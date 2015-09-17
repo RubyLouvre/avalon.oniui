@@ -1,0 +1,138 @@
+@charset "UTF-8";
+/*
+这是每个都组件都应该引用的部分
+*/
+.oni-fileuploader-wrapper {
+  position: relative;
+  border: 1px solid #eee;
+  text-align: center;
+  background-color: #eaeaea;
+  padding: 20px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+  border-radius: 4px; }
+  .oni-fileuploader-wrapper .preview-stage {
+    width: 100%;
+    height: 400px;
+    border-bottom: 1px dashed #aaa;
+    margin-bottom: 20px;
+    text-align: left;
+    overflow-y: auto;
+    font-size: 12px;
+    *position: relative;
+    /*IE6下滚动条有问题，加上Position修复*/ }
+  .oni-fileuploader-wrapper button {
+    width: 168px;
+    height: 44px;
+    font-size: 18px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    -ms-border-radius: 2px;
+    -o-border-radius: 2px;
+    border-radius: 2px;
+    -webkit-box-shadow: #888888 2px 2px 5px;
+    -moz-box-shadow: #888888 2px 2px 5px;
+    box-shadow: #888888 2px 2px 5px;
+    position: relative;
+    margin: 0 5px;
+    font-family: "Microsoft YaHei","Myriad Pro", "Hiragino Sans GB", Calibri, Helvetica, tahoma,arial,simsun, sans-serif; }
+  .oni-fileuploader-wrapper button.uploader-button-add {
+    background-color: #00b7ee;
+    border: 1px solid #00b7ee;
+    color: #eee; }
+  .oni-fileuploader-wrapper button.uploader-button-add:hover {
+    background-color: #00a2d4; }
+  .oni-fileuploader-wrapper button.uploader-button-upload {
+    background-color: white;
+    border: 1px solid #999;
+    color: #333; }
+  .oni-fileuploader-wrapper button.uploader-button-upload:hover {
+    background-color: white; }
+  .oni-fileuploader-wrapper button.uploader-button-add object {
+    position: absolute;
+    top: 0px;
+    left: 0px; }
+  .oni-fileuploader-wrapper div.preview-image-wrapper {
+    display: inline-block;
+    _display: inline;
+    _zoom: 1;
+    margin: 5px;
+    overflow: hidden;
+    position: relative;
+    border: 1px #aaa dashed;
+    z-index: 0;
+    overflow: hidden; }
+    .oni-fileuploader-wrapper div.preview-image-wrapper .preview-progress-wrapper, .oni-fileuploader-wrapper div.preview-image-wrapper div.preview-menu {
+      color: white;
+      height: 24px;
+      line-height: 14px;
+      background-color: #333;
+      opacity: 0.8;
+      filter: alpha(Opacity=80);
+      text-align: left; }
+    .oni-fileuploader-wrapper div.preview-image-wrapper div.preview-menu div {
+      white-space: nowrap;
+      text-align: center; }
+      .oni-fileuploader-wrapper div.preview-image-wrapper div.preview-menu div a.icon {
+        position: absolute;
+        left: 3px;
+        top: 5px;
+        text-decoration: none;
+        cursor: pointer;
+        color: white;
+        font-size: 14px;
+        width: 14px;
+        height: 14px;
+        display: inline-block;
+        line-height: 14px; }
+      .oni-fileuploader-wrapper div.preview-image-wrapper div.preview-menu div span {
+        position: absolute;
+        left: 18px;
+        top: 5px;
+        right: 3px;
+        text-overflow: ellipsis;
+        overflow: hidden; }
+    .oni-fileuploader-wrapper div.preview-image-wrapper img {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      z-index: -1;
+      width: 100%;
+      height: 100%; }
+    .oni-fileuploader-wrapper div.preview-image-wrapper .preview-progress-wrapper {
+      position: absolute;
+      bottom: 0px;
+      width: 100%; }
+    .oni-fileuploader-wrapper div.preview-image-wrapper .preview-progress-body {
+      position: relative;
+      height: 100%;
+      -webkit-border-radius: 4px;
+      -moz-border-radius: 4px;
+      -ms-border-radius: 4px;
+      -o-border-radius: 4px;
+      border-radius: 4px; }
+    .oni-fileuploader-wrapper div.preview-image-wrapper .progress-bar {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      height: 100%;
+      background-color: #00b7ee;
+      opacity: 1; }
+    .oni-fileuploader-wrapper div.preview-image-wrapper .message {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      line-height: 14px;
+      height: 14px;
+      display: inline-block;
+      overflow: hidden;
+      margin: 5px; }
+  .oni-fileuploader-wrapper .flash-wrapper {
+    position: absolute;
+    width: 168px;
+    height: 44px;
+    right: 50%;
+    display: inline-block;
+    margin: 0 5px 0 0; }

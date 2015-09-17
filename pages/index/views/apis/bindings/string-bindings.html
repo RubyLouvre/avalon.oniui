@@ -1,0 +1,10 @@
+
+<h3 id="string-bindings">字符串属性绑定</h3>
+<p>这主要涉及到几个非常常用的字符串属性，即href, src, alt, title, value,
+    分别使用ms-href, ms-src, ms-alt, ms-title, ms-value。它们的值的解析情况与其他绑定不一样，如果值没有{{}}插值表达式，那么就当成VM中的一个属性，并且可以与加号，减号混用，
+    组成表达式，如果里面有表达式，整个当成一个字符串。</p>
+<pre class="brush:html;gutter:false;toolbar:false;">
+    &lt;a ms-href="aaa + '.html'"&gt;xxxx&lt;/a&gt;
+    &lt;a ms-href="{{aaa}}.html"&gt;xxxx&lt;/a&gt;
+</pre>
+<p style="color:red">注意: ms-alt, ms-title, ms-value在1.36中已经废弃，请使用ms-attr-*操作</p>

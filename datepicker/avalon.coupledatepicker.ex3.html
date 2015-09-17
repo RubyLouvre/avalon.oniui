@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>coupledatepicker demo </title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>coupledatepicker demo</h1>
+        <div class="demo-show" ms-controller="demo">
+            <fieldset style="position: relative; z-index: 3">
+                <legend>双日历框,初始化起始日期和结束日期</legend>
+                <div ms-widget="coupledatepicker" data-coupledatepicker-duplex="from, to"></div>
+                <p>from is : {{from}}</p>
+                <p>to is : {{to}}</p>
+                <p>说明：通过配置duplex选项，初始化起始日期和结束日期，默认日期格式是"yyyy-mm-dd"，当没有初始值或者初始值格式错误时，组件会自动更正为今天所对应的日期</p>
+            </fieldset>
+            <fieldset style="position: relative; z-index: 2">
+                <legend>双日历框，禁用双日历框</legend>
+                <div ms-widget="coupledatepicker" data-coupledatepicker-disabled="true"></div>
+                <p>说明：配置双日历组件的disabled为true来禁用组件，配置值可以是布尔值，也可以是controller下的一个属性变量名，如果是属性名则可以通过控制此属性值控制组件的禁用与否</p>
+            </fieldset>
+            <fieldset style="position: relative; z-index: 1">
+                <legend>双日历框，禁用双日历框</legend>
+                <div ms-widget="coupledatepicker, a"></div>
+                <p>说明：配置disabled为一个变量名，点击右边的"切换禁用"按钮来切换双日历框的禁用与否</p>
+                <button ms-click="toggleDisabled" style="position:absolute;right:0;top: 20px;">切换禁用</button>
+            </fieldset>
+            <script> 
+                require(["datepicker/avalon.coupledatepicker"], function(avalon) {
+                    var model = avalon.define("demo", function(vm) {
+                        vm.from = "2014-06-03";
+                        vm.to = "2014-06-26";
+                        vm.toggleDisabled = function() {
+                            avalon.vmodels.a.disabled = !avalon.vmodels.a.disabled
+                        }
+                    })
+                    avalon.scan();
+                })
+            </script>
+        </div>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;coupledatepicker demo&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;div class="demo-show" ms-controller="demo"&gt;
+                        &lt;fieldset style="position: relative; z-index: 3"&gt;
+                            &lt;legend&gt;双日历框,初始化起始日期和结束日期&lt;/legend&gt;
+                            &lt;div ms-widget="coupledatepicker" data-coupledatepicker-duplex="from, to"&gt;&lt;/div&gt;
+                            &lt;p&gt;说明：通过配置duplex选项，初始化起始日期和结束日期，默认日期格式是"yyyy-mm-dd"，当没有初始值或者初始值格式错误时，组件会自动更正为今天所对应的日期&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset style="position: relative; z-index: 2"&gt;
+                            &lt;legend&gt;双日历框，禁用双日历框&lt;/legend&gt;
+                            &lt;div ms-widget="coupledatepicker" data-coupledatepicker-disabled="true"&gt;&lt;/div&gt;
+                            &lt;p&gt;说明：配置双日历组件的disabled为true来禁用组件，配置值可以是布尔值，也可以是controller下的一个属性变量名，如果是属性名则可以通过控制此属性值控制组件的禁用与否&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset style="position: relative; z-index: 1"&gt;
+                            &lt;legend&gt;双日历框，禁用双日历框&lt;/legend&gt;
+                            &lt;div ms-widget="coupledatepicker, a"&gt;&lt;/div&gt;
+                            &lt;p&gt;说明：配置disabled为一个变量名，点击右边的"切换禁用"按钮来切换双日历框的禁用与否&lt;/p&gt;
+                            &lt;button ms-click="toggleDisabled" style="position:absolute;right:0;top: 20px;"&gt;切换禁用&lt;/button&gt;
+                        &lt;/fieldset&gt;
+                        &lt;script&gt; 
+                            require(["datepicker/avalon.coupledatepicker"], function(avalon) {
+                                var model = avalon.define("demo", function(vm) {
+                                    vm.from = "2014-06-03";
+                                    vm.to = "2014-06-26";
+                                    vm.toggleDisabled = function() {
+                                        avalon.vmodels.a.disabled = !avalon.vmodels.a.disabled
+                                    }
+                                })
+                                avalon.scan();
+                            })
+                        &lt;/script&gt;
+                    &lt;/div&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+    </div>
+</body>
+</html>

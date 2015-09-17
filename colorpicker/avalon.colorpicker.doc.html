@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="descriptions" content="一个直观方便的颜色选择器。既可以展示设定的颜色，又可以调试并选择颜色。使用 ms-duplex 可以方便的设置和获取颜色。">
+        <title>颜色选择器</title>
+        <link rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    
+    <body>
+        <div class="wrapper">
+            <h2>colorpicker</h2>
+            <fieldset>
+                <legend>颜色选择器</legend>
+                <p>一个直观方便的颜色选择器。既可以展示设定的颜色，又可以调试并选择颜色。</p>
+                <p>使用
+                    <code>ms-duplex</code>可以方便的设置和获取颜色。</p>
+            </fieldset>
+            <h3 class="table-doc-title">使用说明</h3>
+            <table class="table-doc" border="1">
+                <colgroup>
+                    <col width="180">
+                        <col width="95">
+                            <col width="120">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>名字</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="4">配置参数</td>
+                    </tr>
+                    <tr>
+                        <td>autoHide</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>是否自动隐藏控件</td>
+                    </tr>
+                    <tr>
+                        <td>defaultColor</td>
+                        <td>String</td>
+                        <td>"#ffffff"</td>
+                        <td>默认颜色</td>
+                    </tr>
+                    <tr>
+                        <td>bgColor</td>
+                        <td>String</td>
+                        <td>""</td>
+                        <td>背景颜色</td>
+                    </tr>
+                </tbody>
+            </table>
+            <fieldset>
+                <legend>注意</legend>
+                <p>请不要在
+                    <code>input</code>标签上添加
+                    <code>data-duplex-changed</code>、
+                    <code>ms-css-background</code>、
+                    <code>ms-css-color</code>，因为会被组件内部覆盖</p>
+            </fieldset>
+            <fieldset>
+                <legend>示例</legend>
+                <ul class="example-links">
+                    <li>
+                        <a href="avalon.colorpicker.ex.html">例子</a>
+                    </li>
+                </ul>
+            </fieldset>
+        </div>
+    </body>
+
+</html>

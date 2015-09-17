@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Promise组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js">
+
+        </script>
+        <script src="../highlight/shCore.js">
+
+        </script>
+        <script>
+            require(["mmPromise/mmPromise", "domReady!"], function() {
+                var _resolve
+                var originalPromise = new Promise(function(resolve) {
+                    _resolve = resolve
+                });
+                var promise = new Promise(function(resolve) {
+                    resolve(originalPromise);
+                });
+                promise.then(function(value) {
+                    alert(value === 'original value');
+                });
+                avalon.define("test", function(vm) {
+                    vm.click = function() {
+                        _resolve("original value")
+                    }
+                    vm.array = ["准备开始"]
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body ms-controller="test">
+
+        <p><button ms-click="click" type="button">点我开始</button></p>
+        <pre class="brush:javascript;gutter:false;toolbar:false;">
+            require(["mmPromise/mmPromise", "ready!"], function() {
+                var _resolve
+                var originalPromise = new Promise(function(resolve) {
+                    _resolve = resolve
+                });
+                var promise = new Promise(function(resolve) {
+                    resolve(originalPromise);
+                });
+                promise.then(function(value) {
+                    alert(value === 'original value');
+                });
+                avalon.define("test", function(vm) {
+                    vm.click = function() {
+                        _resolve("original value")
+                    }
+                    vm.array = ["准备开始"]
+                })
+                avalon.scan()
+            })
+        </pre>
+    </body>
+</html>
+

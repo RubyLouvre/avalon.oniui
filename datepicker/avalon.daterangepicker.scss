@@ -1,0 +1,132 @@
+
+@import "../chameleon/oniui-theme";
+$uiname: "oni-daterangepicker";
+.#{$uiname}-wrapper {
+    display: inline-block;
+    *display: inline;
+    _display: inline;
+    zoom: 1;
+}
+.#{$uiname} {
+    width: 260px;
+    font-size: 12px;
+    line-height: 18px;
+    .oni-datepicker-range-input {
+        cursor: pointer;
+        border: 1px solid #cccccc;
+        @if($oinui-theme == smoothness) {
+            background-color: #ffffff;
+        }
+        .oni-datepicker-input {
+            height: 18px;
+            overflow: hidden;
+            padding: 3px 21px 3px 6px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            &.oni-datepicker-input-disabled {
+                background: #ebebe4;
+                border-color: #cccccc;
+            }
+        }
+        &.oni-state-hover {
+            border: 1px solid #999;
+        }
+        &.oni-state-active {
+            border-color: #3775c0;
+            border-bottom-color: #fff;
+        }
+    }
+    .oni-datepicker-icon-wrap {
+        position: relative;
+        display: block;
+        height: 0;
+        .oni-datepicker-icon {
+            position: absolute;
+            right: 0;
+            top: -21px;
+            display: none;
+            cursor: pointer;
+            padding: 0 6px;
+            text-align: center;
+            text-indent: 0;
+            @if($oinui-theme == smoothness) {
+                color: #b5b5b5;
+            }
+            &.oni-icon-angle-down, &.oni-icon-angle-up {
+                display: block;
+            }
+        }
+    }
+}
+.#{$uiname}-content {
+    position: relative;
+    z-index: 1000;
+    zoom: 1;
+    .oni-datepicker-groups {
+        position: absolute;
+        z-index: 1000;
+        zoom: 1;
+        padding: 9px 0 0 10px;
+        border: 1px solid #cccccc;
+        box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1);
+        font-size: 0;
+        white-space: nowrap;
+        @if($oinui-theme == smoothness) {
+            background: #ffffff;
+        }
+        .oni-datepicker-group {
+            position: relative;
+            @include inline-block();
+            .oni-datepicker-content {
+                position: static;
+                box-shadow: 0 0 0 0 rgba(0, 0, 0, 0); 
+            }
+        }
+        .oni-calendarbox-footer-small {
+            position: relative;
+            margin: 10px 0 0 -10px;
+            height:22px;
+            line-height: 22px;
+            padding: 4px 0;
+            _width: 466px;
+            *width: 466px;
+            @if($oinui-theme == smoothness) {
+                background: #f8f8f8;
+            }
+            .oni-calendarbox-btns {
+                position: absolute;
+                right: 10px;
+                top: 4px;
+                display: inline;
+                font-size: 0;
+                .oni-btn {
+                    margin: 0 0 0 5px ;
+                }
+            }
+            .oni-calendarbox-msg {
+                padding-left: 10px;
+                font-size: 12px;
+            }
+        }
+        .oni-datepicker-wrapper {
+            position: static;
+            padding: 0;
+            border: 0;
+            box-shadow: 0 0 0 0 rgba(0,0,0,0);
+            font-size: 12px;
+        }
+    }
+}
+.#{$uiname}-quick-operation {
+    font-size: 12px;
+    border-bottom: 1px solid #f2f2f2;
+    margin: -5px 0 10px -10px;
+    padding-left: 10px;
+    span {
+        color: #3775c0;
+        padding: 6px 10px 6px 0;
+        @include inline-block();
+        cursor: pointer;
+    }
+}
+

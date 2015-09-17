@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>dialog demo 9</title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>dialog demo 9</h1>
+        <p class="example">修改dialog的title、content、或者重新渲染dialog（<span class="statement">ms-widget="dialog, dialogId, $dialogOpts"</span>）</p>
+        <p><span class="useDescription">说明：</span>重新渲染dialog时，务必保证setModel中的model对象是demo controller的属性值，这样才能保证avalon对其进行对象转换，进而发挥avalon对象的自动监控特性，否则会报错</p>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;修改dialog的title、content、或者重新渲染dialog&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;div class="demo-show" ms-controller="demo"&gt;
+                        &lt;fieldset&gt;  
+                            &lt;legend&gt;动态修改dialog的title、content或者重新渲染&lt;/legend&gt;
+                                &lt;button ms-click="show('aa')"&gt;打开对话框&lt;/button&gt;
+                                &lt;button ms-click="changeDialog('aa')"&gt;改变对话框内容&lt;/button&gt;
+                                &lt;button ms-click="changeTitle('aa')"&gt;改变对话框title&lt;/button&gt;
+                                &lt;button ms-click="changeModel('aa')"&gt;改变对话框model&lt;/button&gt;
+                                &lt;div ms-widget="dialog,aa,$aaOpts"&gt;
+                                    可以动态改变对话框的内容，点击不同的按钮，试试看它的灵活性呗
+                                &lt;/div&gt;
+                        &lt;/fieldset&gt;
+                        &lt;script&gt; 
+                            require(["dialog/avalon.dialog"], function(avalon) {
+                                avalon.define("demo", function(vm) {
+                                    var dialog = "";
+                                    vm.tpl = '我是tpl';
+                                    vm.tpl2 = '我是tpl2';
+                                    vm.$aaOpts = {
+                                        title: "标题",
+                                        onConfirm: function(){
+                                            alert('success')
+                                        },
+                                        onCancel: function(){
+                                            alert('fail')
+                                        }
+                                    }
+                                    vm.show = function( id ){
+                                        avalon.vmodels[id].toggle = true;
+                                    }
+                                    /**
+                                     * 更改dialog的content
+                                     */
+                                    vm.changeDialog = function(id) {
+                                        var dialog = avalon.vmodels[id];
+                                        if(!dialog) {
+                                            return;
+                                        }
+                                        dialog.setContent('{{tpl2}}');
+                                    }
+                                    /**
+                                     * 更改dialogtitle
+                                     */
+                                    vm.changeTitle = function(id) {
+                                        var dialog = avalon.vmodels[id];
+                                        if(!dialog) {
+                                            return;
+                                        }
+                                        dialog.setTitle('我是title');
+                                    };
+                                    // setModel的参数就是个简单对象，不要监控
+                                    vm.m = {
+                                        tpl2: '我变了',
+                                        $title: "改变title并且改变模板然后重新渲染",
+                                        $content: "改变modal的content{{tpl2}}",
+                                        $noScan: false // 是否需要扫描编译模板，需要编译则设为false或者不定义即可，不需要扫描设为true
+                                    };
+                                    vm.changeModel = function(id) {
+                                        var dialog = avalon.vmodels[id];
+                                        if(!dialog) {
+                                            return;
+                                        }
+                                        dialog.setModel(vm.m);
+                                    };
+                                    
+                                })
+                                avalon.scan();
+                            })
+                        &lt;/script&gt;
+                    &lt;/div&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+        <div class="demo-show" ms-controller="demo">
+            <fieldset>  
+                <legend>动态修改dialog的title、content或者重新渲染</legend>
+                    <button ms-click="show('aa')">打开对话框</button>
+                    <button ms-click="changeDialog('aa')">改变对话框内容</button>
+                    <button ms-click="changeTitle('aa')">改变对话框title</button>
+                    <button ms-click="changeModel('aa')">改变对话框model</button>
+                    <div ms-widget="dialog,aa,$aaOpts">
+                        可以动态改变对话框的内容，点击不同的按钮，试试看它的灵活性呗
+                    </div>
+            </fieldset>
+            <script> 
+                require(["dialog/avalon.dialog"], function(avalon) {
+                    avalon.define("demo", function(vm) {
+                        var dialog = "";
+                        vm.tpl = '我是tpl';
+                        vm.tpl2 = '我是tpl2';
+                        vm.$aaOpts = {
+                            title: "标题",
+                            onConfirm: function(){
+                                alert('success')
+                            },
+                            onCancel: function(){
+                                alert('fail')
+                            }
+                        }
+                        vm.show = function( id ){
+                            avalon.vmodels[id].toggle = true;
+                        }
+                        /**
+                         * 更改dialog的content
+                         */
+                        vm.changeDialog = function(id) {
+                            var dialog = avalon.vmodels[id];
+                            if(!dialog) {
+                                return;
+                            }
+                            dialog.setContent('{{tpl2}}');
+                        }
+                        /**
+                         * 更改dialogtitle
+                         */
+                        vm.changeTitle = function(id) {
+                            var dialog = avalon.vmodels[id];
+                            if(!dialog) {
+                                return;
+                            }
+                            dialog.setTitle('我是title');
+                        };
+                        // setModel的参数就是个简单对象，不要监控
+                        vm.m = {
+                            tpl2: '我变了',
+                            $title: "改变title并且改变模板然后重新渲染",
+                            $content: "改变modal的content{{tpl2}}",
+                            $noScan: false // 是否需要扫描编译模板，需要编译则设为false或者不定义即可，不需要扫描设为true
+                        };
+                        vm.changeModel = function(id) {
+                            var dialog = avalon.vmodels[id];
+                            if(!dialog) {
+                                return;
+                            }
+                            dialog.setModel(vm.m);
+                        };
+                        
+                    })
+                    avalon.scan();
+                })
+            </script>
+        </div>
+    </div>
+</body>
+</html>
+

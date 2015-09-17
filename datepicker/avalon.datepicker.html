@@ -1,0 +1,199 @@
+<div class="oni-datepicker"
+     ms-visible="toggle"
+     ms-class="oni-datepicker-multiple:numberOfMonths!==1">
+    <div class="oni-datepicker-wrapper" ms-css-position="_position" ms-class="{{_getPositionClass(position)}}">
+        <div class="oni-datepicker-content">
+            <div class="oni-datepicker-label" ms-if="numberOfMonths===1">{{calendarLabel}}</div>
+            <i  class="oni-datepicker-prev oni-icon" 
+                ms-if="numberOfMonths!==1" 
+                ms-click="_prev(prevMonth, $event)"
+                ms-class="oni-datepicker-prev-disabled:!prevMonth" 
+                style="left:15px;">&#xf047;</i>
+            <i  class="oni-datepicker-next oni-icon" 
+                ms-if="numberOfMonths!==1" 
+                ms-click="_next(nextMonth, $event)"
+                ms-class="oni-datepicker-next-disabled:!nextMonth" 
+                style="right:15px;">&#xf03e;</i>
+            <div class="oni-datepicker-content-content" 
+                 ms-repeat-calendar="data" 
+                 ms-visible="_datepickerToggle"
+                 ms-css-width='calendarWidth'
+                 data-repeat-rendered="dataRendered">
+                <div class="oni-datepicker-header" ms-if="numberOfMonths===1">
+                    <i class="oni-datepicker-prev oni-icon" 
+                       ms-click="_prev(prevMonth, $event)"
+                       ms-class="oni-datepicker-prev-disabled:!prevMonth">&#xf047;</i>
+                    <i class="oni-datepicker-next oni-icon"    
+                       ms-click="_next(nextMonth, $event)"
+                       ms-class="oni-datepicker-next-disabled:!nextMonth">&#xf03e;</i>
+                    <div class="oni-datepicker-title" ms-if="changeMonthAndYear && regional.showMonthAfterYear">
+                        <select ms-each="years" data-each-rendered="_afterYearRendered">
+                            <option ms-attr-value="el">{{el}}</option>
+                        </select>&nbsp;{{regional.yearText}}&nbsp;
+                        <select ms-each="months" data-each-rendered="_afterMonthRendered">
+                            <option ms-attr-value="{{el}}">{{el}}</option>
+                        </select>&nbsp;{{regional.monthText}}
+                    </div>
+                    <div class="oni-datepicker-title" ms-if="changeMonthAndYear && !regional.showMonthAfterYear">
+                        <select ms-each="months" data-each-rendered="_afterMonthRendered">
+                            <option ms-attr-value="{{el}}">{{el}}</option>
+                        </select>&nbsp;{{regional.monthText}}
+                        <select ms-each="years" data-each-rendered="_afterYearRendered">
+                            <option ms-attr-value="el">{{el}}</option>
+                        </select>&nbsp;{{regional.yearText}}&nbsp;
+                    </div>
+                    <div class="oni-datepicker-title"
+                         ms-click="_selectMonths"
+                         ms-if="!changeMonthAndYear">
+                        <span ms-hover="oni-state-hover:mobileMonthAndYear" ms-html="_getTitle(calendar.year, calendar.month)"></span>
+                    </div> 
+                </div>
+                <div class="oni-datepicker-header" ms-if="numberOfMonths!==1">
+                    <div class="oni-datepicker-title">
+                        <span ms-hover="oni-state-hover:mobileMonthAndYear" ms-html="_getTitle(calendar.year, calendar.month)"></span>
+                    </div> 
+                </div>
+                <table class="oni-datepicker-calendar-week">
+                    <thead>
+                        <tr>
+                            <th ms-repeat="weekNames"
+                                ms-class="{{_setWeekClass(el)}}">{{el}}
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+                <table class="oni-datepicker-calendar-days" id='oni-datepicker-days'>
+                    <tbody>
+                        <tr ms-repeat-days="calendar.rows"
+                            ms-visible="_rowShow(days, _uc)">
+                            <td class="oni-datepicker-default"
+                                ms-repeat-item="days"
+                                ms-class="{{_setDayClass($index, $outer.$index, $outer.$outer.$index, item)}}"
+                                ms-hover="{{_setHoverClass($index, $outer.$index, $outer.$outer.$index, item)}}"
+                                ms-click="_selectDate($index, $outer.$index, $outer.$outer.$index, $event)"
+                                ms-html="_dateCellRender($outer.$index, $index, $outer.$outer.$index, item)"
+                                ms-attr-title="_dateCellRender($outer.$index, $index, $outer.$outer.$index, item)"
+                                ></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="oni-datepicker-timer" ms-if="timer">
+                    <label>
+                        <span>{{regional.timerText}}</span>
+                        <b>{{hour|timer}}</b>&nbsp;:
+                        <b>{{minute|timer}}</b>
+                    </label>
+                    <p>
+                        <span>{{regional.hourText}}</span>
+                        <input ms-widget="slider, $, sliderHourOpts" data-slider-max="23" data-slider-min="0" data-slider-value="hour" data-slider-width="140">
+                    </p>
+                    <p>
+                        <span>{{regional.minuteText}}</span>
+                        <input ms-widget="slider, $, sliderMinuteOpts" data-slider-max="59" data-slider-min="0" data-slider-width="140" data-slider-value="minute">
+                    </p>
+                </div>
+                <div class="oni-datepicker-timer oni-helper-clearfix" ms-if="timer">
+                    <button type="button" class="oni-btn oni-btn-small" style="float: left" ms-click="_getNow">{{regional.nowText}}</button>
+                    <button type="button" class="oni-btn oni-btn-primary oni-btn-small" style="float:right" ms-click="_selectTime">{{regional.confirmText}}</button>
+                </div>
+                <div class="oni-datepicker-watermark" 
+                     ms-if="watermark"
+                     ms-css-font-size='_height'
+                     ms-css-line-height='{{_height}}px'
+                     ms-css-width='calendarWidth'
+                     ms-css-height='_height'>
+                    {{calendar.month+1}}
+                </div>
+            </div>
+            <div class="oni-datepicker-content-content oni-datepicker-month-year" ms-if="mobileMonthAndYear" ms-visible="_monthToggle" ms-css-width='calendarWidth'>
+                <table>
+                    <thead>
+                        <tr class="oni-datepicker-title">
+                            <th class="prev" style="visibility: visible;text-align:left">
+                                <i class="oni-datepicker-prev oni-icon" 
+                                   ms-click="_prevYear(mobileYear)"
+                                   ms-class="oni-datepicker-prev-disabled:mobileYear===years[0]">&#xf047;</i>
+                            </th>
+                            <th style="text-align:center" 
+                                ms-click="_selectYears" 
+                                ms-hover="oni-state-hover:mobileMonthAndYear">{{mobileYear}}</th>
+                            <th class="next" style="visibility: visible;text-align:right">
+                                <i class="oni-datepicker-next oni-icon" 
+                                   ms-click="_nextYear(mobileYear)"
+                                   ms-class="oni-datepicker-prev-disabled:mobileYear===years[years.length-1]">&#xf03e;</i>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="3" style="padding:0px">
+                                <span ms-repeat-m="months" 
+                                      ms-class="oni-datepicker-selected: (m-1)===elementMonth && mobileYear===elementYear"
+                                      ms-click="_selectDates(m-1)"
+                                      ms-hover="oni-datepicker-day-hover">{{regional.monthNamesShort[m - 1]}}</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="3" class="today" style="display: none;">Today</th>
+                        </tr>
+                        <tr>
+                            <th colspan="3" class="clear" style="display: none;">Clear</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <div class="oni-datepicker-content-content oni-datepicker-month-year" ms-if="mobileMonthAndYear" ms-visible="_yearToggle" ms-css-width='calendarWidth'>
+                <table>
+                    <thead>
+                        <tr class="oni-datepicker-title">
+                            <th class="prev" style="visibility: visible;text-align:left">
+                                <i class="oni-datepicker-prev oni-icon" 
+                                   ms-click="_prevYears" 
+                                   ms-class="oni-datepicker-prev-disabled:_years[0]<=years[0]">&#xf047;</i>
+                            </th>
+                            <th style="text-align:center" 
+                                ms-hover="oni-state-hover:mobileMonthAndYear">{{_years[0]}}-{{_years[9]}}
+                            </th>
+                            <th class="next" style="visibility: visible;text-align:right">
+                                <i class="oni-datepicker-next oni-icon" 
+                                    ms-click="_nextYears"
+                                    ms-class="oni-datepicker-next-disabled:_years[_years.length-1]>=years[years.length-1]">&#xf03e;</i>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="3" style="padding:0px">
+                                <span class="oni-datepicker-prev-year"
+                                      ms-class="{{_setMobileYearClass(_years[0]-1, elementYear, month, elementMonth)}}"
+                                      ms-click="_selectMonths($event, _years[0]-1)"
+                                      ms-hover="oni-datepicker-day-hover"
+                                >{{_years[0]-1}}</span>
+                                <span ms-repeat-y="_years" 
+                                      ms-class="_setMobileYearClass(y, elementYear, month, elementMonth)"
+                                      ms-click="_selectMonths($event, y)"
+                                      ms-hover="oni-datepicker-day-hover"
+                                >{{y}}</span>
+                                <span class="oni-datepicker-next-year"
+                                      ms-class="{{_setMobileYearClass(_years[9]+1, elementYear, month, elementMonth)}}"
+                                      ms-click="_selectMonths($event, _years[9]+1)"
+                                      ms-hover="oni-datepicker-day-hover"
+                                >{{_years[9]+1}}</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="3" class="today" style="display: none;">Today</th></tr>
+
+                            <tr><th colspan="3" class="clear" style="display: none;">Clear</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,9 @@
+<p>tab 组件有一个重要的getTemplate配置方法,见源码：</p>
+<pre class="brush:js;gutter:false;toolbar:false;" ms-skip>
+    getTemplate: function(template, vm, tplName) {
+         if(tplName == "panel") {
+             return template.replace("&lt;div", "&lt;div title='点击我，我被注入了' ms-click='$inject'")
+         }
+         return template
+     }
+</pre>

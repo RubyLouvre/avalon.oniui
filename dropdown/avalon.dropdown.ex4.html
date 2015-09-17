@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+        <script src="../avalon.js"></script>
+        <script type="text/javascript">
+            require(["dropdown/avalon.dropdown", "ready!"], function() {
+                avalon.define('dropdown', function(vm) {
+                });
+                avalon.scan();
+            });
+        </script>
+        <script src="../highlight/shCore.js"></script>
+        <style>
+            html, body {
+                height: 800px;
+            }
+            .wrapper {
+                height: 800px;
+            }
+            .frame {
+                width: 100%;
+                height: 800px;
+                position: relative;
+            }
+            .top {
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+            .bottom {
+                position: absolute;
+                bottom: 0;
+                right: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="wrapper">
+            <div ms-controller="dropdown" class="frame">
+                <div class="top">
+                    <h2>dropdown（下拉框）</h2>
+                    <p>用select结构直接生成dropdown组件</p>
+                    <select ms-widget="dropdown">
+                        <optgroup label="group1">
+                            <option value="value1">Value 1</option>
+                            <option>textValue</option>
+                            <option label="label" value="labelValue">with label</option>
+                            <option value="value2" selected>Value 2</option>
+                            <option value="value3">Value 3</option>
+                        </optgroup>
+                        <optgroup label="group2">
+                            <option value="value4">Value 4</option>
+                            <option value="value5" disabled>Value 5</option>
+                            <option value="value6">Value 6</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div class="bottom">
+                    <select ms-widget="dropdown">
+                        <optgroup label="group1">
+                            <option value="value1">Value 1</option>
+                            <option>textValue</option>
+                            <option label="label" value="labelValue">with label</option>
+                            <option value="value2" selected>Value 2</option>
+                            <option value="value3">Value 3</option>
+                        </optgroup>
+                        <optgroup label="group2">
+                            <option value="value4">Value 4</option>
+                            <option value="value5" disabled>Value 5</option>
+                            <option value="value6">Value 6</option>
+                        </optgroup>
+                    </select>
+                </div>
+            </div>
+            <pre class="brush:html;gutter:false;toolbar:false;" ms-skip>
+    &lt;!DOCTYPE html&gt;
+    &lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;&lt;/title&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width"&gt;
+        &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+        &lt;script type="text/javascript"&gt;
+             require(["dropdown/avalon.dropdown.js", "ready!"], function() {
+                avalon.define('dropdown', function(vm) {
+                });
+                avalon.scan();
+            });
+        &lt;/script&gt;
+        &lt;style&gt;
+            html, body {
+                height: 100%;
+            }
+            .frame {
+                width: 100%;
+                height: 100%;
+                position: relative;
+            }
+            .top {
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+            .bottom {
+                position: absolute;
+                bottom: 0;
+                right: 0;
+            }
+        &lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+    &lt;div class="frame" ms-controller="dropdown"&gt;
+        &lt;div class="top"&gt;
+            &lt;h2&gt;dropdown（下拉框）&lt;/h2&gt;
+            &lt;p&gt;用select结构直接生成dropdown组件&lt;/p&gt;
+            &lt;select ms-widget="dropdown"&gt;
+                &lt;optgroup label="group1"&gt;
+                    &lt;option value="value1"&gt;Value 1&lt;/option&gt;
+                    &lt;option&gt;textValue&lt;/option&gt;
+                    &lt;option label="label" value="labelValue"&gt;with label&lt;/option&gt;
+                    &lt;option value="value2" selected&gt;Value 2&lt;/option&gt;
+                    &lt;option value="value3"&gt;Value 3&lt;/option&gt;
+                &lt;/optgroup&gt;
+                &lt;optgroup label="group2"&gt;
+                    &lt;option value="value4"&gt;Value 4&lt;/option&gt;
+                    &lt;option value="value5" disabled&gt;Value 5&lt;/option&gt;
+                    &lt;option value="value6"&gt;Value 6&lt;/option&gt;
+                &lt;/optgroup&gt;
+            &lt;/select&gt;
+        &lt;/div&gt;
+        &lt;div class="bottom"&gt;
+            &lt;select ms-widget="dropdown"&gt;
+                &lt;optgroup label="group1"&gt;
+                    &lt;option value="value1"&gt;Value 1&lt;/option&gt;
+                    &lt;option&gt;textValue&lt;/option&gt;
+                    &lt;option label="label" value="labelValue"&gt;with label&lt;/option&gt;
+                    &lt;option value="value2" selected&gt;Value 2&lt;/option&gt;
+                    &lt;option value="value3"&gt;Value 3&lt;/option&gt;
+                &lt;/optgroup&gt;
+                &lt;optgroup label="group2"&gt;
+                    &lt;option value="value4"&gt;Value 4&lt;/option&gt;
+                    &lt;option value="value5" disabled&gt;Value 5&lt;/option&gt;
+                    &lt;option value="value6"&gt;Value 6&lt;/option&gt;
+                &lt;/optgroup&gt;
+            &lt;/select&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;
+            </pre>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>移动端时间选择组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    <body ms-controller="test">
+        <h1>移动端时间选择器</h1>
+        <input ms-widget="timer" data-timer-event-type="mousewheel"/>
+        <button ms-click="getCurrentTime">get current time</button>
+        <script>
+            require(["timer/avalon.timer"], function() {
+                var timerVM = null
+                avalon.define("test", function(vm) {
+                    vm.timer = {
+                        onInit: function(vmodel, options, vmodels) {
+                            timerVM = vmodel
+                        }
+                    }
+                    vm.getCurrentTime = function() {
+                        var currentDate = timerVM.timeDate
+                        if (currentDate) {
+                            alert("当前选中日期为："+currentDate.toLocaleString())
+                        } else {
+                            alert("还未选择时间，请选择")
+                        }
+                    }
+                })
+                avalon.scan()
+            })
+        </script>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;timer demo&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body ms-controller="test"&gt;
+                    &lt;h1&gt;移动端时间选择器&lt;/h1&gt;
+                    &lt;input ms-widget="timer" data-timer-event-type="mousewheel"/&gt;
+                    &lt;button ms-click="getCurrentTime"&gt;get current time&lt;/button&gt;
+                    &lt;script&gt;
+                        require(["timer/avalon.timer"], function() {
+                            var timerVM = null
+                            avalon.define("test", function(vm) {
+                                vm.timer = {
+                                    onInit: function(vmodel, options, vmodels) {
+                                        timerVM = vmodel
+                                    }
+                                }
+                                vm.getCurrentTime = function() {
+                                    var currentDate = timerVM.timeDate
+                                    if (currentDate) {
+                                        alert("当前选中日期为："+currentDate.toLocaleString())
+                                    } else {
+                                        alert("还未选择时间，请选择")
+                                    }
+                                }
+                            })
+                            avalon.scan()
+                        })
+                    &lt;/script&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,96 @@
+<div class="oni-smartgrid" id='oni-smartgrid'>
+    <div class='oni-smartgrid-main-wrapper'>
+        <div class='oni-smartgrid-main' id='oni-smartgrid-main'>
+            <div class="oni-smartgrid-header" ms-if='!noHeader'>
+                <div class="oni-smartgrid-header-fixed" 
+                    ms-if="isAffix"
+                    ms-css-top="_headerTop" 
+                    ms-visible="_fixHeaderToggle" 
+                    ms-css-position="_position" 
+                    ms-css-width="_gridWidth">
+                    <div ms-repeat-column="columns" 
+                        class="oni-smartgrid-column"
+                        ms-visible="column.toggle"
+                        ms-css-width="column.width" 
+                        ms-css-text-align="column.align"
+                        ms-class="{{column.customClass}}"
+                        ms-class-1="oni-smartgrid-hidden: _hiddenAffixHeader(column, allChecked)">
+                        <div class="oni-smartgrid-column-cell">
+                            {{column.name|sanitize|html}}
+                            <span  ms-click="sortColumn(column, $index, $event)"
+                                   ms-if="column.sortable" 
+                                   ms-class="oni-helper-{{column.sortTrend}}">
+                                <span class="oni-helper-sort-top"></span>
+                                <span class="oni-helper-sort-bottom"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div id="oni-smartgrid-header">
+                    <div ms-repeat-column="columns" 
+                        class="oni-smartgrid-column"
+                        ms-visible="column.toggle"
+                        ms-css-width="column.width"
+                        ms-css-text-align="column.align" 
+                        ms-class="{{column.customClass}}"
+                        ms-class-1="oni-smartgrid-hidden: _hiddenAffixHeader(column, allChecked)">
+                        <div class="oni-smartgrid-column-cell">
+                            {{column.name|sanitize|html}}
+                            <span  ms-click="sortColumn(column, $index, $event)"
+                                   ms-if="column.sortable" 
+                                   ms-class="oni-helper-{{column.sortTrend}}">
+                                <span class="oni-helper-sort-top"></span>
+                                <span class="oni-helper-sort-bottom"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class='oni-smartgrid-body-wrapper'>
+                <div class="oni-smartgrid-body" id="oni-smartgrid-body">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="oni-smartgrid-footer" ms-if='!noFooter'>
+        <div class="oni-smartgrid-pager-wrapper" ms-visible="pageable && _pagerShow">
+            <div ms-if="pageable" ms-widget="pager, $, $pagerConfig"></div>
+        </div>
+    </div>
+    <div ms-widget="loading"></div>
+</div>
+MS_OPTION_EJS
+<&- var trl = @data.length &>
+<&- if(!trl) { &>
+    <div class="oni-smartgrid-nodata"><&=@noResult&></div>
+<&- } else { &>
+    <&- for(var i=0, tr; i<trl; i++) { &>
+        <&- tr = @data[i]; 
+            var selectedClass = "";
+            if (i%2==0) {
+                selectedClass = "oni-smartgrid-odd";
+            } else {
+                selectedClass = "oni-smartgrid-even"
+            } 
+            if (tr.selected && @checkRow) {
+                selectedClass += " oni-smartgrid-selected"
+            }
+            if (tr.disable) {
+                selectedClass += " oni-smartgrid-disabled"
+            }&>
+        <div id="<&=tr.$id&>" class="<&=selectedClass&> oni-smartgrid-row" ms-hover="oni-smartgrid-hover">
+            <&- for(var j=0, tdl=@columns.length, td; j<tdl; j++) { &>
+                <&- td=@columns[j].$model; 
+                    var textAlign="text-align:"+td.align,
+                        customClass = td.customClass || "",
+                        format = td.format;&>
+                <div class="oni-smartgrid-column" ms-visible="columns[<&= j &>]['toggle']" ms-css-width="columns[<&= j &>]['width']">
+                    <div style="<&= textAlign &>" class="<&= customClass &> oni-smartgrid-column-cell">
+                        <&= format(@vmId, td.key , i, tr[td.key], tr, tr.disable) &>
+                    </div>
+                </div>
+            <& } &>
+        </div>  
+    <& } &>  
+<& } &>
+

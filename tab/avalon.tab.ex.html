@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>tab组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <script>
+            require(["tab/avalon.tab"], function() {
+                avalon.define("test", function(vm) {
+                    vm.tab = {
+                    }
+                    vm.$skipArray = ["tab"]
+
+                    vm.$jjOpt = {
+                        onAjaxCallback: function() {
+                            avalon.log("ajax callback " + this)
+                        }
+                    }
+                    vm.peaple = {
+                        title: "人类"
+                        , content: "我是来搞笑的"
+                    }
+
+                    vm.peaple2 = {
+                        title: "人类"
+                        , removable: false
+                        , content: "我是来搞笑的"
+                    }
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body>
+<div ms-controller="test">
+        <h1>扫描dom树获取数据</h1>
+        <div data-tab-removable="false" ms-widget="tab,jj,$jjOpt" data-tab-auto-switch="1500" class="oni-tabs oni-widget oni-widget-content oni-corner-all">
+            <ul class="oni-tabs-nav oni-helper-oni-helper-reset oni-helper-clearfix oni-widget-header oni-corner-all">
+                <li class="oni-state-default oni-corner-top oni-tab-item" data-removable="false">
+                    水果<i>非国产经典品牌</i>十分流弊
+                </li>
+                <li class="oni-state-default oni-corner-top oni-tab-item oni-tab-active" data-removable="false">
+                    服装非国产经典品牌
+                </li>
+                <li class="oni-state-default oni-corner-top oni-tab-item">
+                    <i>工具</i>非国产经典品牌
+                </li>
+                <li class="oni-state-default oni-corner-top oni-tab-item" data-removable="true">
+                    电器
+                </li>
+                <li class="oni-state-default oni-corner-top oni-tab-item" data-disabled="true">
+                    动物
+                </li>
+            </ul>
+            <div>
+                <div class="oni-tabs-panel oni-widget-content oni-corner-bottom" style="display: none;">
+                    line 1 -
+                    <a href="#" ms-click="add(peaple)">
+                        点击我添加一个tab!
+                    </a>
+                </div>
+                <div data-content-type="ajax" data-content="avalon.tab.ajax.html" class="oni-tabs-panel oni-widget-content oni-corner-bottom" style="display: none;">
+                    
+                </div>
+                <div class="oni-tabs-panel oni-widget-content oni-corner-bottom" style="display: none;">
+                    line 2 -
+                    <a href="#" ms-click="enable(4)">
+                        点击我激活动物tab!
+                    </a>
+                </div>
+                <div class="oni-tabs-panel oni-widget-content oni-corner-bottom" style="display: none;">
+                    line 3 -
+                    <a href="#" ms-click="add(peaple2)">
+                        点击我添加一个不能删除的tab!
+                    </a>
+                </div>
+                <div class="oni-tabs-panel oni-widget-content oni-corner-bottom" style="display: none;">
+                    line 4
+                </div>
+            </div>
+        </div>
+        <pre ms-skip class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;tab组件&lt;/title&gt;
+        &lt;meta charset=&quot;UTF-8&quot;&gt;
+        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;
+        &lt;script src=&quot;../avalon.js&quot;&gt;&lt;/script&gt;
+        
+        &lt;script&gt;
+            require([&quot;tab/avalon.tab&quot;], function() {
+                avalon.define(&quot;test&quot;, function(vm) {
+                    vm.tab = {
+                    }
+                    vm.$skipArray = [&quot;tab&quot;]
+
+                    vm.$jjOpt = {
+                        onAjaxCallback: function() {
+                            avalon.log(&quot;ajax callback &quot; + this)
+                        }
+                    }
+                    vm.peaple = {
+                        title: &quot;人类&quot;
+                        , content: &quot;我是来搞笑的&quot;
+                    }
+
+                    vm.peaple2 = {
+                        title: &quot;人类&quot;
+                        , removable: false
+                        , content: &quot;我是来搞笑的&quot;
+                    }
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+&lt;div ms-controller=&quot;test&quot;&gt;
+        &lt;h1&gt;扫描dom树获取数据&lt;/h1&gt;
+        &lt;div data-tab-removable=&quot;false&quot; ms-widget=&quot;tab,jj,$jjOpt&quot; data-tab-auto-switch=&quot;1500&quot; class=&quot;oni-tabs oni-widget oni-widget-content oni-corner-all&quot;&gt;
+            &lt;ul class=&quot;oni-tabs-nav oni-helper-oni-helper-reset oni-helper-clearfix oni-widget-header oni-corner-all&quot;&gt;
+                &lt;li class=&quot;oni-state-default oni-corner-top oni-tab-item&quot; data-removable=&quot;false&quot;&gt;
+                    水果&lt;i&gt;非国产经典品牌&lt;/i&gt;十分流弊
+                &lt;/li&gt;
+                &lt;li class=&quot;oni-state-default oni-corner-top oni-tab-item oni-tab-active&quot; data-removable=&quot;false&quot;&gt;
+                    服装非国产经典品牌
+                &lt;/li&gt;
+                &lt;li class=&quot;oni-state-default oni-corner-top oni-tab-item&quot;&gt;
+                    &lt;i&gt;工具&lt;/i&gt;非国产经典品牌
+                &lt;/li&gt;
+                &lt;li class=&quot;oni-state-default oni-corner-top oni-tab-item&quot; data-removable=&quot;true&quot;&gt;
+                    电器
+                &lt;/li&gt;
+                &lt;li class=&quot;oni-state-default oni-corner-top oni-tab-item&quot; data-disabled=&quot;true&quot;&gt;
+                    动物
+                &lt;/li&gt;
+            &lt;/ul&gt;
+            &lt;div&gt;
+                &lt;div class=&quot;oni-tabs-panel oni-widget-content oni-corner-bottom&quot; style=&quot;display: none;&quot;&gt;
+                    line 1 -
+                    &lt;a href=&quot;#&quot; ms-click=&quot;add(peaple)&quot;&gt;
+                        点击我添加一个tab!
+                    &lt;/a&gt;
+                &lt;/div&gt;
+                &lt;div data-content-type=&quot;ajax&quot; data-content=&quot;avalon.tab.ajax.html&quot; class=&quot;oni-tabs-panel oni-widget-content oni-corner-bottom&quot; style=&quot;display: none;&quot;&gt;
+                    
+                &lt;/div&gt;
+                &lt;div class=&quot;oni-tabs-panel oni-widget-content oni-corner-bottom&quot; style=&quot;display: none;&quot;&gt;
+                    line 2 -
+                    &lt;a href=&quot;#&quot; ms-click=&quot;enable(4)&quot;&gt;
+                        点击我激活动物tab!
+                    &lt;/a&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;oni-tabs-panel oni-widget-content oni-corner-bottom&quot; style=&quot;display: none;&quot;&gt;
+                    line 3 -
+                    &lt;a href=&quot;#&quot; ms-click=&quot;add(peaple2)&quot;&gt;
+                        点击我添加一个不能删除的tab!
+                    &lt;/a&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;oni-tabs-panel oni-widget-content oni-corner-bottom&quot; style=&quot;display: none;&quot;&gt;
+                    line 4
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+    </div>
+</body>
+</html>

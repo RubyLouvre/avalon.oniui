@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>tab组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <script>
+            require(["tab/avalon.tab"], function() {
+                avalon.define("test", function(vm) {
+                    vm.tab = {
+                        onActivate : function(e) {
+                            avalon.log("user define cc activate callback")
+                        }
+                        , active: 1
+                        , tabs : [{
+                            title: "水果2",
+                            name: "fruit",
+                            removable: false,
+                            href: "http://news.163.com/"
+                            },
+                            {
+                                title: "水果<i>非国产经典品牌</i>十分流弊",
+                                name: "cloth"
+                            },
+                            {
+                                title: "工具2"
+                                , name: "tool"
+                            },
+                            {
+                                title: "电器2"
+                                , name: "tool"
+                            },
+                            {
+                                title: "动物2"
+                                , name: "animal"
+                                , disabled: true
+                            }
+                        ]
+                        , tabpanels : [
+                            {content: "line 1 - <a href=\"#\" ms-click=\"add(peaple)\">点击我添加一个tab!</a>"},
+                            {content: "avalon.tab.ajax.html", contentType: "ajax"},
+                            {content: "line 2 - <a href=\"#\" ms-click=\"enable(4)\">点击我激活动物tab!</a>"},
+                            {content: 'line 3 -  <a href="#" ms-click="add(peaple2)">点击我添加一个不能删除的tab! </a>'},
+                            {content: "line 4"}
+                        ]
+                    }
+
+                    vm.peaple = {
+                        title: "人类"
+                        , content: "我是来搞笑的"
+                    }
+
+                    vm.peaple2 = {
+                        title: "人类"
+                        , removable: false
+                        , content: "我是来搞笑的"
+                    }
+                    vm.$skipArray = ["tab"]
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body>
+<div ms-controller="test">
+        <h1>传参配置数据 - mouseenter切换tab</h1>
+        <div ms-widget="tab" data-tab-removable="true"></div>
+        <pre ms-skip class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;tab组件&lt;/title&gt;
+        &lt;meta charset=&quot;UTF-8&quot;&gt;
+        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;
+        &lt;script src=&quot;../avalon.js&quot;&gt;&lt;/script&gt;
+        
+        &lt;script&gt;
+            require([&quot;tab/avalon.tab&quot;], function() {
+                avalon.define(&quot;test&quot;, function(vm) {
+                    vm.tab = {
+                        onActivate : function(e) {
+                            avalon.log(&quot;user define cc activate callback&quot;)
+                        }
+                        , active: 1
+                        , tabs : [{
+                            title: &quot;水果2&quot;,
+                            name: &quot;fruit&quot;,
+                            removable: false,
+                            href: &quot;http://news.163.com/&quot;
+                            },
+                            {
+                                title: &quot;水果&lt;i&gt;非国产经典品牌&lt;/i&gt;十分流弊&quot;,
+                                name: &quot;cloth&quot;
+                            },
+                            {
+                                title: &quot;工具2&quot;
+                                , name: &quot;tool&quot;
+                            },
+                            {
+                                title: &quot;电器2&quot;
+                                , name: &quot;tool&quot;
+                            },
+                            {
+                                title: &quot;动物2&quot;
+                                , name: &quot;animal&quot;
+                                , disabled: true
+                            }
+                        ]
+                        , tabpanels : [
+                            {content: &quot;line 1 - &lt;a href=\&quot;#\&quot; ms-click=\&quot;add(peaple)\&quot;&gt;点击我添加一个tab!&lt;/a&gt;&quot;},
+                            {content: &quot;avalon.tab.ajax.html&quot;, contentType: &quot;ajax&quot;},
+                            {content: &quot;line 2 - &lt;a href=\&quot;#\&quot; ms-click=\&quot;enable(4)\&quot;&gt;点击我激活动物tab!&lt;/a&gt;&quot;},
+                            {content: 'line 3 -  &lt;a href=&quot;#&quot; ms-click=&quot;add(peaple2)&quot;&gt;点击我添加一个不能删除的tab! &lt;/a&gt;'},
+                            {content: &quot;line 4&quot;}
+                        ]
+                    }
+
+                    vm.peaple = {
+                        title: &quot;人类&quot;
+                        , content: &quot;我是来搞笑的&quot;
+                    }
+
+                    vm.peaple2 = {
+                        title: &quot;人类&quot;
+                        , removable: false
+                        , content: &quot;我是来搞笑的&quot;
+                    }
+                    vm.$skipArray = [&quot;tab&quot;]
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+&lt;div ms-controller=&quot;test&quot;&gt;
+        &lt;h1&gt;传参配置数据 - mouseenter切换tab&lt;/h1&gt;
+        &lt;div ms-widget=&quot;tab&quot; data-tab-removable=&quot;true&quot;&gt;&lt;/div&gt;
+        
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+    </div>
+</body>
+</html>

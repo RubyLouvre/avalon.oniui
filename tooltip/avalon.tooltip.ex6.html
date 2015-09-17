@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>tooltip组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <style type="text/css">
+            div.ct{
+                padding: 40px 0;
+            }
+            a{
+                font-size: 13px;
+                margin-left: 20px;
+                display: inline-block;
+            }
+        </style>
+        <script>
+            var str = '请输入';
+            require(["tooltip/avalon.tooltip"], function() {
+                vmodel = avalon.define("test", function(vm) {
+                    vm.$ppOpt = {
+                        "contentGetter": function(elem) {
+                            if(elem.tagName.toLowerCase() == 'input' || elem.getAttribute("tp")) return str
+                        }
+                        , autohide: true
+                        , event: 'focus'
+                    }
+                    vm.$skipArray = ["tooltip"]
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body>
+<div ms-controller="test">
+        <h1>input元素获取焦点显示tip</h1>
+        <div class="ct">
+            <input type="text" ms-widget="tooltip,pp, $ppOpt" data-tooltip-delegate="false" data-tooltip-position="tr" data-tooltip-position-my="left bottom-10" data-tooltip-position-at="right-20 top" value="focus me"/>
+        </div>
+        <pre ms-skip class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;tooltip组件&lt;/title&gt;
+        &lt;meta charset=&quot;UTF-8&quot;&gt;
+        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;
+        &lt;script src=&quot;../avalon.js&quot;&gt;&lt;/script&gt;
+        
+        &lt;style type=&quot;text/css&quot;&gt;
+            body{
+                padding-bottom: 400px;
+            }
+            div.ct{
+                padding: 40px 0;
+            }
+            a{
+                font-size: 13px;
+                margin-left: 20px;
+                display: inline-block;
+            }
+        &lt;/style&gt;
+        &lt;script&gt;
+            var str = '请输入';
+            require([&quot;tooltip/avalon.tooltip&quot;], function() {
+                vmodel = avalon.define(&quot;test&quot;, function(vm) {
+                    vm.$ppOpt = {
+                        &quot;contentGetter&quot;: function(elem) {
+                            if(elem.tagName.toLowerCase() == 'input' || elem.getAttribute(&quot;tp&quot;)) return str
+                        }
+                        , autohide: true
+                        , event: 'focus'
+                    }
+                    vm.$skipArray = [&quot;tooltip&quot;]
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body class=&quot;oni-helper-reset&quot;&gt;
+&lt;div ms-controller=&quot;test&quot;&gt;
+        &lt;h1&gt;input元素获取焦点显示tip&lt;/h1&gt;
+        &lt;div class=&quot;ct&quot;&gt;
+            &lt;input type=&quot;text&quot; ms-widget=&quot;tooltip,pp, $ppOpt&quot; data-tooltip-delegate=&quot;false&quot; data-tooltip-position=&quot;tr&quot; data-tooltip-position-my=&quot;left bottom-10&quot; data-tooltip-position-at=&quot;right-20 top&quot; value=&quot;focus me&quot;/&gt;
+        &lt;/div&gt;
+        
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+    </div>
+</body>
+</html>

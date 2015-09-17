@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>OniUI</title>
+    <link type="text/css" rel="stylesheet" href="pages/index/styles/index.css"/>
+    <script src="avalon.js"></script>
+    <script src="highlight/shCore.js"></script>
+    <script src="pages/index/scripts/index.js"></script>
+</head>
+<body class="ms-controller" ms-controller="pages">
+
+<div class="oni-layout-header">
+    <div class="container">
+        <a href="#!/widgets" ms-click="switchNavTo('组件库')"><img class="oniicon" src="pages/index/imgs/oniicon.png"></a>
+
+        <div class="nav">
+            <ul class="nav-list">
+                <li class="nav-item" ms-repeat="navs" ms-class="active: $key == activeNav">
+                    <a class="nav-link"
+                       ms-href="{{$val}}"
+                       ms-click="switchNavTo($key)"
+                       >{{$key}}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="oni-layout-search-bar" ms-visible="activeNav !== '下载'">
+    <div class="search-section">
+        <div class="search-wrap">
+            <input class="search-input"
+                   type="text"
+                   ms-duplex="searchKey"
+                   ms-keyup="search()"
+                   ms-click="selectSearchKey()"
+                   ms-attr-placeholder="'搜索' + activeNav + '关键字'"/>
+            <span class="iconfont icon-search" ms-click="search()">&#xF067;</span>
+        </div>
+    </div>
+</div>
+
+<div class="oni-layout-main-container">
+    <!-- 设置id以获取该节点，在搜索时设置其scrollTop -->
+    <div id="listWrap" class="aside" ms-visible="activeNav !== '下载'" ms-include-src="listSrc"></div>
+    <div ms-view class="oni-layout-main"></div>
+</div>
+
+</body>
+</html>

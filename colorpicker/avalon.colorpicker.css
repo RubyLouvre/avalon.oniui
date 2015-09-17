@@ -1,0 +1,43 @@
+.oni-colorpicker{
+	position: relative;
+	cursor: crosshair;
+	width: 195px;
+	height: 195px;
+}
+	.oni-colorpicker-wheel{
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		background: url(http://source.qunarzz.com/general/oniui/colorpicker/wheel.png) no-repeat;
+		_background: none;
+		_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='img/wheel.png');
+	}
+	.oni-colorpicker-hue, .oni-colorpicker-overlay{
+		position: absolute;
+		width: 101px;
+		height: 101px;
+		top: 47px;
+		left: 47px;
+	}
+	.oni-colorpicker-overlay{
+		background: url(http://source.qunarzz.com/general/oniui/colorpicker/overlay.png) no-repeat;
+		_background: none;
+		_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='img/overlay.png');
+	}
+		.oni-colorpicker-marker{
+			position: absolute;
+			width: 17px;
+			height: 17px;
+			margin: -8px 0 0 -8px;
+			background: url(http://source.qunarzz.com/general/oniui/colorpicker/marker.png) no-repeat top left;
+			_background: none;
+			_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='img/marker.png');
+		}
+		.oni-colorpicker-overlay .oni-colorpicker-marker{
+			left: 70px;
+			top: 50px;
+		}
+
+.oni-colorpicker.oni-colorpicker-auto-hide{
+	position: absolute;
+}

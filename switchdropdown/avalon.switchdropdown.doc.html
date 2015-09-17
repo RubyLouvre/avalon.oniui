@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>开关型下拉框</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <meta name="descriptions" content="基于dropdown开发的开关类型的下拉框
+ ">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    
+    <body>
+        <div class="wrapper">
+            <h2>switchdropdown</h2>
+            <fieldset>
+                <legend>开关型下拉框</legend>
+                <p>基于dropdown开发的开关类型的下拉框</p>
+            </fieldset>
+            <h3 class="table-doc-title">使用说明</h3>
+            <table class="table-doc" border="1">
+                <colgroup>
+                    <col width="180">
+                        <col width="95">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>名字</th>
+                        <th>默认值</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="3">配置参数</td>
+                    </tr>
+                    <tr>
+                        <td>width</td>
+                        <td>100</td>
+                        <td>自定义宽度</td>
+                    </tr>
+                    <tr>
+                        <td>listWidth</td>
+                        <td>100</td>
+                        <td>自定义下拉列表的宽度</td>
+                    </tr>
+                    <tr>
+                        <td>height</td>
+                        <td>60</td>
+                        <td>下拉列表的高度</td>
+                    </tr>
+                    <tr>
+                        <td>enable</td>
+                        <td>true</td>
+                        <td>组件是否可用</td>
+                    </tr>
+                    <tr>
+                        <td>readOnly</td>
+                        <td>false</td>
+                        <td>组件是否只读</td>
+                    </tr>
+                    <tr>
+                        <td>data</td>
+                        <td>[]</td>
+                        <td>下拉列表显示的数据模型</td>
+                    </tr>
+                    <tr>
+                        <td>value</td>
+                        <td>""</td>
+                        <td>设置组件的初始值</td>
+                    </tr>
+                    <tr>
+                        <td>getTemplate()</td>
+                        <td></td>
+                        <td>模板函数,方便用户自定义模板
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th>参数名/返回值</th>
+                                        <th>类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>str</td>
+                                        <td>String</td>
+                                        <td>默认模板</td>
+                                    </tr>
+                                    <tr>
+                                        <td>opts</td>
+                                        <td>Object</td>
+                                        <td>VM</td>
+                                    </tr>
+                                    <tr>
+                                        <td>返回</td>
+                                        <td>String</td>
+                                        <td>新模板</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <ul>
+                <li>
+                    <a href="avalon.switchdropdown.ex1.html">用空select节点使用默认配置生成组件</a>
+                </li>
+                <li>
+                    <a href="avalon.switchdropdown.ex2.html">用html结构配置组件</a>
+                </li>
+                <li>
+                    <a href="avalon.switchdropdown.ex3.html">用options配置组件</a>
+                </li>
+                <li>
+                    <a href="avalon.switchdropdown.ex4.html">用options配置组件并设置duplex</a>
+                </li>
+            </ul>
+        </div>
+    </body>
+
+</html>

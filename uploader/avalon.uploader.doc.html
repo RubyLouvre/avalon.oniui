@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>uploader文档说明</title>
+        <script src="../highlight/shCore.js"></script>
+        <link rel="stylesheet" href="../style/avalon.doc.css">
+    </head>
+    
+    <body>
+        <div class="wrapper">
+            <h2>uploader</h2>
+            <fieldset>
+                <legend>uploader上传组件</legend>
+                <p>文件上传组件。目前只能上传图片，且功能较为简单。兼容至ie6。</p>
+                <p>目前具备的功能有：多图片选择，图片预览，图片压缩（基于宽高），跨域等。</p>
+            </fieldset>
+            <h3 class="table-doc-title">使用说明</h3>
+            <table class="table-doc">
+                <tbody>
+                    <tr>
+                        <th>名字</th>
+                        <th nowrap="">默认值</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td colspan="3" align="center">配置参数</td>
+                    </tr>
+                    <tr>
+                        <td>action</td>
+                        <td>无默认值</td>
+                        <td>上传目标页面（必须配置）</td>
+                    </tr>
+                    <tr>
+                        <td>browseButton</td>
+                        <td>无默认值</td>
+                        <td>上传按钮id （必须配置）。上传按钮必须为非自闭合标签，button标签也是不允许的。</td>
+                    </tr>
+                    <tr>
+                        <td>maxFileSize</td>
+                        <td>1048576 (1MB)</td>
+                        <td>单个文件最大大小</td>
+                    </tr>
+                    <tr>
+                        <td>maxFileCount</td>
+                        <td>100</td>
+                        <td>最大文件数目</td>
+                    </tr>
+                    <tr>
+                        <td>imgMaxWidth</td>
+                        <td>10000</td>
+                        <td>图片最大宽度。超过此设置图片将被压缩至此宽度。</td>
+                    </tr>
+                    <tr>
+                        <td>imgMaxHeight</td>
+                        <td>10000</td>
+                        <td>图片最大高度。超过此设置图片将被压缩至此高度。</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" align="center">回调函数</td>
+                    </tr>
+                    <tr>
+                        <td>onInit(vmodel, options, vmodels)</td>
+                        <td></td>
+                        <td>组件初始化后触发。vmodel：组件vm；options：组件配置项；vmodels：组件vm的所有祖先vm。</td>
+                    </tr>
+                    <tr>
+                        <td>onSuccess(files, data)</td>
+                        <td></td>
+                        <td>上传成功时触发。files：上传成功的文件数组；data：服务端返回数据。</td>
+                    </tr>
+                    <tr>
+                        <td>onSingleFailed(fileName)</td>
+                        <td></td>
+                        <td>单个文件上传失败时触发。fileName：文件名。</td>
+                    </tr>
+                    <tr>
+                        <td>onFileSizeErr(fileName)</td>
+                        <td></td>
+                        <td>单个文件大小超出设置时触发。fileName：文件名。</td>
+                    </tr>
+                    <tr>
+                        <td>onFileCountErr(availableNum, selectNum)</td>
+                        <td></td>
+                        <td>文件数目超出设置时触发。availableNum：剩余可选数量；selectNum：此次选择数量。</td>
+                    </tr>
+                    <tr>
+                        <td>onDeleteSuccess(data)</td>
+                        <td></td>
+                        <td>删除文件成功时触发。data：后端返回数据。</td>
+                    </tr>
+                    <tr>
+                        <td>onDeleteFailed(data)</td>
+                        <td></td>
+                        <td>删除文件失败时触发。data：后端返回数据。</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" align="center">暴露参数</td>
+                    </tr>
+                    <tr>
+                        <td>files</td>
+                        <td></td>
+                        <td>数组。数组成员：存放已上传文件对象。文件对象包括name，src，id等属性。</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" align="center">暴露方法</td>
+                    </tr>
+                    <tr>
+                        <td>deleteFile($index)</td>
+                        <td></td>
+                        <td>在files的循环中使用，用来绑定玩文件删除操作。</td>
+                    </tr>
+                </tbody>
+            </table>
+            <fieldset>
+                <legend>服务端接口说明</legend>
+                <ul>
+                    <li>
+                        <p>服务端程序可参考 post.php</p>
+                    </li>
+                    <li>
+                        <p>上传接口返回数据格式</p>
+                        <pre class="brush:html;gutter:false;">					{
+						"ret": 0,
+						"errcode": 0,
+						"errmsg": "success",
+						"ver": 1,
+						"data": {
+							"images": [{
+					"url": ".\/_file\/5428119d379a3",
+					"id": "5428119d379a3"
+							}]
+						}
+					}
+					</pre>
+                    </li>
+                    <li>
+                        <p>删除接口返回数据格式</p>
+                        <pre class="brush:html;gutter:false;">					{
+						"errcode": 0,
+						"errmsg": "success"
+					}
+					</pre>
+                    </li>
+                </ul>
+            </fieldset>
+            <fieldset>
+                <legend>示例</legend>
+                <p>因为需要服务程序，请自行配制php环境，然后下载源码运行本示例。</p>
+                <ul class="example-links">
+                    <li>
+                        <a href="avalon.uploader.ex1.html">概览</a>
+                    </li>
+                    <li>
+                        <a href="avalon.uploader.ex2.html">各种回调</a>
+                    </li>
+                </ul>
+            </fieldset>
+            <fieldset>
+                <legend>注意</legend>
+                <p>在初始化时，请不要使用
+                    <code>display: none</code>来隐藏上传按钮，这样会导致 flash 文件无法加载。</p>
+            </fieldset>
+            <fieldset>
+                <legend>日志</legend>
+                <ul>
+                    <li>
+                        <a href="avalon.uploader.log.html">版本及变动记录</a>
+                    </li>
+                </ul>
+            </fieldset>
+            <fieldset>
+                <legend>计划</legend>
+                <ul>
+                    <li>在高级浏览器时使用 html5 来实现。</li>
+                    <li>一个新的支持包括图片在内各种文件的上传组件正在开发中。</li>
+                </ul>
+            </fieldset>
+        </div>
+    </body>
+
+</html>

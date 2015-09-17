@@ -1,0 +1,55 @@
+<h3 id="ms-css">样式绑定(ms-css)</h3>
+<p>ms-css的用法为ms-css-样式名="样式值"，
+<p> 如ms-css-width="prop"(会自动补px)，ms-css-height="{{prop}}%",  ms-css-color="prop",
+    ms-css-background-color="prop",  ms-css-font-size="{{prop}}px"。</p>
+<p>注意:value不能加入CSS hack!</p>
+<pre class="brush:html;gutter:false;toolbar:false;">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/&gt;
+        &lt;script src="avalon.js"&gt;&lt;/script&gt;
+        &lt;script&gt;
+            avalon.define("c-ms-css", function(vm) {
+                vm.background = "red"
+                vm.$watch("background", function(v) {
+                    vm.background = v
+                });
+            })
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;div ms-controller="c-mss-css"&gt;
+            &lt;div style="width:200px; height:50px" ms-css-background="background"&gt;
+
+            &lt;/div&gt;
+            &lt;select ms-duplex="background"&gt;
+                &lt;option value="red"&gt;红&lt;/option&gt;
+                &lt;option value="yellow"&gt;黄&lt;/option&gt;
+                &lt;option value="green"&gt;绿&lt;/option&gt;
+            &lt;/select&gt;
+        &lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+<fildset>
+    <legend>ms-css</legend>
+    <div ms-controller="c-ms-css">
+        <div style="width:200px; height:50px" ms-css-background="background">
+
+        </div>
+        <select ms-duplex="background">
+            <option value="red">红</option>
+            <option value="yellow">黄</option>
+            <option value="green">绿</option>
+        </select>
+    </div>
+</fildset>
+<script>
+    avalon.define("c-ms-css", function(vm) {
+        vm.background = "red"
+        vm.$watch("background", function(v) {
+            vm.background = v
+        });
+    })
+</script>

@@ -1,0 +1,25 @@
+@charset "UTF-8";
+/*
+这是每个都组件都应该引用的部分
+*/
+.oni-layout {
+  position: relative; }
+  .oni-layout .oni-layout-north-resizer, .oni-layout .oni-layout-south-resizer {
+    cursor: row-resize; }
+  .oni-layout .oni-layout-west-resizer, .oni-layout .oni-layout-east-resizer {
+    cursor: e-resize; }
+  .oni-layout .oni-layout-region {
+    display: inline-block;
+    position: absolute;
+    border-style: solid;
+    border-color: #95B8E7;
+    overflow: hidden; }
+
+.oni-layout-resizer {
+  position: absolute;
+  z-index: 10;
+  background-color: #E6EEF8;
+  opacity: 0.5;
+  overflow: hidden; }
+
+/*# sourceMappingURL=avalon.layout.css.map */

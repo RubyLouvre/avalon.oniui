@@ -1,0 +1,23 @@
+<div class="oni-dialog-layout"></div>
+MS_OPTION_WIDGET
+<div ms-widget="dialog,MS_OPTION_ID,MS_OPTION_OPTS" ms-css-position="position">MS_OPTION_DIALOG_CONTENT</div>
+MS_OPTION_INNERWRAPPER
+<div class="oni-dialog-inner"></div>
+MS_OPTION_HEADER
+<div class="oni-dialog-header">
+    <div class="oni-dialog-close" ms-click="_close" ms-if="showClose">
+        <i class="oni-icon oni-icon-times">&#xf003;</i>
+    </div>
+    <div class="oni-dialog-title">{{ title|html }}</div>
+</div>
+MS_OPTION_CONTENT
+<div class="oni-dialog-content"></div>
+MS_OPTION_FOOTER
+<div class="oni-dialog-footer oni-helper-clearfix">
+    <div class="oni-dialog-btns">
+        <button ms-widget="button" data-button-color="success" ms-hover="oni-state-hover" ms-click="_confirm">{{confirmName}}</button>
+        <button ms-widget="button" ms-if="type =='confirm'" ms-click="_cancel">{{cancelName}}</button>
+    </div>
+</div>
+MS_OPTION_LAYOUT_SIMULATE
+<div></div>

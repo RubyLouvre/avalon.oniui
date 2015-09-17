@@ -1,0 +1,53 @@
+<div class="oni-pager" onselectstart="return false;" unselectable="on" ms-visible="!!totalPages">
+    <span class="oni-pager-prev"
+          ms-class="oni-state-disabled:firstPage==1"
+          ms-if="isShowPrev()"
+          ms-attr-title="getTitle('prev')" 
+          ms-click="jumpPage($event,'prev')" 
+          ms-text="prevText"
+          ></span>
+    <span class="oni-pager-item"
+          ms-visible="firstPage!==1" 
+          ms-attr-title="getTitle('first', currentPage)" 
+          ms-click="jumpPage($event,'first')" 
+          ms-class-oni-state-active="currentPage == 1"
+          ms-hover="oni-state-hover">1</span>
+    <span class='oni-pager-omit'
+          ms-if="showFirstOmit" 
+          ms-text="ellipseText"
+          ></span>
+    <span  class="oni-pager-item" 
+           ms-repeat="pages" 
+           ms-attr-title="getTitle(el, currentPage)"
+           ms-hover="oni-state-hover"
+           ms-click="jumpPage($event,el)"
+           ms-class-oni-state-active="el == currentPage" 
+           ms-text="el"
+           ></span>
+    <span class="oni-pager-omit"
+          ms-if="showLastOmit" 
+          ms-text="ellipseText"
+          ></span>
+    <span class="oni-pager-item "
+          ms-visible="lastPage!==totalPages" 
+          ms-attr-title="getTitle('last', currentPage, totalPages)" 
+          ms-hover="oni-state-hover" 
+          ms-click="jumpPage($event,'last')"  
+          ms-text="totalPages"
+          ></span>
+    <span class="oni-pager-next"
+          ms-if="isShowNext()" 
+          ms-attr-title="getTitle('next')"
+          ms-click="jumpPage($event,'next')" 
+          ms-class="oni-state-disabled:lastPage==totalPages"
+          ms-text="nextText"
+          ></span>
+    <div class="oni-pager-jump" ms-if="showJumper">
+        <span class="oni-pager-text" ms-html="_getTotalPages(totalPages)"></span>
+        <div class="oni-pager-textbox-wrapper">
+            <input class="oni-pager-textbox" ms-duplex="_currentPage" data-duplex-event="change" ms-keyup="changeCurrentPage">
+        </div>
+        <span class="oni-pager-text">{{regional.pageText}}</span>
+        <button class="oni-pager-button" ms-click="changeCurrentPage" >{{regional.confirmText}}</button>
+    </div>
+</div>

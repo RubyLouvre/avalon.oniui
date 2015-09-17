@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Nested Layout demo</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+        <script src="../highlight/shCore.js"></script>
+        <script type="text/javascript" src="../avalon.js"></script>
+    </head>
+    <body ms-controller="demo" style="padding: 50px;">
+        <div style="width:700px; height: 500px; padding-top:10px;">
+            <div ms-widget="layout,layoutVM,$layoutVMOptions" class="container">
+                <div ms-layout-dock="centre">
+                <div ms-widget="layout,layoutVM2,$layoutVMOptions2"></div></div>
+            </div>
+        </div>
+        <script>
+            require(["./layout/avalon.layout","./button/avalon.button"], function() {
+                avalon.define("demo", function(vm) {
+                    vm.$layoutVMOptions = {
+                        northRegion: {
+                            size: 100,
+                            regionClass: "north"
+                        },
+                        southRegion: {
+                            size: 110,
+                            resizable: true
+                        },
+                        eastRegion: {
+                            size: 120,
+                            resizable: true
+                        },
+                        westRegion: {
+                            size: 130,
+                            resizable: true
+                        },
+                        stretchMax: true,
+                        resizerSize: 5,
+                        regionBorderWidth: 1
+                    };
+                    vm.$layoutVMOptions2 = {
+                        northRegion: {
+                            size: 20,
+                            resizable: true,
+                            regionClass: "north"
+                        },
+                        southRegion: {
+                            size: 21,
+                            resizable: true
+                        },
+                        eastRegion: {
+                            size: 22,
+                            resizable: true
+                        },
+                        westRegion: {
+                            size: 23,
+                            resizable: true
+                        },
+                        stretchMax: true,
+                        resizerSize: 2,
+                        regionBorderWidth: 1
+                    };
+                })
+                avalon.scan()
+            })
+        </script>
+
+        <pre class="brush:html;gutter:false;">
+            &lt;!DOCTYPE html&gt;
+            &lt;html&gt;
+                &lt;head&gt;
+                    &lt;title&gt;Nested Layout demo&lt;/title&gt;
+                    &lt;meta charset="UTF-8"&gt;
+                    &lt;meta name="viewport" content="width=device-width"&gt;
+                    &lt;link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/&gt;
+                    &lt;link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/&gt;
+                    &lt;script src="../highlight/shCore.js"&gt;&lt;/script&gt;
+                    &lt;script type="text/javascript" src="../avalon.js"&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body ms-controller="demo" style="padding: 50px;"&gt;
+                    &lt;div style="width:700px; height: 500px; padding-top:10px;"&gt;
+                        &lt;div ms-widget="layout,layoutVM,$layoutVMOptions" class="container"&gt;
+                            &lt;div ms-layout-dock="centre"&gt;
+                            &lt;div ms-widget="layout,layoutVM2,$layoutVMOptions2"&gt;&lt;/div&gt;&lt;/div&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;script&gt;
+                        require(["./layout/avalon.layout","./button/avalon.button"], function() &#123;
+                            avalon.define("demo", function(vm) &#123;
+                                vm.$layoutVMOptions = &#123;
+                                    northRegion: &#123;
+                                        size: 100,
+                                        regionClass: "north"
+                                    &#125;,
+                                    southRegion: &#123;
+                                        size: 110,
+                                        resizable: true
+                                    &#125;,
+                                    eastRegion: &#123;
+                                        size: 120,
+                                        resizable: true
+                                    &#125;,
+                                    westRegion: &#123;
+                                        size: 130,
+                                        resizable: true
+                                    &#125;,
+                                    stretchMax: true,
+                                    resizerSize: 5,
+                                    regionBorderWidth: 1
+                                &#125;;
+                                vm.$layoutVMOptions2 = &#123;
+                                    northRegion: &#123;
+                                        size: 20,
+                                        resizable: true,
+                                        regionClass: "north"
+                                    &#125;,
+                                    southRegion: &#123;
+                                        size: 21,
+                                        resizable: true
+                                    &#125;,
+                                    eastRegion: &#123;
+                                        size: 22,
+                                        resizable: true
+                                    &#125;,
+                                    westRegion: &#123;
+                                        size: 23,
+                                        resizable: true
+                                    &#125;,
+                                    stretchMax: true,
+                                    resizerSize: 2,
+                                    regionBorderWidth: 1
+                                &#125;;
+                            &#125;)
+                            avalon.scan()
+                        &#125;)
+                    &lt;/script&gt;
+                &lt;/body&gt;
+            &lt;/html&gt;
+
+        </pre>
+    </body>
+</html>

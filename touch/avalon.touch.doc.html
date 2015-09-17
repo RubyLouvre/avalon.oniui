@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>touch组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <meta name="descriptions" content=" 支持对手机浏览器下touch事件、手势
+tap 拍击
+doubletap 双击
+hold 长按
+swipe 单指滑动 
+swipeleft 单指向左滑动 - 必定出发swipe
+swiperight 单指向右滑动 - 必定出发swipe
+swipeup 单指向上滑动 - 必定出发swipe
+swipedown 单指向下滑动 - 必定出发swipe
+avalon.bind(ele, &quot;swipe*&quot;, ">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    
+    <body>
+        <div class="wrapper">
+            <h2>touch</h2>
+            <fieldset>
+                <legend>touch组件</legend>
+                <p>支持对手机浏览器下touch事件、手势</p>tap 拍击
+                <br>doubletap 双击
+                <br>hold 长按
+                <br>swipe 单指滑动
+                <br>swipeleft 单指向左滑动 - 必定出发swipe
+                <br>swiperight 单指向右滑动 - 必定出发swipe
+                <br>swipeup 单指向上滑动 - 必定出发swipe
+                <br>swipedown 单指向下滑动 - 必定出发swipe
+                <br>
+                <pre class="brush:javascript;gutter:false;toolbar:false;">avalon.bind(ele, "swipe*", function(e) {
+    e.detail = {
+        direction: left || right || up || down
+    }
+})</pre>pinch 双指缩放
+                <br>pinchin 双指捏合 - 必定出发pinch
+                <br>pinchout 双指展开 - 必定出发pinch
+                <br>
+                <pre class="brush:javascript;gutter:false;toolbar:false;">avalon.bind(ele, "pinch*", function(e) {
+    e.detail = {
+        direction: in || out,
+        scale: 缩放比
+    }
+})</pre>squeeze 三指以上指捏合
+                <br>splay 三指以上展开
+                <br>rotate 双指旋转
+                <br>rotatecw 顺时针旋转 - 必定出发rotate
+                <br>rotateccw 逆时针旋转 - 必定出发rotate
+                <br>
+                <pre class="brush:javascript;gutter:false;toolbar:false;">avalon.bind(ele, "rotate*", function(e) {
+    e.detail = {
+        direction: cw || ccw,
+        deflection: 旋转角度数， 单位一度
+    }
+})</pre>
+                <p>支持对手机浏览器下shake事件绑定的支持</p>
+                <pre class="brush:javascript;gutter:false;toolbar:false;">avalon.bind(ele, "shake", function(e) {
+    e.direction = left || right || forward || back || up || down || 以及组合， 但不准确
+})</pre>
+                <p>ms-iscroll使用说明</p>
+                <pre class="brush:html;gutter:false;toolbar:false;">&lt;div ms-controller="test"&gt;
+    &lt;div ms-iscroll="$,$opt" class="gaoxiao"&gt;
+        &lt;ul&gt;
+            &lt;li class="g" ms-repeat-item="data" ms-css-margin-top="$index === 0 ? '0' : '-75px'"&gt;{{item.title}}&lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/div&gt;
+&lt;/div&gt;当没有找到直系ms-repeat元素的时候，则会创建普通的iscroll
+&lt;script&gt;
+    avalon.define("test", function(vm) {
+    vm.data = []  // 成对出现才行
+    vm.data$ = [] // 这个必须有，跟repeat或者each对象成对出现
+    vm.$options = {
+    lineHeight: 25, // repeat元素的行高
+    showLines: 10, // 显示的数量,
+    getData: avalon.noop // 获取数据的函数
+    }
+    })
+&lt;/script&gt;*</pre>
+            </fieldset>
+            <h3 class="table-doc-title">使用说明</h3>
+            <table class="table-doc" border="1">
+                <colgroup>
+                    <col width="180">
+                        <col width="95">
+                            <col width="120">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>名字</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                        <th>说明</th>
+                    </tr>
+                </tbody>
+            </table>
+            <ul class="example-links">
+                <li>
+                    <a href="avalon.touch.ex.html">touch功能全览</a>
+                </li>
+                <li>
+                    <a href="avalon.shake.ex.html">shake摇一摇</a>
+                </li>
+                <li>
+                    <a href="avalon.iscroll.ex.html">iscroll无限下拉效果</a>
+                </li>
+                <li>
+                    <a href="avalon.iscroll.ex2.html">iscroll普通效果</a>
+                </li>
+            </ul>
+        </div>
+    </body>
+
+</html>

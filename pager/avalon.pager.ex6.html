@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>分页栏组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js">
+
+        </script>
+        <script src="../highlight/shCore.js">
+
+        </script>
+        <script>
+            require(["pager/avalon.pager"], function() {
+                var pager
+                avalon.define("test", function(vm) {
+                    vm.pager = {
+                        alwaysShowNext: true,
+                        alwaysShowPrev: true,
+                        onInit: function(p) {
+                            pager = p
+                        },
+                        onJump: function(e, data) {
+                           location.href = "#page=" + data.currentPage
+                        }
+                    }
+                    vm.$skipArray = ["pager"]
+                })
+                setTimeout(function() {
+                    pager.currentPage = 4
+                    setTimeout(function() {
+                        pager.currentPage = 3
+                    }, 2000)
+                }, 3000)
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body ms-controller="test">
+        <h1>总是显示上一页与下一页按钮(与例2对照看)</h1>
+        <div ms-widget="pager"></div>
+        <pre class="brush:html;gutter:false;toolbar:false">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;分页栏组件&lt;/title&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width"&gt;
+        &lt;script src="../avalon.js"&gt;
+
+        &lt;/script&gt;
+        &lt;script src="../highlight/shCore.js"&gt;
+
+        &lt;/script&gt;
+        &lt;script&gt;
+            require(["pager/avalon.pager"], function() {
+                avalon.define("test", function(vm) {
+                    vm.pager = {
+                        alwaysShowNext: true,
+                        alwaysShowPrev: true
+                    }
+                    vm.$skipArray = ["pager"]
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body ms-controller="test"&gt;
+        &lt;h1&gt;总是显示上一页与下一页按钮&lt;/h1&gt;
+        &lt;div ms-widget="pager"&gt;&lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+           
+        </pre>
+    </body>
+</html>

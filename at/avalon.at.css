@@ -1,0 +1,26 @@
+
+.oni-at {
+  font: normal 12px/1.5 tahoma, arial, 'Hiragino Sans GB', '\5b8b\4f53', sans-serif; }
+
+/*
+这是每个都组件都应该引用的部分
+*/
+.oni-at {
+  min-width: 150px;
+  width: auto !important;
+  width: 150px;
+  background: #fff;
+  border: 2px solid #d4d4d4; }
+  .oni-at .oni-at-popup {
+    list-style: none;
+    margin: 0px;
+    padding: 0px; }
+  .oni-at .oni-at-item {
+    margin: 0px;
+    padding: 0px;
+    height: 24px;
+    line-height: 24px;
+    text-indent: 5px; }
+    .oni-at .oni-at-item.oni-state-hover {
+      background: #f8f8f8;
+      color: black; }

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>doublelist组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <script>
+            var data = [
+                            {name: "Lily", value: 1},
+                            {name: "Lucy", value: 2},
+                            {name: "Tom", value: 3},
+                            {name: "Harry", value: 4},
+                            {name: "Jim", value: 5}
+                        ];
+                        
+            var i = 6
+            while(i < 200) {
+                data.push({
+                    name: "Hello Sang" + i,
+                    value: i
+                })
+                i++
+            }
+            require(["doublelist/avalon.doublelist"], function() {
+                avalon.define("test", function(vm) {
+                    vm.doublelist = {
+                        data: data,
+                        select: [5],
+                        change: function(newValue, oldValue, vmodel) {
+                            // avalon.log(vmodel.select)
+                        }
+                    }
+                    vm.select = []
+                    vm.$skipArray = ["doublelist"]
+                })
+                avalon.vmodels["test"]["select"].$watch("length", function(n,o) {
+                    avalon.log(avalon.vmodels["test"]["select"].join(","))
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body>
+<div ms-controller="test">
+        <h2>doublelist-显示已选中条目，不限制选中条数</h2>
+        <div ms-widget="doublelist,nimei" ms-duplex="select"></div>
+        <pre ms-skip class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;doublelist组件&lt;/title&gt;
+        &lt;meta charset=&quot;UTF-8&quot;&gt;
+        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;
+        &lt;script src=&quot;../avalon.js&quot;&gt;&lt;/script&gt;
+        
+        &lt;script&gt;
+            var data = [
+                            {name: &quot;Lily&quot;, value: 1},
+                            {name: &quot;Lucy&quot;, value: 2},
+                            {name: &quot;Tom&quot;, value: 3},
+                            {name: &quot;Harry&quot;, value: 4},
+                            {name: &quot;Jim&quot;, value: 5}
+                        ];
+                        
+            var i = 6
+            while(i &lt; 200) {
+                data.push({
+                    name: &quot;Hello Sang&quot; + i,
+                    value: i
+                })
+                i++
+            }
+            require([&quot;doublelist/avalon.doublelist&quot;], function() {
+                avalon.define(&quot;test&quot;, function(vm) {
+                    vm.doublelist = {
+                        data: data,
+                        select: [5],
+                        change: function(newValue, oldValue, vmodel) {
+                            // avalon.log(vmodel.select)
+                        }
+                    }
+                    vm.select = []
+                    vm.$skipArray = [&quot;doublelist&quot;]
+                })
+                avalon.vmodels[&quot;test&quot;][&quot;select&quot;].$watch(&quot;length&quot;, function(n,o) {
+                    avalon.log(avalon.vmodels[&quot;test&quot;][&quot;select&quot;].join(&quot;,&quot;))
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+&lt;div ms-controller=&quot;test&quot;&gt;
+        &lt;h2&gt;doublelist-显示已选中条目，不限制选中条数&lt;/h2&gt;
+        &lt;div ms-widget=&quot;doublelist,nimei&quot; ms-duplex=&quot;select&quot;&gt;&lt;/div&gt;
+        
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+    </div>
+</body>
+</html>

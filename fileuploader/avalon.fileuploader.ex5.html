@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>uploader demo Ajax数据参数的配置</title>
+	<script src="../avalon.js"></script>
+	<link rel="stylesheet" href="../style/avalon.doc.css"/>
+	<link rel="stylesheet" href="avalon.fileuploader.ex.css"/>
+</head>
+<body ms-controller="demo">
+	<h1><a name="requestparamnameconfig">Ajax数据参数的配置</a></h1>
+	<p>uploader在发送文件数据Post请求时，包含4到6个最基本的参数。vm的requiredParamsConfig内包含数个参数名配置，分别对应文件上传POST请求所包含的必须的几个参数的名称：</p>
+	<p>1）blobParamName：配置文件数据的参数名。默认值为“blob”。</p>
+	<p>2）fileTokenParamName：在开启文件分块时，作为服务器识别分块数据归属的唯一标识符。默认值为“fileKey”。仅在分块上传时生效。</p>
+	<p>3）totalChunkParamName：标识文件一共包含多少个分块，未开始分块上传时，该参数对应的值总是1。默认值是“total”。</p>
+	<p>4）chunkIndexParamName：分块数据对应的index，从0开始。默认值是“chunk”</p>
+	<p class='end'>5）fileNameParamName：文件名参数名。默认值是“fileName”。</p>
+	<!-- <p class='end'>6）blobMd5ParamName：文件名参数名。默认值是“md5”。仅在开启<a href="avalon.fileuploader.ex4.html#chunk">MD5验证</a>时生效。</p> -->
+    <div ms-widget="fileuploader,demoUploader1,$uploaderOptions1"></div>
+
+	<h1><a name="requestaddparam">为Ajax请求加入自定义的Param和数据</a></h1>
+	<p>uploader在发送请求时，会调用vm的madeRequestParams函数。此函数用来配置除了基本的4-6个参数外的额外的参数项，只需要在此函数返回一个object，uploader将会把object的键值对发送给服务器。madeRequestParams包含两个输入参数file和blob，包含了一些文件的基本信息。</p>
+	<p class='end'>本例中附加了文件的最后修改时间、blob在文件流中的offset以及blob的size。</p>
+    <div ms-widget="fileuploader,demoUploader2,$uploaderOptions2"></div>
+
+	<h1><a name="requestaddparam">开启/关闭失败重试功能</a></h1>
+	<p>uploader在上传文件分块时，失败后会进行重试，默认设置是尝试上传3次，全部失败后才会将文件置成“上传失败”状态。要关闭这个功能，可以将serverConfig.blobRetryTimes设为1；想要增加重试次数，也可以修改此配置。本例展示了如何关闭重试功能。</p>
+	<p class='end'>本例中附加了文件的最后修改时间、blob在文件流中的offset以及blob的size。</p>
+    <div ms-widget="fileuploader,demoUploader3,$uploaderOptions3"></div>
+
+	<h1><a name="requestaddparam">文件上传的服务器响应侦听</a></h1>
+    <div ms-widget="fileuploader,demoUploader4,$uploaderOptions4"></div>
+	<script>
+		require(["./fileuploader/avalon.fileuploader","domReady!"], function($$){
+			var model = $$.define("demo", function(vm){
+				var basicOptions = {
+		            addButtonText: "添加文件",
+		            uploadButtonText: "开始上传",
+		            serverConfig: {
+		                url: "../../Handler1.ashx",
+		                userName: undefined,
+		                password: undefined
+		            },
+					onFileOverSize: function (fileObj) {
+						alert(fileObj.name+"超出了文件尺寸限制")
+					},
+					onSameFileAdded: function () {
+						alert("不能添加相同的文件");
+					},
+					onFilePoolOverSize: function (fileObj, poolSize) {
+						alert("文件缓存池达已满，不能继续添加文件。")
+					}
+				};
+
+				vm.$uploaderOptions1 = $$.mix({
+					requiredParamsConfig: {
+						blobParamName: "data",
+						fileTokenParamName: "fileIndicator",
+						totalChunkParamName: "chunkAmount",
+						chunkIndexParamName: "chunkIndex",
+						fileNameParamName: "name"
+						// blobMd5ParamName: "dataMd53"
+					},
+					chunked: true
+					// enableMd5Validation: true
+				}, basicOptions);
+
+
+				vm.$uploaderOptions2 = $$.mix({
+					madeRequestParams: function (file, blob) {
+						return {
+							lastModifiedTime: file.lastModified,
+							blobOffset: blob.offset,
+							blobSize: blob.size
+						}
+					}
+				}, basicOptions);
+
+				vm.$uploaderOptions3 = {
+		            addButtonText: "添加文件",
+		            uploadButtonText: "开始上传",
+		            serverConfig: {
+		                url: "../../Handler1.ashx",
+		                userName: undefined,
+		                password: undefined,
+		                blobRetryTimes: 1
+		            },
+					onFileOverSize: function (fileObj) {
+						alert(fileObj.name+"超出了文件尺寸限制")
+					},
+					onSameFileAdded: function () {
+						alert("不能添加相同的文件");
+					},
+					onFilePoolOverSize: function (fileObj, poolSize) {
+						alert("文件缓存池达已满，不能继续添加文件。")
+					}
+				};
+
+				vm.$uploaderOptions4 = $$.mix({
+					onFileRequestResponsed: function (fileObj, textStatus, responseText) {
+						console.log("收到了服务器的数据：", textStatus, ". ", responseText)
+					}
+				}, basicOptions);
+
+			});
+			$$.scan();
+		});
+	</script>
+</body>
+</html>
+

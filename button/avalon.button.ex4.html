@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>button demo 4</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+        <script src="../highlight/shCore.js"></script>
+        <script type="text/javascript" src="../avalon.js"></script>
+        <style>
+            body {
+                padding-bottom: 200px;
+            }
+            fieldset > div {
+                margin-bottom: 20px;
+            }
+            .inline {
+                display: inline-block;
+                *display: inline;
+                zoom: 1;
+                margin-right: 30px;
+                vertical-align: bottom;
+            }
+        </style>
+    </head>
+    <body ms-controller="demo">
+        <fieldset>
+            <legend>button group by ms-widget="buttonset"</legend>
+            <div>
+                <div ms-widget="buttonset" class="inline">
+                    <div href="#" ms-widget="button">button 1</div>
+                    <div href="#" ms-widget="button">button 2</div>
+                    <div href="#" ms-widget="button">button 3</div>
+                </div>
+                <div ms-widget="buttonset" class="inline">
+                    <div href="#" ms-widget="button" data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf086;"></div>
+                    <div href="#" ms-widget="button" data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf084;"></div>
+                    <div href="#" ms-widget="button" data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf085;"></div>
+                </div>
+                <div ms-widget="buttonset" class="inline">
+                    <div href="#" ms-widget="button" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf086;">暂停</div>
+                    <div href="#" ms-widget="button" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf084;">播放</div>
+                    <div href="#" ms-widget="button" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf085;">拖曳</div>
+                </div>
+                <div ms-widget="buttonset" class="inline">
+                    <div href="#" ms-widget="button" data-button-type="labeledIcon" data-button-icon-position="right" data-button-icon="\&\#xf086;">暂停</div>
+                    <div href="#" ms-widget="button" data-button-type="labeledIcon" data-button-icon-position="right" data-button-icon="\&\#xf084;">播放</div>
+                    <div href="#" ms-widget="button" data-button-type="labeledIcon" data-button-icon-position="right" data-button-icon="\&\#xf085;">拖曳</div>
+                </div>
+            </div>
+            <div>
+                <div ms-widget="buttonset" class="inline">
+                    <div href="#" ms-widget="button" data-button-color="info" data-button-size="small">button 1</div>
+                    <div href="#" ms-widget="button" data-button-color="info" data-button-size="small">button 2</div>
+                    <div href="#" ms-widget="button" data-button-color="info" data-button-size="small">button 3</div>
+                </div>
+                <div ms-widget="buttonset" class="inline">
+                    <div href="#" ms-widget="button" data-button-color="danger" data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf086;"></div>
+                    <div href="#" ms-widget="button" data-button-color="danger"  data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf084;"></div>
+                    <div href="#" ms-widget="button" data-button-color="danger"  data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf085;"></div>
+                </div>
+                <div ms-widget="buttonset" class="inline">
+                    <div href="#" ms-widget="button" data-button-color="success" data-button-size="big" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf086;">暂停</div>
+                    <div href="#" ms-widget="button" data-button-color="success" data-button-size="big" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf084;">播放</div>
+                    <div href="#" ms-widget="button" data-button-color="success" data-button-size="big" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf085;">拖曳</div>
+                </div>
+                <div ms-widget="buttonset" class="inline">
+                    <div href="#" ms-widget="button" data-button-color="warning" data-button-size="large" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf086;">暂停</div>
+                    <div href="#" ms-widget="button" data-button-color="warning" data-button-size="large" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf084;">播放</div>
+                    <div href="#" ms-widget="button" data-button-color="warning" data-button-size="large" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf085;">拖曳</div>
+                </div>
+            </div>
+            <div>
+                <div ms-widget="buttonset" data-button-direction="vertical" class="inline">
+                    <div href="#" ms-widget="button" data-button-color="danger">button 1</div>
+                    <div href="#" ms-widget="button" data-button-color="danger">button 2</div>
+                    <div href="#" ms-widget="button" data-button-color="danger">button 3</div>
+                </div>
+                <div ms-widget="buttonset" class="inline" data-buttonset-direction="vertical" data-buttonset-width="50">
+                    <div href="#" ms-widget="button" data-button-color="info" data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf086;"></div>
+                    <div href="#" ms-widget="button" data-button-color="info"  data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf084;"></div>
+                    <div href="#" ms-widget="button" data-button-color="info"  data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf085;"></div>
+                </div>
+                <div ms-widget="buttonset" data-buttonset-direction="vertical" class="inline">
+                    <div href="#" ms-widget="button" data-button-color="warning" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf086;">暂停</div>
+                    <div href="#" ms-widget="button" data-button-color="warning" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf084;">播放</div>
+                    <div href="#" ms-widget="button" data-button-color="warning" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf085;">拖曳</div>
+                </div>
+                <div ms-widget="buttonset" data-buttonset-direction="vertical" data-buttonset-corner="false" class="inline">
+                    <div href="#" ms-widget="button" data-button-color="success" data-button-size="large" data-button-type="labeledIcon" data-button-icon-position="right" data-button-icon="\&\#xf086;" id="test">暂停</div>
+                    <div href="#" ms-widget="button" data-button-color="success" data-button-size="large" data-button-type="labeledIcon" data-button-icon-position="right" data-button-icon="\&\#xf084;">播放</div>
+                    <div href="#" ms-widget="button" data-button-color="success" data-button-size="large" data-button-type="labeledIcon" data-button-icon-position="right" data-button-icon="\&\#xf085;">拖曳</div>
+                </div>
+            </div>
+        </fieldset>
+        <script>
+            require(["./button/avalon.button"], function() {
+                avalon.define("demo", function(vm) {
+                    
+                })
+                avalon.scan()
+            })
+        </script>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;button demo 4&lt;/title&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width"&gt;
+        &lt;link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/&gt;
+        &lt;link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/&gt;
+        &lt;script src="../highlight/shCore.js"&gt;&lt;/script&gt;
+        &lt;script type="text/javascript" src="../avalon.js"&gt;&lt;/script&gt;
+        &lt;style&gt;
+            body {
+                padding-bottom: 200px;
+            }
+            fieldset &gt; div {
+                margin-bottom: 20px;
+            }
+            .inline {
+                display: inline-block;
+                margin-right: 30px;
+                vertical-align: bottom;
+            }
+        &lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body ms-controller="demo"&gt;
+        &lt;fieldset&gt;
+            &lt;legend&gt;button group by ms-widget="buttonset"&lt;/legend&gt;
+            &lt;div&gt;
+                &lt;div ms-widget="buttonset" class="inline"&gt;
+                    &lt;a href="#" ms-widget="button"&gt;button 1&lt;/a&gt;
+                    &lt;a href="#" ms-widget="button"&gt;button 2&lt;/a&gt;
+                    &lt;a href="#" ms-widget="button"&gt;button 3&lt;/a&gt;
+                &lt;/div&gt;
+                &lt;div ms-widget="buttonset" class="inline"&gt;
+                    &lt;a href="#" ms-widget="button" data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf086;"&gt;&lt;/a&gt;
+                    &lt;a href="#" ms-widget="button" data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf084;"&gt;&lt;/a&gt;
+                    &lt;a href="#" ms-widget="button" data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf085;"&gt;&lt;/a&gt;
+                &lt;/div&gt;
+                &lt;div ms-widget="buttonset" class="inline"&gt;
+                    &lt;a href="#" ms-widget="button" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf086;"&gt;暂停&lt;/a&gt;
+                    &lt;a href="#" ms-widget="button" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf084;"&gt;播放&lt;/a&gt;
+                    &lt;a href="#" ms-widget="button" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf085;"&gt;拖曳&lt;/a&gt;
+                &lt;/div&gt;
+                &lt;div ms-widget="buttonset" class="inline"&gt;
+                    &lt;a href="#" ms-widget="button" data-button-type="labeledIcon" data-button-icon-position="right" data-button-icon="\&\#xf086;"&gt;暂停&lt;/a&gt;
+                    &lt;a href="#" ms-widget="button" data-button-type="labeledIcon" data-button-icon-position="right" data-button-icon="\&\#xf084;"&gt;播放&lt;/a&gt;
+                    &lt;a href="#" ms-widget="button" data-button-type="labeledIcon" data-button-icon-position="right" data-button-icon="\&\#xf085;"&gt;拖曳&lt;/a&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div&gt;
+                &lt;div ms-widget="buttonset" class="inline"&gt;
+                    &lt;a href="#" ms-widget="button" data-button-color="info" data-button-size="small"&gt;button 1&lt;/a&gt;
+                    &lt;a href="#" ms-widget="button" data-button-color="info" data-button-size="small"&gt;button 2&lt;/a&gt;
+                    &lt;a href="#" ms-widget="button" data-button-color="info" data-button-size="small"&gt;button 3&lt;/a&gt;
+                &lt;/div&gt;
+                &lt;div ms-widget="buttonset" class="inline"&gt;
+                    &lt;a href="#" ms-widget="button" data-button-color="danger" data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf086;"&gt;&lt;/a&gt;
+                    &lt;a href="#" ms-widget="button" data-button-color="danger"  data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf084;"&gt;&lt;/a&gt;
+                    &lt;a href="#" ms-widget="button" data-button-color="danger"  data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf085;"&gt;&lt;/a&gt;
+                &lt;/div&gt;
+                &lt;div ms-widget="buttonset" class="inline"&gt;
+                    &lt;a href="#" ms-widget="button" data-button-color="success" data-button-size="big" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf086;"&gt;暂停&lt;/a&gt;
+                    &lt;a href="#" ms-widget="button" data-button-color="success" data-button-size="big" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf084;"&gt;播放&lt;/a&gt;
+                    &lt;a href="#" ms-widget="button" data-button-color="success" data-button-size="big" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf085;"&gt;拖曳&lt;/a&gt;
+                &lt;/div&gt;
+                &lt;div ms-widget="buttonset" class="inline"&gt;
+                    &lt;a href="#" ms-widget="button" data-button-color="warning" data-button-size="large" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf086;"&gt;暂停&lt;/a&gt;
+                    &lt;a href="#" ms-widget="button" data-button-color="warning" data-button-size="large" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf084;"&gt;播放&lt;/a&gt;
+                    &lt;a href="#" ms-widget="button" data-button-color="warning" data-button-size="large" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf085;"&gt;拖曳&lt;/a&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div&gt;
+                &lt;div ms-widget="buttonset" data-button-direction="vertical" class="inline"&gt;
+                    &lt;a href="#" ms-widget="button" data-button-color="danger"&gt;button 1&lt;/a&gt;
+                    &lt;a href="#" ms-widget="button" data-button-color="danger"&gt;button 2&lt;/a&gt;
+                    &lt;a href="#" ms-widget="button" data-button-color="danger"&gt;button 3&lt;/a&gt;
+                &lt;/div&gt;
+                &lt;div ms-widget="buttonset" class="inline" data-buttonset-direction="vertical" data-buttonset-width="50"&gt;
+                    &lt;a href="#" ms-widget="button" data-button-color="info" data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf086;"&gt;&lt;/a&gt;
+                    &lt;a href="#" ms-widget="button" data-button-color="info"  data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf084;"&gt;&lt;/a&gt;
+                    &lt;a href="#" ms-widget="button" data-button-color="info"  data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf085;"&gt;&lt;/a&gt;
+                &lt;/div&gt;
+                &lt;div ms-widget="buttonset" data-buttonset-direction="vertical" class="inline"&gt;
+                    &lt;a href="#" ms-widget="button" data-button-color="warning" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf086;"&gt;暂停&lt;/a&gt;
+                    &lt;a href="#" ms-widget="button" data-button-color="warning" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf084;"&gt;播放&lt;/a&gt;
+                    &lt;a href="#" ms-widget="button" data-button-color="warning" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf085;"&gt;拖曳&lt;/a&gt;
+                &lt;/div&gt;
+                &lt;div ms-widget="buttonset" data-buttonset-direction="vertical" data-buttonset-corner="false" class="inline"&gt;
+                    &lt;a href="#" ms-widget="button" data-button-color="success" data-button-size="large" data-button-type="labeledIcon" data-button-icon-position="right" data-button-icon="\&\#xf086;"&gt;暂停&lt;/a&gt;
+                    &lt;a href="#" ms-widget="button" data-button-color="success" data-button-size="large" data-button-type="labeledIcon" data-button-icon-position="right" data-button-icon="\&\#xf084;"&gt;播放&lt;/a&gt;
+                    &lt;a href="#" ms-widget="button" data-button-color="success" data-button-size="large" data-button-type="labeledIcon" data-button-icon-position="right" data-button-icon="\&\#xf085;"&gt;拖曳&lt;/a&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/fieldset&gt;
+        &lt;script&gt;
+            require(["./button/avalon.button"], function() {
+                avalon.define("demo", function(vm) {
+                    
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+            </pre>
+        </div>
+    </body>
+</html>

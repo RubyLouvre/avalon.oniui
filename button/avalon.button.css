@@ -1,0 +1,71 @@
+
+/*
+这是每个都组件都应该引用的部分
+*/
+button.oni-button, input.oni-button { height: 26px; }
+button.oni-button .oni-icon, button.oni-button .oni-button-text, input.oni-button .oni-icon, input.oni-button .oni-button-text { *margin-top: -2px; }
+
+.oni-button { display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; overflow: hidden; _display: inline; padding: 0 10px; margin: 0; font-size: 12px; border: 1px solid transparent; text-align: center; vertical-align: middle; cursor: pointer; color: #333; text-decoration: none; outline: 0; height: 24px; font-family: fontawesome; }
+.oni-button:link { text-decoration: none; }
+.oni-button.oni-state-default { border-color: #ccc; background-color: #f8f8f8; }
+.oni-button:hover { background-color: #f5f5f5; border-color: #d9d9d9; }
+.oni-button.oni-state-active, .oni-button:active { background-color: #e6e6e6; background-color: #d9d9d9 \9; background-image: none; outline: 0; -webkit-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05); -moz-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05); box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05); }
+.oni-button.oni-state-disabled, .oni-button[disabled] { background-color: #f8f8f8; border-color: #d9d9d9; color: #cccccc; }
+.oni-button.oni-button-primary { background-color: #3775c0; border-color: #1d5eac; color: #ffffff; }
+.oni-button.oni-button-primary:hover { background-color: #3d8be9; border-color: #1a5092; }
+.oni-button.oni-button-primary.oni-state-disabled { background-color: #428bca; color: #357ebd; color: #ffffff; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); opacity: 0.6; }
+.oni-button.oni-button-warning { background-color: #f0ad4e; border-color: #eea236; color: #ffffff; }
+.oni-button.oni-button-warning:hover { background-color: #ec971f; border-color: #d58512; }
+.oni-button.oni-button-warning.oni-state-disabled { background-color: #f0ad4e; border-color: #eea236; color: #ffffff; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); opacity: 0.6; }
+.oni-button.oni-button-danger { background-color: #d9534f; border-color: #d43f3a; color: #ffffff; }
+.oni-button.oni-button-danger:hover { background-color: #c9302c; border-color: #ac2925; }
+.oni-button.oni-button-danger.oni-state-disabled { background-color: #d9534f; border-color: #d43f3a; color: #ffffff; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); opacity: 0.6; }
+.oni-button.oni-button-success { background-color: #58b359; border-color: #45a846; color: #ffffff; }
+.oni-button.oni-button-success:hover { background-color: #68c969; border-color: #3e973e; }
+.oni-button.oni-button-success.oni-state-disabled { background-color: #5cb85c; border-color: #4cae4c; color: #ffffff; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); opacity: 0.6; }
+.oni-button.oni-button-info { background-color: #5bc0de; border-color: #46b8da; color: #ffffff; }
+.oni-button.oni-button-info:hover { background-color: #31b0d5; border-color: #269abc; }
+.oni-button.oni-button-info.oni-state-disabled { background-color: #5bc0de; border-color: #46b8da; color: #ffffff; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); opacity: 0.6; }
+.oni-button.oni-button-inverse { background-color: #333; border-color: #222; color: #ffffff; }
+.oni-button.oni-button-inverse:hover { background-color: #222; border-color: #000; }
+.oni-button.oni-button-inverse.oni-state-disabled { background-color: #333; border-color: #222; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); opacity: 0.6; }
+.oni-button.oni-corner-all { -webkit-border-radius: 2px; -moz-border-radius: 2px; -ms-border-radius: 2px; -o-border-radius: 2px; border-radius: 2px; }
+.oni-button.oni-corner-left { -moz-border-radius-topleft: 2px; -webkit-border-top-left-radius: 2px; border-top-left-radius: 2px; -moz-border-radius-bottomleft: 2px; -webkit-border-bottom-left-radius: 2px; border-bottom-left-radius: 2px; }
+.oni-button.oni-corner-right { -moz-border-radius-topright: 2px; -webkit-border-top-right-radius: 2px; border-top-right-radius: 2px; -moz-border-radius-bottomright: 2px; -webkit-border-bottom-right-radius: 2px; border-bottom-right-radius: 2px; }
+.oni-button.oni-corner-top { -moz-border-radius-topleft: 2px; -webkit-border-top-left-radius: 2px; border-top-left-radius: 2px; -moz-border-radius-topright: 2px; -webkit-border-top-right-radius: 2px; border-top-right-radius: 2px; }
+.oni-button.oni-corner-bottom { -moz-border-radius-bottomleft: 2px; -webkit-border-bottom-left-radius: 2px; border-bottom-left-radius: 2px; -moz-border-radius-bottomright: 2px; -webkit-border-bottom-right-radius: 2px; border-bottom-right-radius: 2px; }
+.oni-button .oni-icon { font-size: 12px; overflow: hidden; line-height: 24px; height: 24px; display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; _display: inline; font-style: normal; }
+.oni-button .oni-button-text { font-size: 12px; line-height: 24px; height: 24px; word-break: keep-all; white-space: nowrap; display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; _display: inline; }
+.oni-button .oni-button-text.oni-button-text-left { padding-right: 5px; }
+.oni-button .oni-button-text.oni-button-text-right { padding-left: 5px; }
+.oni-button .oni-button-text.oni-button-text-middle { padding-left: 5px; padding-right: 5px; }
+.oni-button .oni-button-text.oni-button-text-hidden { display: none; padding: 0; }
+
+button.oni-button-small, input.oni-button-small { height: 22px; }
+
+.oni-button-small { padding: 0 5px; height: 20px; }
+.oni-button-small .oni-icon { font-size: 12px; line-height: 20px; height: 20px; }
+.oni-button-small .oni-button-text { font-size: 12px; line-height: 20px; height: 20px; }
+
+button.oni-button-big, input.oni-button-big { height: 32px; }
+
+.oni-button-big { font-size: 14px; padding: 0 15px; height: 30px; }
+.oni-button-big .oni-icon { font-size: 14px; line-height: 30px; height: 30px; }
+.oni-button-big .oni-button-text { font-size: 14px; line-height: 30px; height: 30px; }
+
+button.oni-button-large, input.oni-button-large { height: 40px; }
+
+.oni-button-large { padding: 0 25px; height: 38px; }
+.oni-button-large .oni-icon { font-size: 14px; line-height: 38px; height: 38px; }
+.oni-button-large .oni-button-text { font-size: 14px; line-height: 38px; height: 38px; }
+
+.oni-buttonset { font-size: 0; display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; _display: inline; }
+.oni-buttonset .oni-button { margin: 0; float: left; border-left-width: 0; }
+.oni-buttonset .oni-button-first { border-left-width: 1px; }
+.oni-buttonset .oni-icon { *margin-top: 0; }
+.oni-buttonset .oni-button-text { *margin-top: 0; }
+
+.oni-buttonset-vertical { _width: 100px; }
+.oni-buttonset-vertical .oni-button { display: block; float: none; border-left-width: 1px; border-top-width: 0; }
+.oni-buttonset-vertical .oni-button-first { border-top-width: 1px; }
+

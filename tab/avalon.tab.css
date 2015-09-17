@@ -1,0 +1,123 @@
+@charset "UTF-8";
+/*
+这是每个都组件都应该引用的部分
+*/
+div.oni-tab {
+  border: none; }
+
+.oni-tab {
+  /*dir=v, small size*/
+  /*dir=v, normal size*/ }
+  .oni-tab-slider {
+    position: relative;
+    overflow: hidden; }
+    .oni-tab-slider-enable {
+      width: 10000px; }
+    .oni-tab-slider-button {
+      text-decoration: none;
+      position: absolute;
+      right: 0px;
+      top: 0px;
+      padding: 10px 4px;
+      width: 8px;
+      font-weight: bold;
+      background: #ccc;
+      z-index: 10;
+      cursor: pointer;
+      color: #000; }
+      .oni-tab-slider-button-left {
+        left: 0; }
+  .oni-tab .oni-tab-nav {
+    float: left; }
+  .oni-tab .oni-tab-nav .oni-state-default {
+    float: left;
+    display: inline;
+    list-style: none;
+    text-align: center;
+    font-size: 12px;
+    padding: 10px 20px;
+    position: relative;
+    background-color: #f8f8f8;
+    cursor: pointer;
+    border: 1px solid #d4d4d4;
+    border-right-width: 0;
+    color: black; }
+  .oni-tab .oni-tab-nav .oni-state-default a, .oni-tab .oni-tab-nav .oni-state-default:link, .oni-tab .oni-tab-nav .oni-state-default a:hover {
+    color: black;
+    text-decoration: none;
+    font-size: 12px; }
+  .oni-tab .oni-tab-nav .oni-state-hover {
+    color: black;
+    background: white; }
+    .oni-tab .oni-tab-nav .oni-state-hover a {
+      color: black; }
+    .oni-tab .oni-tab-nav .oni-state-hover a:link {
+      color: black; }
+    .oni-tab .oni-tab-nav .oni-state-hover .oni-tab-close {
+      border-color: white; }
+  .oni-tab .oni-tab-nav .oni-state-active {
+    border-bottom-color: white;
+    background: white;
+    color: black; }
+    .oni-tab .oni-tab-nav .oni-state-active a {
+      color: black; }
+    .oni-tab .oni-tab-nav .oni-state-active a:link {
+      color: black; }
+    .oni-tab .oni-tab-nav .oni-state-active .oni-tab-close {
+      border-color: white; }
+  .oni-tab .oni-tab-nav .oni-state-disabled {
+    color: #999999;
+    cursor: default; }
+    .oni-tab .oni-tab-nav .oni-state-disabled a {
+      color: #999999;
+      cursor: default; }
+    .oni-tab .oni-tab-nav .oni-state-disabled a:link {
+      color: #999999;
+      cursor: default; }
+  .oni-tab .oni-tab-nav .oni-tab-last {
+    border-right-width: 1px; }
+  .oni-tab-small .oni-tab-nav .oni-state-default {
+    border-right-width: 1px;
+    margin-right: -1px;
+    z-index: 1;
+    padding: 7px 10px; }
+  .oni-tab-small .oni-tab-nav .oni-state-active {
+    border-color: #3775c0;
+    z-index: 10; }
+  .oni-tab-vertical .oni-tab-nav .oni-state-default {
+    float: none;
+    display: block;
+    text-align: left;
+    border-right-width: 1px;
+    border-bottom-width: 0; }
+  .oni-tab-vertical .oni-tab-nav .oni-state-active {
+    border-right-color: white;
+    border-bottom-color: #d4d4d4; }
+  .oni-tab-vertical .oni-tab-nav .oni-tab-last {
+    border-bottom-width: 1px; }
+  .oni-tab-click .oni-state-default {
+    cursor: pointer; }
+  .oni-tab-removable {
+    padding-right: 30px; }
+  .oni-tab-nav .oni-tab-item .oni-tab-close {
+    position: absolute;
+    right: 0px;
+    top: 7px;
+    padding: 3px;
+    height: 12px;
+    width: 12px;
+    overflow: hidden;
+    border: 1px solid #f8f8f8;
+    border-right-width: 0;
+    color: #666666;
+    text-indent: 0;
+    line-height: 14px;
+    font-family: Helvetica, Arial, sans-serif; }
+  .oni-tab .oni-tab-nav .oni-state-active .oni-tab-close-hover {
+    background: white;
+    border-color: #d4d4d4;
+    cursor: pointer; }
+  .oni-tab .oni-tab-nav .oni-state-hover .oni-tab-close-hover {
+    background: white;
+    border-color: #d4d4d4;
+    cursor: pointer; }

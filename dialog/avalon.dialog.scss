@@ -1,0 +1,77 @@
+
+@import "../chameleon/oniui-theme";
+$uiname: "oni-dialog";
+.#{$uiname} {
+    position: absolute;
+    text-align: left;
+    .#{$uiname}-inner {
+        box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1);
+        @if($oinui-theme == smoothness) {
+            background-color: #ffffff;
+            border: 1px solid #cccccc;
+        }
+        .#{$uiname}-header {
+            @if($oinui-theme == smoothness) {
+                background-color: #f3f3f3;
+            }
+            .#{$uiname}-close {
+                display: inline;
+                @include float-right();
+                padding: 1px 10px 1px 9px;
+                margin-top: 5px;
+                cursor: pointer;
+                @if($oinui-theme == smoothness) {
+                    background-color: #f3f3f3;
+                    color: #666666;
+                }
+                .oni-icon {
+                    cursor: pointer;
+                }
+                &:hover {
+                    border-right: 0;
+                    padding: 0 10px 0 8px;
+                    @if($oinui-theme == smoothness) {
+                        background-color: #ffffff;
+                        border: 1px solid #dedede;
+                    }
+                }
+            }
+            .#{$uiname}-title {
+                padding: 7px 10px;
+                font-size: 12px;
+                line-height: 20px;
+                font-weight: 700;
+            }
+        }
+        .#{$uiname}-content {
+            font-size: 12px;
+            padding: 17px 20px;
+        }
+        .#{$uiname}-footer {
+            padding: 8px 5px;
+            @if($oinui-theme == smoothness) {
+                background-color: #f8f8f8;
+            }
+            .#{$uiname}-btns {
+                display: inline;
+                @include float-right();
+                font-size: 0;
+                .oni-button {
+                    margin-left: 10px;
+                }
+            }
+        }
+    }
+}
+.#{$uiname}-layout {
+    display: none;
+    *position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    @include opacity(0.6);
+    zoom: 1;
+    z-index: 1;
+    background: #000;
+}

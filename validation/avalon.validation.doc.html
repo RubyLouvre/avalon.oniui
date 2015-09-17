@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>验证框架</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <meta name="descriptions" content="基于avalon ms-duplex2.0的强大验证框架，大家可以直接在avalon.duplexHooks添加验证规则，
+也可以在配置对象上的validationHooks中添加验证规则。
+验证规则如下定义:
+alpha_numeric: { //这是名字，不能存在-，因为它是这样使用的ms-duplex-int-alpha_numeric=&quot;prop&quot;
+    message: '必须为字母或数字', //这是错误提示，可以使用{{expr}}插值">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    
+    <body>
+        <div class="wrapper">
+            <h2>validation</h2>
+            <fieldset>
+                <legend>验证框架</legend>
+                <p>基于avalon ms-duplex2.0的强大验证框架，大家可以直接在avalon.duplexHooks添加验证规则， 也可以在配置对象上的validationHooks中添加验证规则。</p>
+                <p>验证规则如下定义:</p>
+                <pre class="brush:javascript;gutter:false;toolbar:false;">alpha_numeric: { //这是名字，不能存在-，因为它是这样使用的ms-duplex-int-alpha_numeric="prop"
+    message: '必须为字母或数字', //这是错误提示，可以使用{{expr}}插值表达式，但这插值功能比较弱，
+    //里面只能是某个单词，两边不能有空格
+    get: function(value, data, next) { //这里的传参是固定的，next为回调
+        next(/^[a-z0-9]+$/i.test(value)) //这里是规则
+            //如果message有{{expr}}插值表达式，需要用data.data.expr = aaa设置参数，
+            //aaa可以通过data.element.getAttribute()得到
+        return value //原样返回value
+    }
+},</pre>
+                <p>在validationHooks中自定验证规则，每个都必须写
+                    <b style="color:red">message</b>(
+                    <span style="color:lightgreen">message不能为空字符串</span>)与
+                    <b style="color:red">get</b>方法。</p>
+                <p>验证规则不惧怕任何形式的异步，只要你决定进行验证时，执行next方法就行。next 需要传入布尔。</p>
+                <pre class="brush:javascript;gutter:false;toolbar:false;">async: {
+    message: "异步验证",
+    get: function(value, data, next) {
+        setTimeout(function() {
+            next(true)
+        }, 3000)
+        return value
+    }
+},</pre>
+                <p>另一个例子:</p>
+                <pre class="brush:javascript;gutter:false;toolbar:false;"> beijing: {
+     message: "当前位置必须是在{{city}}",
+     get: function(value, data, next) {
+         $.ajax({
+             url: "http://ws.qunar.com/ips.jcp",
+             dataType: "jsonp",
+             jsonpCallback: "callback",
+             success: function(data, textStatus, jqXHR) {
+                 data.data.city = "北京"
+                 next(data.city == value)
+             }
+         })
+         return value
+     }
+ }</pre>
+                <p>注意，本组件是基于
+                    <code>avalon1.3.7</code>开发，如果是很旧的版本，可以使用avalon.validation.old.js，它一直兼容到avalon1.2.0。</p>
+                <p>注意，本组件只能绑定在
+                    <code>form元素</code>上, &lt;form ms-widget="validation"&gt;&lt;/&gt;</p>
+                <p>验证框架提供了各式各样的回调，满足你最挑剔的需求：</p>
+                <pre class="brush:javascript;gutter:false;toolbar:false;">onSuccess, onError, onComplete, onValidateAll, onReset, onResetAll</pre>
+                <p>其中，前面四个是一个系列，它们都有1个参数，是一个对象数组，里面一些
+                    <code>验证规则对象</code>（如果成功，数组为空）； onReset是在元素获取焦点做重置工作的，如清理类名， 清空value值，onResetAll是用于重置整个表单，它会在组件执行它辖下的所有元素的onReset回调后再执行。</p>
+                <p>
+                    <b>验证规则对象</b>的结构如下：</p>
+                <pre class="brush:javascript;gutter:false;toolbar:false;">{
+    element: element, //添加了ms-duplex绑定的元素节点，它应该位于form[ms-widget="validation"]这个元素下
+    data: {
+        city: "北京"
+    }，
+    message: '当前位置必须是在{{city}}',
+    validateRule: "beijing",
+    getMessage: function() {} //用户调用到方法即可以拿到完整的错误消息——“当前位置必须是在北京”
+}</pre>
+                <p>如果用户指定了
+                    <code>norequired</code>验证规则，如果input为空, 那么就会跳过之后的所有验证; 在定义拦截器时,务必将它放在最前面, 如ms-duplex-norequired-int-gt='xxx'</p>
+            </fieldset>
+            <h3 class="table-doc-title">使用说明</h3>
+            <table class="table-doc" border="1">
+                <colgroup>
+                    <col width="180">
+                        <col width="95">
+                            <col width="120">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>名字</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="4">配置参数</td>
+                    </tr>
+                    <tr>
+                        <td>validationHooks</td>
+                        <td>Object</td>
+                        <td>{}</td>
+                        <td>空对象，用于放置验证规则</td>
+                    </tr>
+                    <tr>
+                        <td>onSuccess</td>
+                        <td>Function</td>
+                        <td>avalon.noop</td>
+                        <td>空函数，单个验证成功时触发，this指向被验证元素this指向被验证元素，传参为一个对象数组外加一个可能存在的事件对象</td>
+                    </tr>
+                    <tr>
+                        <td>onError</td>
+                        <td>Function</td>
+                        <td>avalon.noop</td>
+                        <td>空函数，单个验证失败时触发，this与传参情况同上</td>
+                    </tr>
+                    <tr>
+                        <td>onComplete</td>
+                        <td>Function</td>
+                        <td>avalon.noop</td>
+                        <td>空函数，单个验证无论成功与否都触发，this与传参情况同上</td>
+                    </tr>
+                    <tr>
+                        <td>onValidateAll</td>
+                        <td>Function</td>
+                        <td>avalon.noop</td>
+                        <td>空函数，整体验证后或调用了validateAll方法后触发；有了这东西你就不需要在form元素上ms-on-submit="submitForm"，直接将提交逻辑写在onValidateAll回调上</td>
+                    </tr>
+                    <tr>
+                        <td>onReset</td>
+                        <td>Function</td>
+                        <td>avalon.noop</td>
+                        <td>空函数，表单元素获取焦点时触发，this指向被验证元素，大家可以在这里清理className、value</td>
+                    </tr>
+                    <tr>
+                        <td>onResetAll</td>
+                        <td>Function</td>
+                        <td>avalon.noop</td>
+                        <td>空函数，当用户调用了resetAll后触发，</td>
+                    </tr>
+                    <tr>
+                        <td>validateInBlur</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>true，在blur事件中进行验证,触发onSuccess, onError, onComplete回调</td>
+                    </tr>
+                    <tr>
+                        <td>validateInKeyup</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>true，在keyup事件中进行验证,触发onSuccess, onError, onComplete回调</td>
+                    </tr>
+                    <tr>
+                        <td>validateAllInSubmit</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>true，在submit事件中执行onValidateAll回调</td>
+                    </tr>
+                    <tr>
+                        <td>resetInFocus</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>true，在focus事件中执行onReset回调,</td>
+                    </tr>
+                    <tr>
+                        <td>deduplicateInValidateAll</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>false，在validateAll回调中对reason数组根据元素节点进行去重</td>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="4">接口方法与固有属性</td>
+                    </tr>
+                    <tr>
+                        <td>$init()</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>为元素绑定submit事件，阻止默认行为</td>
+                    </tr>
+                    <tr>
+                        <td>$destory()</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>销毁组件，移除相关回调</td>
+                    </tr>
+                    <tr>
+                        <td>validateAll(callback)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>验证当前元素下的所有非disabled元素
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>callback</td>
+                                        <td>Null|Function</td>
+                                        <td>最后执行的回调，如果用户没传就使用vm.onValidateAll</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>resetAll(callback)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>重置当前表单元素
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>callback</td>
+                                        <td>Null|Function</td>
+                                        <td>最后执行的回调，如果用户没传就使用vm.onResetAll</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>validate(data,isValidateAll,event)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>验证单个元素对应的VM中的属性是否符合格式
+                            <br>此方法是框架自己调用
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>data</td>
+                                        <td>Object</td>
+                                        <td>绑定对象</td>
+                                    </tr>
+                                    <tr>
+                                        <td>isValidateAll</td>
+                                        <td>Undefined|Boolean</td>
+                                        <td>是否全部验证,是就禁止onSuccess, onError, onComplete触发</td>
+                                    </tr>
+                                    <tr>
+                                        <td>event</td>
+                                        <td>Undefined|Event</td>
+                                        <td>方便用户判定这是由keyup,还是blur等事件触发的</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="others">
+                <p>avalon.validation自带了许多
+                    <code>验证规则</code>，满足你一般的业务需求。</p>
+                <p>大家可以在onReset的回调里得到第二个参数data, 然后调用data.valueResetor()将VM中的数据也置空,如布尔数据变false,
+                    数值数据变0,数组数据变[],字符串数组变成""</p>
+                <h2>错误提示信息的添加</h2>
+                <p>比如说&lt;input ms-duplex-alpha="aaa"/&lt;要求用户输出的都是字母，如果输入其他类型的内容， 它就会报错
+                    <b
+                    style="color:red">必须是字母</b>。为什么呢，因为alpha为一个内置拦截器， 定义在avalon.duplexHooks上，结构为</p>
+                <pre class="brush:javascript;gutter:false;toolbar:false;"> alpha: {
+     message: '必须是字母',
+     get: function(value, data, next) {
+         next(/^[a-z]+$/i.test(value))
+         return value
+     }
+ },</pre>如果想显示别的提示信息有三种办法，一就是重写这个栏截器的message属性； 二就是添加data-duplex-message="新提示信息"（不过这个已经不提倡使用了，
+                因为一个表单控制可能使用N个拦截器做验证，如ms-duplex-required-alpha-minlength， 这会覆盖其他拦截器的默认提示信息）；三就是使用data-duplex-alpha-message="专门用于alpha提示信息"
+                <pre
+                class="brush:html;gutter:false;toolbar:false;"></pre>此外，提示信息里面可以使用插值表达式，虽然不能使用变量，也应该够用，比如说minlength拦截器
+                    <pre class="brush:javascript;gutter:false;toolbar:false;"> minlength: {
+     message: '最少输入{{min}}个字',
+     get: function(value, data, next) {
+         var elem = data.element
+         var a = parseInt(elem.getAttribute("minlength"), 10)
+         if (!isFinite(a)) {
+             a = parseInt(elem.getAttribute("data-duplex-minlength"), 10)
+         }
+         var num = data.data.min = a
+         next(value.length &gt;= num)
+         return value
+     }
+ },</pre>我们必须传入一个min参数,这要在元素上添加
+                    <pre class="brush:html;gutter:false;toolbar:false;"></pre>这样报错时就提示要
+                    <b>最少输入6个字</b>
+            </div>
+            <ul class="example-links">
+                <li>
+                    <a href="avalon.validation.ex1.html">自带验证规则required,int,decimal,alpha,chs,ipv4,phone</a>
+                </li>
+                <li>
+                    <a href="avalon.validation.ex2.html">自带验证规则qq,id,email,url,date,passport,pattern</a>
+                </li>
+                <li>
+                    <a href="avalon.validation.ex3.html">自带验证规则maxlength,minlength,lt,gt,eq,repeat</a>
+                </li>
+                <li>
+                    <a href="avalon.validation.ex4.html">自带验证规则contains,contain</a>
+                </li>
+                <li>
+                    <a href="avalon.validation.ex5.html">自带验证规则repeat(重复密码)</a>
+                </li>
+                <li>
+                    <a href="avalon.validation.ex6.html">自定义验证规则</a>
+                </li>
+                <li>
+                    <a href="avalon.validation.ex7.html">自带验证规则norequied</a>
+                </li>
+                <li>
+                    <a href="avalon.validation.ex8.html">禁止获得焦点时的onRest回调 resetInFocus</a>
+                </li>
+                <li>
+                    <a href="avalon.validation.ex9.html">与textbox组件的混用, ms-duplex-string的使用</a>
+                </li>
+                <li>
+                    <a href="avalon.validation.ex10.html">验证表单元素存在disabled的情况</a>
+                </li>
+                <li>
+                    <a href="avalon.validation.ex13.html">deduplicateInValidateAll:true对validatieAll回调的reasons数组根据element进行去重</a>
+                </li>
+                <li>
+                    <a href="avalon.validation.ex14.html">验证dropdown组件</a>
+                </li>
+            </ul>
+        </div>
+    </body>
+
+</html>

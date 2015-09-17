@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>scrollspy组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <meta name="descriptions" content="当滚动页面或者元素的时候触发某种事件和动画效果该组件通过侦听页面或者元素的scrolling事件，触发基于滚动位置衍生的事件。例如：当你滚动页面到一个特定的位置，你可以给应该展现视图内的特定元素指定一个渐入效果
+
+ ">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    
+    <body>
+        <div class="wrapper">
+            <h2>scrollspy</h2>
+            <fieldset>
+                <legend>scrollspy组件</legend>
+                <p>当滚动页面或者元素的时候触发某种事件和动画效果
+                    <br>该组件通过侦听页面或者元素的scrolling事件，触发基于滚动位置衍生的事件。例如：当你滚动页面到一个特定的位置，你可以给应该展现视图内的特定元素指定一个渐入效果</p>
+            </fieldset>
+            <h3 class="table-doc-title">使用说明</h3>
+            <table class="table-doc" border="1">
+                <colgroup>
+                    <col width="180">
+                        <col width="95">
+                            <col width="120">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>名字</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="4">配置参数</td>
+                    </tr>
+                    <tr>
+                        <td>onInit</td>
+                        <td>Member</td>
+                        <td>avalon.noop</td>
+                        <td>onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's interface</td>
+                    </tr>
+                    <tr>
+                        <td>onChange</td>
+                        <td>Member</td>
+                        <td>avalon.noop</td>
+                        <td>onChange(index, ele, widgetElement, options) 滚动到应该显示的index[是onChangeNew返回的indexs的第一个值]，以及targetListGetter返回的list[index]值，以及绑定scrollspy的元素，options</td>
+                    </tr>
+                    <tr>
+                        <td>onChangeNew</td>
+                        <td>Member</td>
+                        <td>avalon.lop</td>
+                        <td>onChangeNew(indexLists, lists, element, options)参数indexs为所有显示在viewpoint内的index组成数组,lists为对应的list[index]集合的数组，其他同onChange</td>
+                    </tr>
+                    <tr>
+                        <td>axis</td>
+                        <td>String</td>
+                        <td>"y"</td>
+                        <td>滚动条滚动的方向，默认是竖直方向y，取值为x的时候，表示水平方向</td>
+                    </tr>
+                    <tr>
+                        <td>targetListGetter(spytarget)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>targetListGetter() 获取tab list函数，元素是数字或者元素id索引，默认是元素id索引，如果targetListGetter返回为空或者空数组的时候，list则取值panelListGetter的值，因此panelListGetter是必须有返回内容的</td>
+                    </tr>
+                    <tr>
+                        <td>panelListGetter</td>
+                        <td>Member</td>
+                        <td>avalon.noop</td>
+                        <td>panelListGetter() 获取panel list函数，返回一个数组，元素是dom，或者返回空，默认返回空，panel跟targetListGetter返回的数组项，是一一对应的，来实现menu的切换，而内容滚动或切换到对应的panel，必须返回一个数组</td>
+                    </tr>
+                    <tr>
+                        <td>panelGetter(id,index,list,options)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>panelGetter(pannelId, pannelIndex, panelsList, options) 获取panel函数，默认返回
+                            panelsList[pannelIndex] || Id = pannelId</td>
+                    </tr>
+                    <tr>
+                        <td>spytarget</td>
+                        <td>Unary</td>
+                        <td>void 0</td>
+                        <td>指定滚动关联的元素id，默认的targetListGetter会到这个指定元素内寻找li元素作为所有的菜单选项，spytarget会作为第一个参数传递给targetListGetter,panelListGetter</td>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="4">接口方法与固有属性</td>
+                    </tr>
+                    <tr>
+                        <td>scrollTo(id,index)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>scrollTo(id, index) 滚动到panel位置，滚动到 panelList[index] || dom.id = id的元素的地方，该方法绑定在onInit的返回的options参数上返回，供调用</td>
+                    </tr>
+                </tbody>
+            </table>
+            <ul class="example-links">
+                <li>
+                    <a href="avalon.scrollspy.ex.html">scrollspy：侦听内容元素是否在viewport</a>
+                </li>
+                <li>
+                    <a href="avalon.scrollspy.ex1.html">scrollspy-与tab联动[结合tab、scrollbar组件]</a>
+                </li>
+            </ul>
+        </div>
+    </body>
+
+</html>

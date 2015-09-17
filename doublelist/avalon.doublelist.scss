@@ -1,0 +1,77 @@
+
+@import "../chameleon/oniui-theme";
+$uiname : ".oni-doublelist";
+@if($oinui-theme == smoothness) {
+	$doublelist: (
+		fontColor: #000, 
+		menuBg: #fff,
+		hoverBg: $ui-state-hover-background-color, 
+		activeBg: $ui-state-active-background-color,
+		disableBg: #fff,
+		buttonBg: #f8f8f8
+	) !global;
+} @else {
+}
+div#{$uiname} {
+	// current style
+	// means #{$pr}-bar
+	font-size:12px;
+}
+#{$uiname} {
+	&-menu {
+		width: 180px;
+		height: 190px;
+		border: 1px solid $ui-state-default-border-color;
+		background: map-get($doublelist, menuBg);
+		float: left;
+		display: inline;
+	}
+	ul{
+		width: 100%;
+	}
+	&-option {
+		width: 58px;
+		height: 62px;
+		padding: 10px;
+		vertical-align: middle;
+		float: left;
+		display: inline;
+		margin-top: 40px;
+		@include box-sizing("content-box");
+	}
+	li {
+		list-style: none;
+		padding: 5px 6px;
+		cursor: pointer;
+		color: map-get($doublelist, fontColor);
+	}
+	li.oni-state-hover{
+		background-color: map-get($doublelist, hoverBg);
+	}
+	li.oni-state-active{
+		background-color: map-get($doublelist, activeBg);
+		color: $ui-state-active-color;
+	}
+	li.oni-state-disabled{
+		cursor: default;
+		color: $ui-state-disabled-color;
+		background: map-get($doublelist, disableBg);
+	}
+	.oni-dbl-button{
+		height: 24px;
+		*height: auto;
+		line-height: 24px;
+		padding: 0;
+		background-color: map-get($doublelist, buttonBg);
+		border: 1px solid $ui-state-default-border-color;
+		border-radius: 2px;
+		color: map-get($doublelist, fontColor);
+		text-align: center;
+		margin-top: 10px;
+		cursor: pointer;
+	}
+	&-option div.oni-state-disabled{
+		border-color: #dedede;
+		color: #ccc;
+	}
+}

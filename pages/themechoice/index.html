@@ -1,0 +1,510 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="xjb_html">
+    <head>
+        <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+        <meta http-equiv="x-ua-compatible" content="ie=edge" />
+        <title>去哪儿avalon ui skin themes</title>
+        <link rel="stylesheet" type="text/css" href="oniui.css">
+        <style type="text/css">
+            body {
+                -webkit-font-smoothing: antialiased;
+                color: #333;
+                font: 15px/22.5px "Helvetica Neue", HelveticaNeue, Helvetica, Arial, sans-serif;
+                padding-bottom: 200px;
+            }
+            .uiCollection {
+                width: 1000px;
+                margin: 0 auto;
+            }
+            .ms-controller{
+                visibility: hidden;
+            }
+            .demoHeaders {
+                font-size: 1.3em;
+                font-weight: normal;
+                margin: 2em 0 1em;
+            }
+            ul, li {
+                list-style: none;
+                padding: 0;
+                margin: 0 0 10px 0;
+            }
+            .btnWidth {
+                width: 110px;
+                display: inline-block;
+            }
+            .inlineBlock {
+                display: inline-block;
+                margin-right: 20px;
+            }
+            .oni-progressbar {
+                width: 700px;
+            }
+            .menu-tree .oni-tree li span.flight_ico_open,
+            .menu-tree .oni-tree li span.flight_ico_close,
+            .menu-tree .oni-tree li span.hotel_ico_open,
+            .menu-tree .oni-tree li span.hotel_ico_close {
+                background: url(http://simg4.qunarzz.com/site/images/homepage/ico_p3.png) no-repeat scroll 0 -20px;
+                width: 18px;
+                height: 20px;
+            }
+            .oni-carousel {
+                margin: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="uiCollection" ms-controller='theme'>
+            <div style="padding: 0 20px; width: 700px; float:left">
+                <h2 class="demoHeaders">Accordion</h2>
+                <div ms-widget="accordion,accordion,$accordionOpts" id="accordion" ms-text="aaa"></div> 
+                <h2 class="demoHeaders">simplegrid</h2>
+                <div ms-widget="simplegrid, simplegridA, $simplegridAOpts"></div>
+                
+                <h2 class="demoHeaders">Tabs</h2>
+                <div ms-widget="tab" id="tabs"></div>
+                <h2 class="demoHeaders">Slier</h2>
+                <input ms-widget="slider" data-slider-value="36" data-slider-values = "[40, 60]" data-slider-range="true" id="slider">
+                <h2 class="demoHeaders">Progressbar</h2>
+                <div ms-widget="progressbar" data-progressbar-value="49" data-progressbar-label="true" data-progressbar-in-two="true" id="progressbar"></div>
+                <h2 class="demoHeaders">Loading</h2>
+                <div id="loading" style="width:690px" class="ui-helper-clearfix">
+                    <div ms-widget="loading" data-loading-type="ticks" style="width:100px;height:100px;position:relative;zoom:1;float: left"></div>
+                    <div ms-widget="loading" data-loading-type="spin" style="width:130px;height:130px;position:relative;zoom:1;float: left"></div>
+                    <div ms-widget="loading" data-loading-type="spokes" style="width:130px;height:130px;position:relative;zoom:1;float: left"></div>
+                    <div ms-widget="loading" data-loading-type="spinning-bubbles" style="width:130px;height:130px;position:relative;zoom:1;float: left"></div> 
+                </div> 
+                <h2 class="demoHeaders" style='clear:left'>ButtonGroup</h2> 
+                <ul id="buttongroup">
+                    <li class="inlineBlock">
+                        <div ms-widget="button, $, group1"></div>
+                    </li>
+                    <li class="inlineBlock">
+                        <div ms-widget="button, $, group2"></div>
+                    </li>
+                    <li class="inlineBlock">
+                        <div ms-widget="button, $, group3"></div>
+                    </li>
+                </ul>
+                <h2 class="demoHeaders">checkboxlist</h2>
+                <ul ms-widget="checkboxlist" data-checkboxlist-type="week" data-checkboxlist-duplex="week" data-checkboxlist-alltext="全部" data-checkboxlist-vertical="false">
+                </ul>
+                <h2 class="demoHeaders">Doublelist</h2>
+                <div ms-widget="doublelist,nimei" ms-duplex="select" id="doublelist"> </div>
+                <h2 class="demoHeaders">Coupledatepicker</h2>
+                <div ms-widget="coupledatepicker" id="coupledatepicker"></div>
+                <h2 class="demoHeaders">Daterangepicker</h2>
+                <div ms-widget="daterangepicker" id="daterangepicker"></div>
+                <h2 class="demoHeaders">notice  <span ms-widget='button' data-button-size='small' data-button-color='warning' ms-click='toggleNotice'>display notice</span></h2>
+                <div ms-widget="notice,a" data-notice-title='提示'>
+                    基本的提示信息组件，全部使用默认配置项
+                </div>
+                
+                <h2 class="demoHeaders">tree</h2>
+                <div ms-widget="tree" class="menu-tree"></div>
+                <h2 class="demoHeaders">preview</h2>
+                <form>
+                    <p><input type="file" id="file" multiple=""/>可预览多个</p>
+                    <div ms-widget="preview"></div>
+                </form>
+            </div>
+            <div style="width:235px; float:right;">
+                <h2 class="demoHeaders">Textbox</h2>
+                <input ms-widget="textbox" ms-duplex="val" data-textbox-suggest="test" id="textbox" data-textbox-width="190"/>
+                <h2 class="demoHeaders">Spinner</h2>
+                <input ms-widget="spinner" id="spinner"/>
+                <h2 class="demoHeaders">Datepicker</h2>
+                <input ms-widget="datepicker" id="datepicker" data-datepicker-show-datepicker-always="true" data-datepicker-timer="true"/>
+                <h2 class="demoHeaders">carousel</h2>
+                <div ms-widget="carousel,carouselDemo1,$opt1" data-carousel-effect="none"></div>
+                <h2 class="demoHeaders">Dropdown</h2>
+                <select ms-widget="dropdown" id="dropdown">
+                    <optgroup label="group1">
+                        <option value="value1">Value 1</option>
+                        <option>textValue</option>
+                        <option label="label" value="labelValue">with label</option>
+                        <option value="value2" selected>Value 2</option>
+                        <option value="value3">Value 3</option>
+                    </optgroup>
+                    <optgroup label="group2">
+                        <option value="value4" selected>Value 4</option>
+                        <option value="value5" disabled selected>Value 5</option>
+                        <option value="value6">Value 6</option>
+                    </optgroup>
+                </select>
+                
+                <h2 class="demoHeaders">dropdownlist</h2>
+                <select ms-widget="dropdownlist">
+                    <optgroup label="group1">
+                        <option value="value1">Value 1</option>
+                        <option>textValue</option>
+                        <option label="label" value="labelValue">with label</option>
+                        <option value="value2" selected>Value 2</option>
+                        <option value="value3">Value 3</option>
+                    </optgroup>
+                    <optgroup label="group2">
+                        <option value="value4">Value 4</option>
+                        <option value="value5" disabled>Value 5</option>
+                        <option value="value6">Value 6</option>
+                    </optgroup>
+                </select>
+                <h2 class="demoHeaders">Button</h2>
+                <ul id="button">
+                    <li>
+                        <div class="btnWidth"><button ms-widget="button" data-button-width="100">button default</button></div>
+                        <div class="btnWidth"><button ms-widget="button" data-button-width="108" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf015;">primary icon</button></div></li>
+                    <li>
+                        <div class="btnWidth"><button ms-widget="button" data-button-width="100" data-button-type="labeledIcon" data-button-icon-position="right" data-button-icon="\&\#xf015;">warning</button></div>
+                        <div class="btnWidth"><button ms-widget="button" data-button-width="108" data-button-type="labeledIcon" data-button-icon-position="left-right" data-button-icon="\&\#xf001;-\&\#xf06b;">danger</button></div>
+                    </li>
+                    <li>
+                        <div class="btnWidth"><button ms-widget="button" data-button-width="100" data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf015;">button success</button></div>
+                        <div class="btnWidth"><button ms-widget="button" data-button-width="108" data-button-type="icon" data-button-icon-position="left-right" data-button-icon="\&\#xf001;-\&\#xf06b;">button info</button></div>
+                    </li>
+                </ul>
+                <h2 class="demoHeaders">at</h2>
+                <textarea ms-widget="at" placeholder="@后面填上a,或aa, c试试" style="width:200px;height:40px;resize:none;"></textarea>
+                <h2 class="demoHeaders">timer</h2>
+                <input ms-widget="timer" data-timer-event-type="mousewheel"/>
+                <h2 class="demoHeaders">colorpicker</h2>
+                <input type="text" ms-widget="colorpicker" data-colorpicker-auto-hide='false'>
+                <h2 class="demoHeaders">Menu</h2>
+                <ul ms-widget="menu, menuA, $menuAOpts" id="menu" style="float:left"></ul>
+                <br style="clear:both"/>
+                
+
+                
+                <h2 class="demoHeaders">rating</h2>
+                <div ms-widget="rating"></div>
+
+                <h2 class="demoHeaders">switchdropdown</h2>
+                <select ms-widget="switchdropdown"></select>
+                <h2 class="demoHeaders">Flipswitch</h2>
+                <input checked="checked" type="checkbox" ms-widget="flipswitch" data-flipswitch-size="large" data-flipswitch-draggable="true" id="flipswitch">
+                <h2 class="demoHeaders">Dialog</h2>
+                <div id="dialog">
+                    <button ms-click="openDialog" ms-widget="button">Open Dialog</button>
+                    <div ms-widget="dialog, dialogA" data-dialog-title="Dialog Title" data-dialog-modal="false" ms-draggable data-dialog-z-index='1001'>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                    </div>
+                </div>
+                <h2 class="demoHeaders">miniswitch</h2>
+                <select ms-widget="miniswitch"></select>
+            </div>
+            <br style="clear:left;"/>
+        </div>
+        <script src="oniui-min.js"></script>
+        <script>
+            var child = []
+            var zNodes =[
+                { id:1, pid:0, name:"机票", open:true, "iconSkin": "flight"},
+                { id:11, pid:1, name:"国内"},
+                { id:111, pid:11, name:"北京"},
+                { id:112, pid:11, name:"上海"},
+                { id:113, pid:11, name:"广州"},
+                { id:114, pid:11, name:"深圳"},
+                { id:12, pid:1, name:"国际"},
+                { id:121, pid:12, name:"美国"},
+                { id:122, pid:12, name:"德国"},
+                { id:123, pid:12, name:"日本"},
+                { id:124, pid:12, name:"英国"},
+                { id:2, pid:0, name:"酒店", "iconSkin": "hotel"},
+                { id:21, pid:2, name:"五星级酒店"},
+                { id:211, pid:21, name:"逗比酒店"},
+                { id:212, pid:21, name:"坑爹酒店"},
+                { id:22, pid:2, name:"四星级以下"},
+                { id:221, pid:22, name:"E边酒店"},
+                { id:222, pid:22, name:"W边酒店"},
+                { id:223, pid:22, name:"N边酒店"},
+                { id:224, pid:22, name:"S边酒店"}
+            ]
+            var tree = avalon.mix(true, {}, avalon.treeMenu, {
+                children: zNodes, 
+                data: {
+                    simpleData: {
+                        enable: true,
+                        pIdKey: "pid"
+                    }
+                }
+            })
+            function getDatas(number) {
+                var data = []
+                for (var i = 0; i < number; i++) {
+                    data.push({
+                        name: "shirly"+i,
+                        age: parseInt(10 + Math.random() * 20),
+                        selected: i%3 ? false: true,
+                        salary: parseInt(Math.random() * 100),
+                        operate : i % 5 ? 0 : 1,
+                        busy : !i%3 && !i%5 ? 0 : 1
+                    })
+                }
+                return data
+            } 
+            function getData(n) {
+                var ret = []
+                for (var i = 0; i < n; i++) {
+                    ret.push({
+                        symbol: Math.random().toString(32).slice(4, 10),
+                        price: range(100, 200),
+                        change: Math.random().toFixed(2) * (Math.random() > 0.5 ? 1 : -1)
+                    })
+                }
+                return ret
+            }
+            function range(s, b) {
+                return s + Math.floor((b - s) * Math.random())
+            }
+            avalon.ui["suggest"].strategies['test'] = function(value, render) {
+                var data = !value.indexOf("x") ? ["xueer", "xueli", "xueyan"] : []
+                render(data)
+            }
+            var themeVM = avalon.define("theme", function(vm) {
+                vm.$skipArray = ["group1", "group2", "group3", "tab", "smartgrid", "doublelist", "tree", "at", "preview", "timer"]
+                vm.timer = {
+                    dialog: {
+                        zIndex: 1002
+                    }
+                }
+                vm.at = {
+                    datalist: ["aaa", "aab", "aaaa", "aac", "ccc", "cc1", "ccaaccaa"],
+                    minLength: 1
+                }
+                vm.week = ['TUESDAY','MONDAY']
+                vm.group1 = {
+                    groups: true,
+                    data: [{
+                        text: "button 1"
+                    }, {
+                        text: "button2"
+                    }, {
+                        text: "button 3"
+                    }]
+                }
+                vm.preview = {
+                    fileInput: document.getElementById("file"),
+                    onInit: function(vmodel, options, vmodels) {
+                       avalon.bind(options.fileInput, "change", function() {
+                            try{
+                                parent && parent.setHeight && parent.setHeight()
+                            }catch(e) {}
+                        })
+                    }
+                }
+                vm.$opt1 = {
+                    pictures: [{
+                        src: "http://placehold.it/500x200/333/dddddd.jpg&text=slide1"
+                    }, {
+                        src: "http://placehold.it/500x200/555/dddddd.jpg&text=slide2"
+                    }, {
+                        src: "http://placehold.it/500x200/777/dddddd.jpg&text=slide3"
+                    }],
+                    hoverStop: true, //@param autoSlide 鼠标经过不停止播放
+                    pictureWidth:235,
+                    pictureHeight:150
+                }
+                vm.tree = tree
+                vm.$simplegridAOpts = {
+                    columns: ["symbol", "price", "change"],
+                    data: getData(6)
+                }
+                vm.toggleNotice = function() {
+                    avalon.vmodels.a.toggle = !avalon.vmodels.a.toggle
+                }
+                vm.group2 = {
+                    groups: true,
+                    data: [{
+                        type: "labeledIcon",
+                        iconPosition: "left",
+                        icon: "\&\#xf04c;",
+                        text: "暂停"
+                    }, {
+                        type: "labeledIcon",
+                        iconPosition: "left",
+                        icon: "\&\#xf04b;",
+                        text: "播放"
+                    }, {
+                        type: "labeledIcon",
+                        iconPosition: "left",
+                        icon: "\&\#xf074;",
+                        text: "拖曳"
+                    }]
+                }
+                vm.group3 =  {
+                    groups: true,
+                    width: 50,
+                    data: [{
+                        type: "icon",
+                        iconPosition: "left",
+                        icon: "\&\#xf04c;",
+                        text: "button 1"
+                    }, {
+                        type: "icon",
+                        iconPosition: "left",
+                        icon: "\&\#xf04b;",
+                        text: "button 2"
+                    }, {
+                        type: "icon",
+                        iconPosition: "left",
+                        icon: "\&\#xf074;",
+                        text: "button 3"
+                    }]
+                }
+                vm.$accordionOpts = {
+                    data: [{
+                            'title': 'Section 1',
+                            'content': '<p>Mauris mauris ante, blandit et, ultrices a, suscipit eget, quam. Integer ut neque. Vivamus nisi metus, molestie vel, gravida in, condimentum sit amet, nunc. Nam a nibh. Donec suscipit eros. Nam mi. Proin viverra leo ut odio. Curabitur malesuada. Vestibulum a velit eu ante scelerisque vulputate.</p>'
+                        }, {
+                            'title': 'Section 2',
+                            'content': '<p>Sed non urna. Donec et ante. Phasellus eu ligula. Vestibulum sit amet purus. Vivamus hendrerit, dolor at aliquet laoreet, mauris turpis porttitor velit, faucibus interdum tellus libero ac justo. Vivamus non quam. In suscipit faucibus urna.</p>'
+                        }, {
+                            'title': 'Section 3',
+                            'content': '<p>Nam enim risus, molestie et, porta ac, aliquam ac, risus. Quisque lobortis. Phasellus pellentesque purus in massa. Aenean in pede. Phasellus ac libero ac tellus pellentesque semper. Sed ac felis. Sed commodo, magna quis lacinia ornare, quam ante aliquam nisi, eu iaculis leo purus venenatis dui.</p><ul><li>List item one</li><li>List item two</li><li>List item three</li></ul>'
+                        }]
+                }
+                vm.tab = {
+                    onActivate: function(e) {
+                        avalon.log("user define cc activate callback")
+                    },
+                    hideTooltip: function() {
+                        if (avalon.vmodels.tooltipA)
+                            avalon.vmodels.tooltipA.toggle = false;
+                    },
+                    active: 0,
+                    tabs: [{
+                            title: "First",
+                            name: "First",
+                            target: "_self"
+                        }, {
+                            title: "Second",
+                            name: "Second",
+                            target: "_self"
+                        }, {
+                            title: "Third",
+                            name: "Third",
+                            target: "_self"
+                        }
+                    ],
+                    tabpanels: [
+                        {
+                            content: '<h2 class="demoHeaders">Smartgrid</h2><div ms-widget="smartgrid, smartgridA" style="width:680px; margin: 0 auto;"></div>'
+                        },
+                        {
+                            content: '<p ms-widget="tooltip, tooltipA, $tooptipAOpts"  data-tooltip-position="br">' +
+                                    'Phasellus mattis tincidunt nibh. Cras orci urna, blandit id, pretium vel, aliquet ornare,' +
+                                    ' felis. Maecenas scelerisque sem non nisl. Fusce sed lorem in enim dictum bibendum.</p>'
+                        },
+                        {
+                            content: "<p>Nam dui erat, auctor a, dignissim quis, sollicitudin eu, felis. Pellentesque nisi urna, interdum eget, sagittis et, consequat vestibulum, lacus. Mauris porttitor ullamcorper augue.</p>"
+                        }
+                    ]
+                }
+                vm.smartgrid = {
+                    columns: [
+                        {
+                            key : "name", //列标识
+                            name : "姓名", //列名
+                            sortable : true, //是否可排序
+                            isLock : true, //是否锁死列让其始终显示
+                            align: "left", //列的对象方式
+                            defaultValue: "shirly", //列的默认值
+                            customClass: "ddd", //自定义此列单元格类
+                            toggle: false, //控制列的显示隐藏
+                            width: 200 //设置列的宽度
+                        }, {
+                            key : "age",
+                            name : "年龄",
+                            sortable : true,
+                            width: 100,
+                            type: "Number"
+                        }, {
+                            key : "salary",
+                            name : "薪水",
+                            type : "Number",
+                            sortable : true,
+                            align: "right",
+                            width: 100
+                        }
+                    ],
+                    data: getDatas(8)
+                }
+                vm.$tooptipAOpts = {
+                    "contentGetter": function(elem) {
+                        return '提示：Phasellus mattis tincidunt nibh. Cras orci urna, blandit id, pretium vel, aliquet ornare, felis. Maecenas scelerisque sem non nisl. Fusce sed lorem in enim dictum bibendum.'
+                    }, 
+                    autohide: true
+                }
+                vm.openDialog = function() {
+                    avalon.vmodels.dialogA.toggle = true;
+                }
+                vm.doublelist = {
+                    data: [
+                        {name: "Lily", value: 1},
+                        {name: "Lucy", value: 2},
+                        {name: "Tom", value: 3},
+                        {name: "Harry", value: 4},
+                        {name: "Jim", value: 5}
+                    ],
+                    select: [5],
+                    change: function(newValue, oldValue, vmodel) {
+                        avalon.log(vmodel.select)
+                    }
+                }
+                vm.val = "";
+                vm.$menuAOpts = {
+                    data: [{
+                            active: false,
+                            title: "menu1",
+                            disabled: false,
+                            data: [{
+                                    active: true,
+                                    title: "menu1_1",
+                                    disabled: false
+                                }, {
+                                    active: false,
+                                    title: "menu1_2",
+                                    disabled: false
+                                }, {
+                                    active: false,
+                                    title: "menu1_3",
+                                    disabled: false
+                                }]
+                        }, {
+                            active: false,
+                            title: "menu2",
+                            disabled: false
+                        }, {
+                            active: false,
+                            title: "menu3",
+                            disabled: false
+                        }, {
+                            active: false,
+                            title: "menu4",
+                            disabled: false
+                        }, {
+                            active: false,
+                            title: "menu5",
+                            disabled: false
+                        }]
+                }
+            })
+            var i = 6, arr = []
+            while (i < 10) {
+                arr.push({
+                    name: "Hello Sang" + i,
+                    value: i
+                })
+                i++
+            }
+            themeVM.doublelist.data.splice.apply(themeVM.doublelist.data, [5,0].concat(arr))
+
+            function asyncRender(fn) {
+                if(asyncRender.count === void 0) {
+                    asyncRender.count = 0
+                }
+                asyncRender.count++
+                setTimeout(fn, asyncRender.count * 40)
+            }
+        </script>
+    </body>
+</html>

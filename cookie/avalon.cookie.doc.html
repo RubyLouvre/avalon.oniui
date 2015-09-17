@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>Cookie工具模块</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <meta name="descriptions" content="处理cookie的工具函数集合， 与store模块的接口一致， 即包含get, set, forEach, remove, clear, getAll">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    
+    <body>
+        <div class="wrapper">
+            <h2>cookie</h2>
+            <fieldset>
+                <legend>Cookie工具模块</legend>
+                <p>处理cookie的工具函数集合， 与store模块的接口一致， 即包含get, set, forEach, remove, clear, getAll</p>
+            </fieldset>
+            <h3 class="table-doc-title">使用说明</h3>
+            <table class="table-doc" border="1">
+                <colgroup>
+                    <col width="180">
+                        <col width="95">
+                            <col width="120">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>名字</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="4">接口方法与固有属性</td>
+                    </tr>
+                    <tr>
+                        <td>stringify(name,val,opts)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>将两个字符串变成一个cookie字段
+                            <pre class="brush:javascript;gutter:false;toolbar:false">Cookie.stringify('foo', 'bar', { httpOnly: true })  =&gt; "foo=bar; httpOnly"
+</pre>
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>name</td>
+                                        <td>String</td>
+                                        <td>cookie的名字不能为空</td>
+                                    </tr>
+                                    <tr>
+                                        <td>val</td>
+                                        <td>String</td>
+                                        <td>cookie的名字不能为空</td>
+                                    </tr>
+                                    <tr>
+                                        <td>opts</td>
+                                        <td>Undefined|Object|Number</td>
+                                        <td>配置对象，如果为数字则当成maxAge,否则为对象时，里面可以配置maxAge, domain, path, expires, httpOnly,
+                                            secure</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>forEach(callback)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>遍历所有cookie
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>callback</td>
+                                        <td>Function</td>
+                                        <td>里面会依次传入key与value</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>get(name)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>获取某一cookie
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>name</td>
+                                        <td>String</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>返回</td>
+                                        <td>String</td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>getAll()</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>获取所有cookie，以对象形式返回
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>返回</td>
+                                        <td>Object</td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>set(key,val,opts)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>添加或设置某一cookie
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>name</td>
+                                        <td>String</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>value</td>
+                                        <td>String</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>返回</td>
+                                        <td>Undefined|Object|Number</td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>remove(key,opt)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>移除某一cookie
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>name</td>
+                                        <td>String</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>opt</td>
+                                        <td>Object|Undefined</td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>clear()</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>移除所有cookie</td>
+                    </tr>
+                </tbody>
+            </table>
+            <ul class="example-links">
+                <li>
+                    <a href="avalon.cookie.ex1.html">例子1</a>
+                </li>
+            </ul>
+        </div>
+    </body>
+
+</html>

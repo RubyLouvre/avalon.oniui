@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>Name 延迟加载组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <meta name="descriptions" content="延迟加载组件用于对页面中的图片/文档片段进行延迟加载，让页面在初次渲染时不加载图片/文档片段，当其处于浏览器窗口可视范围内再进行加载，以尽可能提高网页渲染速度。">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    
+    <body>
+        <div class="wrapper">
+            <h2>lazyload</h2>
+            <fieldset>
+                <legend>延迟加载组件</legend>延迟加载组件用于对页面中的图片/文档片段进行延迟加载，让页面在初次渲染时不加载图片/文档片段，当其处于浏览器窗口可视范围内再进行加载，以尽可能提高网页渲染速度。</fieldset>
+            <h3
+            class="table-doc-title">使用说明</h3>
+                <table class="table-doc" border="1">
+                    <colgroup>
+                        <col width="180">
+                            <col width="95">
+                                <col width="120">
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <th>名字</th>
+                            <th>类型</th>
+                            <th>默认值</th>
+                            <th>说明</th>
+                        </tr>
+                        <tr>
+                            <td align="center" colspan="4">配置参数</td>
+                        </tr>
+                        <tr>
+                            <td>width</td>
+                            <td>String</td>
+                            <td>""</td>
+                            <td>懒加载占位宽度，可通过设置元素的data-lazyload-width修改</td>
+                        </tr>
+                        <tr>
+                            <td>height</td>
+                            <td>String</td>
+                            <td>""</td>
+                            <td>懒加载占位高度，可通过设置元素的data-lazyload-height修改</td>
+                        </tr>
+                        <tr>
+                            <td>contentType</td>
+                            <td>String</td>
+                            <td>"image"</td>
+                            <td>懒加载内容类型："image"-图片 / "DOM"-文档片段</td>
+                        </tr>
+                        <tr>
+                            <td>preLoadType</td>
+                            <td>String</td>
+                            <td>"image"</td>
+                            <td>预加载类型："image"-采用加载中图片 / "text"-采用加载中文字</td>
+                        </tr>
+                        <tr>
+                            <td>preLoadSrc</td>
+                            <td>Binary</td>
+                            <td>path + "/images/loading1.gif"</td>
+                            <td>预加载图片路径（文字内容）：preLoadType为"image"时为图片路径；preLoadType为"text"时为文字内容。也可以设置元素的data-lazyload-preloadsrc，替代默认值</td>
+                        </tr>
+                        <tr>
+                            <td>delay</td>
+                            <td>Number</td>
+                            <td>500</td>
+                            <td>延迟加载时间（毫秒）。也可以设置元素的data-lazyload-itemdelay，替代默认值</td>
+                        </tr>
+                        <tr>
+                            <td>effect</td>
+                            <td>String</td>
+                            <td>"none"</td>
+                            <td>预加载效果 "none"-无效果 / "fadeIn"-渐入效果 / "slideX"-由左向右滑动 / "slideY"-由上向下滑动，建议在图片加载中使用。也可以设置元素的data-lazyload-itemeffect，替代默认值</td>
+                        </tr>
+                        <tr>
+                            <td>easing</td>
+                            <td>String</td>
+                            <td>"easeInOut"</td>
+                            <td>动画效果的缓动函数</td>
+                        </tr>
+                        <tr>
+                            <td>slideDistance</td>
+                            <td>Number</td>
+                            <td>300</td>
+                            <td>effect-slide模式的滑动长度。也可以设置元素的data-lazyload-distance，替代默认值</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <ul class="example-links">
+                    <li>
+                        <a href="avalon.lazyload.ex.html">懒加载组件-默认配置</a>
+                    </li>
+                    <li>
+                        <a href="avalon.lazyload.ex1.html">懒加载组件-自定义effect(加载效果)和各自delay(加载延迟)</a>
+                    </li>
+                    <li>
+                        <a href="avalon.lazyload.ex2.html">懒加载组件-自定义加载中图片</a>
+                    </li>
+                    <li>
+                        <a href="avalon.lazyload.ex3.html">懒加载组件-预加载采用文字模式</a>
+                    </li>
+                    <li>
+                        <a href="avalon.lazyload.ex4.html">懒加载组件-懒加载页面元素</a>
+                    </li>
+                    <li>
+                        <a href="avalon.lazyload.ex5.html">懒加载组件-自定义懒加载尺寸</a>
+                    </li>
+                </ul>
+        </div>
+    </body>
+
+</html>

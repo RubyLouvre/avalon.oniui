@@ -1,0 +1,74 @@
+
+
+<div class="oni-fileuploader-wrapper" ms-on-drop="onDrop" ms-on-dragover="onDragOver">
+	<div class="preview-stage"
+		ms-if="showPreview">
+		<div 
+			class="preview-image-wrapper"
+			ms-repeat="previews"
+			ms-css-width="previewWidth"
+			ms-css-height="previewHeight">
+			<div class="preview-menu">
+				<div><a class="oni-icon icon" ms-on-click="onPreviewRemoveClicked(el)">&#xf003;</a><span>{{el.name}}</span></div>
+			</div>
+			<img ms-attr-src="el.preview" alt=""/>
+			<div class="preview-progress-wrapper">
+				<div class="preview-progress-body">
+					<div class='progress-bar' ms-css-width="{{el.uploadProgress}}%" ms-if="showProgress"></div>
+					<span class="message">{{el.message}}</span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<button 
+		type="button" 
+		class="uploader-button-add uploader-button"
+		ms-click="addFileClicked" >
+		{{addButtonText}}
+		<input type="file" 
+				ms-if="useHtml5Runtime"
+				ms-attr-accept="getInputAcceptTypes(false)"
+				ms-attr-multiple="multipleFileAllowed"
+				style="display:none" />
+	</button>
+	<button 
+		type="button"
+		class="uploader-button-upload uploader-button"
+    	ms-click="uploadClicked">
+    	{{uploadButtonText}}
+    </button>
+
+    <div	class="flash-wrapper"
+    		ms-if = "useFlashRuntime">
+		<object
+			classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
+			width="100%"
+			align="middle"
+			height="100%"
+			codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=10,0,0,0"
+			id="##VM_ID##_flash"
+			>
+			<param name="allowScriptAccess" value="sameDomain" />
+			<param name="scaleMode" value="exactFit">
+			<param name="bgcolor" value="" />
+			<param name="wmode" value="transparent">
+			<param name="allowFullScreen" value="false" />
+			<param name="movie" value="avalon.fileuploader.swf?vmid=##VM_ID##" />
+			<param name="quality" value="high" />
+			<embed src="avalon.fileuploader.swf?vmid=##VM_ID##"
+				type="application/x-shockwave-flash"
+				align="middle"
+				width="100%"
+				scaleMode="exactFit"
+				wmode="transparent"
+				height="100%"
+				quality="high"
+				pluginspage="http://www.adobe.com/go/getflashplayer_cn"
+				allowScriptAccess="sameDomain"
+				allowFullScreen="false" 
+				name="##VM_ID##_flash"
+			/>
+		</object>
+    </div>
+</div>

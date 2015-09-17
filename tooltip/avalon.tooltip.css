@@ -1,0 +1,115 @@
+@charset "UTF-8";
+/*
+这是每个都组件都应该引用的部分
+*/
+.oni-tooltip-hidden {
+  visibility: hidden; }
+
+div.oni-tooltip {
+  padding: 10px;
+  position: absolute;
+  max-width: 300px;
+  overflow: visible;
+  background: #ffe44f;
+  border: 1px solid #ffc805;
+  color: #a65a00;
+  font-size: 12px;
+  border-radius: 0 0 0 0; }
+  div.oni-tooltip a, div.oni-tooltip a:link, div.oni-tooltip a:hover {
+    color: #a65a00;
+    cursor: pointer; }
+  div.oni-tooltip .oni-tooltip-arrow-in, div.oni-tooltip .oni-tooltip-arrow-out {
+    overflow: visible;
+    position: absolute; }
+
+.oni-tooltip-top .oni-tooltip-arrow-in {
+  width: 0;
+  height: 0;
+  line-height: 0;
+  font-size: 0;
+  border-top: 0 none;
+  border-right: 4px dashed transparent;
+  border-bottom: 5px solid #ffe44f;
+  border-left: 4px dashed transparent;
+  left: 29px;
+  top: -5px; }
+.oni-tooltip-top .oni-tooltip-arrow-out {
+  width: 0;
+  height: 0;
+  line-height: 0;
+  font-size: 0;
+  border-top: 0 none;
+  border-right: 5px dashed transparent;
+  border-bottom: 6px solid #ffc805;
+  border-left: 5px dashed transparent;
+  left: 28px;
+  top: -6px; }
+.oni-tooltip-right .oni-tooltip-arrow-in {
+  width: 0;
+  height: 0;
+  line-height: 0;
+  font-size: 0;
+  border-top: 4px dashed transparent;
+  border-right: 0;
+  border-bottom: 4px dashed transparent;
+  border-left: 5px solid #ffe44f;
+  right: -4px;
+  top: 29px; }
+.oni-tooltip-right .oni-tooltip-arrow-out {
+  width: 0;
+  height: 0;
+  line-height: 0;
+  font-size: 0;
+  border-top: 5px dashed transparent;
+  border-right: 0;
+  border-bottom: 5px dashed transparent;
+  border-left: 6px solid #ffc805;
+  left: auto;
+  right: -5px;
+  top: 28px; }
+.oni-tooltip-bottom .oni-tooltip-arrow-in {
+  width: 0;
+  height: 0;
+  line-height: 0;
+  font-size: 0;
+  border-top: 5px solid #ffe44f;
+  border-right: 4px dashed transparent;
+  border-bottom: 0;
+  border-left: 4px dashed transparent;
+  bottom: -5px;
+  left: 29px;
+  top: auto; }
+.oni-tooltip-bottom .oni-tooltip-arrow-out {
+  width: 0;
+  height: 0;
+  line-height: 0;
+  font-size: 0;
+  border-top: 6px solid #ffc805;
+  border-right: 5px dashed transparent;
+  border-bottom: 0;
+  border-left: 5px dashed transparent;
+  bottom: -6px;
+  left: 28px;
+  top: auto; }
+.oni-tooltip-left .oni-tooltip-arrow-in {
+  width: 0;
+  height: 0;
+  line-height: 0;
+  font-size: 0;
+  border-top: 4px dashed transparent;
+  border-right: 5px solid #ffe44f;
+  border-bottom: 4px dashed transparent;
+  border-left: 0;
+  left: -4px;
+  top: 29px; }
+.oni-tooltip-left .oni-tooltip-arrow-out {
+  width: 0;
+  height: 0;
+  line-height: 0;
+  font-size: 0;
+  border-top: 5px dashed transparent;
+  border-right: 6px solid #ffc805;
+  border-bottom: 5px dashed transparent;
+  border-left: 0;
+  left: -5px;
+  top: 28px; }

@@ -1,0 +1,271 @@
+@import "../chameleon/oniui-theme";
+$uiname: "oni-smartgrid";
+.#{$uiname} {
+    font-size: 12px;
+    line-height: 20px;
+    position: relative;
+    /*三种容器的规则*/
+    .oni-helper-asc, .oni-helper-desc,  .oni-helper-ndb{
+        width:12px;
+        height:12px;
+        line-height: 1;
+        vertical-align: middle;
+        @include inline-block();
+        //display: inline-block;
+        position: relative;
+        cursor: pointer;
+    }
+    /*三种容器下三角形的共同点*/
+    .oni-helper-asc span, .oni-helper-desc span, .oni-helper-ndb span{
+        position: absolute;
+        top: 0px;
+        left: 4px;
+    }
+    /*上三角*/
+    .oni-helper-ndb .oni-helper-sort-top, .oni-helper-desc .oni-helper-sort-top{
+        @include triangle(top, 12px, half, #ccc);
+        top: 0px;
+        left: 0px;
+    }
+    .oni-helper-asc .oni-helper-sort-top{
+        @include triangle(top, 12px, half, #000);
+        top: 0px;
+        left: 0px;
+    }
+    /*下三角*/
+    .oni-helper-ndb .oni-helper-sort-bottom, .oni-helper-asc .oni-helper-sort-bottom{
+        @include triangle(bottom, 12px, half, #ccc);
+        top: 8px;
+        left: 0px;
+    }
+    .oni-helper-desc .oni-helper-sort-bottom{
+        @include triangle(bottom, 12px, half, #000);
+        top: 8px;
+        left: 0px;
+    }
+    .oni-pager {
+        display: inline;
+        float: right; 
+    }
+    input {
+        margin: 0;
+    }
+}
+.#{$uiname}-hide {
+    display: none;
+}
+.#{$uiname}-hover {
+    background-color: #e8f5fd; 
+}
+.#{$uiname}-selected {
+    background-color: #fff7e6;
+}
+.#{$uiname}-disabled {
+    color: #ccc;
+    background: #fff;
+    .oni-dropdown .oni-dropdown-source {
+        border-color: #ccc;
+    }
+}
+.#{$uiname}-hidden input {
+    visibility: hidden;
+}
+.#{$uiname}-main-wrapper {
+    position: relative;
+    overflow-x: auto;
+    _width: 100%;
+    border: 1px solid #e5e5e5;
+}
+.#{$uiname}-header {
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #e5e5e5;
+    zoom: 1;
+}
+.#{$uiname}-header-fixed {
+    background-color: #f8f8f8;
+    border-top: 1px solid #e5e5e5;
+    border-bottom: 1px solid #e5e5e5;
+    border-right: 1px solid #e5e5e5;
+    z-index: 1;
+}
+.#{$uiname}-column {
+    display: inline-block;
+    *display: inline;
+    _display: inline;
+    zoom: 1;
+    vertical-align: middle;
+    overflow: hidden;
+}
+.#{$uiname}-column-cell {
+    padding: 7px 5px;
+}
+.#{$uiname}-body-wrapper {
+    overflow-y: auto;
+    zoom: 1;
+}
+.#{$uiname}-body {
+    background: #fff;
+}
+.#{$uiname}-row {
+    border-bottom: 1px solid #f3f3f3;
+    font-size: 0
+}
+.#{$uiname}-row .#{$uiname}-column {
+    font-size: 12px;
+}
+.#{$uiname}-footer {
+    background-color: #f8f8f8;
+    font-size: 0;
+    padding: 0;
+    .#{$uiname}-pager-wrapper {
+        width: 100%;
+        padding: 5px 0px;
+        overflow: hidden;
+        background-color: #f8f8f8;
+    }
+}
+.#{$uiname}-pager-options {
+    font-size: 12px;
+    float: left;
+    height: 26px;
+    line-height: 26px;
+    padding-left: 5px; 
+    .#{$uiname}-showinfo {
+        @include inline-block();
+    }
+    .oni-dropdown {
+        margin: 0 5px;
+        vertical-align: top; 
+    }
+}
+.#{$uiname}-nodata {
+    padding: 23px 0;
+    text-align: center;
+    line-height: 15px;
+}
+
+/*列设置*/
+.#{$uiname}-handler-wrap{
+    @include inline-block();
+    position: relative;
+    z-index: 1;
+    vertical-align: middle;
+    text-align: left;
+    font-size: 12px;
+
+    .#{$uiname}-handler-toggle{
+        width: 24px;
+        height: 24px;
+        border: 1px #ccc solid;
+        border-radius: 2px;
+        cursor: pointer;
+        text-align: center;
+        line-height: 28px;
+        outline: none;
+        background: #f8f8f8 url(http://7xkm02.com1.z0.glb.clouddn.com/smartgridsetting.png) no-repeat center;
+        @include user-select();
+    }
+
+    .#{$uiname}-handler-toggle-active{
+        border-color: #3775c0;
+    }
+
+    .#{$uiname}-handler{
+        position: absolute;
+        top: 25px;
+        left: 0;
+        width: 290px;
+        background-color: #fff;
+        border: 1px solid #cccccc;
+
+        .#{$uiname}-handler-mode{
+            padding: 9px 10px;
+            border-bottom: 1px #f2f2f2 solid;
+            color: #0084bb;
+
+            span{
+                margin: 0 10px 0 0;
+                cursor: pointer;
+                @include user-select();
+            }
+
+            .#{$uiname}-handler-mode-active{
+                font-weight: bold;
+            }
+        }
+        .#{$uiname}-handler-list{
+            margin: 0;
+            padding: 9px 10px;
+            list-style: none;
+            overflow: hidden;
+
+            >li{
+                float: left;
+                width: 135px;
+
+                >label{
+                    @include inline-block();
+                    cursor: pointer;
+
+                    >input{
+                        @include inline-block();
+                        margin-left: 0;
+                        cursor: pointer;
+                        *vertical-align: -3px;
+                    }
+                    .oni-smartgrid-handler-name{
+                        @include inline-block();
+                        max-width: 110px;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space:nowrap;
+                    }
+                }
+            }
+        }
+        .#{$uiname}-handler-ope{
+            padding: 4px 5px;
+            text-align: right;
+            background-color: #f8f8f8;
+            font-size: 0;
+
+            span{
+                @include inline-block();
+                padding: 4px 5px;
+                margin: 0 0 0 5px;
+                line-height: 1;
+                font-size: 12px;
+                border-radius: 2px;
+                cursor: pointer;
+                @include user-select();
+            }
+
+            .#{$uiname}-handler-confirm{
+                background-color: #58b359;
+                color: #fff;
+                border: 1px #45a846 solid;
+
+                &:hover{
+                    background-color: #68c969;
+                    border-color: #3e973e;
+                }
+            }
+
+            .#{$uiname}-handler-cancel{
+                background-color: #f8f8f8;
+                border: 1px #ccc solid;
+
+                &:hover{
+                    border-color: #bbb;
+                }
+            }
+        }
+    }
+}
+
+.#{$uiname}-handler-wrap-right{
+    .#{$uiname}-handler {
+        left: auto;
+        right: 0;
+    }
+}

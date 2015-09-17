@@ -1,0 +1,36 @@
+<div class="oni-accordion-inner" ms-each-item="data" ms-class="oni-accordion-horizontal: direction==='horizontal'">
+    <div class="oni-accordion-header oni-widget-header oni-state-default oni-accordion-trigger"
+
+        ms-class="MS_OPTION_ACTIVECLASS:item.toggle"
+        ms-class-1="oni-corner-top: item.toggle && direction==='vertical'"
+        ms-class-2="oni-corner-all: direction==='vertical'"
+        MS_OPTION_HORIZONTAL_HEADER_WIDTH_HEIGHT
+        ms-hover="oni-state-hover">
+        <h2 ms-if="direction==='horizontal'" MS_OPTION_HORIZONTAL_TITLE>{{item.title}} {{$index}}{{currentIndex}}</h2>
+        <span ms-if="direction==='vertical'">{{item.title}}</span>
+    </div>
+    <div class="oni-accordion-content oni-widget-content oni-state-default" 
+         ms-visible="item.toggle"
+         ms-class="oni-corner-bottom: direction==='vertical'"
+         MS_OPTION_HORIZONTAL_CONTENT_WIDTH_HEIGHT>
+         <div MS_OPTION_HORIZONTAL_CONTENT_WIDTH_HEIGHT>
+            {{item.content|html}}
+         </div>
+    </div>
+</div>
+MS_OPTION_MODE_CARET
+<div class="oni-accordion-inner" ms-each-item="data">
+    <div class="oni-accordion-header oni-widget-header oni-state-default oni-corner-all"
+        ms-class="MS_OPTION_ACTIVECLASS:item.toggle"
+        ms-class-1="oni-corner-top: item.toggle"
+        ms-hover="oni-state-hover">
+        <span class="oni-accordion-icon-wrap oni-accordion-trigger">
+            <i class="oni-icon oni-icon-caret-right">&#xf040;</i>
+            <i class="oni-icon oni-icon-caret-down">&#xf033;</i>
+        </span> 
+        {{item.title}}
+    </div>
+    <div class="oni-accordion-content oni-state-default oni-widget-content oni-corner-bottom" ms-visible="item.toggle">
+        {{item.content|html}}
+    </div>
+</div>

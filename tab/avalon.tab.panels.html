@@ -1,0 +1,12 @@
+<div class="oni-tab-panel-container" ms-each-panel="tabpanels"
+	 ms-visible="toggle"
+	 ms-if="tabpanels.size()">
+     <div class="oni-tab-panel oni-widget-content" 
+          ms-visible="_shallPanelAlwaysShow($index)" 
+          ms-if-loop="_isAjax(panel)">{{panel.content | sanitize | html }}</div>
+     <div class="oni-tab-panel oni-widget-content"
+          ms-visible="_shallPanelAlwaysShow($index)" 
+          ms-include-src="panel.content" 
+          ms-if-loop="!_isAjax(panel)" data-include-rendered="onAjaxCallback">
+     </div>
+</div>

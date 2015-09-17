@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>验证框架</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js">
+
+        </script>
+        <script src="../highlight/shCore.js">
+
+        </script>
+        <style >
+            .error{
+                border:1px  solid red;
+
+            }
+            .success{
+                border:1px  solid greenyellow;
+            }
+            .error-tip{
+                color: red;
+                background:pink;
+            }
+        </style>
+        <script>
+            require(["validation/avalon.validation", "ready!"], function() {
+                var validationVM
+                var v = avalon.define({
+                    $id: "test",
+                    $skipArray: ["validation"],
+                    a: 'bbb',
+                    b: ["4", "5"],
+                    c: "5",
+                    d: "",
+                    a1: 0,
+                    a2: 0,
+                    a3: 0,
+                    a4: 0,
+                    four: [],
+                    validateInBlur:false,
+                    clearAll: function() {
+                        validationVM && validationVM.resetAll()
+                    },
+                    checkAll: function() {
+                        validationVM && validationVM.validateAll()
+                    },
+                    validation: {
+                        validationHooks: {
+                            checkfour1: {
+                                message: "要求a1 > a2 && a3 < a4",
+                                get: function(value, data, next) {
+                                    var ret = v.a1 > v.a2 && v.a3 < v.a4
+                                    next(ret)
+                                    return value
+                                }
+                            }
+                        },
+                        valiedateInBlur: false,
+                        onInit: function(v) {
+                            validationVM = v
+                        },
+                        onReset: function(e, data) {
+                            data.valueResetor()
+                        },
+                        onValidateAll: function(reasons) {
+                            var msg = []
+                            reasons.forEach(function(reason) {
+                                msg.push(reason.getMessage())
+                            })
+                            if (reasons.length === 0) {
+                                alert("全部验证成功！")
+                            } else {
+                                alert(msg.join("\n"))
+                            }
+                        }
+                    }
+                })
+
+//                v.$watch("a1", function(a) {
+//                    v.four[0] = a
+//                })
+//                v.$watch("a2", function(a) {
+//                    v.four[1] = a
+//                })
+//                v.$watch("a3", function(a) {
+//                    v.four[2] = a
+//                })
+//                v.$watch("a4", function(a) {
+//                    v.four[3] = a
+//                    avalon.log(v.four)
+//                })
+                avalon.scan()
+            })
+
+
+        </script>
+    </head>
+    <body>
+        <form ms-controller="test" ms-widget="validation">
+            <pre>select, checkbox, radiobox, textarea</pre>
+            <select ms-duplex-contains="a" data-duplex-contains="aaa">
+                <option value="aaa" >aaa</option>
+                <option value="bbb" >bbb</option>
+            </select> 必须选择 aaa
+            <br />
+            <label><input name="chk" type="checkbox" value="1" ms-duplex-contain="b" data-duplex-contain="1,2" />1</label>
+            <label><input name="chk" type="checkbox" value="2" ms-duplex="b"/>2</label>
+            <label><input name="chk" type="checkbox" value="3" ms-duplex="b"/>3</label>
+            <label><input name="chk" type="checkbox" value="4" ms-duplex="b"/>4</label>
+            <label><input name="chk" type="checkbox" value="5" ms-duplex="b"/>5</label>
+            必须包含 1与 2
+            <br />
+            <label><input name="rdo" type="radio" value="1" ms-duplex-contains-string="c" data-duplex-contains="1,2" />1</label>
+            <label><input name="rdo" type="radio" value="2" ms-duplex-string="c"/>2</label>
+            <label><input name="rdo" type="radio" value="3" ms-duplex-string="c"/>3</label>
+            <label><input name="rdo" type="radio" value="4" ms-duplex-string="c"/>4</label>
+            <label><input name="rdo" type="radio" value="5" ms-duplex-string="c"/>5</label>
+            必须选择 1 或 2
+            <br />
+            <textarea ms-duplex="d"></textarea>  <div ms-duplex-required="d" class="error">必须有内容</div>
+            必须有内容
+            <br />
+            <!--方案1
+                        <label><input name="chk"  value="1" ms-duplex-required-number-checkfour1-="a1" />{{a1}}</label>
+                        <label><input name="chk"  value="2" ms-duplex-required-number="a2"/>{{a2}}</label>
+                        <label><input name="chk"  value="3" ms-duplex-required-number="a3"/>{{a3}}</label>
+                        <label><input name="chk"  value="4" ms-duplex-required-number="a4"/>{{a4}}</label>
+            -->          
+            <label><input name="chk"  value="1" ms-duplex-required-number="a1"  />{{a1}}</label>
+            <label><input name="chk"  value="2" ms-duplex-required-number="a2"/>{{a2}}</label>
+            <label><input name="chk"  value="3" ms-duplex-required-number="a3"/>{{a3}}</label>
+            <label><input name="chk"  value="4" ms-duplex-required-number="a4"/>{{a4}}</label>
+            <div ms-duplex-checkfour1="four"></div>
+
+            <br/>
+            <input type="button" value="验证" ms-click="checkAll" />
+            <input type="button" value="重置" ms-click="clearAll" />
+        </form>
+    </body>
+</html>

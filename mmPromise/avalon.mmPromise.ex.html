@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Promise组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js">
+
+        </script>
+        <script src="../highlight/shCore.js">
+
+        </script>
+        <script>
+            require(["mmPromise/mmPromise", "domReady!"], function() {
+                Promise.all([]).then(function() {
+                    alert("成功")
+                })
+            })
+        </script>
+    </head>
+    <body ms-controller="test">
+        <pre class="brush:javascript;gutter:false;toolbar:false">
+            require(["mmPromise/mmPromise", "ready!"], function() {
+                Promise.all([]).then(function(){
+                    alert("成功")
+                })
+            })
+        </pre>
+    </body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>伸缩组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+    </head>
+    
+    <body>
+        <div class="wrapper">
+            <h2>resizable</h2>
+            <fieldset>
+                <legend>伸缩组件</legend>使用时在目标元素上添加ms-resizable绑定属性，值可以为空。值不为空时，有两个可选设置项，用逗号隔开。 第一个用于指放置配置对象的VM的$id，为$或不存在时默认为离它最近的VM。第二个用于指定配置对象。</fieldset>
+            <h3
+            class="table-doc-title">使用说明</h3>
+                <table class="table-doc">
+                    <colgroup>
+                        <col width="180">
+                            <col width="95">
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <th>名字</th>
+                            <th>默认值</th>
+                            <th>说明</th>
+                        </tr>
+                        <tr>
+                            <td colspan="3" align="center">配置参数</td>
+                        </tr>
+                        <tr>
+                            <td>handles</td>
+                            <td>"n,e,s,w,ne,se,sw,nw"</td>
+                            <td>伸缩的方向,一共八个方向</td>
+                        </tr>
+                        <tr>
+                            <td>maxHeight</td>
+                            <td>10000</td>
+                            <td>被调整大小的元素最大能拉到多高</td>
+                        </tr>
+                        <tr>
+                            <td>maxWidth</td>
+                            <td>10000</td>
+                            <td>被调整大小的元素最大能拉到多宽</td>
+                        </tr>
+                        <tr>
+                            <td>minHeight</td>
+                            <td>10</td>
+                            <td>被调整大小的元素最小能压到多低</td>
+                        </tr>
+                        <tr>
+                            <td>minWidth</td>
+                            <td>10</td>
+                            <td>被调整大小的元素最小能压到多窄</td>
+                        </tr>
+                        <tr>
+                            <td>edge</td>
+                            <td>5</td>
+                            <td>距离在拉到的边缘还有多少ms就能被调整大小及改变光标的类型</td>
+                        </tr>
+                        <tr>
+                            <td>aspectRatio</td>
+                            <td></td>
+                            <td>等比例缩放, 没有默认值,如果是数字,为长与高之比</td>
+                        </tr>
+                        <tr>
+                            <td>start(e,data)</td>
+                            <td>空函数</td>
+                            <td>调整大小前触发的函数。此函数有两个参数 分别是事件对象与data对象，this指向拖动元素</td>
+                        </tr>
+                        <tr>
+                            <td>resize(e,data)</td>
+                            <td>空函数</td>
+                            <td>调整大小时连续触发的函数。参数与this情况见start</td>
+                        </tr>
+                        <tr>
+                            <td>drag(e,data)</td>
+                            <td>空函数</td>
+                            <td>拖动时连续触发的函数。参数与this情况见start。这个需要自己设置元素top, left。</td>
+                        </tr>
+                        <tr>
+                            <td>stop</td>
+                            <td>空函数</td>
+                            <td>调整大小后触发的函数。参数与this情况见start</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <h3 class="table-doc-title">使用说明</h3>
+                <table class="table-doc">
+                    <tbody>
+                        <tr>
+                            <th>名称</th>
+                            <th>默认值</th>
+                            <th></th>
+                            <th>说明</th>
+                        </tr>
+                        <tr>
+                            <td colspan="3" align="center">接口方法与固有属性</td>
+                        </tr>
+                        <tr>
+                            <td>startResizeTop/startResizeLeft</td>
+                            <td>0</td>
+                            <td>被调整大小的元素最开始时的坐标</td>
+                        </tr>
+                        <tr>
+                            <td>startResizeWidth/startResizeHeight</td>
+                            <td>0</td>
+                            <td>被调整大小的元素最开始时的宽高</td>
+                        </tr>
+                        <tr>
+                            <td>resizeTop/resizeLeft</td>
+                            <td>0</td>
+                            <td>被调整大小的元素在拖动中时的坐标</td>
+                        </tr>
+                        <tr>
+                            <td>resizeWidth/resizeHeight</td>
+                            <td>0</td>
+                            <td>被调整大小的元素在拖动中时的宽高</td>
+                        </tr>
+                        <tr>
+                            <td>dir</td>
+                            <td>""</td>
+                            <td>被调整大小的元素当前往哪个方向拉伸,为handles的其中一个</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <ul class="example-links">
+                    <li>
+                        <a href="avalon.resizable.ex1.html">各种回调</a>
+                    </li>
+                    <li>
+                        <a href="avalon.resizable.ex2.html">最小最大尺寸</a>
+                    </li>
+                    <li>
+                        <a href="avalon.resizable.ex3.html">按比例缩放</a>
+                    </li>
+                    <li>
+                        <a href="avalon.resizable.ex4.html">使用shift键</a>
+                    </li>
+                    <li>
+                        <a href="avalon.resizable.ex5.html">缩放textarea, select, input等控件</a>
+                    </li>
+                    <li>
+                        <a href="avalon.resizable.ex6.html">既能调整大小又能拖</a>
+                    </li>
+                </ul>
+        </div>
+    </body>
+
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>Name 复选框列表</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <meta name="descriptions" content="通过checkboxlist可以方便的实现选框的全选、全不选，并可通过简单配置进行选中操作的回调处理，也可以通过多种方式来提供渲染选项视图所需要的数据
+ ">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    
+    <body>
+        <div class="wrapper">
+            <h2>checkboxlist</h2>
+            <fieldset>
+                <legend>Name 复选框列表</legend>
+                <p>通过checkboxlist可以方便的实现选框的全选、全不选，并可通过简单配置进行选中操作的回调处理，也可以通过多种方式来提供渲染选项视图所需要的数据</p>
+            </fieldset>
+            <h3 class="table-doc-title">使用说明</h3>
+            <table class="table-doc" border="1">
+                <colgroup>
+                    <col width="180">
+                        <col width="95">
+                            <col width="180">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>名字</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="4">配置参数</td>
+                    </tr>
+                    <tr>
+                        <td>data</td>
+                        <td>Array</td>
+                        <td>[]</td>
+                        <td>所有选项值的集合，通过此数据来渲染初始视图。可以在组件初始化之前配置data，也可以在异步取得数据之后在配置。当同时配置了data、fetch且在绑定元素内部显示设置了要渲染的checkbox列表，则优先级顺序是：data&gt;fetch&gt;sub
+                            elements</td>
+                    </tr>
+                    <tr>
+                        <td>all</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>默认不选中所有选项</td>
+                    </tr>
+                    <tr>
+                        <td>alltext</td>
+                        <td>String</td>
+                        <td>"全部"</td>
+                        <td>显示"全部"按钮，方便进行全选或者全不选操作,不需要全选操作的话可以设置alltext为""</td>
+                    </tr>
+                    <tr>
+                        <td>type</td>
+                        <td>String</td>
+                        <td>""</td>
+                        <td>内置type为week时的data，用户只需配置type为week即可显示周一到周日的选项</td>
+                    </tr>
+                    <tr>
+                        <td>fetch</td>
+                        <td>String</td>
+                        <td>""</td>
+                        <td>通过配置fetch来获得要显示的数据，数据格式必须如下所示：
+                            <pre class="brush:javascript;gutter:false;toolbar:false">             [
+                { text : '文字1' , value : 'w1' } ,
+                { text : '文字2' , value : 'w2' } ,
+                { text : '文字3' , value : 'w3' } ,
+                { text : '文字4' , value : 'w4' }
+             ]
+             </pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>onSelect</td>
+                        <td>Function</td>
+                        <td>avalon.noop</td>
+                        <td>组件面板展开后的回调函数
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>data</td>
+                                        <td>Array</td>
+                                        <td>checkboxlist的选项集合</td>
+                                    </tr>
+                                    <tr>
+                                        <td>checkStatus</td>
+                                        <td>Boolean</td>
+                                        <td>选中或者未选中的状态</td>
+                                    </tr>
+                                    <tr>
+                                        <td>target</td>
+                                        <td>ElementObj</td>
+                                        <td>触发事件的dom对象的引用</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>vertical</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>如果希望选框水平排列则设置vertical为false，默认垂直排列</td>
+                    </tr>
+                </tbody>
+            </table>
+            <ul class="example-links">
+                <li>
+                    <a href="avalon.checkboxlist.ex.html">checkboxlist功能全览</a>
+                </li>
+                <li>
+                    <a href="avalon.checkboxlist.ex1.html">默认配置的checkboxlist组件</a>
+                </li>
+                <li>
+                    <a href="avalon.checkboxlist.ex2.html">配置checkboxlist-duplex初始化初始选中的选项，而且可以通过duplex值的改变修正选中项状态</a>
+                </li>
+                <li>
+                    <a href="avalon.checkboxlist.ex3.html">checkboxlist组件默认提供了type为week时的data</a>
+                </li>
+                <li>
+                    <a href="avalon.checkboxlist.ex4.html">配置checkboxlist-fetch获取用户定义的所有选项值</a>
+                </li>
+                <li>
+                    <a href="avalon.checkboxlist.ex5.html">配置onselect回调</a>
+                </li>
+                <li>
+                    <a href="avalon.checkboxlist.ex6.html">配置data选项来渲染checkbox</a>
+                </li>
+            </ul>
+        </div>
+    </body>
+
+</html>

@@ -1,0 +1,10 @@
+
+/*
+这是每个都组件都应该引用的部分
+*/
+.oni-textbox-suggest { position: relative; z-index: 1000; }
+
+.oni-suggest { position: absolute; top: 3px; left: -6px; z-index: 1; border: 1px solid #cccccc; padding: 0; margin: 0; background-color: #ffffff; }
+.oni-suggest .oni-suggest-item { overflow: hidden; cursor: pointer; font-size: 12px; padding: 3px 5px; word-break: break-all; }
+.oni-suggest .oni-suggest-item-selected { background-color: #3775c0; color: #fff; }
+.oni-suggest .oni-suggest-item-hover { background-color: #f8f8f8; color: #333333; }

@@ -1,0 +1,96 @@
+
+@import "../chameleon/oniui-theme";
+$uiname: "oni-spinner";
+.oni-spinner {
+    font-size: 0;
+    @include inline-block();
+    .oni-btn {
+        height: 26px;
+        overflow: visible;
+        _overflow-y: hidden;
+        padding: 0 10px;
+        font-size: 0;
+        outline: 0;
+        vertical-align: middle;
+        @include border-radius(2px);
+        @if($oinui-theme == smoothness) {
+            color: #333333;
+            background-color: #f8f8f8;
+            border: 1px solid #cccccc;
+        }
+        &:active {
+            border-color: #fff;
+        }
+        &:hover {
+            @if($oinui-theme == smoothness) {
+                box-shadow: 1px 1px 0 0 rgba(0, 0, 0, 0.1);
+                background-color: #f8f8f8;
+                border-color: #bbbbbb;
+                color: #333333;
+            }
+        }
+        &.oni-state-disabled, &.oni-state-disabled .oni-icon {
+            background-color: whitesmoke;
+            border-color: #d9d9d9;
+            cursor: default;
+            color: #ccc;
+        }
+    }
+    .oni-btn .oni-icon {
+        line-height: 15px;
+        text-indent: 0;
+    }
+    .oni-textbox {
+        @include inline-block();
+        outline: none;
+        margin: 0 -1px;
+        border: 1px solid #cccccc;
+        padding: 3px 5px;
+        font-size: 0;
+        line-height: 18px;
+        @if($oinui-theme == smoothness) {
+            background-color: #ffffff;
+        }
+        &:hover {
+            @if($oinui-theme == smoothness) {
+                border-color: #999999;
+            }
+        }
+        &.oni-state-disabled {
+            background-color: whitesmoke;
+            border-color: #d9d9d9;
+            cursor: default;
+        }
+        .oni-textbox-input-wrap {
+            position: relative;
+            @include inline-block();
+            vertical-align: middle;
+            .oni-textbox-input {
+                position: relative;
+                display: inline;
+                float: left;
+                top: 1px\9;
+                _top: 0;
+                outline: none;
+                height: 18px;
+                line-height: 18px;
+                vertical-align: middle;
+                font-size: 12px;
+                border: 0 none;
+                padding: 0;
+                @if($oinui-theme == smoothness) {
+                    color: #333333;
+                    background-color: #ffffff;
+                }
+                &.oni-state-disabled {
+                    background-color: whitesmoke;
+                    border-color: #d9d9d9;
+                    cursor: default;
+                    color: #ccc;
+                }
+            }
+        }
+    }
+}
+
+

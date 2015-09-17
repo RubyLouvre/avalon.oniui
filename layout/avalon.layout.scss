@@ -1,0 +1,27 @@
+@charset "utf-8"; 
+@import "../chameleon/oniui-theme";
+$uiname : ".oni-layout";
+
+#{$uiname} {
+	position: relative;
+    #{$uiname}-north-resizer,#{$uiname}-south-resizer {
+	    cursor: row-resize;
+    }
+    #{$uiname}-west-resizer,#{$uiname}-east-resizer {
+    	cursor: e-resize;
+    }
+    #{$uiname}-region {
+    	display: inline-block;
+    	position: absolute;
+        border-style: solid;
+        border-color: #95B8E7;
+        overflow: hidden;
+    }
+}
+#{$uiname}-resizer {
+    position: absolute; 
+    z-index: 10;
+    background-color:#E6EEF8;
+    opacity: 0.5;
+    overflow: hidden;
+}

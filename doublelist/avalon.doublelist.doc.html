@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>doublelist组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <meta name="descriptions" content=" 以左右列表形式展示实现的复选组件，不支持ms-duplex，请在onChange回调里面处理类似ms-duplex逻辑
+ ">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    
+    <body>
+        <div class="wrapper">
+            <h2>doublelist</h2>
+            <fieldset>
+                <legend>doublelist组件</legend>
+                <p>以左右列表形式展示实现的复选组件，不支持ms-duplex，请在onChange回调里面处理类似ms-duplex逻辑</p>
+            </fieldset>
+            <h3 class="table-doc-title">使用说明</h3>
+            <table class="table-doc" border="1">
+                <colgroup>
+                    <col width="180">
+                        <col width="95">
+                            <col width="120">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>名字</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="4">配置参数</td>
+                    </tr>
+                    <tr>
+                        <td>data</td>
+                        <td>Array</td>
+                        <td>[]</td>
+                        <td>配置左侧待选项列表，数据 [{value: xxx, name: xx}]</td>
+                    </tr>
+                    <tr>
+                        <td>select</td>
+                        <td>Array</td>
+                        <td>[]</td>
+                        <td>选中的value list，[value1,value2]，取的是data 里面item的value</td>
+                    </tr>
+                    <tr>
+                        <td>toggle</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>组件是否显示，可以通过设置为false来隐藏组件</td>
+                    </tr>
+                    <tr>
+                        <td>hideSelect</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>是否隐藏以选中的项目，默认不隐藏</td>
+                    </tr>
+                    <tr>
+                        <td>onInit</td>
+                        <td>Member</td>
+                        <td>avalon.noop</td>
+                        <td>onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method</td>
+                    </tr>
+                    <tr>
+                        <td>getTemplate(tmpl,opts,tplName)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>getTemplate(tpl, opts) 定制修改模板接口</td>
+                    </tr>
+                    <tr>
+                        <td>countLimit(select)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>countLimit(select) 选择条目限制，必须有return true or false，参数是当前已选中条数和add or delete操作</td>
+                    </tr>
+                    <tr>
+                        <td>onChange</td>
+                        <td>Member</td>
+                        <td>avalon.noop</td>
+                        <td>change(newValue, oldValue, vmodel) 所选变化的回调，不建议使用，等价于onChange</td>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="4">接口方法与固有属性</td>
+                    </tr>
+                    <tr>
+                        <td>reset(data,select)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>reset(data, select) 重置，用新的data和select渲染，如果!data为真，则不修改左侧list；如果select为空或者空数组，则清空已选，否则将select中的项目置为已选</td>
+                    </tr>
+                </tbody>
+            </table>
+            <ul class="example-links">
+                <li>
+                    <a href="avalon.doublelist.ex.html">doublelist-隐藏已选中条目，限制选中条数</a>
+                </li>
+                <li>
+                    <a href="avalon.doublelist.ex1.html">doublelist-显示已选中条目，不限制选中条数</a>
+                </li>
+            </ul>
+        </div>
+    </body>
+
+</html>

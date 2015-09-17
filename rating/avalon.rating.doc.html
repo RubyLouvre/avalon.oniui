@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    
+    <head>
+        <meta http-equiv="content-type" content="text/html;charset=utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="description" content="rating是星标组件，创建可点选的标星工具。">
+        <title>rating文档说明</title>
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+    </head>
+    
+    <body class="doc">
+        <div class="wrapper">
+            <h2>rating</h2>
+            <fieldset>
+                <legend>评分组件</legend>
+                <p>使用ms-duplex可以方便的设置和获取星标数值。</p>
+                <p>图标使用字体图标。来自：
+                    <a href="http://fortawesome.github.io/Font-Awesome/icons/">Font-Awesome</a>
+                </p>
+            </fieldset>
+            <h3 class="table-doc-title">使用说明</h3>
+            <table class="table-doc">
+                <thead>
+                    <tr>
+                        <th>名字</th>
+                        <th>默认值</th>
+                        <th>说明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="3" align="center">配置参数</td>
+                    </tr>
+                    <tr>
+                        <td>defaultValue</td>
+                        <td>3</td>
+                        <td>设置星标默认值</td>
+                    </tr>
+                    <tr>
+                        <td>margin</td>
+                        <td>3</td>
+                        <td>设置星标间距</td>
+                    </tr>
+                    <tr>
+                        <td>max</td>
+                        <td>5</td>
+                        <td>设置星标最大值</td>
+                    </tr>
+                    <tr>
+                        <td>notSelectedColor</td>
+                        <td>#CECECE</td>
+                        <td>设置未选中颜色</td>
+                    </tr>
+                    <tr>
+                        <td>notSelectedContent</td>
+                        <td>&amp;#xf006;</td>
+                        <td>设置未选中图标</td>
+                    </tr>
+                    <tr>
+                        <td>selectedColor</td>
+                        <td>#00A3C2</td>
+                        <td>设置选中颜色</td>
+                    </tr>
+                    <tr>
+                        <td>selectedContent</td>
+                        <td>&amp;#xf005;</td>
+                        <td>设置选中图标</td>
+                    </tr>
+                    <tr>
+                        <td>size</td>
+                        <td>20</td>
+                        <td>设置星标大小</td>
+                    </tr>
+                    <tr>
+                        <td>getTemplate(tmp)</td>
+                        <td>Function</td>
+                        <td>方便用户自定义模板</td>
+                    </tr>
+                    <tr>
+                        <td>onInit(vmodel, options, vmodels)</td>
+                        <td>Function</td>
+                        <td>组件初始化完成回调</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" align="center">接口方法</td>
+                    </tr>
+                    <tr>
+                        <td>set(num)</td>
+                        <td></td>
+                        <td>设置星标值。接受一个自然数为参数。</td>
+                    </tr>
+                    <tr>
+                        <td>getRating()</td>
+                        <td></td>
+                        <td>获取当前星标值</td>
+                    </tr>
+                </tbody>
+            </table>
+            <fieldset>
+                <legend>注意</legend>
+                <p>字体编码获取方式：</p>
+                <p>星星图标详情地址
+                    <a href="http://fortawesome.github.io/Font-Awesome/icon/star/">http://fortawesome.github.io/Font-Awesome/icon/star/</a>，如下图找到对应编码为f005</p>
+                <p></p>
+                <p>
+                    <img src="http://ww1.sinaimg.cn/large/71c50075jw1ek0lx2j52aj20fw01r3yl.jpg">
+                </p>
+                <p>则此图标编码为:&amp;#xf005;</p>
+            </fieldset>
+            <h3>例子：</h3>
+            <ol class="example-links">
+                <li>
+                    <a href="avalon.rating.ex.html">例子</a>
+                </li>
+            </ol>
+        </div>
+    </body>
+
+</html>

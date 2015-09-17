@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>accordion demo </title>
+<style>
+    input {
+        margin: 20px 10px;
+    }
+</style>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>accordion demo 3</h1>
+        <div class="demo-show" ms-controller="demo">
+            <div ms-widget="accordion,aa,$aaOpts">
+            </div>
+            <input type="button" ms-click="getCurrentHeader('aa')" value="getCurrentHeader('aa')"/>
+            <input type="button" ms-click="getCurrentPanel('aa')" value="getCurrentPanel('aa')"/>
+            <input type="button" ms-click="getHeader('aa',1)" value="getHeader('aa',1)"/>
+            <input type="button" ms-click="getPanel('aa',1)" value="getPanel('aa',1)"/>
+            <input type="button" ms-click="getLength('aa')" value="getLength('aa')"/>
+            <input type="button" ms-click="getStatus('aa',1)" value="getStatus('aa',1)"/>
+            <input type="button" ms-click="switchTo('aa',1)" value="switchTo('aa',1)"/>
+            <script>
+                require(["accordion/avalon.accordion"], function($$) {
+                    $$.define('demo',function(vm){
+                        vm.$aaOpts = {
+                            data: [{
+                                'title': '标题1',
+                                'content': '正文1<p>fasdfsdaf</p>'
+                            }, {
+                                'title': '标题2',
+                                'content': '正文2'
+                            }],
+                            mode: "custom",
+                            template: '<div class="oni-accordion-inner" ms-each-item="data"><h3 class="oni-accordion-header oni-state-default" ms-class="MS_OPTION_ACTIVECLASS:currentIndex == $index">{{item.title}}</h3><div class="oni-accordion-content oni-state-default oni-widget-content" ms-visible="currentIndex == $index">{{item.content|html}}</div>',
+                        }
+                        vm.getCurrentHeader = function(id) {
+                            var currentHeader = avalon.vmodels[id].getCurrentHeader();
+                            avalon.log(currentHeader);
+                        }
+                        vm.getCurrentPanel = function(id) {
+                            var currentPanel = avalon.vmodels[id].getCurrentPanel();
+                            avalon.log(currentPanel);
+                        }
+                        vm.getHeader = function(id, index) {
+                            var header = avalon.vmodels[id].getHeader(index);
+                            avalon.log(header);
+                        }
+                        vm.getPanel = function(id, index) {
+                            var panel = avalon.vmodels[id].getPanel(index);
+                            avalon.log(panel);
+                        }
+                        vm.getLength = function(id) {
+                            var length = avalon.vmodels[id].getLength();
+                            avalon.log(length);
+                        }
+                        vm.getStatus = function(id, index) {
+                            var status = avalon.vmodels[id].getStatus(index);
+                            avalon.log(status);
+                        }
+                        vm.switchTo = function(id, index) {
+                            avalon.vmodels[id].switchTo(index);
+                        }
+
+                    });
+
+                    $$.scan();
+                });
+            </script>
+        </div>
+
+        <p class="example">可自定义accordion模板，并通过提供的API方便的获取需要的title、panel元素节点等的引用</p>
+        <p><span class="use-description">说明：</span>设置mode为“custom”可以自定义accordion的模板template，但是template需要遵守一些约定，详细说明请查看<a href="avalon.accordion.doc.html">avalon.accordion.doc.html</a>；getCurrentHeader方法可以获得最近一次展开面板的header节点的引用；getCurrentPanel方法可获得最近一次展开面板的panel的引用；getHeader方法可获得指定索引(index)的header节点的引用；getPanel方法可获得指定索引(index)的panel节点的引用；getLength方法可以得到accordion中面板数量；getStatus方法可以获得指定索引(index)的展开或收起状态，1表示展开，0表示收起；switchTo方法可以通过程序控制打开指定索引(index)的面板</p>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;最基本的dialog组件&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;div class="demo-show" ms-controller="demo"&gt;
+                        &lt;div ms-widget="accordion,aa,$aaOpts"&gt;
+                        &lt;/div&gt;
+                        &lt;input type="button" ms-click="getCurrentHeader('aa')" value="getCurrentHeader('aa')"/&gt;
+                        &lt;input type="button" ms-click="getCurrentPanel('aa')" value="getCurrentPanel('aa')"/&gt;
+                        &lt;input type="button" ms-click="getHeader('aa',1)" value="getHeader('aa',1)"/&gt;
+                        &lt;input type="button" ms-click="getPanel('aa',1)" value="getPanel('aa',1)"/&gt;
+                        &lt;input type="button" ms-click="getLength('aa')" value="getLength('aa')"/&gt;
+                        &lt;input type="button" ms-click="getStatus('aa',1)" value="getStatus('aa',1)"/&gt;
+                        &lt;input type="button" ms-click="switchTo('aa',1)" value="switchTo('aa',1)"/&gt;
+                        &lt;script&gt; 
+                            require(["accordion/avalon.accordion"], function($$) {
+                                $$.define('demo',function(vm){
+                                    vm.$aaOpts = {
+                                        data: [{
+                                            'title': '标题1',
+                                            'content': '正文1&lt;p&gt;fasdfsdaf&lt;/p&gt;'
+                                        }, {
+                                            'title': '标题2',
+                                            'content': '正文2'
+                                        }],
+                                        mode: "custom",
+                                        template: '&lt;div class="oni-accordion-inner" ms-each-item="data"&gt;&lt;h3 class="oni-accordion-header" ms-class="MS_OPTION_ACTIVECLASS:currentIndex == $index"&gt;{{item.title}}&lt;/h3&gt;&lt;div class="oni-accordion-content" ms-visible="currentIndex == $index"&gt;{{item.content|html}}&lt;/div&gt;',
+                                    }
+                                    vm.getCurrentHeader = function(id) {
+                                        var currentHeader = avalon.vmodels[id].getCurrentHeader();
+                                        avalon.log(currentHeader);
+                                    }
+                                    vm.getCurrentPanel = function(id) {
+                                        var currentPanel = avalon.vmodels[id].getCurrentPanel();
+                                        avalon.log(currentPanel);
+                                    }
+                                    vm.getHeader = function(id, index) {
+                                        var header = avalon.vmodels[id].getHeader(index);
+                                        avalon.log(header);
+                                    }
+                                    vm.getPanel = function(id, index) {
+                                        var panel = avalon.vmodels[id].getPanel(index);
+                                        avalon.log(panel);
+                                    }
+                                    vm.getLength = function(id) {
+                                        var length = avalon.vmodels[id].getLength();
+                                        avalon.log(length);
+                                    }
+                                    vm.getStatus = function(id, index) {
+                                        var status = avalon.vmodels[id].getStatus(index);
+                                        avalon.log(status);
+                                    }
+                                    vm.switchTo = function(id, index) {
+                                        avalon.vmodels[id].switchTo(index);
+                                    }
+                                    
+                                });
+                                
+                                $$.scan();
+                            });
+                        &lt;/script&gt;
+                    &lt;/div&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+
+    </div>
+</body>
+</html>

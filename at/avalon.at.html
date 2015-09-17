@@ -1,0 +1,8 @@
+<ul class="oni-at-popup" >
+    <li class="oni-at-item" 
+        ms-repeat-item="_datalist" 
+        ms-class="oni-state-hover:activeIndex == $index"
+        ms-mouseenter="_hover($event,$index)"
+        ms-click="_select"
+        >{{item | html}}</li>
+</ul>

@@ -1,0 +1,68 @@
+<div ms-if="!circle" class="oni-progressbar oni-helper-reset oni-helper-clearfix oni-widget oni-widget-content oni-progressbar-normal" 	  ms-class-100="oni-progressbar-indeterminate:indeterminate" 
+	 ms-class-101="oni-progressbar-haslabel:label" 
+	 ms-class-102="oni-progressbar-right:inTwo" 
+	 ms-visible="toggle">
+	<div ms-class-100="oni-helper-hidden:inTwo" class="oni-progressbar-label" ms-if="label">{{_labelShower(value, 'l1') | html}}
+		<b ms-if="!inTwo" class="oni-progressbar-arrow"></b>
+	</div>
+	<div class="oni-progressbar-bar" ms-css-width="{{_cssMaker()}}">
+		<div class="oni-progressbar-label" ms-if="_showLabel(label, inTwo)">{{_labelShower(value) | html}}
+		<b ms-if="inTwo" class="oni-progressbar-arrow"></b></div>
+		<div class="oni-progressbar-overlay" ms-if="_indeterminate()">       
+		</div>
+	</div>
+	<div class="oni-progressbar-bar oni-progressbar-bar-right" ms-if="inTwo" ms-css-width="{{_cssMaker('inTwo')}}">
+		<div class="oni-progressbar-label" ms-if="_showLabel(label, inTwo)">
+		<div class="oni-progressbar-overlay" ms-if="_indeterminate()">
+		</div>{{_labelShower(value, "inTwo") | html}}
+		<b ms-if="inTwo" class="oni-progressbar-arrow"></b></div>
+	</div>
+</div>
+<div ms-if="circle" class="oni-progressbar oni-helper-reset oni-helper-clearfix oni-widget oni-widget-content oni-progressbar-circle" ms-class-100="oni-progressbar-indeterminate:indeterminate" ms-class-101="oni-progressbar-haslabel:label" ms-css-height="circleRadius*2+'px'" ms-css-width="circleRadius*2+'px'">
+	<div class="oni-helper-hidden oni-progressbar oni-progressbar-circle-par"></div>
+	<div class="oni-progressbar-hidden oni-progressbar-circle-bar"></div>
+	<svg ms-if="svgSupport"
+	width="100%" 
+	height="100%" 
+	style="position:absolute;z-index:3;" 
+	version="1.1" 
+	xmlns="http://www.w3.org/2000/svg">
+		<path ms-attr-d="circleCoordinates" 
+		ms-if="circleCoordinates" 
+		ms-attr-stroke="circleBorderColor" 
+		ms-attr-stroke-width="circleBorderWidth" 
+		stroke-linejoin="round" ms-attr-fill="circleColor"></path>
+		<path ms-if="barCoordinates" 
+		ms-attr-d="barCoordinates" 
+		ms-attr-stroke="circleBarColor" 
+		ms-attr-stroke-width="circleBorderWidth" 
+		stroke-linejoin="round" 
+		fill="none"></path>
+	</svg>
+	<v:arc ms-if="!svgSupport"  
+    filled="false" 
+    stroked="true" 
+    ms-css-left="circleBorderWidth+'px'" 
+    ms-css-top="circleBorderWidth+'px'" 
+    ms-css-height="(circleRadius-circleBorderWidth)*2+'px'" 
+    ms-css-width="(circleRadius-circleBorderWidth)*2+'px'" 
+    ms-attr-strokecolor="circleBarColor" 
+    ms-attr-strokeweight="circleBorderWidth +'px'" 
+    style="position:absolute;z-index:3;behavior:url(#default#VML);text-indent:-1000px;overflow:hidden;" 
+    startangle="0" 
+    ms-attr-endangle="angel">
+	</v:arc>
+   	<v:oval ms-if="!svgSupport"  
+	stroked="true" 
+    ms-css-left="circleBorderWidth+'px'" 
+    ms-css-top="circleBorderWidth+'px'" 
+	ms-css-height="(circleRadius-circleBorderWidth)*2+'px'" 
+	ms-css-width="(circleRadius-circleBorderWidth)*2+'px'" 
+	ms-attr-fillcolor="circleColor" 
+	ms-attr-strokecolor="circleBorderColor" 
+	ms-attr-strokeweight="circleBorderWidth+'px'" 
+	style="position:absolute;z-index:2;behavior:url(#default#VML);"></v:oval>
+    <div class="oni-progressbar-label" 
+	ms-css-line-height="circleRadius*2-4+'px'" 
+    ms-if="label">{{_labelShower(value) | html}}</div>
+</div>

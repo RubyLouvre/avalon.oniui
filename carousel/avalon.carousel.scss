@@ -1,0 +1,125 @@
+@charset "utf-8";
+@import "../chameleon/oniui-theme";
+@mixin transition($duration) {
+	-webkit-transition: $duration;
+	-moz-transition: $duration;
+	-ms-transition: $duration;
+	-o-transition: $duration;
+	transition: $duration;
+}
+$uiname : "oni-carousel";
+@if($oinui-theme == smoothness) {
+	$carousel: (
+			bg: #fff,
+			borderColor:#aaaaaa
+	) !global
+}
+
+.#{$uiname} {
+	// current style
+	// means #{$uiname}-bar
+	position: relative;
+	margin: 0 auto;
+	overflow: hidden;
+	width: 300px;
+	height: 100px;
+	@include user-select();
+	.#{$uiname}-panel {
+		height: 100%;
+		position: absolute;
+		top: 0;
+		left: 0;
+		overflow: hidden;
+
+		.#{$uiname}-item {
+			position: relative;
+			height: 100%;
+			@include inline-block();
+			overflow: hidden;
+			text-align: center;
+			background-color: #fff;
+
+			.oni-img-origin{
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				width: 100%;
+				height: 100%;
+				@include transform(translate(-50%, -50%));
+				position: static\0;
+				transform: translate(0, 0)\0;
+				*top: 0;
+				*left: 0;
+			}
+
+			.oni-img-placeholder{
+				_display: none;
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				margin: -30px 0 0 -30px;
+			}
+
+			.#{$uiname}-link{
+				display: block;
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				top: 0;
+				left: 0;
+				z-index: 5;
+			}
+		}
+	}
+	.#{$uiname}-selection-wrap{
+		position: absolute;
+		z-index: 20;
+		bottom: 4%;
+		left: 50%;
+		a{
+			@include inline-block();
+			width: 10px;
+			height: 10px;
+			margin: 0 5px;
+			background-color: rgb(255,255,255);
+			@include opacity(0.6);
+			border-radius: 50%;
+			cursor: pointer;
+		}
+		.selected{
+			background-color: #00a3c2;
+		}
+	}
+	.#{$uiname}-selection-wrap-keep-right{
+		left: initial;
+		right: 3%;
+	}
+	.#{$uiname}-description-wrap{
+		position: absolute;
+		z-index: 10;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		background-color: rgb(0,0,0);
+		color: #fff;
+		@include opacity(0.7);
+		@include user-select("text");
+
+		.#{$uiname}-description{
+			padding: 8px 12px;
+		}
+	}
+	.#{$uiname}-arrow{
+		position: absolute;
+		z-index: 20;
+		top:50%;
+		margin: -15px 0 0 0;
+		cursor: pointer;
+	}
+	.#{$uiname}-prev{
+		left: 5%;
+	}
+	.#{$uiname}-after{
+		right: 5%;
+	}
+}

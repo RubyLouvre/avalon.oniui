@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>拖动组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+    </head>
+    
+    <body>
+        <div class="wrapper">
+            <h2>draggable</h2>
+            <fieldset>
+                <legend>拖拽组件</legend>让一个定位元素可以拖动。使用时在目标元素上添加ms-draggable绑定属性，值可以为空。值不为空时，有两个可选设置项，用逗号隔开。
+                第一个用于指放置配置对象的VM的$id，为$或不存在时默认为离它最近的VM。第二个用于指定配置对象。</fieldset>
+            <h3 class="table-doc-title">使用说明</h3>
+            <table class="table-doc">
+                <colgroup>
+                    <col width="180">
+                        <col width="95">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>名字</th>
+                        <th>默认值</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td colspan="3" aligin="center">配置参数</td>
+                    </tr>
+                    <tr>
+                        <td>axis</td>
+                        <td>"xy"</td>
+                        <td>决定拖动方向， x是水平， y是垂直，xy是任意，此外的其他值都会转换为xy</td>
+                    </tr>
+                    <tr>
+                        <td>ghosting</td>
+                        <td>false</td>
+                        <td>影子拖动，指拖动时不拖动原元素，而是动态生成一个与原元素相同大小的半透明元素做替身，在拖动结束再决位到替身的位置上。 用于拖动复杂的目标节省性能</td>
+                    </tr>
+                    <tr>
+                        <td>handle</td>
+                        <td>空函数</td>
+                        <td>手柄拖动，用于拖动原元素的某一部分就能拖动整体，因此这函数要求返回一个元素节点，此元素节点应该位于拖动元素内部。此函数有两个参数 分别是事件对象与data对象，this指向拖动元素</td>
+                    </tr>
+                    <tr>
+                        <td>containment</td>
+                        <td></td>
+                        <td>区域拖动，可以是window, parent, #id, [0, 0, 400, 300]这些格式。 window是指在当前可视区拖动， parent是指当前父元素，
+                            #id是用于取得目标元素， 拥有4个数字的数组是用于圈定范围，前两个数字是左上角的坐标，后两个是右下角的坐标</td>
+                    </tr>
+                    <tr>
+                        <td>beforeStart(e, data)</td>
+                        <td>空函数</td>
+                        <td>鼠标按下时立即触发的回调，它的参数与this参考handle。你可以在这里设置拖动范围与改变元素样式。</td>
+                    </tr>
+                    <tr>
+                        <td>start(e, data)</td>
+                        <td>空函数</td>
+                        <td>紧接着beforeStart，handle触发的回调，它的参数与this参考handle</td>
+                    </tr>
+                    <tr>
+                        <td>drag(e, data)</td>
+                        <td>空函数</td>
+                        <td>鼠标拖动（mousemove或touchmove）连续触发的回调，它的参数与this参考handle</td>
+                    </tr>
+                    <tr>
+                        <td>beforeStop(e, data)</td>
+                        <td>空函数</td>
+                        <td>鼠标弹起后立即触发的回调，它的参数与this参考handle。你可以在恢复样式，或改变data的一些属性</td>
+                    </tr>
+                    <tr>
+                        <td>stop(e, data)</td>
+                        <td>空函数</td>
+                        <td>拖放结束后执行的回调，它的参数与this参考handle。</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3 class="table-doc-title">使用说明</h3>
+            <table class="table-doc">
+                <tbody>
+                    <tr>
+                        <th>名称</th>
+                        <th>默认值</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td>★element</td>
+                        <td></td>
+                        <td>要拖动的元素节点</td>
+                    </tr>
+                    <tr>
+                        <td>$element</td>
+                        <td></td>
+                        <td>用avalon封装好element --&gt; avalon(element)</td>
+                    </tr>
+                    <tr>
+                        <td>★clone</td>
+                        <td></td>
+                        <td>影子拖动时，复制生成的元素节点</td>
+                    </tr>
+                    <tr>
+                        <td>started</td>
+                        <td>false</td>
+                        <td>是否已经在拖动</td>
+                    </tr>
+                    <tr>
+                        <td>★pageX/pageY</td>
+                        <td>0</td>
+                        <td>当前元素在页面的坐标（这两个会在mousemove中改变）</td>
+                    </tr>
+                    <tr>
+                        <td>startPageX/startPageY</td>
+                        <td>0</td>
+                        <td>开始拖动时元素在页面的坐标</td>
+                    </tr>
+                    <tr>
+                        <td>★dragX/dragY</td>
+                        <td>true</td>
+                        <td>是否在鼠标拖动时，将pageX/pageY赋给元素的left, top来改变它的位置</td>
+                    </tr>
+                    <tr>
+                        <td>clickX/clickY</td>
+                        <td>0</td>
+                        <td>鼠标点击的位置与目标元素左上角的距离</td>
+                    </tr>
+                    <tr>
+                        <td>startLeft/startTop</td>
+                        <td>0</td>
+                        <td>拖动前相对于offsetParent的坐标</td>
+                    </tr>
+                    <tr>
+                        <td>endLeft/endTop</td>
+                        <td>0</td>
+                        <td>拖动后相对于offsetParent的坐标</td>
+                    </tr>
+                    <tr>
+                        <td>endX/endY</td>
+                        <td>0</td>
+                        <td>拖动后相对于offsetParent的坐标</td>
+                    </tr>
+                    <tr>
+                        <td>marginLeft/marginTop</td>
+                        <td>0</td>
+                        <td>开始拖动时元素的左上边距宽度</td>
+                    </tr>
+                </tbody>
+            </table>
+            <ul class="example-links">
+                <li>
+                    <a href="avalon.draggable.ex1.html">简单例子</a>
+                </li>
+                <li>
+                    <a href="avalon.draggable.ex2.html">方向的限制</a>
+                </li>
+                <li>
+                    <a href="avalon.draggable.ex3.html">区域拖动</a>
+                </li>
+                <li>
+                    <a href="avalon.draggable.ex4.html">影子拖动</a>
+                </li>
+                <li>
+                    <a href="avalon.draggable.ex5.html">手柄拖动</a>
+                </li>
+                <li>
+                    <a href="avalon.draggable.ex6.html">各种回调</a>
+                </li>
+            </ul>
+        </div>
+    </body>
+
+</html>

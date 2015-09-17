@@ -1,0 +1,173 @@
+html {
+	color:#000;
+	background:#e5e5e5;
+}
+.tree {
+	width:1000px;
+	width: 1000px;
+	margin: 0 auto;
+	background: url("i/tree_rp.jpg") repeat-y center 0;
+}
+.icon-1 {
+	background: url("i/sp-1.png") no-repeat;
+}
+.icon__marker {
+	position: absolute;
+	right: -40px;
+	top: 124px;
+	width: 26px;
+	height: 26px;
+	background-position: -34px -101px;
+}
+.tree__item {
+	background: url("i/T1je0yXEBfXXan5nrF-473-276.png") no-repeat;
+	width: 460px;
+	height: 252px;
+	padding: 12px 0 12px 13px;
+	position: relative;
+}
+.tree__item__main {
+	position:relative;
+	height:100%;
+	overflow:hidden;
+}
+.tree__item__main img {
+	cursor: pointer;
+	cursor: -webkit-zoom-in;
+	cursor:zoom-in;
+}
+.tree__item__main .des {
+	position:absolute;
+	top:212px;
+	cursor:pointer;
+	transition: top .4s;
+}
+.tree__item__main .des__content {
+	display:block;
+	padding:5px 10px;
+	font-size:12px;
+	color: #EFEFEF;
+	line-height: 2;
+}
+.tree__item__main .des__title {
+	display:block;
+	padding:0 10px;
+	line-height:40px;
+	font-size:18px;
+	color:#FFF;
+	font-weight:bold;
+}
+.tree__item__main .des__bg {
+	width:430px;
+	height:250px;
+	/*opacity:0.7;*/
+	color:#FFF;
+	background:#28966f;
+}
+.tree__item__main .des__main {
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+}
+
+.tree__item--right {
+	margin-left:527px;
+	padding-left:30px;
+	background: url("i/T1dOdzXtRdXXan5nrF-473-276.png") no-repeat;
+}
+.tree__item--right .icon__marker {
+	left:-40px;
+}
+.tree-foot {
+	position: relative;
+	width: 1000px;
+	height: 455px;
+	margin: 0 auto;
+	background: url("i/T1K4JAXD8XXXckoJcM-440-455.png") no-repeat center 0;
+}
+.month {
+	position: absolute;
+	background: url("i/T1k14yXqpgXXbxLnMR-761-500.png") no-repeat;
+}
+.month--1 {
+}
+/* 年月份层 */
+
+.month-box{ width:1000px; margin:0 auto; position:relative;}
+.month-box .month{ position:absolute; background:url("i/T1k14yXqpgXXbxLnMR-761-500.png") no-repeat;}
+.month-box .month--m1{ width:172px; height:172px; top:1503px; left:294px; background-position:-377px -180px;}
+.month-box .month--m2{ width:118px; height:118px; top:1639px; left:297px; background-position:-355px -376px;}
+.month-box .month--m3{ width:170px; height:170px; top:136px; left:563px;}
+.month-box .month--m4{ width:120px; height:120px; top:166px; left:345px; background-position:0 -376px;}
+.month-box .month--m5{ width:180px; height:180px; top:268px; left:566px; background-position:-170px 0;}
+.month-box .month--m6{ width:120px; height:120px; top:401px; left:629px; background-position:-120px -376px;}
+.month-box .month--m7{ width:172px; height:172px; top:567px; left:267px; background-position:-350px 0;}
+.month-box .month--m8{ width:115px; height:115px; top:602px; left:629px; background-position:-240px -376px;}
+.month-box .month--m9{ width:173px; height:173px; top:734px; left:629px; background-position:-522px 0;}
+.month-box .month--m10{ width:136px; height:136px; top:862px; left:600px; background-position:-549px -180px;}
+.month-box .month--m11{ width:181px; height:181px; top:1005px; left:600px; background-position:0 -180px;}
+.month-box .month--m12{ width:196px; height:196px; top:1205px; left:600px; background-position:-181px -180px;}
+.month-box .month--m12{ width:196px; height:196px; top:1205px; left:600px; background-position:-181px -180px;}
+/* 小圆圈层 */
+.circle-box{ width:1000px; margin:0 auto; position:relative;}
+.circle-box .circle{ position:absolute; background:url("i/T1TX4nXudiXXXhCsM.-453-283.png") no-repeat;}
+.circle-box .circle-1{ width:47px; height:49px; left:570px; top:2450px;}
+.circle-box .circle-2{ width:55px; height:57px; background-position:-47px 0; left:671px; top:255px;}
+.circle-box .circle-3{ width:87px; height:89px; background-position:-102px 0; left:152px; top:485px;}
+.circle-box .circle-4{ width:61px; height:61px; background-position:-189px 0; left:312px; top:670px;}
+.circle-box .circle-5{ width:70px; height:70px; background-position:-250px 0; left:781px; top:800px;}
+.circle-box .circle-6{ width:43px; height:43px; background-position:-320px 0; left:717px; top:1012px;}
+.circle-box .circle-7{ width:55px; height:55px; background-position:-363px 0; left:240px; top:1142px;}
+.circle-box .circle-8{ width:35px; height:35px; background-position:-418px 0; left:158px; top:137px;}
+.circle-box .circle-9{ width:60px; height:60px; background-position:0 -89px; left:207px; top:1541px;}
+.circle-box .circle-10{ width:43px; height:43px; background-position:-60px -89px; left:205px; top:1718px;}
+.circle-box .circle-11{ width:61px; height:61px; background-position:-103px -89px; left:111px; top:1927px;}
+.circle-box .circle-12{ width:28px; height:28px; background-position:-164px -89px; left:810px; top:2147px;}
+.circle-box .circle-13{ width:36px; height:36px; background-position:-192px -89px; left:735px; top:2334px;}
+.circle-box .circle-14{ width:61px; height:61px; background-position:-228px -89px; left:835px; top:2561px;}
+.circle-box .circle-15{ width:61px; height:61px; background-position:-289px -89px; left:261px; top:1091px;}
+.circle-box .circle-16{ width:42px; height:42px; background-position:-350px -89px; left:336px; top:1102px;}
+.circle-box .circle-17{ width:37px; height:37px; background-position:-392px -89px; left:647px; top:1132px;}
+.circle-box .circle-18{ width:37px; height:37px; background-position:-392px -89px; left:251px; top:1173px;}
+.circle-box .circle-19{ width:69px; height:69px; background-position:0 -150px; left:553px; top:1216px;}
+.circle-box .circle-20{ width:45px; height:45px; background-position:-69px -150px; left:751px; top:1231px;}
+.circle-box .circle-21{ width:51px; height:57px; background-position:-114px -150px; left:641px; top:1305px;}
+.circle-box .circle-22{ width:63px; height:63px; background-position:-165px -150px; left:262px; top:1351px;}
+.circle-box .circle-23{ width:45px; height:45px; background-position:-228px -150px; left:372px; top:1362px;}
+.circle-box .circle-24{ width:38px; height:38px; background-position:-273px -150px; left:575px; top:1393px;}
+.circle-box .circle-25{ width:62px; height:62px; background-position:-311px -150px; left:320px; top:1432px;}
+.circle-box .circle-26{ width:56px; height:56px; background-position:-373px -150px; left:566px; top:1482px;}
+.circle-box .circle-27{ width:45px; height:45px; background-position:0 -219px; left:370px; top:1522px;}
+.circle-box .circle-28{ width:61px; height:61px; background-position:-45px -219px; left:770px; top:1570px;}
+.circle-box .circle-29{ width:45px; height:45px; background-position:-106px -219px; left:606px; top:1659px;}
+.circle-box .circle-30{ width:64px; height:64px; background-position:-151px -219px; left:637px; top:1670px;}
+.circle-box .circle-31{ width:61px; height:61px; background-position:-228px -89px; left:262px; top:1700px;}
+.circle-box .circle-32{ width:47px; height:49px; left:570px; top:2450px; left:714px; top:1748px;}
+.circle-box .circle-33{ width:59px; height:59px; background-position:-215px -219px; left:846px; top:1830px;}
+.circle-box .circle-34{ width:39px; height:39px; background-position:-274px -219px; left:770px; top:1840px;}
+.parallax {
+	position: fixed;
+	top:0;
+	left:0;
+	width: 100%;
+	z-index:10;
+	/*
+	transition-property: top;
+	transition-duration: .8s;
+	transition-timing-function: ease-out;
+	*/
+}
+
+.parallax1 {
+	z-index:9;
+}
+
+.parallax2 {
+	z-index:8;
+}
+
+.low-ie {
+	text-align: center;
+}

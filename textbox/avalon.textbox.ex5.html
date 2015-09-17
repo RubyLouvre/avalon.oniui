@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>textbox demo 5</title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>textbox demo 5</h1>
+        <p class="example">表单域的自动补全功能的focus配置项的使用（<span class="statement">data-textbox-suggest-focus</span>）</p>
+        <p><span class="useDescription">说明：</span>设置data-textbox-suggest-focus为true时，使得表单域在为空的时候才显示提示补全信息，有值时无补全</p>
+        <p><span class="warn">注意：</span>当输入框放在form中的时候，如果form中只存在一个表单元素，那么在自动补全按回车获取信息时会自动提交表单，这时候只需要在form加一个隐藏的input type="text"即可解决问题</p>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;自动补全focus配置项&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;div class="demo-show" ms-controller="demo5"&gt;
+                        &lt;form&gt;
+                            &lt;input ms-widget="textbox" ms-duplex="sfocus" type="textbox" data-textbox-suggest="phone" data-textbox-suggest-focus="true"/&gt;
+                            &lt;input type="text" style="display: none"/&gt;
+                            &lt;p&gt;输入框的值是： {{sfocus}}&lt;/p&gt;
+                        &lt;/form&gt;
+                    &lt;/div&gt;
+
+                    &lt;script&gt;
+                        require(["textbox/avalon.textbox"], function() {
+                            avalon.define("demo5", function(vm) {
+                                vm.$skipArray = ["suggest"]
+                                vm.sfocus = "";
+                                vm.textbox = {
+                                    suggestion: {
+                                        emphasize: false
+                                    }
+                                }
+                            })
+                            avalon.scan();
+                            avalon.ui["suggest"].strategies['phone'] = function( value , done ) {
+                                setTimeout(function(){
+                                    done(value ? [] : [
+                                        { value : '13800138000' , text : '&lt;b&gt;日审&lt;/b&gt; 13800138000' } ,
+                                        { value : '13800138001' , text : '&lt;b&gt;夜审&lt;/b&gt; 13800138001' }
+                                    ])
+                                },100)
+                            }
+                        })
+                    &lt;/script&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+        <div class="demo-show" ms-controller="demo5">
+            <form>
+                <input ms-widget="textbox" ms-duplex="sfocus" type="textbox" data-textbox-suggest="phone" data-textbox-suggest-focus="true"/>
+                <input type="text" style="display: none"/>
+                <p>输入框的值是： {{sfocus}}</p>
+            </form>
+        </div>
+        <script>
+            require(["textbox/avalon.textbox"], function() {
+                avalon.define("demo5", function(vm) {
+                    vm.$skipArray = ["suggest"]
+                    vm.sfocus = "";
+                    vm.textbox = {
+                        suggestion: {
+                            emphasize: false
+                        }
+                    }
+                })
+                avalon.scan();
+                avalon.ui["suggest"].strategies['phone'] = function( value , done ) {
+                    setTimeout(function(){
+                        done(value ? [] : [
+                            { value : '13800138000' , text : '<b>日审</b> 13800138000' } ,
+                            { value : '13800138001' , text : '<b>夜审</b> 13800138001' }
+                        ])
+                    },100)
+                }
+            })
+        </script>
+    </div>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>lazyload组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+        <script>
+            require(["lazyload/avalon.lazyload"], function() {
+                avalon.define("demo", function(vm) {})
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body>
+        <div class="wrapper">
+            <h1>lazyload懒加载组件-自定义加载中图片</h1>
+            <fieldset ms-controller="demo">
+                <legend>自定义加载中图片</legend>
+                <img alt="" 
+                data-lazyload-preloadsrc= "./images/loading2.gif" 
+                data-lazyload-original="images/placeholderimg1.jpg" 
+                ms-lazyload><br />
+                <img alt="" 
+                data-lazyload-preloadsrc= "./images/loading3.gif" 
+                data-lazyload-original="images/placeholderimg2.jpg" 
+                data-lazyload-itemdelay="1000"
+                ms-lazyload><br />
+                <img alt="" 
+                data-lazyload-preloadsrc= "./images/loading4.gif" 
+                data-lazyload-original="images/placeholderimg3.jpg" 
+                data-lazyload-itemdelay="1500"
+                ms-lazyload><br />
+                <img alt=""
+                data-lazyload-preloadsrc= "./images/loading5.gif" 
+                data-lazyload-original="images/placeholderimg4.jpg" 
+                data-lazyload-itemdelay="2000"
+                ms-lazyload><br />
+            </fieldset>
+            <pre ms-skip class="brush:html;gutter:false;toolbar:false">
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;lazyload组件&lt;/title&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width"&gt;
+        &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+        &lt;script src="../highlight/shCore.js"&gt;&lt;/script&gt;
+        &lt;link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/&gt;
+        &lt;script&gt;
+            require(["lazyload/avalon.lazyload"], function() {
+                avalon.define("demo", function(vm) {})
+                avalon.scan()
+            })
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;div class="wrapper"&gt;
+            &lt;h1&gt;lazyload懒加载组件-自定义加载中图片&lt;/h1&gt;
+            &lt;fieldset ms-controller="demo"&gt;
+                &lt;legend&gt;自定义加载中图片&lt;/legend&gt;
+                &lt;img alt="" 
+                data-lazyload-preloadsrc= "./images/loading2.gif" 
+                data-lazyload-original="images/placeholderimg1.jpg" 
+                ms-lazyload&gt;&lt;br /&gt;
+                &lt;img alt="" 
+                data-lazyload-preloadsrc= "./images/loading3.gif" 
+                data-lazyload-original="images/placeholderimg2.jpg" 
+                data-lazyload-itemdelay="1000"
+                ms-lazyload&gt;&lt;br /&gt;
+                &lt;img alt="" 
+                data-lazyload-preloadsrc= "./images/loading4.gif" 
+                data-lazyload-original="images/placeholderimg3.jpg" 
+                data-lazyload-itemdelay="1500"
+                ms-lazyload&gt;&lt;br /&gt;
+                &lt;img alt=""
+                data-lazyload-preloadsrc= "./images/loading5.gif" 
+                data-lazyload-original="images/placeholderimg4.jpg" 
+                data-lazyload-itemdelay="2000"
+                ms-lazyload&gt;&lt;br /&gt;
+            &lt;/fieldset&gt;
+        &lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+            </pre>
+        </div>
+    </body>
+</html>
+

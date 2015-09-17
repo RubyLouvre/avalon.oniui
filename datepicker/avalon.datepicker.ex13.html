@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>datepicker demo </title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>datepicker lang demo</h1>
+        <div class="demo-show" ms-controller="demo">
+            <fieldset style="position: relative; z-index: 2">
+                <legend>使用en语言包</legend>
+                <input ms-widget="datepicker"/>
+            </fieldset>
+            <script>
+                //将语言包加载即可
+                require(["datepicker/avalon.datepicker"], function(avalon) {
+                    require(["i18n/avalon.datepicker.lang-en"], function() {
+                        var model = avalon.define("demo", function(vm) {
+                            //设置业务部分的文案
+                            vm.datepicker = {
+                                calendarLabel: "Datepicker",
+                                formatErrorTip: "Malformed"
+                            }
+                        })
+                        avalon.scan();
+                    })
+                })
+            </script>
+        </div>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;datepicker demo&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;h1&gt;datepicker lang demo&lt;/h1&gt;
+                    &lt;div class="demo-show" ms-controller="demo"&gt;
+                        &lt;fieldset style="position: relative; z-index: 2"&gt;
+                            &lt;legend&gt;使用en语言包&lt;/legend&gt;
+                            &lt;input ms-widget="datepicker"/&gt;
+                        &lt;/fieldset&gt;
+                        &lt;script&gt;
+                            //将语言包加载即可
+                            require(["datepicker/avalon.datepicker"], function(avalon) {
+                                require(["i18n/avalon.datepicker.lang-en"], function() {
+                                    var model = avalon.define("demo", function(vm) {
+                                        //设置业务部分的文案
+                                        vm.datepicker = {
+                                            calendarLabel: "Datepicker",
+                                            formatErrorTip: "Malformed"
+                                        }
+                                    })
+                                    avalon.scan();
+                                })
+                            })
+                        &lt;/script&gt;
+                    &lt;/div&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+    </div>
+</body>
+</html>
+

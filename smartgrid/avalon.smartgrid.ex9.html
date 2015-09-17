@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>简单的表格组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    <body ms-controller="test">
+        <div style="width:960px; margin: 0 auto">
+            <h1>通过avalon.filters.sanitize(str)来防止xss攻击</h1>
+            <p>ps: 如果不重写组件内部格式化单元格数据的format方法的话默认组件会对数据进行格式化，防止xss，但是如果自定义了format请根据自己情况格式化要展示的数据。特别注意的是必须保证传给sanitize的参数是一个<b style="color: red">String</b></p>
+            <div ms-widget="smartgrid, sg1, opts"></div>
+        </div>
+        <script>
+            require(["smartgrid/avalon.smartgrid"], function() {
+                function getDatas(number) {
+                    var data = [],
+                        random = Math.random(),
+                        factor = random > 0.5 ? 1 : -1
+
+                    for (var i = 0; i < number; i++) {
+                        data.push({
+                            name: '<a href="javascript:alert(1)">' + random.toString(32).slice(4, 10) + "</a>",
+                            age: parseInt(10 + Math.random() * 20) + "\<script\>console.log('aaa')\</script\>",
+                            salary: "1000\<script\>alert('1')\</script\>",
+                            change: "<span onclick='alert(2)' style='color:" + (factor === 1 ? 'green' : 'red') + "'>" + random.toFixed(2) * factor + "</span>"
+                        })
+                    }
+                    return data
+                } 
+                
+                avalon.define("test", function(vm) {
+                    vm.$skipArray = ["opts"]
+                    vm.opts = {
+                        columns: [
+                            {
+                                key : "name", //列标识
+                                name : "姓名", //列名
+                                sortable : true, //是否可排序
+                                isLock : true, //是否锁死列让其始终显示
+                                align: "left", //列的对象方式
+                                defaultValue: "shirly", //列的默认值
+                                customClass: "ddd", //自定义此列单元格类
+                                toggle: false //控制列的显示隐藏
+                            }, {
+                                key : "age",
+                                name : "年龄",
+                                sortable : true,
+                                width: 300,
+                                type: "Number"
+                            }, {
+                                key : "salary",
+                                name : "薪水",
+                                sortable : true,
+                                align: "right",
+                                width: 300
+                            }, {
+                                key : "change",
+                                name : "change",
+                                align: "center",
+                                width: 200
+                            }
+                        ],
+                        data: getDatas(5)
+                    }
+                })
+                avalon.scan()
+            })
+        </script>
+        <div ms-skip style="width:960px; margin: 0 auto">
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;smartgrid demo&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body ms-controller="test"&gt;
+                    &lt;div style="width:960px; margin: 0 auto"&gt;
+                        &lt;h1&gt;通过avalon.filters.sanitize(str)来防止xss攻击&lt;/h1&gt;
+                        &lt;p&gt;ps: 如果不重写组件内部格式化单元格数据的format方法的话默认组件会对数据进行格式化，防止xss，但是如果自定义了format请根据自己情况格式化要展示的数据。特别注意的是必须保证传给sanitize的参数是一个&lt;b style="color: red"&gt;String&lt;/b&gt;&lt;/p&gt;
+                        &lt;div ms-widget="smartgrid, sg1, opts"&gt;&lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;script&gt;
+                        require(["smartgrid/avalon.smartgrid"], function() {
+                            function getDatas(number) {
+                                var data = [],
+                                    random = Math.random(),
+                                    factor = random &gt; 0.5 ? 1 : -1
+
+                                for (var i = 0; i &lt; number; i++) {
+                                    data.push({
+                                        name: '&lt;a href="javascript:alert(1)"&gt;' + random.toString(32).slice(4, 10) + "&lt;/b&gt;",
+                                        age: parseInt(10 + Math.random() * 20) + "\&lt;script\&gt;console.log('aaa')\&lt;/script\&gt;",
+                                        salary: "1000\&lt;script\&gt;alert('1')\&lt;/script\&gt;",
+                                        change: "&lt;span onclick='alert(2)' style='color:" + (factor === 1 ? 'green' : 'red') + "'&gt;" + random.toFixed(2) * factor + "&lt;/span&gt;"
+                                    })
+                                }
+                                return data
+                            } 
+                            
+                            avalon.define("test", function(vm) {
+                                vm.$skipArray = ["opts"]
+                                vm.opts = {
+                                    columns: [
+                                        {
+                                            key : "name", //列标识
+                                            name : "姓名", //列名
+                                            sortable : true, //是否可排序
+                                            isLock : true, //是否锁死列让其始终显示
+                                            align: "left", //列的对象方式
+                                            defaultValue: "shirly", //列的默认值
+                                            customClass: "ddd", //自定义此列单元格类
+                                            toggle: false //控制列的显示隐藏
+                                        }, {
+                                            key : "age",
+                                            name : "年龄",
+                                            sortable : true,
+                                            width: 300,
+                                            type: "Number"
+                                        }, {
+                                            key : "salary",
+                                            name : "薪水",
+                                            sortable : true,
+                                            align: "right",
+                                            width: 300
+                                        }, {
+                                            key : "change",
+                                            name : "change",
+                                            align: "center",
+                                            width: 200
+                                        }
+                                    ],
+                                    data: getDatas(5)
+                                }
+                            })
+                            avalon.scan()
+                        })
+                    &lt;/script&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+    </body>
+</html>

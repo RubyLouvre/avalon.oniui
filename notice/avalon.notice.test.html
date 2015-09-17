@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>spinner test</title>
+        <link type="text/css" rel="stylesheet" charset="utf-8" href="../mocha/mocha.css" />
+        <script src="../avalon.js"></script>
+        <script src="../mocha/mocha.js"></script>
+        <script src="../mocha/expect.js"></script>
+        <style>
+            #testWrapper {
+                margin: -40px 50px 100px 80px;
+            }
+        </style>
+    </head>
+    <body >
+        <div id="mocha"></div>
+        <div id="testWrapper" ms-controller="demo">
+                
+        </div>
+        <script>
+            (function() {
+                mocha.ui('bdd')
+                mocha.setup({timeout: 100000})
+                require(["ready!", "notice/avalon.notice"], function() {
+                    var testWrapper = document.getElementById("testWrapper");
+                    var btns = [];
+                    describe("测试notice组件", function() {
+                        beforeEach(function() {
+                            testWrapper.innerHTML = '<div id="notice" ms-widget="notice,a,$aOpts">基本的提示信息组件，全部使用默认配置项</div><div ms-widget="notice, b, $bOpts" data-notice-container="#notice">notice content b</div>';
+                        })
+                        afterEach(function() {
+                            testWrapper.innerHTML = testWrapper.textContent = "";
+                        })
+                        it("测试默认配置的notice以及自定义回调、动态修改type、content、header", function(done) {
+                            var noticeA = null;
+                            var model = avalon.define("demo", function(vm) {
+                                vm.$bOpts = {
+                                    type: "error"
+                                }
+                                vm.$aOpts = {
+                                    onHide: function() {
+                                        expect(notices[0].style.display).to.be("none");
+                                        done();
+                                    },
+                                    onShow: function() {
+                                        noticeA.$watch("header", function() {
+                                            var innerNotice = notices[0].children[0];
+                                            var noticeHeader = innerNotice.children[0];
+                                            var noticeContent = innerNotice.children[1];
+                                            var contentSpan = noticeContent.getElementsByTagName("span");
+                                            expect(noticeHeader.innerHTML).to.be("modify header")
+                                            expect(contentSpan[0].innerHTML).to.be("modify content")
+                                            expect(contentSpan[1].innerHTML).to.be("关闭");
+                                            expect(notices[0].style.display).to.be("block");
+                                            expect(avalon(notices[0]).hasClass("oni-notice-info")).to.be(true);
+                                            noticeA.toggle = false;
+                                        })
+                                    }
+                                }
+                                vm.changeHeader = function() {
+                                    if(noticeA === null) {
+                                        noticeA = avalon.vmodels["a"];
+                                    }
+                                    noticeA.header = "modify header"
+                                    
+                                }
+                                vm.changeContent = function() {
+                                    if(noticeA === null) {
+                                        noticeA = avalon.vmodels["a"];
+                                    }
+                                    noticeA.content = "modify content"
+                                }
+                                vm.changeType = function() {
+                                    if(noticeA === null) {
+                                        noticeA = avalon.vmodels["a"];
+                                    }
+                                    noticeA.type = "success"
+                                }
+
+                                vm.showNotice = function() {
+                                    if(noticeA === null) {
+                                        noticeA = avalon.vmodels["a"];
+                                    }
+                                    noticeA.toggle = true
+                                    
+                                }
+                            })
+                            
+                            testWrapper.innerHTML += "<button ms-click='changeHeader'>changeHeader</button><button ms-click='changeContent'>changeContent</button><button ms-click='changeType'>changeType</button><button ms-click='showNotice'>showNotice</button>";
+                            var noticeElement, $noticeWidget, notices;
+                            avalon.scan(testWrapper, model);
+                            setTimeout(function() {
+                                noticeElement = document.getElementById("notice");
+                                $noticeWidget = avalon(noticeElement.children[0]);
+
+                                notices = $noticeWidget[0].children;
+                                var buttons = testWrapper.getElementsByTagName("button");
+                                expect($noticeWidget.hasClass("oni-notice-flow")).to.be(true)
+                                expect(notices.length).to.be(2)
+                                expect(avalon(notices[0]).hasClass("oni-notice")).to.be(true);
+                                expect(avalon(notices[0]).hasClass("oni-notice-info")).to.be(false);
+                                expect(avalon(notices[1]).hasClass("oni-notice oni-notice-danger")).to.be(true)
+                                expect(notices[0].style.display).to.be("none");
+                                buttons[3].click();
+                                buttons[2].click();
+                                buttons[1].click();
+                                buttons[0].click();
+                            }, 400)
+                        })
+                        it("测试notice的自动关闭", function(done) {
+
+                            var model = avalon.define("demo", function(vm) {
+                                vm.$aOpts = {
+                                    timer: 300,
+                                    hasCloseBtn: false,
+                                    onShow: function() {
+                                        expect(notices[0].style.display).to.be("block");
+                                        setTimeout(function() {
+                                            expect(notices[0].style.display).to.be("none"); 
+                                            done();
+                                        },300)
+                                    }
+                                }
+                            })
+                            avalon.scan(testWrapper, model);
+                            var noticeElement, $noticeWidget, notices;
+                            setTimeout(function() {
+                                noticeElement = document.getElementById("notice");
+                                $noticeWidget = avalon(noticeElement.children[0]);
+
+                                notices = $noticeWidget[0].children;
+                                expect(notices[0].style.display).to.be("none");
+                                var noticeContentSpans = notices[0].children[0].children[1].getElementsByTagName("span");
+                                expect(noticeContentSpans.length).to.be(1);
+                                expect(avalon(noticeContentSpans[0]).hasClass("js_notice_close")).to.be(false);
+                                avalon.vmodels["a"].toggle = true;
+                            }, 400)
+                        })
+                        it("自定义组件container、配置组件非占位、吸顶", function(done) {
+
+                            testWrapper.innerHTML += "<div id='noticeContainer'></div>"
+                            var noticeContainer = document.getElementById("noticeContainer");
+                            var flowContent = null;
+                            document.body.style.height = "1000px";
+                            var model = avalon.define("demo", function(vm) {
+                                vm.$aOpts = {
+                                    isAffix: true,
+                                    container: noticeContainer,
+                                    onShow: function() {
+                                        window.scrollTo(0, 800);
+                                        setTimeout(function() {
+                                            expect(flowContent[0].style.position).to.be("fixed");
+                                            expect(flowContent[0].style.top).to.be("0px")    
+                                            window.scrollTo(0,0);
+                                            done();  
+                                        }, 200)   
+                                    }
+                                }
+                                vm.$bOpts = {
+                                    container: noticeContainer,
+                                    isPlace: false,
+                                    header: "notice b title"
+                                }
+                            })
+                            avalon.scan(testWrapper, model);
+                            setTimeout(function() {
+                                var noticeContainerFlow = noticeContainer.children[0];
+                                flowContent = noticeContainerFlow.children;
+                                var len = flowContent.length;i
+                                var noticeArr = [];
+                                var bodyChildren = document.body.children;
+                                var bodyChildrenLen = bodyChildren.length;
+                                var bodyDetatch = bodyChildren[bodyChildrenLen-1];
+                                expect(len).to.be(2);
+                                for(var i=0;i<len;i++) {
+                                    if(avalon(flowContent[i]).hasClass("oni-notice")) {
+                                        noticeArr.push(flowContent[i]);
+                                    }
+                                }
+                                expect(noticeArr.length).to.be(1);
+                                expect(avalon(noticeContainerFlow).hasClass("oni-notice-flow")).to.be(true);
+                                expect(avalon(bodyDetatch).hasClass("oni-notice-detach")).to.be(true);
+                                expect(bodyDetatch.children[0].children[0].children[0].innerHTML).to.be("notice b title");
+                                avalon.vmodels["a"].toggle = true;
+
+                            }, 400)
+                        })
+                        // it("", function(done) {
+                        //     var model = avalon.define("demo", function(vm) {
+                                
+                        //     })
+                        //     avalon.scan(noticeElement, model);
+                        //     setTimeout(function() {
+                                
+                        //     }, 400)
+                        // })
+                        // it("", function(done) {
+                        //     var model = avalon.define("demo", function(vm) {
+                                
+                        //     })
+                        //     avalon.scan(noticeElement, model);
+                        //     setTimeout(function() {
+                                
+                        //     }, 400)
+                        // })
+                        // it("", function(done) {
+                        //     var model = avalon.define("demo", function(vm) {
+                                
+                        //     })
+                        //     avalon.scan(noticeElement, model);
+                        //     setTimeout(function() {
+                                
+                        //     }, 400)
+                        // })
+                        // it("", function(done) {
+                        //     var model = avalon.define("demo", function(vm) {
+                                
+                        //     })
+                        //     avalon.scan(noticeElement, model);
+                        //     setTimeout(function() {
+                                
+                        //     }, 400)
+                        // })
+                    })
+                    mocha.run();
+                })
+            })()
+        </script>
+    </body>
+</html>

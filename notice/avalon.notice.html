@@ -1,0 +1,12 @@
+<div class="oni-notice" ms-class="{{typeClass}}" ms-css-height="height" ms-visible="toggle">
+    <div class="oni-notice-inner">
+        <div class="oni-notice-header" ms-if="!!header">{{title|html}}</div>
+        <div class="oni-notice-content">
+            <span class="js_notice_content">{{content|html}}</span>
+            <span class="oni-notice-close js_notice_close" 
+                ms-if="hasCloseBtn"
+                ms-click="_close">关闭</span>
+        </div>
+    </div>
+</div>
+<div ms-if="_isAffix" ms-css-width="noticeAffixWidth" ms-css-height="noticeAffixHeight" ms-css-display="affixPlaceholderDisplay"></div>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>进度条组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <meta name="descriptions" content=" 可以通过接口控制或者随机模拟进度条效果，支持条形，圆形，倒计时等效果功能
+
+ ">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    
+    <body>
+        <div class="wrapper">
+            <h2>progressbar</h2>
+            <fieldset>
+                <legend>进度条组件</legend>
+                <p>可以通过接口控制或者随机模拟进度条效果，支持条形，圆形，倒计时等效果功能</p>
+            </fieldset>
+            <h3 class="table-doc-title">使用说明</h3>
+            <table class="table-doc" border="1">
+                <colgroup>
+                    <col width="180">
+                        <col width="95">
+                            <col width="120">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>名字</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="4">配置参数</td>
+                    </tr>
+                    <tr>
+                        <td>toggle</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>组件是否显示，可以通过设置为false来隐藏组件</td>
+                    </tr>
+                    <tr>
+                        <td>value</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>当前进度值 0 - 100 or false</td>
+                    </tr>
+                    <tr>
+                        <td>label</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>是否在进度条上显示进度数字提示</td>
+                    </tr>
+                    <tr>
+                        <td>simulate</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>是否模拟进度条效果，默认为否，模拟的时候需要调用触发告知完成，模拟会采用模拟函数及算子进行模拟，取值为int表示动画效果间隔ms数</td>
+                    </tr>
+                    <tr>
+                        <td>indeterminate</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>是否不确定当前进度，现在loading效果</td>
+                    </tr>
+                    <tr>
+                        <td>countDown</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>倒计时</td>
+                    </tr>
+                    <tr>
+                        <td>inTwo</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>是否显示左右两段</td>
+                    </tr>
+                    <tr>
+                        <td>circle</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>圆形</td>
+                    </tr>
+                    <tr>
+                        <td>circleColor</td>
+                        <td>String</td>
+                        <td>"#ffffff"</td>
+                        <td>圆形填充色彩，可以配制为从皮肤中提取，只在初始化的时候提取</td>
+                    </tr>
+                    <tr>
+                        <td>circleBorderColor</td>
+                        <td>String</td>
+                        <td>"#dedede"</td>
+                        <td>圆形边框颜色，，可以配制为从皮肤中提取，只在初始化的时候提取</td>
+                    </tr>
+                    <tr>
+                        <td>circleBarColor</td>
+                        <td>String</td>
+                        <td>"#619FE8"</td>
+                        <td>圆形进度条边框颜色，可以配制为从皮肤中提取，只在初始化的时候提取</td>
+                    </tr>
+                    <tr>
+                        <td>circleRadius</td>
+                        <td>Number</td>
+                        <td>38</td>
+                        <td>圆形的半径，可以配制为从皮肤中提取，只在初始化的时候提取</td>
+                    </tr>
+                    <tr>
+                        <td>circleBorderWidth</td>
+                        <td>Number</td>
+                        <td>4</td>
+                        <td>圆形的边框宽度，可以配制为从皮肤中提取，只在初始化的时候提取</td>
+                    </tr>
+                    <tr>
+                        <td>success</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>是否完成，进度为100时或者外部将success置为true，用于打断模拟效果</td>
+                    </tr>
+                    <tr>
+                        <td>onInit</td>
+                        <td>Member</td>
+                        <td>avalon.noop</td>
+                        <td>onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method</td>
+                    </tr>
+                    <tr>
+                        <td>simulater(i,vmodel)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>simulater(value, vmodel) 模拟进度进行效果函数，参数为当前进度和vmodel，默认return value + 5
+                            * Math.random() &gt;&gt; 0</td>
+                    </tr>
+                    <tr>
+                        <td>getTemplate(tmpl,opts)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>getTemplate(tmp, opts) 用于修改模板的接口，默认不做修改</td>
+                    </tr>
+                    <tr>
+                        <td>onChange</td>
+                        <td>Member</td>
+                        <td>avalon.noop</td>
+                        <td>onChange(value) value发生变化回调，this指向vmodel</td>
+                    </tr>
+                    <tr>
+                        <td>onComplete</td>
+                        <td>Member</td>
+                        <td>avalon.noop</td>
+                        <td>onComplete() 完成回调，默认空函数，this指向vmodel</td>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="4">接口方法与固有属性</td>
+                    </tr>
+                    <tr>
+                        <td>start()</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>start() 开始进度推进，该接口适用于模拟进度条</td>
+                    </tr>
+                    <tr>
+                        <td>end(value)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>end(value) 结束进度推进，该接口适用于模拟进度条，value为100表示结束，failed表示失败，undefine等于pause，其他则终止于value，并在label上显示</td>
+                    </tr>
+                    <tr>
+                        <td>reset(value)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>reset(value) 重置设置项，参数可选，为需要重设的值</td>
+                    </tr>
+                    <tr>
+                        <td>progress(value)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>progress(value) 设置value值，其实也可以直接设置vmodel.value</td>
+                    </tr>
+                </tbody>
+            </table>
+            <ul class="example-links">
+                <li>
+                    <a href="avalon.progressbar.ex.html">外部设置进度值</a>
+                </li>
+                <li>
+                    <a href="avalon.progressbar.ex1.html">模拟进度条，带label</a>
+                </li>
+                <li>
+                    <a href="avalon.progressbar.ex2.html">外部设置进度值，带label</a>
+                </li>
+                <li>
+                    <a href="avalon.progressbar.ex3.html">模拟进度条，带label，进度indeterminate，接口调用</a>
+                </li>
+                <li>
+                    <a href="avalon.progressbar.ex4.html">占比进度条，带label，左右两段，接口调用</a>
+                </li>
+                <li>
+                    <a href="avalon.progressbar.ex5.html">模拟进度条倒计时</a>
+                </li>
+                <li>
+                    <a href="avalon.progressbar.ex6.html">圆形进度条，外部设置进度值，带label</a>
+                </li>
+                <li>
+                    <a href="avalon.progressbar.ex7.html">圆形进度条，外部设置进度值，带label，倒计时</a>
+                </li>
+            </ul>
+        </div>
+    </body>
+
+</html>

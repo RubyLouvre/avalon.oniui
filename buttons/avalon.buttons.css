@@ -1,0 +1,279 @@
+
+/*
+这是每个都组件都应该引用的部分
+*/
+.oni-button {
+  border-color: #c5c5c5;
+  border-color: rgba(0, 0, 0, 0.15) rgba(0, 0, 0, 0.15) rgba(0, 0, 0, 0.25); }
+  .oni-button-small.oni-button {
+    padding: 4px  5px;
+    font-size: small; }
+  .oni-button-big.oni-button {
+    padding: 8px 15px;
+    font-size: large; }
+  .oni-button-large.oni-button {
+    padding: 12px 25px;
+    font-size: x-large; }
+  .oni-button-primary.oni-button {
+    color: white;
+    background-color: #006ccc;
+    background-image: -moz-linear-gradient(top, #0088cc, #0044cc);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#0044cc));
+    background-image: -webkit-linear-gradient(top, #0088cc, #0044cc);
+    background-image: -o-linear-gradient(top, #0088cc, #0044cc);
+    background-image: linear-gradient(to bottom, #0088cc, #0044cc);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF0088CC', endColorstr='#FF0044CC', GradientType=0);
+    border-color: #0044cc #0044cc #002a80;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) fadein(rgba(0, 0, 0, 0.1), 15%);
+    *background-color: #0044cc;
+    /* Darken IE7 buttons by default so they stand out more given they won't have borders */
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled = false); }
+    .oni-button-primary.oni-button:hover, .oni-button-primary.oni-state-hover.oni-button, .oni-button-primary.oni-button:active, .oni-button-primary.oni-state-active.oni-button, .oni-button-primary[disabled].oni-button, .oni-button-primary.oni-state-disabled.oni-button {
+      color: white;
+      background-color: #0044cc;
+      *background-color: #003bb3; }
+    .oni-button-primary.oni-button:active, .oni-button-primary.oni-state-active.oni-button {
+      background-color: #003399 \9; }
+  .oni-button-warning.oni-button {
+    color: white;
+    background-color: #f9a732;
+    background-image: -moz-linear-gradient(top, #fbb450, #f89406);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fbb450), to(#f89406));
+    background-image: -webkit-linear-gradient(top, #fbb450, #f89406);
+    background-image: -o-linear-gradient(top, #fbb450, #f89406);
+    background-image: linear-gradient(to bottom, #fbb450, #f89406);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFBB450', endColorstr='#FFF89406', GradientType=0);
+    border-color: #f89406 #f89406 #ad6704;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) fadein(rgba(0, 0, 0, 0.1), 15%);
+    *background-color: #f89406;
+    /* Darken IE7 buttons by default so they stand out more given they won't have borders */
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled = false); }
+    .oni-button-warning.oni-button:hover, .oni-button-warning.oni-state-hover.oni-button, .oni-button-warning.oni-button:active, .oni-button-warning.oni-state-active.oni-button, .oni-button-warning[disabled].oni-button, .oni-button-warning.oni-state-disabled.oni-button {
+      color: white;
+      background-color: #f89406;
+      *background-color: #df8505; }
+    .oni-button-warning.oni-button:active, .oni-button-warning.oni-state-active.oni-button {
+      background-color: #c67605 \9; }
+  .oni-button-danger.oni-button {
+    color: white;
+    background-color: #da4e49;
+    background-image: -moz-linear-gradient(top, #ee5f5b, #bd362f);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ee5f5b), to(#bd362f));
+    background-image: -webkit-linear-gradient(top, #ee5f5b, #bd362f);
+    background-image: -o-linear-gradient(top, #ee5f5b, #bd362f);
+    background-image: linear-gradient(to bottom, #ee5f5b, #bd362f);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFEE5F5B', endColorstr='#FFBD362F', GradientType=0);
+    border-color: #bd362f #bd362f #802420;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) fadein(rgba(0, 0, 0, 0.1), 15%);
+    *background-color: #bd362f;
+    /* Darken IE7 buttons by default so they stand out more given they won't have borders */
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled = false); }
+    .oni-button-danger.oni-button:hover, .oni-button-danger.oni-state-hover.oni-button, .oni-button-danger.oni-button:active, .oni-button-danger.oni-state-active.oni-button, .oni-button-danger[disabled].oni-button, .oni-button-danger.oni-state-disabled.oni-button {
+      color: white;
+      background-color: #bd362f;
+      *background-color: #a9302a; }
+    .oni-button-danger.oni-button:active, .oni-button-danger.oni-state-active.oni-button {
+      background-color: #942a25 \9; }
+  .oni-button-success.oni-button {
+    color: white;
+    background-color: #5bb65b;
+    background-image: -moz-linear-gradient(top, #62c462, #51a351);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#62c462), to(#51a351));
+    background-image: -webkit-linear-gradient(top, #62c462, #51a351);
+    background-image: -o-linear-gradient(top, #62c462, #51a351);
+    background-image: linear-gradient(to bottom, #62c462, #51a351);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF62C462', endColorstr='#FF51A351', GradientType=0);
+    border-color: #51a351 #51a351 #387038;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) fadein(rgba(0, 0, 0, 0.1), 15%);
+    *background-color: #51a351;
+    /* Darken IE7 buttons by default so they stand out more given they won't have borders */
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled = false); }
+    .oni-button-success.oni-button:hover, .oni-button-success.oni-state-hover.oni-button, .oni-button-success.oni-button:active, .oni-button-success.oni-state-active.oni-button, .oni-button-success[disabled].oni-button, .oni-button-success.oni-state-disabled.oni-button {
+      color: white;
+      background-color: #51a351;
+      *background-color: #499249; }
+    .oni-button-success.oni-button:active, .oni-button-success.oni-state-active.oni-button {
+      background-color: #408140 \9; }
+  .oni-button-info.oni-button {
+    color: white;
+    background-color: #49afcd;
+    background-image: -moz-linear-gradient(top, #5bc0de, #2f96b4);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#5bc0de), to(#2f96b4));
+    background-image: -webkit-linear-gradient(top, #5bc0de, #2f96b4);
+    background-image: -o-linear-gradient(top, #5bc0de, #2f96b4);
+    background-image: linear-gradient(to bottom, #5bc0de, #2f96b4);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF5BC0DE', endColorstr='#FF2F96B4', GradientType=0);
+    border-color: #2f96b4 #2f96b4 #1f6377;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) fadein(rgba(0, 0, 0, 0.1), 15%);
+    *background-color: #2f96b4;
+    /* Darken IE7 buttons by default so they stand out more given they won't have borders */
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled = false); }
+    .oni-button-info.oni-button:hover, .oni-button-info.oni-state-hover.oni-button, .oni-button-info.oni-button:active, .oni-button-info.oni-state-active.oni-button, .oni-button-info[disabled].oni-button, .oni-button-info.oni-state-disabled.oni-button {
+      color: white;
+      background-color: #2f96b4;
+      *background-color: #2a85a0; }
+    .oni-button-info.oni-button:active, .oni-button-info.oni-state-active.oni-button {
+      background-color: #24748c \9; }
+  .oni-button-inverse.oni-button {
+    color: white;
+    background-color: #363636;
+    background-image: -moz-linear-gradient(top, #444444, #222222);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#444444), to(#222222));
+    background-image: -webkit-linear-gradient(top, #444444, #222222);
+    background-image: -o-linear-gradient(top, #444444, #222222);
+    background-image: linear-gradient(to bottom, #444444, #222222);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF444444', endColorstr='#FF222222', GradientType=0);
+    border-color: #222222 #222222 black;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) fadein(rgba(0, 0, 0, 0.1), 15%);
+    *background-color: #222222;
+    /* Darken IE7 buttons by default so they stand out more given they won't have borders */
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled = false); }
+    .oni-button-inverse.oni-button:hover, .oni-button-inverse.oni-state-hover.oni-button, .oni-button-inverse.oni-button:active, .oni-button-inverse.oni-state-active.oni-button, .oni-button-inverse[disabled].oni-button, .oni-button-inverse.oni-state-disabled.oni-button {
+      color: white;
+      background-color: #222222;
+      *background-color: #151515; }
+    .oni-button-inverse.oni-button:active, .oni-button-inverse.oni-state-active.oni-button {
+      background-color: #090909 \9; }
+  .oni-button-flat.oni-button {
+    background-color: #eeeeee;
+    background-image: none;
+    border-color: #eeeeee; }
+    .oni-button-flat.oni-button:hover, .oni-button-flat.oni-button .oni-state-hover {
+      background-color: #eeeeee;
+      background-image: none;
+      border-color: #eeeeee; }
+  .oni-button-primary-flat.oni-button {
+    background-color: #0088cc;
+    background-image: none;
+    border-color: #0088cc; }
+    .oni-button-primary-flat.oni-button:hover, .oni-button-primary-flat.oni-button .oni-state-hover {
+      background-color: #0088cc;
+      background-image: none;
+      border-color: #0088cc; }
+  .oni-button-warning-flat.oni-button {
+    background-color: #fbb450;
+    background-image: none;
+    border-color: #fbb450; }
+    .oni-button-warning-flat.oni-button:hover, .oni-button-warning-flat.oni-button .oni-state-hover {
+      background-color: #fbb450;
+      background-image: none;
+      border-color: #fbb450; }
+  .oni-button-danger-flat.oni-button {
+    background-color: #ee5f5b;
+    background-image: none;
+    border-color: #ee5f5b; }
+    .oni-button-danger-flat.oni-button:hover, .oni-button-danger-flat.oni-button .oni-state-hover {
+      background-color: #ee5f5b;
+      background-image: none;
+      border-color: #ee5f5b; }
+  .oni-button-success-flat.oni-button {
+    background-color: #62c462;
+    background-image: none;
+    border-color: #62c462; }
+    .oni-button-success-flat.oni-button:hover, .oni-button-success-flat.oni-button .oni-state-hover {
+      background-color: #62c462;
+      background-image: none;
+      border-color: #62c462; }
+  .oni-button-info-flat.oni-button {
+    background-color: #5bc0de;
+    background-image: none;
+    border-color: #5bc0de; }
+    .oni-button-info-flat.oni-button:hover, .oni-button-info-flat.oni-button .oni-state-hover {
+      background-color: #5bc0de;
+      background-image: none;
+      border-color: #5bc0de; }
+  .oni-button-inverse-flat.oni-button {
+    background-color: #444444;
+    background-image: none;
+    border-color: #444444; }
+    .oni-button-inverse-flat.oni-button:hover, .oni-button-inverse-flat.oni-button .oni-state-hover {
+      background-color: #444444;
+      background-image: none;
+      border-color: #444444; }
+
+.oni-button {
+  display: -moz-inline-stack;
+  display: inline-block;
+  vertical-align: middle;
+  *vertical-align: auto;
+  zoom: 1;
+  *display: inline;
+  padding: 6px 12px;
+  margin-bottom: 0;
+  font-size: 12px;
+  line-height: 20px;
+  *line-height: 20px;
+  border: 1px solid #bbbbbb;
+  *border: 0;
+  border-bottom-color: #a2a2a2;
+  color: #333333;
+  background-color: whitesmoke;
+  background-image: -moz-linear-gradient(top, white, #e6e6e6);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(white), to(#e6e6e6));
+  background-image: -webkit-linear-gradient(top, white, #e6e6e6);
+  background-image: -o-linear-gradient(top, white, #e6e6e6);
+  background-image: linear-gradient(to bottom, white, #e6e6e6);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFFFF', endColorstr='#FFE6E6E6', GradientType=0);
+  border-color: #e6e6e6 #e6e6e6 #bfbfbf;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) fadein(rgba(0, 0, 0, 0.1), 15%);
+  *background-color: #e6e6e6;
+  /* Darken IE7 buttons by default so they stand out more given they won't have borders */
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -ms-border-radius: 2px;
+  -o-border-radius: 2px;
+  border-radius: 2px;
+  *margin-left: .3em;
+  -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+  -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer; }
+  .oni-button:hover, .oni-button.oni-state-hover, .oni-button:active, .oni-button.oni-state-active, .oni-button[disabled], .oni-button.oni-state-disabled {
+    color: #333333;
+    background-color: #e6e6e6;
+    *background-color: #d9d9d9; }
+  .oni-button:active, .oni-button.oni-state-active {
+    background-color: #cccccc \9; }
+  .oni-button:first-child {
+    *margin-left: 0; }
+  .oni-button:hover, .oni-button.oni-state-hover {
+    color: #333333;
+    text-decoration: none;
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80);
+    opacity: 0.8;
+    background-position: 0 -15px;
+    -webkit-transition: background-position 0.1s linear;
+    -moz-transition: background-position 0.1s linear false;
+    -o-transition: background-position 0.1s linear false;
+    transition: background-position 0.1s linear; }
+  .oni-button:focus {
+    outline: thin dotted #333;
+    outline: 5px auto -webkit-focus-ring-color;
+    outline-offset: -2px; }
+  .oni-button.oni-state-active, .oni-button:active {
+    background-color: #e6e6e6;
+    background-color: #d9d9d9 \9;
+    background-image: none;
+    outline: 0;
+    -webkit-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+    -moz-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05); }
+  .oni-button.oni-state-disabled, .oni-button[disabled] {
+    cursor: not-allowed;
+    background-color: #e6e6e6;
+    background-image: none;
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=65);
+    opacity: 0.65;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none; }

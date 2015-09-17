@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>tree组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <script>
+        var child = []
+        var zNodes =[
+            { id:1, pid:0, name:"机票", open:true, "iconSkin": "flight"},
+            { id:11, pid:1, name:"国内"},
+            { id:111, pid:11, name:"北京"},
+            { id:112, pid:11, name:"上海"},
+            { id:113, pid:11, name:"广州"},
+            { id:114, pid:11, name:"深圳"},
+            { id:12, pid:1, name:"国际"},
+            { id:121, pid:12, name:"美国"},
+            { id:122, pid:12, name:"德国"},
+            { id:123, pid:12, name:"日本"},
+            { id:124, pid:12, name:"英国"},
+            { id:2, pid:0, name:"酒店", "iconSkin": "hotel"},
+            { id:21, pid:2, name:"五星级酒店"},
+            { id:211, pid:21, name:"逗比酒店"},
+            { id:212, pid:21, name:"坑爹酒店"},
+            { id:22, pid:2, name:"四星级以下"},
+            { id:221, pid:22, name:"E边酒店"},
+            { id:222, pid:22, name:"W边酒店"},
+            { id:223, pid:22, name:"N边酒店"},
+            { id:224, pid:22, name:"S边酒店"}
+        ];
+
+            require(["tree/avalon.tree.menu", ], function() {
+                var tree = avalon.mix(true, {}, avalon.treeMenu, {
+                    children: zNodes, 
+                    data: {
+                        simpleData: {
+                            enable: true,
+                            pIdKey: "pid"
+                        }
+                    }
+                })
+                avalon.define("test", function(vm) {
+                    vm.tree = tree
+                    vm.$skipArray = ["tree"]
+                })
+                avalon.scan()
+            })
+        </script>
+        <style type="text/css">
+            .menu-tree .oni-tree li span.flight_ico_open,
+            .menu-tree .oni-tree li span.flight_ico_close,
+            .menu-tree .oni-tree li span.hotel_ico_open,
+            .menu-tree .oni-tree li span.hotel_ico_close {
+                background: url(http://simg4.qunarzz.com/site/images/homepage/ico_p3.png) no-repeat scroll 0 -20px;
+                width: 18px;
+                height: 20px;
+            }
+        </style>
+    </head>
+    <body ms-controller="test">
+        <h1>tree - 自定义菜单</h1>
+        <p>
+            为了实现menu功能，treeMenu内占用了 onInit,callback.beforeClick等配置，因此如果实在有需要使用这几个配置，需要: 
+<pre>
+{
+    onInit: function(vmodel, options, vmodels) {
+        avalon.treeMenu.onInit.call(this, vmodel, options, vmodels)
+        // your code
+    }
+}
+</pre>
+        </p>
+        <div ms-widget="tree,tree2" class="menu-tree"></div>
+        <pre ms-skip class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;tree组件&lt;/title&gt;
+        &lt;meta charset=&quot;UTF-8&quot;&gt;
+        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;
+        &lt;script src=&quot;../avalon.js&quot;&gt;&lt;/script&gt;
+        
+        &lt;script&gt;
+        var child = []
+        var zNodes =[
+            { id:1, pid:0, name:&quot;机票&quot;, open:true, &quot;iconSkin&quot;: &quot;flight&quot;},
+            { id:11, pid:1, name:&quot;国内&quot;},
+            { id:111, pid:11, name:&quot;北京&quot;},
+            { id:112, pid:11, name:&quot;上海&quot;},
+            { id:113, pid:11, name:&quot;广州&quot;},
+            { id:114, pid:11, name:&quot;深圳&quot;},
+            { id:12, pid:1, name:&quot;国际&quot;},
+            { id:121, pid:12, name:&quot;美国&quot;},
+            { id:122, pid:12, name:&quot;德国&quot;},
+            { id:123, pid:12, name:&quot;日本&quot;},
+            { id:124, pid:12, name:&quot;英国&quot;},
+            { id:2, pid:0, name:&quot;酒店&quot;, &quot;iconSkin&quot;: &quot;hotel&quot;},
+            { id:21, pid:2, name:&quot;五星级酒店&quot;},
+            { id:211, pid:21, name:&quot;逗比酒店&quot;},
+            { id:212, pid:21, name:&quot;坑爹酒店&quot;},
+            { id:22, pid:2, name:&quot;四星级以下&quot;},
+            { id:221, pid:22, name:&quot;E边酒店&quot;},
+            { id:222, pid:22, name:&quot;W边酒店&quot;},
+            { id:223, pid:22, name:&quot;N边酒店&quot;},
+            { id:224, pid:22, name:&quot;S边酒店&quot;}
+        ];
+
+            require([&quot;tree/avalon.tree.menu&quot;, ], function() {
+                var tree = avalon.mix(true, {}, avalon.treeMenu, {
+                    children: zNodes, 
+                    data: {
+                        simpleData: {
+                            enable: true,
+                            pIdKey: &quot;pid&quot;
+                        }
+                    }
+                })
+                avalon.define(&quot;test&quot;, function(vm) {
+                    vm.tree = tree
+                    vm.$skipArray = [&quot;tree&quot;]
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+        &lt;style type=&quot;text/css&quot;&gt;
+            .menu-tree .oni-tree li span.flight_ico_open,
+            .menu-tree .oni-tree li span.flight_ico_close,
+            .menu-tree .oni-tree li span.hotel_ico_open,
+            .menu-tree .oni-tree li span.hotel_ico_close {
+                background: url(http://simg4.qunarzz.com/site/images/homepage/ico_p3.png) no-repeat scroll 0 -20px;
+                width: 18px;
+                height: 20px;
+            }
+        &lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body ms-controller=&quot;test&quot;&gt;
+        &lt;h1&gt;tree - 自定义菜单&lt;/h1&gt;
+        &lt;p&gt;
+            为了实现menu功能，treeMenu内占用了 onInit,callback.beforeClick等配置，因此如果实在有需要使用这几个配置，需要: 
+{
+    onInit: function(vmodel, options, vmodels) {
+        avalon.treeMenu.onInit.call(this, vmodel, options, vmodels)
+        // your code
+    }
+}
+        &lt;/p&gt;
+        &lt;div ms-widget=&quot;tree,tree2&quot; class=&quot;menu-tree&quot;&gt;&lt;/div&gt;
+        
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+    </body>
+</html>

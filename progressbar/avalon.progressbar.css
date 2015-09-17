@@ -1,0 +1,81 @@
+
+/*
+这是每个都组件都应该引用的部分
+*/
+div.oni-progressbar-circle {
+  border: none;
+  background-color: transparent; }
+
+.oni-progressbar {
+  width: 100%;
+  position: relative;
+  height: 6px;
+  border: none;
+  background-color: #dedede;
+  font-family: Verdana,Arial,sans-serif; }
+  .oni-progressbar-bar {
+    z-index: 1;
+    position: relative;
+    background-color: #619fe8;
+    height: 100%;
+    width: 0;
+    float: left;
+    display: inline; }
+  .oni-progressbar-bar-right {
+    background: #dddddd; }
+  .oni-progressbar-overlay {
+    width: 100%;
+    position: relative;
+    z-index: 1;
+    height: 100%;
+    overflow: hidden;
+    background: url("http://source.qunarzz.com/general/oniui/progressbar/indeterminate.gif") repeat-x #dddddd; }
+  .oni-progressbar-label {
+    position: absolute;
+    left: 50%;
+    z-index: 10;
+    margin: 0 auto;
+    color: white; }
+  .oni-progressbar-circle .oni-progressbar-label {
+    font-size: 13px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    color: #619fe8; }
+  .oni-progressbar-circle-bar {
+    border: 4px solid #619fe8;
+    position: absolute;
+    color: white;
+    background-color: #619fe8;
+    width: 38px;
+    height: 38px;
+    z-index: -1;
+    visibility: hidden;
+    padding: 0;
+    margin: 0; }
+  .oni-progressbar-normal .oni-progressbar-label {
+    background-color: #6aa5e9;
+    padding: 2px 4px;
+    font-size: 13px;
+    top: -25px;
+    height: 14px;
+    color: #fff;
+    line-height: 14px;
+    left: 0;
+    border-radius: 2px; }
+  .oni-progressbar-right .oni-progressbar-label {
+    left: 50%; }
+  .oni-progressbar-arrow {
+    width: 0;
+    height: 0;
+    line-height: 0;
+    font-size: 0;
+    border-top: 5px solid #6aa5e9;
+    border-right: 5px dashed transparent;
+    border-bottom: 0;
+    border-left: 5px dashed transparent;
+    overflow: hidden;
+    bottom: -5px;
+    left: 50%;
+    position: absolute;
+    margin-left: -5px; }

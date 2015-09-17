@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>checkboxlist demo</title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>checkboxlist demo 1</h1>
+        <p class="example">最基本的checkboxlist组件（<span class="statement">ms-widget="checkboxlist"</span>）</p>
+        <p><span class="">说明：</span>只配置ms-widget="checkboxlist"组件，默认组件会显示“全部”选框，不想让其出现的话，可以配置data-cboxpicket-alltext=""</p>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;基本的checkboxlist组件&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;div class="demo-show" ms-controller="demo1"&gt;
+                        &lt;fieldset ms-controller="demo1"&gt;
+                            &lt;legend&gt;ms-widget="checkboxlist"&lt;/legend&gt;
+                            &lt;ul ms-widget="checkboxlist"&gt;
+                                &lt;li&gt;&lt;input type="checkbox" value="1"&gt;选项一&lt;/li&gt;
+                                &lt;li&gt;&lt;input type="checkbox" value="2"&gt;选项二&lt;/li&gt;
+                                &lt;li&gt;&lt;input type="checkbox" value="3"&gt;选项三&lt;/li&gt;
+                            &lt;/ul&gt;
+                        &lt;/fieldset&gt;
+                    &lt;/div&gt;
+                    &lt;script&gt;
+                        require(["./checkboxlist/avalon.checkboxlist"], function(avalon) {
+                            var sss = avalon.define('demo1',function(vm){
+                            });
+                            avalon.scan();
+                        });
+                    &lt;/script&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+        <div class="demo-show" ms-controller="demo1">
+            <fieldset>
+                <legend>ms-widget="checkboxlist"</legend>
+                <p>组件默认方式</p>
+                <ul ms-widget="checkboxlist" data-checkboxlist-duplex="check1">
+                    <li><input type="checkbox" value="1">选项一</li>
+                    <li><input type="checkbox" value="2">选项二</li>
+                    <li><input type="checkbox" value="3">选项三</li>
+                </ul>
+                <p>配置data-checkboxlist-alltext=""来取消“全部”选项。</p>
+                <ul ms-widget="checkboxlist" data-checkboxlist-alltext="" data-checkboxlist-duplex="check2">
+                    <li><input type="checkbox" value="1">选项一</li>
+                    <li><input type="checkbox" value="2">选项二</li>
+                    <li><input type="checkbox" value="3">选项三</li>
+                </ul>
+            </fieldset>
+        </div>
+        <script>
+            require(["./checkboxlist/avalon.checkboxlist"], function(avalon) {
+                var sss = avalon.define('demo1',function(vm){
+                    vm.check1 = [];
+                    vm.check2 = [];
+                });
+                avalon.scan();
+            });
+        </script>
+    </div>
+</body>
+</html>

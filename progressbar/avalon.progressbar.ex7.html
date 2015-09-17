@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>progressbar组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <script>
+            require(["progressbar/avalon.progressbar"], function() {
+                avalon.define("test", function(vm) {
+                    vm.progressbar = {
+                        onComplete: function() {
+                        },
+                        circle: true
+                    }
+                    vm.$skipArray = ["progressbar"]
+                    var v = 30
+                        , timer
+                    setTimeout(function() {
+                      timer = setInterval(function() {
+                          
+                          avalon.vmodels.$aa.value = 0
+                        }, 50)
+                    }, 3000)
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body>
+<div ms-controller="test">
+        <h1>圆形进度条，外部设置进度值，带label，倒计时</h1>
+        <div ms-widget="progressbar,$aa" data-progressbar-label="true" data-progressbar-count-down="true" data-progressbar-simulate="100">
+            
+        </div>
+        <pre ms-skip class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;progressbar组件&lt;/title&gt;
+        &lt;meta charset=&quot;UTF-8&quot;&gt;
+        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;
+        &lt;script src=&quot;../avalon.js&quot;&gt;&lt;/script&gt;
+        
+        &lt;script&gt;
+            require([&quot;progressbar/avalon.progressbar&quot;], function() {
+                avalon.define(&quot;test&quot;, function(vm) {
+                    vm.progressbar = {
+                        onComplete: function() {
+                        },
+                        circle: true
+                    }
+                    vm.$skipArray = [&quot;progressbar&quot;]
+                    var v = 30
+                        , timer
+                    setTimeout(function() {
+                      timer = setInterval(function() {
+                          
+                          avalon.vmodels.$aa.value = 0
+                        }, 50)
+                    }, 3000)
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+&lt;div ms-controller=&quot;test&quot;&gt;
+        &lt;h1&gt;圆形进度条，外部设置进度值，带label，倒计时&lt;/h1&gt;
+        &lt;div ms-widget=&quot;progressbar,$aa&quot; data-progressbar-label=&quot;true&quot; data-progressbar-count-down=&quot;true&quot; data-progressbar-simulate=&quot;100&quot;&gt;
+            
+        &lt;/div&gt;
+        
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+    </div>
+</body>
+</html>

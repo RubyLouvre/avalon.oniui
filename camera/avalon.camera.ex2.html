@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>camera组件</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+    <script src="../avalon.js"></script>
+    <script src="../highlight/shCore.js"></script>
+    <script>
+        avalon.config({
+            paths: {
+                jquery: "./mocha/jquery.js"
+            },
+            shim: {
+                jquery: {
+                    exports: "jQuery"
+                }
+            }
+        })
+        require(["camera/avalon.camera"], function () {
+            avalon.define("demo", function (vm) {
+                vm.$opt1 = {
+                    pictures: [
+                        "http://placehold.it/600x300/903/fff.jpg&text=img1",
+                        "http://placehold.it/600x300/f36/fff.jpg&text=img2",
+                        "http://placehold.it/600x300/669/fff.jpg&text=img3",
+                        "http://placehold.it/600x300/0cf/fff.jpg&text=img4",
+                        "http://placehold.it/600x300/09f/fff.jpg&text=img5",
+                    ],
+                    timeout: 2000,
+                    speed: 1000
+                }
+                vm.$opt2 = {
+                    pictures: [
+                        "http://placehold.it/600x300/903/fff.jpg&text=img1",
+                        "http://placehold.it/600x300/f36/fff.jpg&text=img2",
+                        "http://placehold.it/600x300/669/fff.jpg&text=img3",
+                        "http://placehold.it/600x300/0cf/fff.jpg&text=img4",
+                        "http://placehold.it/600x300/09f/fff.jpg&text=img5",
+                    ],
+                    timeout: 1000,
+                    speed: 1000
+                }
+                vm.$opt3 = {
+                    pictures: [
+                        "http://placehold.it/600x300/903/fff.jpg&text=img1",
+                        "http://placehold.it/600x300/f36/fff.jpg&text=img2",
+                        "http://placehold.it/600x300/669/fff.jpg&text=img3",
+                        "http://placehold.it/600x300/0cf/fff.jpg&text=img4",
+                        "http://placehold.it/600x300/09f/fff.jpg&text=img5",
+                    ],
+                    timeout: 1000,
+                    speed: 300
+                }
+                vm.$skipArray = ["camera"]
+            })
+
+            avalon.scan()
+        })
+    </script>
+    <style type="text/css">
+        .widget {
+            width: 600px;
+            height: 300px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper" ms-controller="demo">
+        <h1>图片百叶窗切换组件-自定义切换间隔和切换速度</h1>
+        <fieldset>
+            <legend>timeout：2000, during: 1000</legend>
+            <div class="widget" ms-widget="camera,camera1,$opt1"></div>
+        </fieldset>
+        <fieldset>
+            <legend>timeout：1000, during: 1000</legend>
+            <div class="widget" ms-widget="camera,camera2,$opt2"></div>
+        </fieldset>
+        <fieldset>
+            <legend>timeout：1000, during: 300</legend>
+            <div class="widget" ms-widget="camera,camera3,$opt3"></div>
+        </fieldset>
+        <pre ms-skip class="brush:html;gutter:false;toolbar:false">
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;camera组件&lt;/title&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width"&gt;
+    &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+    &lt;script src="../highlight/shCore.js"&gt;&lt;/script&gt;
+    &lt;script&gt;
+        avalon.config({
+            paths: {
+                jquery: "./mocha/jquery.js"
+            },
+            shim: {
+                jquery: {
+                    exports: "jQuery"
+                }
+            }
+        })
+        require(["camera/avalon.camera"], function () {
+            avalon.define("demo", function (vm) {
+                vm.$opt1 = {
+                    pictures: [
+                        "http://placehold.it/600x300/903/fff.jpg&text=img1",
+                        "http://placehold.it/600x300/f36/fff.jpg&text=img2",
+                        "http://placehold.it/600x300/669/fff.jpg&text=img3",
+                        "http://placehold.it/600x300/0cf/fff.jpg&text=img4",
+                        "http://placehold.it/600x300/09f/fff.jpg&text=img5",
+                    ],
+                    timeout: 2000,
+                    speed: 1000
+                }
+                vm.$opt2 = {
+                    pictures: [
+                        "http://placehold.it/600x300/903/fff.jpg&text=img1",
+                        "http://placehold.it/600x300/f36/fff.jpg&text=img2",
+                        "http://placehold.it/600x300/669/fff.jpg&text=img3",
+                        "http://placehold.it/600x300/0cf/fff.jpg&text=img4",
+                        "http://placehold.it/600x300/09f/fff.jpg&text=img5",
+                    ],
+                    timeout: 1000,
+                    speed: 1000
+                }
+                vm.$opt3 = {
+                    pictures: [
+                        "http://placehold.it/600x300/903/fff.jpg&text=img1",
+                        "http://placehold.it/600x300/f36/fff.jpg&text=img2",
+                        "http://placehold.it/600x300/669/fff.jpg&text=img3",
+                        "http://placehold.it/600x300/0cf/fff.jpg&text=img4",
+                        "http://placehold.it/600x300/09f/fff.jpg&text=img5",
+                    ],
+                    timeout: 1000,
+                    speed: 300
+                }
+                vm.$skipArray = ["camera"]
+            })
+
+            avalon.scan()
+        })
+    &lt;/script&gt;
+    &lt;style type="text/css"&gt;
+        .widget {
+            width: 600px;
+            height: 300px;
+            margin: 0 auto;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class="wrapper" ms-controller="demo"&gt;
+    &lt;h1&gt;图片百叶窗切换组件-自定义切换间隔和切换速度&lt;/h1&gt;
+    &lt;fieldset&gt;
+        &lt;legend&gt;timeout：2000, during: 1000&lt;/legend&gt;
+        &lt;div class="widget" ms-widget="camera,camera1,$opt1"&gt;&lt;/div&gt;
+    &lt;/fieldset&gt;
+    &lt;fieldset&gt;
+        &lt;legend&gt;timeout：1000, during: 1000&lt;/legend&gt;
+        &lt;div class="widget" ms-widget="camera,camera2,$opt2"&gt;&lt;/div&gt;
+    &lt;/fieldset&gt;
+    &lt;fieldset&gt;
+        &lt;legend&gt;timeout：1000, during: 300&lt;/legend&gt;
+        &lt;div class="widget" ms-widget="camera,camera3,$opt3"&gt;&lt;/div&gt;
+    &lt;/fieldset&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+        </pre>
+    </div>
+</body>
+</html>

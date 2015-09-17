@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js"></script>
+        <style>
+            body{
+                font-size:13px;
+            }
+            .oni-slider-vertical{
+                float:left;
+                margin-right:3em;
+            }
+            .oni-slider-vertical:after {
+                visibility: hidden;
+                display: block;
+                font-size: 0;
+                content: " ";
+                clear: both;
+                height: 0;
+            }
+            p {
+                clear: both;
+            }
+        </style>
+        <script>
+
+            require(["slider/avalon.slider"], function() {
+                var model = avalon.define("theme", function(vm) {
+                    vm.percent = 0
+                    vm.$aaaOpts = {
+                        onDragStart: function(){
+                            avalon.log("start dragging");
+                            avalon.log(arguments);
+                        },
+                        onDrag: function() {
+                            avalon.log("dragging");
+                            avalon.log(arguments);
+                        },
+                        onDragEnd: function() {
+                            avalon.log("dragend");
+                            avalon.log(arguments);
+                        },
+                        min: 20,
+                        max: 100,
+                        value: 30
+                    }
+                })
+
+                avalon.log("avalon scan");
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body ms-controller = "theme">
+        <div style="width:70%">
+            <input ms-widget="slider,aaa, $aaaOpts" >
+            <p ms-controller="aaa">值为{{value}}，百分比为{{percent}}%; min为{{$valueMin}}, max为{{$valueMax}}</p>
+            <p>想禁止拖动，可以为原input元素设置disabled属性</p>
+            <input ms-widget="slider, tt" disabled data-slider-max="255" data-slider-value="36">
+            <p ms-controller="tt">如果可以拖动的话,值为{{value}}, 百分比为{{percent}}%,min为{{$valueMin}},max为{{$valueMax}}</p>
+            <input ms-widget="slider, ll" disabled data-slider-range="min" data-slider-value="36">
+            <p ms-controller="ll">禁止拖动的slider ll,初始值为36，range 为min,值为{{value}}, 百分比为{{percent}}%,min为{{$valueMin}},max为{{$valueMax}}</p>
+            <input ms-widget="slider, qq" disabled data-slider-range="max" data-slider-value="36">
+            <p ms-controller="qq">禁止拖动的slider qq,初始值为36，range 为max,值为{{value}}, 百分比为{{percent}}%,min为{{$valueMin}},max为{{$valueMax}}</p>
+            
+        </div>
+        
+        <div style="width:70%">
+            <input ms-widget="slider, kk" data-slider-range="min" data-slider-min="20">
+            <p ms-controller="kk">值为{{value}}，百分比为{{percent}}%; min为{{$valueMin}}, max为{{$valueMax}}</p>
+        </div>
+        <br/> 
+        <div style="width:70%">
+
+            <p>固定最大值</p>
+            <input ms-widget="slider, b" data-slider-range="max" data-slider-max="10" data-slider-value="2">
+
+            <p ms-controller="b">值为{{value}},百分比为{{percent}}%; min为{{$valueMin}}, max为{{$valueMax}}</p>
+
+            <p>固定值小值</p>
+            <input ms-widget="slider, c" data-slider-min="1" data-slider-max="700" data-slider-value="8" data-slider-range="min"/>
+
+            <p ms-controller="c">值为{{value}},百分比为{{percent}}%; min为{{$valueMin}}, max为{{$valueMax}}</p>
+        
+        
+            <p>只有拖动了一定距离才同步数据</p>
+            <input ms-widget="slider, d" data-slider-min="0" data-slider-max="500" data-slider-value="100" data-slider-step="50" />
+            <p ms-controller="d">值为{{value}},百分比为{{percent}}%; min为{{$valueMin}}, max为{{$valueMax}}</p>
+            <br/>
+        </div>
+       
+        <div style="width:70%">
+            <input ms-widget="slider,bbb" data-slider-range="true" data-slider-values="[ 25,50 ]" data-slider-min ="20" data-slider-max="100">
+            <p ms-controller="bbb">
+                $twohandlebars is : {{$twohandlebars}}<br />
+                这是分开写的： {{ percent0 }} {{ percent1 }}<br/>这是并在一起的 {{ value }} min为{{$valueMin}}, max为{{$valueMax}}
+            </p>
+            <p>percent is : {{percent}}</p>
+        </div>
+        <div style="height:200px">
+            <input ms-widget="slider,ccc" data-slider-value="20" data-slider-range="min" data-slider-orientation="vertical" >
+
+            <p ms-controller="ccc">值为{{value}},百分比为{{percent}}%; min为{{$valueMin}}, max为{{$valueMax}}</p>
+
+            <input ms-widget="slider, mm" data-slider-value="40" data-slider-range="min" data-slider-orientation="vertical" >
+
+            <p ms-controller="mm">值为{{value}},百分比为{{percent}}%; min为{{$valueMin}}, max为{{$valueMax}}</p>
+
+            <input ms-widget="slider,gg" data-slider-value="60" data-slider-range="min" data-slider-orientation="vertical" >
+
+            <p ms-controller="gg">值为{{value}},百分比为{{percent}}%; min为{{$valueMin}}, max为{{$valueMax}}</p>
+
+
+            <input ms-widget="slider, nn" data-slider-value="80" data-slider-range="min" data-slider-orientation="vertical" >
+
+            <p ms-controller="nn">值为{{value}},百分比为{{percent}}%; min为{{$valueMin}}, max为{{$valueMax}}</p>
+
+            <input ms-widget="slider,ddd" data-slider-values="[20,80]" data-slider-range="true" data-slider-orientation="vertical" >
+
+            <p ms-controller="ddd">值为{{value}},百分比为{{percent}}%; min为{{$valueMin}}, max为{{$valueMax}}</p>
+
+            <input ms-widget="slider, pp" data-slider-value="60" data-slider-range="max" data-slider-orientation="vertical" >
+
+            <p ms-controller="pp">值为{{value}},百分比为{{percent}}%; min为{{$valueMin}}, max为{{$valueMax}}</p>
+
+            <input ms-widget="slider,pp" disabled data-slider-values="[20,80]" data-slider-range="true" data-slider-orientation="vertical" >
+
+            <p ms-controller="pp">slider pp 设置为diabled，值为{{value}},百分比为{{percent}}%; min为{{$valueMin}}, max为{{$valueMax}}</p>
+
+        </div> 
+
+        <p style="padding: 100px;">请测试范围是否正确</p>
+        <p>清除浮动</p>
+        <div style="width:70%">
+            <input ms-widget="slider,eee" data-slider-range="true" data-slider-values="[ 25,50 ]" data-slider-max="100" data-slider-min="20">
+            <p ms-controller="eee">{{ percent0 }} {{ percent1 }} {{value}}; min为{{$valueMin}}, max为{{$valueMax}}</p>
+        </div>
+    </body>
+</html>

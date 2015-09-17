@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>Name 表格</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <meta name="descriptions" content="smartgrid与simplegrid最大的不同是数据的渲染是通过静态模板实现的，当然也可以方便的实现动态更新视图。同时smartgrid实现了grid adapter的所有功能，不过部分使用方式会有些差异，下面会详细说明
+ ">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    
+    <body>
+        <div class="wrapper">
+            <h2>smartgrid</h2>
+            <fieldset>
+                <legend>Name 表格</legend>
+                <p>smartgrid与simplegrid最大的不同是数据的渲染是通过静态模板实现的，当然也可以方便的实现动态更新视图。同时smartgrid实现了grid
+                    adapter的所有功能，不过部分使用方式会有些差异，下面会详细说明</p>
+            </fieldset>
+            <h3 class="table-doc-title">使用说明</h3>
+            <table class="table-doc" border="1">
+                <colgroup>
+                    <col width="180">
+                        <col width="95">
+                            <col width="120">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>名字</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="4">配置参数</td>
+                    </tr>
+                    <tr>
+                        <td>container</td>
+                        <td>String</td>
+                        <td>''</td>
+                        <td>设置组件的容器元素，可以是字符串,表示对应元素的id，也可以是元素对象</td>
+                    </tr>
+                    <tr>
+                        <td>pageable</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>表格是否需要分页，默认需要，false不需要</td>
+                    </tr>
+                    <tr>
+                        <td>noHeader</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>是否显示表格头部</td>
+                    </tr>
+                    <tr>
+                        <td>noFooter</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>是否显示表格底部</td>
+                    </tr>
+                    <tr>
+                        <td>data</td>
+                        <td>Array</td>
+                        <td>[]</td>
+                        <td>表格数据</td>
+                    </tr>
+                    <tr>
+                        <td>columns</td>
+                        <td>Array</td>
+                        <td>[]</td>
+                        <td>g 表格列信息对象的集合
+                            <pre>[{
+    key: "name", <span>//列标志 </span>
+    name: "姓名", <span>//列名</span>
+    sortable: true, <span>//是否可对列排序</span>
+    isLock: true, <span>//是否锁死列，设为true会始终显示此列，无论配置如何</span>
+    align": "left", <span>//设置列的对齐方式，"left"|"center"|"right"默认为"center"</span>
+    defaultValue: "shirly", <span>//列的默认值，当数据中没有为此列设置值时显示此默认值</span>
+    customClass: "custom", <span>//设置此列单元格的自定义类</span>
+    toggle: false, <span>//是否显示此列，true显示false不显示</span>
+    width: 400, <span>//设置列宽，必须是Number</span>
+    localSort: function(a, b, f) { <span>//自定义列的本地排序规则</span>
+        return a[f].localeCompare(b[f]);
+    },
+    format: "upperCaseName" <span>//包装列数据的方法，此方法名对应到htmlHelper对象中的方法</span>
+}, ...]</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>colHandlerContainer</td>
+                        <td>String</td>
+                        <td>""</td>
+                        <td>为列显隐设置按钮指定一个容器，不配置该项则按钮不出现，可传DOM节点或id</td>
+                    </tr>
+                    <tr>
+                        <td>allChecked</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>当设置selectable之后，是否显示表头的全选框，默认显示，false不显示</td>
+                    </tr>
+                    <tr>
+                        <td>htmlHelper</td>
+                        <td>Object</td>
+                        <td>{}</td>
+                        <td>包装数据的方法集合,可
+                            <a href="avalon.smartgrid.ex2.html">参见实例2</a>的使用</td>
+                    </tr>
+                    <tr>
+                        <td>noResult</td>
+                        <td>String</td>
+                        <td>'暂时没有数据'</td>
+                        <td>数据为空时表格的提示信息</td>
+                    </tr>
+                    <tr>
+                        <td>remoteSort</td>
+                        <td>Function</td>
+                        <td>avalon.noop</td>
+                        <td>远程排序操作的方法
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>field</td>
+                                        <td>String</td>
+                                        <td>待排序的列名</td>
+                                    </tr>
+                                    <tr>
+                                        <td>sortTrend</td>
+                                        <td>String</td>
+                                        <td>排序规则，"asc"为升序"desc"为降序</td>
+                                    </tr>
+                                    <tr>
+                                        <td>vmodel</td>
+                                        <td>Object</td>
+                                        <td>smartgrid组件对应的Vmodel</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>isAffix</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>表头在表格内容超过可视区高度时是否吸顶，true吸顶，false不吸顶，默认不吸顶</td>
+                    </tr>
+                    <tr>
+                        <td>affixHeight</td>
+                        <td>Number</td>
+                        <td>0</td>
+                        <td>配置吸顶元素距离窗口顶部的高度</td>
+                    </tr>
+                    <tr>
+                        <td>selectable</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>为表格添加Checkbox或者Radio操作项，格式为
+                            <pre>{type: 'Checkbox', width: '25px'}</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>loading</td>
+                        <td>Object</td>
+                        <td>{ toggle: false, modal: true, modalBackground: '#000' }</td>
+                        <td>设置loading缓冲的配置项，具体使用方法参见loading文档</td>
+                    </tr>
+                    <tr>
+                        <td>pager</td>
+                        <td>Object</td>
+                        <td>{}</td>
+                        <td>设置pager的配置项，smartgrid组件默认会添加pager，也可以改变表格显示数目，默认可选10、20、50、100条数据，如果不希望显示此选项，可以设置canChangePageSize为false</td>
+                    </tr>
+                    <tr>
+                        <td>sortable</td>
+                        <td>Object</td>
+                        <td>{ remoteSort: true }</td>
+                        <td>是否进行远程排序，默认true，进行远程排序必须配置远程排序的方法：remoteSort</td>
+                    </tr>
+                    <tr>
+                        <td>addRow(tmpl,columns,vmodel)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>为表格添加新行
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>tmp</td>
+                                        <td>String</td>
+                                        <td>表格的body模板</td>
+                                    </tr>
+                                    <tr>
+                                        <td>columns</td>
+                                        <td>Array</td>
+                                        <td>列信息数组</td>
+                                    </tr>
+                                    <tr>
+                                        <td>vmodel</td>
+                                        <td>Object</td>
+                                        <td>smartgrid组件对应的Vmodel</td>
+                                    </tr>
+                                    <tr>
+                                        <td>返回</td>
+                                        <td>String</td>
+                                        <td>用户定制后的模板</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>onColumnSort</td>
+                        <td>Function</td>
+                        <td>avalon.noop</td>
+                        <td>排序回调
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>sortType</td>
+                                        <td>String</td>
+                                        <td>排序规则，"asc"为升序"desc"为降序</td>
+                                    </tr>
+                                    <tr>
+                                        <td>field</td>
+                                        <td>String</td>
+                                        <td>排序的列名</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>onRowSelect</td>
+                        <td>Function</td>
+                        <td>avalon.noop</td>
+                        <td>用户选中一行或者取消一行选中状态的回调
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>rowData</td>
+                                        <td>Object</td>
+                                        <td>被操作行的数据对象</td>
+                                    </tr>
+                                    <tr>
+                                        <td>isSelected</td>
+                                        <td>Boolean</td>
+                                        <td>行的选中状态，true选中状态，false非选中状态</td>
+                                    </tr>
+                                    <tr>
+                                        <td>dataIndex</td>
+                                        <td>Number</td>
+                                        <td>当前行数据在data中的索引</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>onSelectAll</td>
+                        <td>Function</td>
+                        <td>avalon.noop</td>
+                        <td>用户全选或全不选的回调
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>datas</td>
+                                        <td>Array</td>
+                                        <td>表格数据</td>
+                                    </tr>
+                                    <tr>
+                                        <td>isSelectedAll</td>
+                                        <td>Boolean</td>
+                                        <td>全选状态，true选中状态，false非选中状态</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="4">接口方法与固有属性</td>
+                    </tr>
+                    <tr>
+                        <td>getRawData()</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>获取表格数据,当然也可以通过vmodel.data直接获得表格数据</td>
+                    </tr>
+                    <tr>
+                        <td>getSelected()</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>获取选中表格行的数据集合</td>
+                    </tr>
+                    <tr>
+                        <td>selectAll(b)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>全选表格，或者全不选
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>b</td>
+                                        <td>Boolean</td>
+                                        <td>true表示全选，false表示全不选，为空时以true对待</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>isSelectAll()</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>判断表过是否全选
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>返回</td>
+                                        <td>Boolean</td>
+                                        <td>true表示全选，false表示全不选</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>setColumns(columns,b)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>设置列的显示或者隐藏
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>columns</td>
+                                        <td>String|Array</td>
+                                        <td>可以是字符串，也可以是数组，列出要设置的列的key值</td>
+                                    </tr>
+                                    <tr>
+                                        <td>b</td>
+                                        <td>Boolean</td>
+                                        <td>true为显示列，false为隐藏列，设置了列的isLock属性为ture时始终显示列</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>showNoResult(text)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>调用此方法清空表格数据
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>text</td>
+                                        <td>String</td>
+                                        <td>无数据情况下的说明文字，默认为“暂时没有数据”</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>showLoading()</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>显示缓冲提示</td>
+                    </tr>
+                    <tr>
+                        <td>hideLoading()</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>隐藏缓冲提示</td>
+                    </tr>
+                    <tr>
+                        <td>addRows(data,init,noShowLoading)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>增加行，已經渲染的不會再操作
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>data</td>
+                                        <td>Array</td>
+                                        <td>新增的行</td>
+                                    </tr>
+                                    <tr>
+                                        <td>init</td>
+                                        <td>Boolean</td>
+                                        <td>是否为初始化grid</td>
+                                    </tr>
+                                    <tr>
+                                        <td>noShowLoading</td>
+                                        <td>Boolean</td>
+                                        <td>渲染期间是否显示loading</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>render(data,init,noShowLoading)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>用新的数据重新渲染表格视图
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>data</td>
+                                        <td>Array</td>
+                                        <td>重新渲染表格的数据集合</td>
+                                    </tr>
+                                    <tr>
+                                        <td>init</td>
+                                        <td>Boolean</td>
+                                        <td>是否为初始化grid</td>
+                                    </tr>
+                                    <tr>
+                                        <td>noShowLoading</td>
+                                        <td>Boolean</td>
+                                        <td>渲染期间是否显示loading</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="others">
+                <p>下面附上实现相同展示效果的情况下，smartgrid与simplegrid的渲染情况对比</p>
+                <div>
+                    <h2>smartgrid渲染10条表格数据</h2>
+                    <img src="smartgrid10.png" style="width:100%">
+                    <h2>simplegrid渲染10条表格数据</h2>
+                    <img src="simplegrid10.png" style="width:100%">
+                    <h2>smartgrid渲染200条表格数据</h2>
+                    <img src="smartgrid200.png" style="width:100%">
+                    <h2>simplegrid渲染200条表格数据</h2>
+                    <img src="simplegrid200.png" style="width:100%">
+                </div>
+            </div>
+            <ul class="example-links">
+                <li>
+                    <a href="avalon.smartgrid.ex1.html">除设置columns和data外都是默认配置的smartgrid</a>
+                </li>
+                <li>
+                    <a href="avalon.smartgrid.ex2.html">通过htmlHelper配置数据包装函数集合，定义columns时设置要包装列的format为对应的包装函数</a>
+                </li>
+                <li>
+                    <a href="avalon.smartgrid.ex3.html">演示表格吸顶效果，并且取消pager的显示</a>
+                </li>
+                <li>
+                    <a href="avalon.smartgrid.ex4.html">表格排序操作</a>
+                </li>
+                <li>
+                    <a href="avalon.smartgrid.ex5.html">自定义smartgrid各种事件回调</a>
+                </li>
+                <li>
+                    <a href="avalon.smartgrid.ex6.html">供用户调用API</a>
+                </li>
+                <li>
+                    <a href="avalon.smartgrid.ex7.html">配置addRow为表格添加新行</a>
+                </li>
+                <li>
+                    <a href="avalon.smartgrid.ex8.html">通过data的disable属性禁用部分数据</a>
+                </li>
+                <li>
+                    <a href="avalon.smartgrid.ex9.html">通过avalon.filters.sanitize(str)来防止xss攻击</a>
+                </li>
+                <li>
+                    <a href="avalon.smartgrid.ex10.html">嵌套的表格</a>
+                </li>
+                <li>
+                    <a href="avalon.smartgrid.ex11.html">grid会根据columns配置的width自主决定是否显示水平滚动条</a>
+                </li>
+                <li>
+                    <a href="avalon.smartgrid.ex12.html">通过设置bodyHeight使得表格体可以垂直滚动</a>
+                </li>
+                <li>
+                    <a href="avalon.smartgrid.ex13.html">自定义列的显示/隐藏</a>
+                </li>
+            </ul>
+        </div>
+    </body>
+
+</html>

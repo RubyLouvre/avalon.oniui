@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>表格组件</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <script src="../highlight/shCore.js">
+</script>
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+    </head>
+    
+    <body>
+        <div class="wrapper">
+            <h2>simplegrid</h2>
+            <fieldset>
+                <legend>表格组件</legend>用于各种大数据的展示，但最好存在滚动条，方便让它不会卡死页面。鉴于simplegrid是动态模板实现，在大数据量的情况下容易卡，性能不佳，故推荐使用通过静态模板实现的smartgrid</fieldset>
+            <h3
+            class="table-doc-title">使用说明</h3>
+                <table class="table-doc">
+                    <colgroup>
+                        <col width="180">
+                            <col width="95">
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <th>名字</th>
+                            <th>默认值</th>
+                            <th>说明</th>
+                        </tr>
+                        <tr>
+                            <td colspan="3">columns对象数组里面的各个对象的匹置项</td>
+                        </tr>
+                        <tr>
+                            <td>field</td>
+                            <td></td>
+                            <td>列的ID名，方便与tbody中的数据相对应</td>
+                        </tr>
+                        <tr>
+                            <td>text</td>
+                            <td></td>
+                            <td>列的输出文本</td>
+                        </tr>
+                        <tr>
+                            <td>width</td>
+                            <td></td>
+                            <td>列宽</td>
+                        </tr>
+                        <tr>
+                            <td>align</td>
+                            <td>"left"</td>
+                            <td>对齐方式, left, right, center</td>
+                        </tr>
+                        <tr>
+                            <td>hidden</td>
+                            <td>false</td>
+                            <td>是否隐藏列</td>
+                        </tr>
+                        <tr>
+                            <td>resizable</td>
+                            <td>true</td>
+                            <td>是否允许改变列宽</td>
+                        </tr>
+                        <tr>
+                            <td>sortable</td>
+                            <td>true</td>
+                            <td>是否允许排序</td>
+                        </tr>
+                        <tr>
+                            <td>title</td>
+                            <td></td>
+                            <td>通过getColumnTitle获得</td>
+                        </tr>
+                        <tr>
+                            <td>className</td>
+                            <td></td>
+                            <td>类名</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" align="center">与columns并列的属性或方法</td>
+                        </tr>
+                        <tr>
+                            <td>pageable</td>
+                            <td>false</td>
+                            <td>是否显示分页栏</td>
+                        </tr>
+                        <tr>
+                            <td>pager</td>
+                            <td>{}</td>
+                            <td>用于配置分页栏</td>
+                        </tr>
+                        <tr>
+                            <td>showRows</td>
+                            <td>0</td>
+                            <td>每页真实要显示的行数</td>
+                        </tr>
+                        <tr>
+                            <td>currentPage</td>
+                            <td>1</td>
+                            <td>当前位于第几页</td>
+                        </tr>
+                        <tr>
+                            <td>edge</td>
+                            <td>15</td>
+                            <td>如果某一列可以允许
+                                <b>通过拖动改变列宽</b>,当用户在表头对应的单元格移动鼠标时,
+                                <br>它离单元格的右边多少像素时就改变光标的形态,表示可以拖动</td>
+                        </tr>
+                        <tr>
+                            <td>columnWidth</td>
+                            <td>160</td>
+                            <td>每列默认的宽度</td>
+                        </tr>
+                        <tr>
+                            <td>tbodyHeight</td>
+                            <td>35</td>
+                            <td>框架根据 tbodyRowHeight * showRows求出</td>
+                        </tr>
+                        <tr>
+                            <td>theadHeight</td>
+                            <td>35</td>
+                            <td>这个最好与thead的单元格一样或差一两像素</td>
+                        </tr>
+                        <tr>
+                            <td>theadTemplate(template)</td>
+                            <td>函数或默认模板</td>
+                            <td>表头那一行的HTML模板</td>
+                        </tr>
+                        <tr>
+                            <td>tbodyTemplate(template)</td>
+                            <td>函数或默认模板</td>
+                            <td>表身每一行的HTML模板</td>
+                        </tr>
+                        <tr>
+                            <td>getTemplate(template, options)</td>
+                            <td>函数</td>
+                            <td>用于修改整个模板</td>
+                        </tr>
+                        <tr>
+                            <td>getColumn(el, options)</td>
+                            <td>函数</td>
+                            <td>用于为每一列的数据添加更多自定义属性, el为columns中的某一个对象</td>
+                        </tr>
+                        <tr>
+                            <td>addColumn(option, index)</td>
+                            <td>函数</td>
+                            <td>在第index列插入新的列,option为一个对象，参见columns的配置</td>
+                        </tr>
+                        <tr>
+                            <td>columnsOrder</td>
+                            <td>[]</td>
+                            <td>里面为columns中每个field的名字,用于调整每一列出现的顺序</td>
+                        </tr>
+                        <tr>
+                            <td>onSort(vmodel)</td>
+                            <td>函数</td>
+                            <td>排序后执行的回调</td>
+                        </tr>
+                        <tr>
+                            <td>evenClass</td>
+                            <td>"even"</td>
+                            <td>为表身的偶数行添加一个类名，以实现斑马线效果。</td>
+                        </tr>
+                        <tr>
+                            <td>reRender(data,vmodel)</td>
+                            <td>函数</td>
+                            <td>重新渲染数据</td>
+                        </tr>
+                        <tr>
+                            <td>remoteSort(field, trend, vmodel, callback)</td>
+                            <td>函数</td>
+                            <td>远程排序, 用户需要定义一个函数,框架会为它传入四个参数 field是要排序的值,trend为排序方向,vmodel为VM,callback是AJAX回调里需要执行的回调,要求传入一个数组
+                                <pre
+                                class="brush:javascript;gutter:false;toolbar:false">remoteSort: function(field, trend, vmodel, callback){ $.ajax({ url: url,
+                                    data: { sortField: field, sortTrend: trend, xxx: xxxx }, dataType: "json",
+                                    callback: function(json){ callback(data.gridData) } }) }</pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>renderCell(val, key, row)</td>
+                            <td>函数</td>
+                            <td>为每一个单元格渲染内容（★这是一个非常重要的方法）</td>
+                        </tr>
+                        <tr>
+                            <td>theadRenderedCallback(vmodel, options, vmodels)</td>
+                            <td>函数</td>
+                            <td>表头渲染完毕执行的回调</td>
+                        </tr>
+                        <tr>
+                            <td>tbodyRenderedCallback(vmodel, options, vmodels)</td>
+                            <td>函数</td>
+                            <td>表身渲染完毕执行的回调</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b style="color:orangered">data</b>
+                            </td>
+                            <td>[]</td>
+                            <td>是当前页的所有数据。 如果存在分页，默认是第一页。
+                                <br>当我们点击分页栏的下一页或其他页时，就会ajax请求数据， 重写data。
+                                <br>此属性在vm里是
+                                <b style="color:green">不可监控的</b>， 只是用来克隆其中一部分到_data。</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b style="color:orangered">_data</b>
+                            </td>
+                            <td>[]</td>
+                            <td>是当前页的显示出来的数据， 如果出现滚动条就是可视区那一部分的TR元素上附加的数据。
+                                <br>此属性在vm里是
+                                <b style="color:green">可监控的</b>，但不建议用户修改它， 应该交给框架自行处理。</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <ul class="example-links">
+                    <li>
+                        <a href="avalon.simplegrid.ex1.html">最简单的例子,只有columns与data</a>
+                    </li>
+                    <li>
+                        <a href="avalon.simplegrid.ex2.html">演示tbodyTemplate的使用</a>
+                    </li>
+                    <li>
+                        <a href="avalon.simplegrid.ex3.html">演示className, renderCell, align, columnsOrder的使用</a>
+                    </li>
+                    <li>
+                        <a href="avalon.simplegrid.ex4.html">指定百分比列宽</a>
+                    </li>
+                    <li>
+                        <a href="avalon.simplegrid.ex5.html">表头拖动改变列宽</a>
+                    </li>
+                    <li>
+                        <a href="avalon.simplegrid.ex6.html">演示无限拖</a>
+                    </li>
+                    <li>
+                        <a href="avalon.simplegrid.ex7.html">演示无限拖与分页栏</a>
+                    </li>
+                    <li>
+                        <a href="avalon.simplegrid.ex8.html">右边添加一个全选非全选的checkbox栏</a>
+                    </li>
+                    <li>
+                        <a href="avalon.simplegrid.ex9.html">演示斑马线效果</a>
+                    </li>
+                    <li>
+                        <a href="avalon.simplegrid.ex10.html">演示十字线效果</a>
+                    </li>
+                    <li>
+                        <a href="avalon.simplegrid.ex11.html">演示tbodyTemplate的使用</a>
+                    </li>
+                    <li>
+                        <a href="avalon.simplegrid.ex12.html">演示theadRenderedCallback的使用(数据汇总)</a>
+                    </li>
+                    <li>
+                        <a href="avalon.simplegrid.ex13.html">演示环比同比表格</a>
+                    </li>
+                    <li>
+                        <a href="avalon.simplegrid.ex14.html">切换卡(非组件)里面套着表格</a>
+                    </li>
+                    <li>
+                        <a href="avalon.simplegrid.ex15.html">表格套textbox组件</a>
+                    </li>
+                    <li>
+                        <a href="avalon.simplegrid.ex16.html">当数据为零时显示没有结果的情况</a>
+                    </li>
+                </ul>
+        </div>
+    </body>
+
+</html>

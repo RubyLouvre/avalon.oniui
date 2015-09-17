@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>mmRouter组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="ui/ex.css">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <script>
+            var arr = "doublelist flipswitch loading menu progressbar scrollbar scrollspy tab tooltip tree dragsort treeMunu mmPromise".split(" ")
+            require(["mmRouter/mmState", "dialog/avalon.dialog", "dropdownlist/avalon.dropdownlist"], function() {
+                var home = avalon.define("home", function(vm) {
+                    vm.user = {
+                        username: "",
+                        pwd: ""
+                    }
+                    vm.dropdownlist1 = {
+                        textbox: {
+                            placeholder: "请输入组件名字"
+                        },
+                        data: arr
+                    }
+                    vm.admin = {
+                        username: "skipper",
+                        pwd: "123"
+                    }
+                    vm.isLogin = function() {
+                        if(!vm.user.username || !vm.user.pwd) {
+                            avalon.router.go("login", {query: {
+                                jumpUrl: encodeURIComponent(location.hash)
+                            }}, {replace: true})
+                            return false
+                        }
+                    }
+                    vm.uis = arr
+                    vm.page = ""
+                }),
+                currentState,
+                // 登录
+                login = avalon.define("login", function(vm) {
+                    vm.login = function(e) {
+                        e.preventDefault()
+                        if(home.user.username && home.user.pwd) {
+                            avalon.vmodels.dialogName.toggle = false
+                            if(currentState && currentState.query) {
+                                var jumpUrl = currentState.query.jumpUrl
+                                if(jumpUrl) {
+                                    jumpUrl = decodeURIComponent(jumpUrl)
+                                    jumpUrl = jumpUrl.replace(avalon.history.prefix, "")
+                                    return avalon.router.navigate(jumpUrl)
+                                }
+                            }
+                            avalon.router.go("user.developer", {
+                                username: home.user.username,
+                                pwd: home.user.pwd,
+                                isAdmin: home.user.username == home.admin.username && home.user.pwd == home.add.pwd
+                            })
+                            return
+                        }
+                        alert("请输入用户名和密码")
+                    }
+                })
+                avalon.state("home", {
+                    url: "/",
+                    controller: "home",
+                    views: {
+                        "": {
+                            templateUrl: "ui/home.html"
+                        }
+                    },
+                    onEnter: function() {
+                                                
+                    }
+                })
+                avalon.state("login", {
+                    controller: "home",
+                    url: "/login",
+                    views: {
+                        "login" : {
+                            templateUrl: "ui/login.html"
+                        }
+                    },
+                    onBeforeEnter: function() {
+                        if(avalon.vmodels.dialogName) {
+                            avalon.vmodels.dialogName.toggle = true
+                            return false
+                        }
+                    },
+                    onEnter: function() {
+                    },
+                    onAfterLoad: function() {
+                        if(avalon.vmodels.dialogName) avalon.vmodels.dialogName.toggle = true
+                    }
+                })
+
+                avalon.state("user", {
+                    controller: "home",
+                    url: "/user",
+                    views: {
+                        "user": {
+                            templateUrl: "ui/user.html"
+                        }
+                    },
+                    onBeforeEnter: home.isLogin
+                })
+
+                avalon.state("user.developer", {
+                    controller: "home",
+                    url: "/developer/:username",
+                    views: {
+                        "uilist": {
+                            templateUrl: "ui/list.html"
+                        }
+                    },
+                    onEnter: function() {
+                        home.user.username = this.params.username
+                        home.user.pwd = this.params.pwd
+                    }
+                })
+
+                avalon.state.config({
+                    onLoad: function() {
+                        currentState = this.currentState
+                        home.page = currentState.stateName
+                    },
+                    onError: function(e, state) {
+                        avalon.log(e.error)
+                    }
+                })
+
+                //启动路由
+                avalon.history.start({
+                    basepath: "/mmRouter",
+                    fireAnchor: false
+                })
+
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body ms-controller="home">
+        <h1>mmRouter：登录跳转</h1>
+        <div>
+            <a href="#!//">Home</a>
+            <div 
+                 ms-visible="page=='home'" ms-view=""></div>
+            <div 
+                 ms-visible="page=='login'" ms-view="login"></div>
+            <div 
+                 ms-visible="page=='user.developer'" ms-view="user"></div>
+            <div class="clr"></div>
+        </div>
+        <pre ms-skip class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;mmRouter组件&lt;/title&gt;
+        &lt;meta charset=&quot;UTF-8&quot;&gt;
+        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;
+        &lt;link rel=&quot;stylesheet&quot; href=&quot;ui/ex.css&quot;&gt;
+        &lt;script src=&quot;../avalon.js&quot;&gt;&lt;/script&gt;
+        
+        &lt;script&gt;
+            var arr = &quot;doublelist flipswitch loading menu progressbar scrollbar scrollspy tab tooltip tree dragsort treeMunu mmPromise&quot;.split(&quot; &quot;)
+            require([&quot;mmRouter/mmState&quot;, &quot;dialog/avalon.dialog&quot;, &quot;dropdownlist/avalon.dropdownlist&quot;], function() {
+                var home = avalon.define(&quot;home&quot;, function(vm) {
+                    vm.user = {
+                        username: &quot;&quot;,
+                        pwd: &quot;&quot;
+                    }
+                    vm.dropdownlist1 = {
+                        textbox: {
+                            placeholder: &quot;请输入组件名字&quot;
+                        },
+                        data: arr
+                    }
+                    vm.admin = {
+                        username: &quot;skipper&quot;,
+                        pwd: &quot;123&quot;
+                    }
+                    vm.isLogin = function() {
+                        if(!vm.user.username || !vm.user.pwd) {
+                            avalon.router.go(&quot;login&quot;, {query: {
+                                jumpUrl: encodeURIComponent(location.hash)
+                            }}, {replace: true})
+                            return false
+                        }
+                    }
+                    vm.uis = arr
+                    vm.page = &quot;&quot;
+                }),
+                currentState,
+                // 登录
+                login = avalon.define(&quot;login&quot;, function(vm) {
+                    vm.login = function(e) {
+                        e.preventDefault()
+                        if(home.user.username &amp;&amp; home.user.pwd) {
+                            avalon.vmodels.dialogName.toggle = false
+                            if(currentState &amp;&amp; currentState.query) {
+                                var jumpUrl = currentState.query.jumpUrl
+                                if(jumpUrl) {
+                                    jumpUrl = decodeURIComponent(jumpUrl)
+                                    jumpUrl = jumpUrl.replace(avalon.history.prefix, &quot;&quot;)
+                                    return avalon.router.navigate(jumpUrl)
+                                }
+                            }
+                            avalon.router.go(&quot;user.developer&quot;, {
+                                username: home.user.username,
+                                pwd: home.user.pwd,
+                                isAdmin: home.user.username == home.admin.username &amp;&amp; home.user.pwd == home.add.pwd
+                            })
+                            return
+                        }
+                        alert(&quot;请输入用户名和密码&quot;)
+                    }
+                })
+                avalon.state(&quot;home&quot;, {
+                    url: &quot;/&quot;,
+                    controller: &quot;home&quot;,
+                    views: {
+                        &quot;&quot;: {
+                            templateUrl: &quot;ui/home.html&quot;
+                        }
+                    },
+                    onEnter: function() {
+                                                
+                    }
+                })
+                avalon.state(&quot;login&quot;, {
+                    controller: &quot;home&quot;,
+                    url: &quot;/login&quot;,
+                    views: {
+                        &quot;login&quot; : {
+                            templateUrl: &quot;ui/login.html&quot;
+                        }
+                    },
+                    onBeforeEnter: function() {
+                        if(avalon.vmodels.dialogName) {
+                            avalon.vmodels.dialogName.toggle = true
+                            return false
+                        }
+                    },
+                    onEnter: function() {
+                    },
+                    onAfterLoad: function() {
+                        if(avalon.vmodels.dialogName) avalon.vmodels.dialogName.toggle = true
+                    }
+                })
+
+                avalon.state(&quot;user&quot;, {
+                    controller: &quot;home&quot;,
+                    url: &quot;/user&quot;,
+                    views: {
+                        &quot;user&quot;: {
+                            templateUrl: &quot;ui/user.html&quot;
+                        }
+                    },
+                    onBeforeEnter: home.isLogin
+                })
+
+                avalon.state(&quot;user.developer&quot;, {
+                    controller: &quot;home&quot;,
+                    url: &quot;/developer/:username&quot;,
+                    views: {
+                        &quot;uilist&quot;: {
+                            templateUrl: &quot;ui/list.html&quot;
+                        }
+                    },
+                    onEnter: function() {
+                        home.user.username = this.params.username
+                        home.user.pwd = this.params.pwd
+                    }
+                })
+
+                avalon.state.config({
+                    onLoad: function() {
+                        currentState = this.currentState
+                        home.page = currentState.stateName
+                    },
+                    onError: function(e, state) {
+                        avalon.log(e.error)
+                    }
+                })
+
+                //启动路由
+                avalon.history.start({
+                    basepath: &quot;/mmRouter&quot;,
+                    fireAnchor: false
+                })
+
+                avalon.scan()
+            })
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body ms-controller=&quot;home&quot;&gt;
+        &lt;h1&gt;mmRouter：登录跳转&lt;/h1&gt;
+        &lt;div&gt;
+            &lt;a href=&quot;#!//&quot;&gt;Home&lt;/a&gt;
+            &lt;div 
+                 ms-visible=&quot;page=='home'&quot; ms-view=&quot;&quot;&gt;&lt;/div&gt;
+            &lt;div 
+                 ms-visible=&quot;page=='login'&quot; ms-view=&quot;login&quot;&gt;&lt;/div&gt;
+            &lt;div 
+                 ms-visible=&quot;page=='user.developer'&quot; ms-view=&quot;user&quot;&gt;&lt;/div&gt;
+            &lt;div class=&quot;clr&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+        
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+    </body>
+</html>

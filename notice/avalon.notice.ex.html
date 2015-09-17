@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+        <meta http-equiv="x-ua-compatible" content="ie=edge" />
+        <title>notice demo </title>
+        <link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+        <script src="../highlight/shCore.js"></script>
+        <script src="../avalon.js"></script>
+    </head>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        .ms-controller {
+            display: none;
+        }
+        button {
+            display: block;
+            margin: 10px;
+        }
+        .wrapper {
+            width: 800px;
+            margin: 0 auto;
+            border: 1px solid black;
+            padding: 20px;
+        }
+        #test2 {
+            margin-top: 100px;
+        }
+        #nav {
+            width: 100%;
+            height: 40px;
+            line-height: 40px;
+            position: fixed;
+            background: #ccc;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: red;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body class="ms-controller" ms-controller="noticeUi">
+    <div id="nav">
+        导航条
+    </div>
+    <div class="wrapper">
+        <div id="test">
+            <p>提示信息的container test1</p>
+        </div>
+        <div id="test2">
+            <p>提示信息的container test2</p>
+        </div>
+        <div ms-widget="notice,errorMessage" data-notice-header="错误信息errorMessage" data-notice-is-place=false data-notice-content="hello content" data-notice-container="#test2" data-notice-is-affix=true data-notice-type="success"></div>
+        <div ms-widget="notice,aa" data-notice-header="错误信息aa" data-notice-content="hello content aa" data-notice-container="#test" data-notice-is-affix=true data-notice-type="error"></div>
+        <div ms-widget="notice,bb" data-notice-header="错误信息bb" data-notice-content="hello content bb" data-notice-container="#test2" data-notice-is-affix=true data-notice-type="info"></div>
+        <div ms-widget="notice,cc" data-notice-header="错误信息cc" data-notice-is-place=false data-notice-content="hello content cc" data-notice-container="#test" data-notice-is-affix=true data-notice-type="success"></div>
+        <div ms-widget="notice,dd" data-notice-header="错误信息dd" data-notice-content="hello content dd" data-notice-container="#test2" data-notice-is-affix=true data-notice-type="error"></div>
+        <div ms-widget="notice,ff" data-notice-header="成功提示ff" data-notice-type="success" data-notice-content="操作成功了" data-notice-container="#test" data-notice-is-affix=true></div>
+
+        <button ms-click="changeType('errorMessage')">change notice type</button>
+        <button ms-click="changeContent('errorMessage')">change notice content</button>
+        <button ms-click="changeHeader('errorMessage')">change notice header</button>
+        <button ms-click="removeNotice('errorMessage')">remove errorMessage notice</button>
+        <button ms-click="removeNotice('cc')">remove cc notice</button>
+
+        <p id="test3">将此段落内容放到<b style="color: blue">notice</b>中作为提示信息</p>
+        <div ms-each-i="list"> {{i}} <br /></div>
+        <button ms-click="toggleNotice()">show notice</button>
+        <script>
+
+require(["notice/avalon.notice", "ready!"], function(avalon) {
+    var pTest3 = document.getElementById("test3");
+    var model = avalon.define("noticeUi", function(vm) {
+        vm.list = avalon.range(0, 100);
+        vm.go = function() {
+            avalon.notice.go('dd');
+        }
+        vm.affix = function() {
+            avalon.notice.show('form_validate_message', 'content', 'success');      //info,error,success为notice类型
+        };
+        vm.toggleNotice = function() {
+            var noticeVM = avalon.vmodels['errorMessage'];
+            var noticeVM1 = avalon.vmodels['ff'];
+            var noticeVMaa = avalon.vmodels["aa"];
+            var noticeVMbb = avalon.vmodels["bb"];
+            var noticeVMcc = avalon.vmodels["cc"];
+            var noticeVMdd = avalon.vmodels["dd"];
+
+            noticeVM && (noticeVM.toggle = !noticeVM.toggle)
+            noticeVM1 && (noticeVM1.toggle = !noticeVM1.toggle);
+            noticeVMaa && (noticeVMaa.toggle = !noticeVMaa.toggle);
+            noticeVMbb && (noticeVMbb.toggle = !noticeVMbb.toggle);
+            noticeVMcc && (noticeVMcc.toggle = !noticeVMcc.toggle);
+            noticeVMdd && (noticeVMdd.toggle = !noticeVMdd.toggle);
+        }
+        vm.changeType = function(id) {
+            var typeArr = ["info", "success", "error"];
+            var noticeVM = avalon.vmodels[id];
+            var index = Math.floor(Math.random() * 3)
+            noticeVM.type = typeArr[index];
+        }
+        vm.changeContent = function(id) {
+            var noticeVM = avalon.vmodels[id];
+            var pContent = pTest3.innerHTML;
+            var contentArr = ["change content", "<b style='color:red'>使用红色粗体字的notice</b>", pTest3];
+            var index = Math.floor(Math.random() * 3)
+            noticeVM.content = contentArr[index]
+            if (index === 2) {
+                pTest3.innerHTML = pContent;
+            }
+        }
+        vm.changeHeader = function(id) {
+            var noticeVM = avalon.vmodels[id];
+            noticeVM.header = "header changed!"
+        }
+        vm.removeNotice = function(id) {
+            var noticeVM = avalon.vmodels[id];
+            var widgetElement = noticeVM.widgetElement;
+            widgetElement.parentNode.removeChild(widgetElement);
+        }
+    })
+    avalon.scan();
+})
+        </script>
+    </div>
+</body>
+</html>
+

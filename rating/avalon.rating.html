@@ -1,0 +1,10 @@
+<label ms-on-mouseout="mouseout">
+    <span class="oni-icon"
+        ms-repeat="list"
+        ms-css-color="{{floatValue > $index ? selectedColor : notSelectedColor}}"
+        ms-css-font-size="{{size}}px"
+        ms-css-margin-right="{{margin}}px"
+        ms-on-mouseover="mouseover($index)"
+        ms-click="select($index)"
+    >{{floatValue > $index ? selectedContent : notSelectedContent | html}}</span>
+</label>

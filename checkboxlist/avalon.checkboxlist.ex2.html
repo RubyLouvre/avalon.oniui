@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>checkboxlist demo(配置duplex选项)</title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>checkboxlist demo 2</h1>
+        <p class="example">配置checkboxlist-duplex初始化初始选中的选项，而且可以通过duplex值的改变修正选中项状态（<span class="statement">data-checkboxlist-duplex="val"</span>）</p>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;配置duplex选项&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;div class="demo-show" ms-controller="demo2"&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;data-checkboxlist-duplex="val"&lt;/legend&gt;
+                            &lt;ul ms-widget="checkboxlist" data-checkboxlist-duplex="val" data-checkboxlist-alltext="全部"&gt;
+                                &lt;li&gt;&lt;input type="checkbox" value="1"&gt;选项一&lt;/li&gt;
+                                &lt;li&gt;&lt;input type="checkbox" value="2"&gt;选项二&lt;/li&gt;
+                                &lt;li&gt;&lt;input type="checkbox" value="3"&gt;选项三&lt;/li&gt;
+                                &lt;li&gt;&lt;input type="checkbox" value="4"&gt;选项四&lt;/li&gt;
+                                &lt;li&gt;&lt;input type="checkbox" value="5"&gt;选项五&lt;/li&gt;
+                                &lt;li&gt;&lt;input type="checkbox" value="6"&gt;选项六&lt;/li&gt;
+                            &lt;/ul&gt;
+                            {{ val }}
+                        &lt;/fieldset&gt;
+                    &lt;/div&gt;
+                    &lt;script&gt;
+                        require(["./checkboxlist/avalon.checkboxlist"], function(avalon) {
+                            var sss = avalon.define('demo2',function(vm){
+                                vm.val = ["1", "2"];
+                            });
+                            setTimeout(function (){
+                                sss.val = ["1","2","3","4","5","6"];
+                            },5000);
+                            avalon.scan();
+                        });
+                    &lt;/script&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+        <div class="demo-show" ms-controller="demo2">
+            <fieldset>
+                <legend>data-checkboxlist-duplex="val"</legend>
+                <ul ms-widget="checkboxlist, a" data-checkboxlist-duplex="val" data-checkboxlist-alltext="全部">
+                    <li><input type="checkbox" value="1">选项一</li>
+                    <li><input type="checkbox" value="2">选项二</li>
+                    <li><input type="checkbox" value="3">选项三</li>
+                    <li><input type="checkbox" value="4">选项四</li>
+                    <li><input type="checkbox" value="5">选项五</li>
+                    <li><input type="checkbox" value="6">选项六</li>
+                </ul>
+                {{ val }}
+                <p>设置vertical为false，使得选框水平排列</p>
+                <ul ms-widget="checkboxlist" data-checkboxlist-duplex="selectionList" data-checkboxlist-alltext="全部" data-checkboxlist-vertical="false">
+                    <li><input type="checkbox" value="1">选项一</li>
+                    <li><input type="checkbox" value="2">选项二</li>
+                    <li><input type="checkbox" value="3">选项三</li>
+                    <li><input type="checkbox" value="4">选项四</li>
+                    <li><input type="checkbox" value="5">选项五</li>
+                    <li><input type="checkbox" value="6">选项六</li>
+                </ul>
+            </fieldset>
+        </div>
+        <script>
+            require(["./checkboxlist/avalon.checkboxlist"], function(avalon) {
+                var sss = avalon.define('demo2',function(vm){
+                    vm.val = ["1", "2"];
+                    vm.selectionList = ["3", "5"];
+                });
+                // setTimeout(function (){
+                //     sss.val = ["1","2","3","4","5","6"];
+                // },10000);
+                avalon.scan();
+            });
+        </script>
+    </div>
+</body>
+</html>
+    

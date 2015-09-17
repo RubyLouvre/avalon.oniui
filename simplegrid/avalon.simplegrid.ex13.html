@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>simplegrid</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js">
+
+        </script>
+        <script id="summarizing" type="summarizing">
+            <td></td> <td ms-repeat="columns"
+            ms-css-width="el.width" 
+            ms-css-text-align="el.align" 
+            ms-visible="el.toggle" 
+            >{{getSummarizing(summarizing, el.field) | html}}
+            </td>
+        </script>
+        <script>
+            avalon.config({debug: false})
+            require(["simplegrid/avalon.simplegrid"], function() {
+
+                var createData = function(n) {
+                    var array = []
+                    array.push({
+                        date: "2014-03-07",
+                        search: 800,
+                        detail: 100001,
+                        booing: 44435,
+                        order: 589364,
+                        visit: 5803,
+                        affirm: 1850,
+                        compare: {
+                            lastyear: {
+                                date: "2013-03-07",
+                                search: 556,
+                                detail: 80000,
+                                booing: 4432,
+                                order: 89364,
+                                visit: 5200,
+                                affirm: 1750
+                            },
+                            lastday: {
+                                date: "2013-03-06",
+                                search: 670,
+                                detail: 125800,
+                                booing: 4432,
+                                order: 59364,
+                                visit: 3800,
+                                affirm: 800
+                            }
+                        }
+                    },
+                    {
+                        date: "2014-03-08",
+                        search: 801,
+                        detail: 100092,
+                        booing: 44432,
+                        order: 589334,
+                        visit: 5801,
+                        affirm: 1800,
+                        compare: {
+                            lastyear: {
+                                date: "2013-03-08",
+                                search: 556,
+                                detail: 80000,
+                                booing: 4436,
+                                order: 89364,
+                                visit: 5200,
+                                affirm: 1700
+                            },
+                            lastday: {
+                                date: "2013-03-07",
+                                search: 670,
+                                detail: 125800,
+                                booing: 4432,
+                                order: 59364,
+                                visit: 3800,
+                                affirm: 800
+                            }
+                        }
+                    },
+                    {
+                        date: "2014-03-09",
+                        search: 802,
+                        detail: 100003,
+                        booing: 44437,
+                        order: 589364,
+                        visit: 5800,
+                        affirm: 1804,
+                        compare: {
+                            lastyear: {
+                                date: "2013-03-09",
+                                search: 556,
+                                detail: 80000,
+                                booing: 4432,
+                                order: 89364,
+                                visit: 5200,
+                                affirm: 1700
+                            },
+                            lastday: {
+                                date: "2013-03-08",
+                                search: 670,
+                                detail: 125800,
+                                booing: 4432,
+                                order: 59364,
+                                visit: 3870,
+                                affirm: 821
+                            }
+                        }
+                    })
+                    return array
+                }
+
+                avalon.define("test", function(vm) {
+
+                    vm.simplegrid = {
+                        tbodyRowHeight: 105,
+                        columns: [
+                            {field: "date", text: "日期", resizable: true, width: 210},
+                            {field: "search", text: "曝光search量", resizable: true, align: "right"},
+                            {field: "detail", text: "Detail页访问量", resizable: true, align: "right"},
+                            {field: "booing", text: "Booing量", resizable: true, align: "right"},
+                            {field: "order", text: "生成订单量", resizable: true, align: "right"},
+                            {field: "visit", text: "访问量", resizable: true, align: "right"},
+                            {field: "affirm", text: "确认订单量", align: "right", resizable: true}
+                        ],
+                        renderCell: function(val, name, obj) {
+                            var compare = obj.compare
+                            var lastyear = compare.lastyear
+                            var lastday = compare.lastday
+                            switch (name) {
+                                case  "date":
+                                    return "<div>" + val + "</div><div class='datecell'>" + lastyear[name] + "<span>同比</span></div><div class='datecell'>" + lastday[name] + "<span>环比</span></div>"
+                                default:
+                                    return  "<div>" + val + "</div><div>" + lastyear[name] + "</div><div>" + lastday[name] + "</div>"
+                            }
+                        },
+                        tbodyTemplate: function() {
+                            return '<td class="ui-simplegrid-td" data-with-sorted="getColumnsOrder" ms-repeat="row"' +
+                                    ' ms-css-width="getCellProperty($key,\'width\')" ms-css-text-align="getCellProperty($key,\'align\')">{{renderCell($val,$key,row) | html}}</td>'
+                        },
+                        showRows: 3,
+                        pageable: true,
+                        pager: {
+                            perPages: 20,
+                            totalItems: 1000,
+                            showPages: 5,
+                            options: [10, 20, 30, 40]
+                        },
+                        columnsOrder: ["date", "search", "detail", "booing", "order", "visit", "affirm"],
+                        data: createData(100)
+                    }
+                    vm.$skipArray = ["simplegrid"]
+                })
+                avalon.scan()
+            })
+
+        </script>
+        <style>
+            .ui-simplegrid-tbody  td .datecell{
+                text-indent: 1em;
+            }
+        </style>
+    </head>
+    <body>
+
+        <fieldset ms-controller="test">
+            <legend>演示theadRenderedCallback的使用(环比同比效果)</legend>
+
+            <div ms-widget="simplegrid,xxx" width="100%">
+
+            </div>
+            <pre class="brush:css;gutter:false;toolbar:false;">
+           &lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;simplegrid&lt;/title&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width"&gt;
+        &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+ 
+        &lt;script id="summarizing" type="summarizing"&gt;
+            &lt;td&gt;&lt;/td&gt; &lt;td ms-repeat="columns"
+            ms-css-width="el.width" 
+            ms-css-text-align="el.align" 
+            ms-visible="el.toggle" 
+            &gt;{{getSummarizing(summarizing, el.field) | html}}
+            &lt;/td&gt;
+        &lt;/script&gt;
+        &lt;script&gt;
+            avalon.config({debug: false})
+            require(["simplegrid/avalon.simplegrid"], function() {
+
+                var createData = function(n) {
+                    var array = []
+                    array.push({
+                        date: "2014-03-07",
+                        search: 800,
+                        detail: 100000,
+                        booing: 44432,
+                        order: 589364,
+                        visit: 5800,
+                        affirm: 1800,
+                        compare: {
+                            lastyear: {
+                                date: "2013-03-07",
+                                search: 556,
+                                detail: 80000,
+                                booing: 4432,
+                                order: 89364,
+                                visit: 5200,
+                                affirm: 1700
+                            },
+                            lastday: {
+                                date: "2013-03-06",
+                                search: 670,
+                                detail: 125800,
+                                booing: 4432,
+                                order: 59364,
+                                visit: 3800,
+                                affirm: 800
+                            }
+                        }
+                    },
+                    {
+                        date: "2014-03-08",
+                        search: 800,
+                        detail: 100000,
+                        booing: 44432,
+                        order: 589364,
+                        visit: 5800,
+                        affirm: 1800,
+                        compare: {
+                            lastyear: {
+                                date: "2013-03-08",
+                                search: 556,
+                                detail: 80000,
+                                booing: 4432,
+                                order: 89364,
+                                visit: 5200,
+                                affirm: 1700
+                            },
+                            lastday: {
+                                date: "2013-03-07",
+                                search: 670,
+                                detail: 125800,
+                                booing: 4432,
+                                order: 59364,
+                                visit: 3800,
+                                affirm: 800
+                            }
+                        }
+                    },
+                    {
+                        date: "2014-03-09",
+                        search: 800,
+                        detail: 100000,
+                        booing: 44432,
+                        order: 589364,
+                        visit: 5800,
+                        affirm: 1800,
+                        compare: {
+                            lastyear: {
+                                date: "2013-03-09",
+                                search: 556,
+                                detail: 80000,
+                                booing: 4432,
+                                order: 89364,
+                                visit: 5200,
+                                affirm: 1700
+                            },
+                            lastday: {
+                                date: "2013-03-08",
+                                search: 670,
+                                detail: 125800,
+                                booing: 4432,
+                                order: 59364,
+                                visit: 3800,
+                                affirm: 800
+                            }
+                        }
+                    })
+                    return array
+                }
+
+                avalon.define("test", function(vm) {
+
+                    vm.simplegrid = {
+                        tbodyRowHeight: 105,
+                        columns: [
+                            {field: "date", text: "日期", resizable: true, width: 210},
+                            {field: "search", text: "曝光search量", resizable: true, align: "right"},
+                            {field: "detail", text: "Detail页访问量", resizable: true, align: "right"},
+                            {field: "booing", text: "Booing量", resizable: true, align: "right"},
+                            {field: "order", text: "生成订单量", resizable: true, align: "right"},
+                            {field: "visit", text: "访问量", resizable: true, align: "right"},
+                            {field: "affirm", text: "确认订单量", align: "right", resizable: true}
+                        ],
+                        renderCell: function(val, name, obj) {
+                            var compare = obj.compare
+                            var lastyear = compare.lastyear
+                            var lastday = compare.lastday
+                            switch (name) {
+                                case  "date":
+                                    return "&lt;div&gt;" + val + "&lt;/div&gt;&lt;div class='datecell'&gt;" + lastyear[name] + "&lt;span&gt;同比&lt;/span&gt;&lt;/div&gt;&lt;div class='datecell'&gt;" + lastday[name] + "&lt;span&gt;环比&lt;/span&gt;&lt;/div&gt;"
+                                default:
+                                    return  "&lt;div&gt;" + val + "&lt;/div&gt;&lt;div&gt;" + lastyear[name] + "&lt;/div&gt;&lt;div&gt;" + lastday[name] + "&lt;/div&gt;"
+                            }
+                        },
+                        tbodyTemplate: function() {
+                            return '&lt;td class="ui-simplegrid-td" data-with-sorted="getColumnsOrder" ms-repeat="row"' +
+                                    ' ms-css-width="getCellProperty($key,\'width\')" ms-css-text-align="getCellProperty($key,\'align\')"&gt;{{renderCell($val,$key,row) | html}}&lt;/td&gt;'
+                        },
+                        showRows: 3,
+                        pageable: true,
+                        pager: {
+                            perPages: 20,
+                            totalItems: 1000,
+                            showPages: 5,
+                            options: [10, 20, 30, 40]
+                        },
+                        columnsOrder: ["date", "search", "detail", "booing", "order", "visit", "affirm"],
+                        data: createData(100)
+                    }
+                    vm.$skipArray = ["simplegrid"]
+                })
+                avalon.scan()
+            })
+
+        &lt;/script&gt;
+        &lt;style&gt;
+            .ui-simplegrid-tbody  td .datecell{
+                text-indent: 1em;
+            }
+        &lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body ms-constroller="test"&gt;
+       &lt;div ms-widget="simplegrid,xxx" style="width:70%"&gt;
+
+       &lt;/div&gt;
+
+    &lt;/body&gt;
+&lt;/html&gt;
+
+            </pre>
+    </fieldset>
+
+</body>
+</html>

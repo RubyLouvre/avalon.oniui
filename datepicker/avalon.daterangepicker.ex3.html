@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>daterangepicker demo </title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="demo-show" ms-controller="demo">
+            <fieldset>
+                <legend>日期范围框,初始化起始日期和结束日期</legend>
+                <div ms-widget="daterangepicker" data-daterangepicker-duplex="from, to"></div>
+                <p>说明：通过配置duplex选项，初始化起始日期和结束日期，默认日期格式是"yyyy-mm-dd"，当没有初始值或者初始值格式错误时，组件会自动更正为今天所对应的日期</p>
+            </fieldset>
+            <fieldset>
+                <legend>日期范围框，禁用日期范围框</legend>
+                <div ms-widget="daterangepicker" data-daterangepicker-disabled="true"></div>
+                <p>说明：配置双日历组件的disabled为true来禁用组件，配置值可以是布尔值，也可以是controller下的一个属性变量名，如果是属性名则可以通过控制此属性值控制组件的禁用与否</p>
+            </fieldset>
+            
+            <fieldset style="position:relative;">
+                <legend>日期范围框，禁用日期范围框</legend>
+                <div ms-widget="daterangepicker, a"></div>
+                <p>说明：关于禁用日期范围框，也可以通过widget绑定生成的VM中setDisabled方法来禁用组件</p>
+                <button ms-click="setDisabled" style="position:absolute;right:0;top: 20px;">禁用组件</button>
+            </fieldset>
+            <script> 
+                require(["datepicker/avalon.daterangepicker"], function(avalon) {
+                    var model = avalon.define("demo", function(vm) {
+                        vm.from = "2014-06-03";
+                        vm.to = "2014-06-26";
+                        vm.setDisabled = function() {
+                            var daterangepickerVM = avalon.vmodels.a;
+                            daterangepickerVM.setDisabled(true);
+                        }
+                    })
+                    avalon.scan();
+                })
+            </script>
+        </div>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;daterangepicker demo&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;div class="demo-show" ms-controller="demo"&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;日期范围框,初始化起始日期和结束日期&lt;/legend&gt;
+                            &lt;div ms-widget="daterangepicker" data-daterangepicker-duplex="from, to"&gt;&lt;/div&gt;
+                            &lt;p&gt;说明：通过配置duplex选项，初始化起始日期和结束日期，默认日期格式是"yyyy-mm-dd"，当没有初始值或者初始值格式错误时，组件会自动更正为今天所对应的日期&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;日期范围框，禁用日期范围框&lt;/legend&gt;
+                            &lt;div ms-widget="daterangepicker" data-daterangepicker-disabled="true"&gt;&lt;/div&gt;
+                            &lt;p&gt;说明：配置双日历组件的disabled为true来禁用组件，配置值可以是布尔值，也可以是controller下的一个属性变量名，如果是属性名则可以通过控制此属性值控制组件的禁用与否&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        
+                        &lt;fieldset style="position:relative;"&gt;
+                            &lt;legend&gt;日期范围框，禁用日期范围框&lt;/legend&gt;
+                            &lt;div ms-widget="daterangepicker, a"&gt;&lt;/div&gt;
+                            &lt;p&gt;说明：关于禁用日期范围框，也可以通过widget绑定生成的VM中setDisabled方法来禁用组件&lt;/p&gt;
+                            &lt;button ms-click="setDisabled" style="position:absolute;right:0;top: 20px;"&gt;禁用组件&lt;/button&gt;
+                        &lt;/fieldset&gt;
+                        &lt;script&gt; 
+                            require(["datepicker/avalon.daterangepicker"], function(avalon) {
+                                var model = avalon.define("demo", function(vm) {
+                                    vm.from = "2014-06-03";
+                                    vm.to = "2014-06-26";
+                                    vm.setDisabled = function() {
+                                        var daterangepickerVM = avalon.vmodels.a;
+                                        daterangepickerVM.setDisabled(true);
+                                    }
+                                })
+                                avalon.scan();
+                            })
+                        &lt;/script&gt;
+                    &lt;/div&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+    </div>
+</body>
+</html>

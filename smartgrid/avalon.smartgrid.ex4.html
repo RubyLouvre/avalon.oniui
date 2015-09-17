@@ -1,0 +1,263 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>表格排序操作</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    <body ms-controller="test">
+        <div style="width:960px; margin: 0 auto">
+            <h1>表格排序操作</h1>
+            <p>设置远程排序为true且配置了远程排序函数remotesort则进行远程排序，否则本地排序，默认的本地排序是数组的sort方法，根据需求可以自己配置排序规则</p>
+            <div ms-widget="smartgrid, sg1"></div>
+            <h2>对比一下，上面表格使用本地排序，下面表格使用远程排序</h2>
+            <div ms-widget="smartgrid, sg2, $sg2Options"></div>
+        </div>
+        <script>
+            require(["smartgrid/avalon.smartgrid"], function() {
+                function getDatas(number) {
+                    var data = []
+                    for (var i = 0; i < number; i++) {
+                        data.push({
+                            name: "shirly"+i,
+                            age: parseInt(10 + Math.random() * 20),
+                            selected: i%3 ? false: true,
+                            salary: parseInt(Math.random() * 100),
+                            operate : i % 5 ? 0 : 1,
+                            busy : !i%3 && !i%5 ? 0 : 1
+                        })
+                    }
+                    return data
+                } 
+                
+                avalon.define("test", function(vm) {
+                    vm.$skipArray = ["smartgrid"]
+                    vm.smartgrid = {
+                        pager: {
+                            canChangePageSize: false //取消表格可显示条数的配置选项
+                        },
+                        columns: [
+                            {
+                                key : "name",
+                                name : "姓名",
+                                sortable : true,
+                                isLock : true,
+                                align: "left",
+                                defaultValue: "shirly",
+                                toggle: false,
+                                width: 400
+                            }, {
+                                key: "age",
+                                name: "年龄",
+                                sortable: true,
+                                width: 100,
+                                type: "Number"
+                            }, {
+                                key : "salary",
+                                name : "薪水",
+                                type : "Number",
+                                sortable : true,
+                                align: "right",
+                                width: 100,
+                                type: "Number"
+                            }, {
+                                key: "operate",
+                                name: "操作",
+                                title: "操作",
+                                width: 200,
+                                sortable: true,
+                                localSort: function(a, b, f) { //自定义排序规则
+                                    return (a[f] - b[f]) || 0
+                                }
+                            }, {
+                                key : "busy",
+                                name : "忙吗",
+                                title : "忙吗",
+                                width : 200,
+                                type: "Number"
+                            }
+                        ],
+                        data: getDatas(10)
+                    }
+                    vm.$sg2Options = {
+                        remoteSort: function(field, sortType, vmodel) {
+                            avalon.log("remoteSort, arguments is : ")
+                            avalon.log(arguments)
+                            // 此处是远程排序的操作，参数分别是列标识、排序类型(asc|desc)、smartgrid对应的vmodel
+                        },
+                        columns: [
+                            {
+                                key : "name",
+                                name : "姓名",
+                                sortable : true,
+                                isLock : true,
+                                align: "left",
+                                defaultValue: "shirly",
+                                toggle: false,
+                                width: 400
+                            }, {
+                                key: "age",
+                                name: "年龄",
+                                sortable: true,
+                                width: 100
+                            }, {
+                                key : "salary",
+                                name : "薪水",
+                                type : "Number",
+                                sortable : true,
+                                align: "right",
+                                width: 100
+                            }, {
+                                key: "operate",
+                                name: "操作",
+                                title: "操作",
+                                width: 200
+                            }, {
+                                key : "busy",
+                                name : "忙吗",
+                                title : "忙吗",
+                                width : 200
+                            }
+                        ],
+                        data: getDatas(10)
+                    }
+                })
+                avalon.scan()
+            })
+        </script>
+        <div ms-skip style="width:960px; margin: 0 auto">
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;smartgrid demo&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body ms-controller="test"&gt;
+                    &lt;h1&gt;表格排序操作&lt;/h1&gt;
+                    &lt;p&gt;设置远程排序为true且配置了远程排序函数remotesort则进行远程排序，否则本地排序，默认的本地排序是数组的sort方法，根据需求可以自己配置排序规则&lt;/p&gt;
+                    &lt;div ms-widget="smartgrid, sg1"&gt;&lt;/div&gt;
+                    &lt;h2&gt;对比一下，上面表格使用本地排序，下面表格使用远程排序&lt;/h2&gt;
+                    &lt;div ms-widget="smartgrid, sg2, $sg2Options"&gt;&lt;/div&gt;
+                    &lt;script&gt;
+                        require(["smartgrid/avalon.smartgrid"], function() {
+                            function getDatas(number) {
+                                var data = []
+                                for (var i = 0; i &lt; number; i++) {
+                                    data.push({
+                                        name: "shirly"+i,
+                                        age: parseInt(10 + Math.random() * 20),
+                                        selected: i%3 ? false: true,
+                                        salary: parseInt(Math.random() * 100),
+                                        operate : i % 5 ? 0 : 1,
+                                        busy : !i%3 && !i%5 ? 0 : 1
+                                    })
+                                }
+                                return data
+                            } 
+                            
+                            avalon.define("test", function(vm) {
+                                vm.$skipArray = ["smartgrid"]
+                                vm.smartgrid = {
+                                    pager: {
+                                        canChangePageSize: false //取消表格可显示条数的配置选项
+                                    },
+                                    columns: [
+                                        {
+                                            key : "name",
+                                            name : "姓名",
+                                            sortable : true,
+                                            isLock : true,
+                                            align: "left",
+                                            defaultValue: "shirly",
+                                            toggle: false,
+                                            width: 400,
+                                        }, {
+                                            key: "age",
+                                            name: "年龄",
+                                            sortable: true,
+                                            width: 100,
+                                            type: "Number"
+                                        }, {
+                                            key : "salary",
+                                            name : "薪水",
+                                            type : "Number",
+                                            sortable : true,
+                                            align: "right",
+                                            width: 100,
+                                            type: "Number"
+                                        }, {
+                                            key: "operate",
+                                            name: "操作",
+                                            title: "操作",
+                                            width: 200,
+                                            sortable: true,
+                                            localSort: function(a, b, f) { //自定义排序规则
+                                                return (a[f] - b[f]) || 0
+                                            }
+                                        }, {
+                                            key : "busy",
+                                            name : "忙吗",
+                                            title : "忙吗",
+                                            width : 200,
+                                            type: "Number"
+                                        }
+                                    ],
+                                    data: getDatas(10),
+                                }
+                                vm.$sg2Options = {
+                                    remoteSort: function(field, sortType, vmodel) {
+                                        avalon.log("remoteSort, arguments is : ")
+                                        avalon.log(arguments)
+                                        // 此处是远程排序的操作，参数分别是列标识、排序类型(asc|desc)、smartgrid对应的vmodel
+                                    },
+                                    columns: [
+                                        {
+                                            key : "name",
+                                            name : "姓名",
+                                            sortable : true,
+                                            isLock : true,
+                                            align: "left",
+                                            defaultValue: "shirly",
+                                            toggle: false,
+                                            width: 400,
+                                        }, {
+                                            key: "age",
+                                            name: "年龄",
+                                            sortable: true,
+                                            width: 100
+                                        }, {
+                                            key : "salary",
+                                            name : "薪水",
+                                            type : "Number",
+                                            sortable : true,
+                                            align: "right",
+                                            width: 100
+                                        }, {
+                                            key: "operate",
+                                            name: "操作",
+                                            title: "操作",
+                                            width: 200,
+                                        }, {
+                                            key : "busy",
+                                            name : "忙吗",
+                                            title : "忙吗",
+                                            width : 200,
+                                        }
+                                    ],
+                                    data: getDatas(10),
+                                }
+                            })
+                            avalon.scan()
+                        })
+                    &lt;/script&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+    </body>
+</html>

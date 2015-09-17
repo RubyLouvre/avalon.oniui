@@ -1,0 +1,226 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>简单的表格组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <style>
+            .oni-smartgrid .oni-smartgrid-hover {
+                background: #fff;
+            }
+        </style>
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    <body ms-controller="test">
+        <div style="width:960px; margin: 0 auto">
+            <h1>表格嵌套</h1>
+            <div ms-widget="smartgrid, sg1, opts"></div>
+        </div>
+        <script>
+            require(["smartgrid/avalon.smartgrid"], function() {
+                function getDatas(number) {
+                    var data = [],
+                        random = Math.random(),
+                        factor = random > 0.5 ? 1 : -1
+
+                    for (var i = 0; i < number; i++) {
+                        data.push({
+                            name: random.toString(32).slice(4, 10),
+                            age: parseInt(10 + Math.random() * 20),
+                            salary: 100 + i,
+                            change: "<span onclick='alert(2)' style='color:" + (factor === 1 ? 'green' : 'red') + "'>" + random.toFixed(2) * factor + "</span>",
+                            jobs: [{ // jobs项会作为嵌套的表格
+                                job: 'frontend',
+                                fulltime: true
+                            },{
+                                job: 'java',
+                                fulltime: false
+                            },{
+                                job: 'design',
+                                fulltime: true
+                            }]
+                        })
+                    }
+                    return data
+                } 
+                
+                avalon.define("test", function(vm) {
+                    vm.$skipArray = ["opts"]
+                    vm.d = getDatas(5)
+                    vm.opts = {
+                        htmlHelper: {
+                            jobs: function(vmId, field, index, cellValue, rowData) {
+                                // 嵌套的表格必须在元素上配置data和field，data值为当前数据项在数据data中的索引，field表示当前单元格的key信息
+                                return '<div ms-widget="smartgrid" data-smartgrid-data="'+index+'" data-smartgrid-field="'+field+'"></div>'
+                            }
+                        },
+                        columns: [
+                            {
+                                key : "name", //列标识
+                                name : "姓名", //列名
+                                sortable : true, //是否可排序
+                                isLock : true, //是否锁死列让其始终显示
+                                align: "left", //列的对象方式
+                                defaultValue: "shirly", //列的默认值
+                                customClass: "ddd", //自定义此列单元格类
+                                toggle: false //控制列的显示隐藏
+                            }, {
+                                key : "age",
+                                name : "年龄",
+                                sortable : true,
+                                width: 100,
+                                type: "Number"
+                            }, {
+                                key : "salary",
+                                name : "薪水",
+                                sortable : true,
+                                align: "right",
+                                width: 100
+                            }, {
+                                key : "change",
+                                name : "change",
+                                align: "center",
+                                width: 100
+                            }, {
+                                key: 'jobs',
+                                name: '职位信息',
+                                format: 'jobs', //将jobs列用嵌套的表格表示
+                                width: 400
+                            }
+                        ],
+                        data: getDatas(5),
+                        smartgrid: { //统一设置嵌套表格的配置项
+                            noHeader: true,
+                            noFooter: true,
+                            columns: [
+                                {
+                                    key : "job", 
+                                    name : "职位",
+                                    width: 100
+                                }, {
+                                    key : "fulltime",
+                                    name : "是否全职",
+                                    width: 100
+                                }
+                            ]
+                        }
+                    }
+                })
+                avalon.scan()
+            })
+        </script>
+        <div ms-skip style="width:960px; margin: 0 auto;">
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;smartgrid demo&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body ms-controller="test"&gt;
+                    &lt;div style="width:960px; margin: 0 auto"&gt;
+                        &lt;h1&gt;表格嵌套&lt;/h1&gt;
+                        &lt;div ms-widget="smartgrid, sg1, opts"&gt;&lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;script&gt;
+                        require(["smartgrid/avalon.smartgrid"], function() {
+                            function getDatas(number) {
+                                var data = [],
+                                    random = Math.random(),
+                                    factor = random &gt; 0.5 ? 1 : -1
+
+                                for (var i = 0; i &lt; number; i++) {
+                                    data.push({
+                                        name: random.toString(32).slice(4, 10),
+                                        age: parseInt(10 + Math.random() * 20),
+                                        salary: 100 + i,
+                                        change: "&lt;span onclick='alert(2)' style='color:" + (factor === 1 ? 'green' : 'red') + "'&gt;" + random.toFixed(2) * factor + "&lt;/span&gt;",
+                                        jobs: [{ // jobs项会作为嵌套的表格
+                                            job: 'frontend',
+                                            fulltime: true
+                                        },{
+                                            job: 'java',
+                                            fulltime: false
+                                        },{
+                                            job: 'design',
+                                            fulltime: true
+                                        }]
+                                    })
+                                }
+                                return data
+                            } 
+                            
+                            avalon.define("test", function(vm) {
+                                vm.$skipArray = ["opts"]
+                                vm.d = getDatas(5)
+                                vm.opts = {
+                                    htmlHelper: {
+                                        jobs: function(vmId, field, index, cellValue, rowData) {
+                                            // 嵌套的表格必须在元素上配置data和field，data值为当前数据项在数据data中的索引，field表示当前单元格的key信息
+                                            return '&lt;div ms-widget="smartgrid" data-smartgrid-data="'+index+'" data-smartgrid-field="'+field+'"&gt;&lt;/div&gt;'
+                                        }
+                                    },
+                                    columns: [
+                                        {
+                                            key : "name", //列标识
+                                            name : "姓名", //列名
+                                            sortable : true, //是否可排序
+                                            isLock : true, //是否锁死列让其始终显示
+                                            align: "left", //列的对象方式
+                                            defaultValue: "shirly", //列的默认值
+                                            customClass: "ddd", //自定义此列单元格类
+                                            toggle: false //控制列的显示隐藏
+                                        }, {
+                                            key : "age",
+                                            name : "年龄",
+                                            sortable : true,
+                                            width: 100,
+                                            type: "Number"
+                                        }, {
+                                            key : "salary",
+                                            name : "薪水",
+                                            sortable : true,
+                                            align: "right",
+                                            width: 100
+                                        }, {
+                                            key : "change",
+                                            name : "change",
+                                            align: "center",
+                                            width: 100
+                                        }, {
+                                            key: 'jobs',
+                                            name: '职位信息',
+                                            format: 'jobs', //将jobs列用嵌套的表格表示
+                                            width: 200
+                                        }
+                                    ],
+                                    data: getDatas(5),
+                                    smartgrid: { //统一设置嵌套表格的配置项
+                                        noHeader: true,
+                                        noFooter: true,
+                                        columns: [
+                                            {
+                                                key : "job", 
+                                                name : "职位",
+                                                width: 100
+                                            }, {
+                                                key : "fulltime",
+                                                name : "是否全职",
+                                                width: 100
+                                            }
+                                        ]
+                                    }
+                                }
+                            })
+                            avalon.scan()
+                        })
+                    &lt;/script&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+    </body>
+</html>

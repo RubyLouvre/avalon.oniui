@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>datepicker demo </title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>datepicker demo</h1>
+        <div class="demo-show" ms-controller="demo">
+            <fieldset style="position: relative; z-index: 2">
+                <legend>默认配置的单日历框</legend>
+                <input ms-widget="datepicker"/>
+                <p>说明：默认情况下，日历显示方式从周一到周日，显示一个月份，输输入域不允许为空，点击next、pre切换月份时，默认切换一个月，并且不可通过下拉框切换月份和年份</p>
+            </fieldset>
+            <fieldset style="position:relative; z-index: 1">
+                <legend>默认配置的单日历框</legend>
+                <input ms-widget="datepicker" data-datepicker-allow-blank="true" data-datepicker-show-other-months="true"/>
+                <p>说明：此demo配置allowBlank为true，使得输入域可以为空,与第一个demo做对比</p>
+            </fieldset>
+            <script> 
+                require(["datepicker/avalon.datepicker"], function(avalon) {
+                    var model = avalon.define("demo", function(vm) {
+                    })
+                    avalon.scan();
+                })
+            </script>
+        </div>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;datepicker demo&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;div class="demo-show" ms-controller="demo"&gt;
+                        &lt;fieldset style="position: relative; z-index: 2"&gt;
+                            &lt;legend&gt;默认配置的单日历框&lt;/legend&gt;
+                            &lt;input ms-widget="datepicker"/&gt;
+                            &lt;p&gt;说明：默认情况下，日历显示方式从周一到周日，显示一个月份，输输入域不允许为空，点击next、pre切换月份时，默认切换一个月，并且不可通过下拉框切换月份和年份&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset style="position: relative; z-index: 1"&gt;
+                            &lt;legend&gt;默认配置的单日历框&lt;/legend&gt;
+                            &lt;input ms-widget="datepicker" data-datepicker-allow-blank="true"/&gt;
+                            &lt;p&gt;说明：此demo配置allowBlank为true，使得输入域可以为空,与第一个demo做对比&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;script&gt; 
+                            require(["datepicker/avalon.datepicker"], function(avalon) {
+                                var model = avalon.define("demo", function(vm) {
+                                })
+                                avalon.scan();
+                            })
+                        &lt;/script&gt;
+                    &lt;/div&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+    </div>
+</body>
+</html>
+

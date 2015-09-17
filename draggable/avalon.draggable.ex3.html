@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>draggable</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../highlight/shCore.js">
+
+        </script>
+        <script src="../avalon.js">
+
+        </script>
+        <script>
+            require(["draggable/avalon.draggable"], function() {
+                avalon.define("test", function(vm) {
+                })
+                avalon.scan()
+            })
+
+        </script>
+        <style>
+            #aaa{
+                width:100px;
+                height: 100px;
+                position: absolute;
+                background: red;
+                z-index: 10;
+            }
+            .pool {
+                position: relative;
+                width:400px;
+                height:300px;
+                border:1px solid silver;
+            }
+            #bbb{
+                width:100px;
+                height: 100px;
+                position: absolute;
+                background: blue;
+                z-index: 11;
+            }
+            #ccc{
+                width:100px;
+                height: 100px;
+                top: 200px;
+                position: absolute;
+                background: yellow;
+                z-index: 11;
+            }
+            #ddd{
+                width:100px;
+                height: 100px;
+                top:200px;
+                left:400px;
+                position: absolute;
+                background: orange;
+                z-index: 11;
+            }
+            #eee{
+                left:400px;
+                top: 200px;
+                width: 400px;
+                height: 300px;
+                border:1px solid red;
+                position: absolute;
+               
+            }
+        </style>
+    </head>
+    <body>
+        <div class="pool" id="test">
+            <div ms-controller="test" ms-draggable data-draggable-containment="#test" id="aaa">
+                containment= "#test"
+            </div>
+        </div>
+        <div class="pool" >
+            <div ms-controller="test" ms-draggable data-draggable-containment="parent" id="bbb">
+                containment= "parent"
+            </div>
+        </div>
+        <div ms-controller="test" ms-draggable data-draggable-containment="window" id="ccc">
+            containment= "window"
+        </div>
+        <div id="eee">
+            
+        </div>
+         <div ms-controller="test" ms-draggable data-draggable-containment="[400,200,800,500]" id="ddd">
+            containment= "[400,200,800,500]"
+        </div>
+
+        <h1>区域拖动 通过containment指定范围 </h1>
+        <pre class="brush:html;gutter:false;toolbar:false;">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;draggable&lt;/title&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width"&gt;
+        &lt;script src="../highlight/shCore.js"&gt;
+
+        &lt;/script&gt;
+        &lt;script src="../avalon.js"&gt;
+
+        &lt;/script&gt;
+        &lt;script&gt;
+            require(["draggable/avalon.draggable"], function() {
+                avalon.define("test", function(vm) {
+                })
+                avalon.scan()
+            })
+
+        &lt;/script&gt;
+        &lt;style&gt;
+            #aaa{
+                width:200px;
+                height: 200px;
+                position: absolute;
+                background: red;
+                z-index: 10;
+            }
+            #bbb{
+                width:200px;
+                height: 200px;
+                left: 200px;
+                position: absolute;
+                background: blue;
+                z-index: 11;
+            }
+            #ccc{
+                width:200px;
+                height: 200px;
+                top: 200px;
+                position: absolute;
+                background: yellow;
+                z-index: 11;
+            }
+            #ddd{
+                width:200px;
+                height: 200px;
+                top:200px;
+                left: 200px;
+                position: absolute;
+                background: orange;
+                z-index: 11;
+            }
+        &lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;div ms-controller="test" ms-draggable data-draggable-axis="x" id="aaa"&gt;
+x 只能横向
+        &lt;/div&gt;
+        &lt;div ms-controller="test" ms-draggable data-draggable-axis="y" id="bbb"&gt;
+y 只能纵向
+        &lt;/div&gt;
+        &lt;div ms-controller="test" ms-draggable data-draggable-axis="xy" id="ccc"&gt;
+xy 能横纵向，即任何方向
+        &lt;/div&gt;
+        &lt;div ms-controller="test" ms-draggable data-draggable-axis="zxcsd" id="ddd"&gt;
+其他任何值，也是任何方向
+        &lt;/div&gt;
+        &lt;h1&gt;拖动方向的限制&lt;/h1&gt;
+
+    &lt;/body&gt;
+&lt;/html&gt;
+
+        </pre>
+    </body>
+</html>

@@ -1,0 +1,256 @@
+
+@import "../chameleon/oniui-theme";
+
+$grayDark:  #333;
+$white: #fff;
+$grayDarker:       #222;
+$grayLighter:       #eee;
+$orange:          #f89406;
+$linkColor:        #08c;
+$uiname: "ui-button";
+//thanks https://github.com/twbs/bootstrap/blob/v2.2.0/less/buttons.less
+
+@mixin bootstrap-button(
+$font-size: 12px,
+$line-height:20px,
+$border-color:#bbb, 
+$border-radius:2px,
+$background-color:$white,
+$background-highlight-color:darken($white, 10%)
+){
+
+    @include inline-block();
+    padding: 6px 12px;
+    margin-bottom: 0; // For input.btn
+    font-size:  $font-size;
+    line-height:$line-height;
+    *line-height: $line-height;
+    border: 1px solid  $border-color;
+    *border: 0; // Remove the border to prevent IE7's black border on input:focus
+    border-bottom-color: darken($border-color, 10%);
+    @include button-background($background-color, $background-highlight-color, $grayDark);
+    @include border-radius($border-radius);
+    @include ie7-restore-left-whitespace(); // Give IE7 some love
+    @include box-shadow(inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05));
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    // Hover state
+    &:hover, &.oni-state-hover {
+        color: $grayDark;
+        text-decoration: none;
+        @include opacity(0.8);
+        //    background-color: darken($white, 10%);
+        //   *background-color: darken($white, 15%); /* Buttons in IE7 don't get borders, so darken on hover */
+        background-position: 0 -15px;
+
+        // transition is only when going to hover, otherwise the background
+        // behind the gradient (there for IE<=9 fallback) gets mismatched
+        @include transition(background-position .1s linear);
+    }
+
+    // Focus state for keyboard and accessibility
+    &:focus {
+        @include tab-focus();
+    }
+
+    // Active state
+    &.oni-state-active,
+    &:active {
+        background-color: darken($white, 10%);
+        background-color: darken($white, 15%) \9;
+        background-image: none;
+        outline: 0;
+        @include box-shadow(inset 0 2px 4px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05));
+    }
+
+    // Disabled state
+    &.oni-state-disabled,
+    &[disabled] {
+        cursor: not-allowed;
+        background-color: darken($white, 10%);
+        background-image: none;
+        @include opacity(0.65);
+        @include box-shadow(none);
+    }
+
+}
+
+
+// Webkit-style focus
+// ------------------
+@mixin tab-focus() {
+    // Default
+    outline: thin dotted #333;
+    // Webkit
+    outline: 5px auto -webkit-focus-ring-color;
+    outline-offset: -2px;
+}
+
+// IE7 likes to collapse whitespace on either side of the inline-block elements.
+// Ems because we're attempting to match the width of a space character. Left
+// version is for form buttons, which typically come after other elements, and
+// right version is for icons, which come before. Applying both is ok, but it will
+// mean that space between those elements will be .6em (~2 space characters) in IE7,
+// instead of the 1 space in other browsers.
+@mixin ie7-restore-left-whitespace() {
+    *margin-left: .3em;
+    &:first-child {
+        *margin-left: 0;
+    }
+}
+
+@mixin ie7-restore-right-whitespace() {
+    *margin-right: .3em;
+}
+// ------------------
+@mixin gradientbar($primaryColor, $secondaryColor, $color: $white) {
+    color: $color;
+    @if($primaryColor == $secondaryColor){
+        background-color:$primaryColor;
+        background-image:none;
+    }@else{
+        @include vertical-gradient($primaryColor, $secondaryColor);
+    }
+    border-color: $secondaryColor $secondaryColor darken($secondaryColor, 15%);
+    border-color: rgba(0,0,0,.1) rgba(0,0,0,.1) fadein(rgba(0,0,0,.1), 15%);
+}
+
+@mixin vertical-gradient($startColor: #555, $endColor: #333) {
+    background-color: mix($startColor, $endColor, 60%);
+    background-image: -moz-linear-gradient(top, $startColor, $endColor); // FF 3.6+
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from($startColor), to($endColor)); // Safari 4+, Chrome 2+
+    background-image: -webkit-linear-gradient(top, $startColor, $endColor); // Safari 5.1+, Chrome 10+
+    background-image: -o-linear-gradient(top, $startColor, $endColor); // Opera 11.10
+    background-image: linear-gradient(to bottom, $startColor, $endColor); // Standard, IE10
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#{ie-hex-str($startColor)}', endColorstr='#{ie-hex-str($endColor)}', GradientType=0) // IE9 and down
+}
+
+
+@mixin button-background($startColor, $endColor: $startColor, $textColor: #fff) {
+    // gradientBar will set the background to a pleasing blend of these, to support IE<=9
+    @include gradientbar($startColor, $endColor, $textColor);
+    *background-color: $endColor; /* Darken IE7 buttons by default so they stand out more given they won't have borders */
+    @include reset-filter();
+
+    // in these cases the gradient won't cover the background, so we override
+    &:hover, &.oni-state-hover, &:active, &.oni-state-active,&[disabled], &.oni-state-disabled  {
+        color: $textColor;
+        background-color: $endColor;
+        *background-color: darken($endColor, 5%);
+    }
+
+    // IE 7 + 8 can't handle box-shadow to show active, so we darken a bit ourselves
+    &:active,
+        &.oni-state-active {
+        background-color: darken($endColor, 10%) \9;
+    }
+}
+
+
+@mixin reset-filter() {
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+//================================
+
+//======================color==================
+$btnPrimaryBackground:              $linkColor;
+$btnPrimaryBackgroundHighlight:     adjust-hue($btnPrimaryBackground, 20%);
+
+$btnInfoBackground:                 #5bc0de;
+$btnInfoBackgroundHighlight:        #2f96b4;
+
+$btnSuccessBackground:              #62c462;
+$btnSuccessBackgroundHighlight:     #51a351;
+
+$btnWarningBackground:              lighten($orange, 15%);
+$btnWarningBackgroundHighlight:     $orange;
+
+$btnDangerBackground:               #ee5f5b;
+$btnDangerBackgroundHighlight:      #bd362f;
+
+$btnInverseBackground:              #444;
+$btnInverseBackgroundHighlight:     $grayDarker;
+
+@mixin flat-button($color){
+    background-color:$color;
+    background-image:none;
+    border-color:$color;
+    &:hover, .oni-state-hover{
+        background-color:$color;
+        background-image:none;
+        border-color:$color;
+    }
+}
+%uibutton {
+    // reset here as of 2.0.3 due to Recess property order
+    border-color: #c5c5c5;
+    border-color: rgba(0,0,0,.15) rgba(0,0,0,.15) rgba(0,0,0,.25);
+    &.#{$uiname}-small{
+        padding:4px  5px;
+        font-size:small;
+    }
+    &.#{$uiname}-big{
+        padding:8px 15px;
+        font-size: large;
+    }
+    &.#{$uiname}-large{
+        padding:12px 25px;
+        font-size: x-large;
+    }
+    &.#{$uiname}-primary {
+        @include button-background($btnPrimaryBackground, $btnPrimaryBackgroundHighlight);
+    }
+    // Warning appears are orange
+    &.#{$uiname}-warning {
+        @include button-background($btnWarningBackground, $btnWarningBackgroundHighlight);
+    }
+    // Danger and error appear as red
+    &.#{$uiname}-danger  {
+        @include button-background($btnDangerBackground, $btnDangerBackgroundHighlight);
+    }
+    // Success appears as green
+    &.#{$uiname}-success {
+        @include button-background($btnSuccessBackground, $btnSuccessBackgroundHighlight);
+    }
+    // Info appears as a neutral blue
+    &.#{$uiname}-info {
+        @include button-background($btnInfoBackground, $btnInfoBackgroundHighlight);
+    }
+    // Inverse appears as dark gray
+    &.#{$uiname}-inverse {
+        @include button-background($btnInverseBackground, $btnInverseBackgroundHighlight);
+    }
+    &.#{$uiname}-flat {
+        @include flat-button(#eee);
+    }
+    &.#{$uiname}-primary-flat {
+        @include flat-button($btnPrimaryBackground);
+    }
+    // Warning appears are orange
+    &.#{$uiname}-warning-flat {
+        @include flat-button($btnWarningBackground);
+    }
+    // Danger and error appear as red
+    &.#{$uiname}-danger-flat  {
+        @include flat-button($btnDangerBackground);
+    }
+    // Success appears as green
+    &.#{$uiname}-success-flat {
+        @include flat-button($btnSuccessBackground);
+    }
+    // Info appears as a neutral blue
+    &.#{$uiname}-info-flat {
+        @include flat-button($btnInfoBackground);
+    }
+    // Inverse appears as dark gray
+    &.#{$uiname}-inverse-flat {
+        @include flat-button($btnInverseBackground);
+    }
+
+
+}
+
+//http://alexwolfe.github.io/Buttons/
+//http://jaredhardy.com/sassy-buttons/

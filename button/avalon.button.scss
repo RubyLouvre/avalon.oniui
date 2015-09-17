@@ -1,0 +1,334 @@
+
+@import "../chameleon/oniui-theme";
+$uiname: "oni-button";
+@mixin button-background($startColor, $endColor: $startColor, $textColor: #fff) {
+    &:active, &.oni-state-active,&[disabled], &.oni-state-disabled  {
+        color: $textColor;
+        background-color: $endColor;
+        *background-color: darken($endColor, 5%);
+    }
+
+    // IE 7 + 8 can't handle box-shadow to show active, so we darken a bit ourselves
+    &:active,
+        &.oni-state-active {
+        background-color: darken($endColor, 10%) \9;
+    }
+}
+@mixin ie7-restore-left-whitespace() {
+    *margin-left: .3em;
+    &:first-child {
+        *margin-left: 0;
+    }
+}
+
+@mixin ie7-restore-right-whitespace() {
+    *margin-right: .3em;
+}
+
+//======================color==================
+$white: #fff;
+$grayDark:  #333;
+$background-color: #fff;
+$grayDarker: #222;
+$background-highlight-color: darken(#fff, 10%);
+$linkColor:        #08c;
+
+$btnPrimaryBackground:              $linkColor;
+$btnPrimaryBackgroundHighlight:     adjust-hue($btnPrimaryBackground, 20%);
+
+$btnInfoBackground:                 #5bc0de;
+$btnInfoBackgroundHighlight:        #2f96b4;
+
+$btnSuccessBackground:              #62c462;
+$btnSuccessBackgroundHighlight:     #51a351;
+
+$btnWarningBackground:              lighten($orange, 15%);
+$btnWarningBackgroundHighlight:     $orange;
+
+$btnDangerBackground:               #ee5f5b;
+$btnDangerBackgroundHighlight:      #bd362f;
+
+$btnInverseBackground:              #444;
+$btnInverseBackgroundHighlight:     $grayDarker;
+button.#{$uiname}, input.#{$uiname} {
+    height: 26px;
+    .oni-icon, .#{$uiname}-text {
+        *margin-top: -2px;
+    }
+}
+.#{$uiname} {
+    @include inline-block();
+    overflow: hidden;
+    _display: inline;
+    padding: 0 10px;
+    margin: 0;
+    font-size: 12px;
+    border: 1px solid transparent;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    color: #333;
+    text-decoration: none;
+    outline: 0;
+    height: 24px;
+    font-family: fontawesome;
+    &:link {
+        text-decoration: none;
+    }
+    &.oni-state-default {
+        border-color: #ccc;
+        background-color: #f8f8f8;
+    }
+    // button status
+    &:hover {
+        background-color: #f5f5f5;
+        border-color: #d9d9d9;
+    }
+    // Active state
+    &.oni-state-active, &:active {
+        background-color: darken($white, 10%);
+        background-color: darken($white, 15%) \9;
+        background-image: none;
+        outline: 0;
+        @include box-shadow(inset 0 2px 4px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05));
+    }
+    
+    // Disabled state
+    &.oni-state-disabled, &[disabled] {
+        background-color: #f8f8f8;
+        border-color: #d9d9d9;
+        color: #cccccc;
+    }
+    
+    // button color
+    &.#{$uiname}-primary {
+        background-color: #3775c0;
+        border-color: #1d5eac;
+        color: #ffffff;
+        &:hover {
+            background-color: #3d8be9;
+            border-color: #1a5092;
+        }
+        &.oni-state-disabled {
+            background-color: #428bca;
+            color: #357ebd;
+            color: #ffffff;
+            @include opacity(0.6)
+        }
+    }
+    // Warning appears are orange
+    &.#{$uiname}-warning {
+        background-color: #f0ad4e;
+        border-color: #eea236;
+        color: #ffffff;
+        &:hover {
+            background-color: #ec971f;
+            border-color: #d58512;
+        }
+        &.oni-state-disabled {
+            background-color: #f0ad4e;
+            border-color: #eea236;
+            color: #ffffff;
+            @include opacity(0.6);
+        }
+    }
+    // Danger and error appear as red
+    &.#{$uiname}-danger  {
+        background-color: #d9534f;
+        border-color: #d43f3a;
+        color: #ffffff;
+        &:hover {
+            background-color: #c9302c;
+            border-color: #ac2925;
+        }
+        &.oni-state-disabled {
+            background-color: #d9534f;
+            border-color: #d43f3a;
+            color: #ffffff;
+            @include opacity(0.6);
+        }
+    }
+    // Success appears as green
+    &.#{$uiname}-success {
+        background-color: #58b359;
+        border-color: #45a846;
+        color: #ffffff;
+        &:hover {
+            background-color: #68c969;
+            border-color: #3e973e;
+        }
+        &.oni-state-disabled {
+            background-color: #5cb85c;
+            border-color: #4cae4c;
+            color: #ffffff;
+            @include opacity(0.6);
+        }
+    }
+    // Info appears as a neutral blue
+    &.#{$uiname}-info {
+        background-color: #5bc0de;
+        border-color: #46b8da;
+        color: #ffffff;
+        &:hover {
+            background-color: #31b0d5;
+            border-color: #269abc;
+        }
+        &.oni-state-disabled {
+            background-color: #5bc0de;
+            border-color: #46b8da;
+            color: #ffffff;
+            @include opacity(0.6);
+        }
+    }
+    // Inverse appears as dark gray
+    &.#{$uiname}-inverse {
+        background-color: #333;
+        border-color: #222;
+        color: #ffffff;
+        &:hover {
+            background-color: #222;
+            border-color: #000;
+        }
+        &.oni-state-disabled {
+            background-color: #333;
+            border-color: #222;
+            @include opacity(0.6);
+        }
+    }
+
+    // button corner
+    &.oni-corner-all {
+        @include border-radius(2px);
+    }
+    &.oni-corner-left {
+        @include border-left-radius(2px);
+    }
+    &.oni-corner-right {
+        @include border-right-radius(2px);
+    }
+    &.oni-corner-top {
+        @include border-top-radius(2px);
+    }
+    &.oni-corner-bottom {
+        @include border-bottom-radius(2px);
+    }
+
+    // icon
+    .oni-icon {
+        font-size: 12px;
+        overflow: hidden;
+        line-height: 24px;
+        height: 24px;
+        @include inline-block();
+        _display: inline;
+        font-style: normal;
+    }
+    .#{$uiname}-text {
+        font-size: 12px;
+        line-height: 24px;
+        height: 24px;
+        word-break: keep-all;
+        white-space: nowrap;
+        @include inline-block();
+        _display: inline;
+        &.#{$uiname}-text-left {
+            padding-right: 5px;
+        }
+        &.#{$uiname}-text-right {
+            padding-left: 5px;
+        }
+        &.#{$uiname}-text-middle {
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+        &.#{$uiname}-text-hidden {
+            display: none;
+            padding: 0;
+        }
+    }
+}
+// button size
+button.#{$uiname}-small, input.#{$uiname}-small {
+    height: 22px;
+}
+.#{$uiname}-small {
+    padding: 0 5px;
+    height: 20px;
+    .oni-icon {
+        font-size: 12px;
+        line-height: 20px;
+        height: 20px;
+    }
+    .#{$uiname}-text {
+        font-size: 12px;
+        line-height: 20px;
+        height: 20px;
+    }
+}
+button.#{$uiname}-big, input.#{$uiname}-big {
+    height: 32px;
+}
+.#{$uiname}-big {
+    font-size: 14px;
+    padding: 0 15px;
+    height: 30px;
+    .oni-icon {
+        font-size: 14px;
+        line-height: 30px;
+        height: 30px;
+    }
+    .#{$uiname}-text {
+        font-size: 14px;
+        line-height: 30px;
+        height: 30px;
+    }
+}
+button.#{$uiname}-large, input.#{$uiname}-large {
+    height: 40px;
+}
+.#{$uiname}-large {
+    padding: 0 25px;
+    height: 38px;
+    .oni-icon {
+        font-size: 14px;
+        line-height: 38px;
+        height: 38px;
+    }
+    .#{$uiname}-text {
+        font-size: 14px;
+        line-height: 38px;
+        height: 38px;
+    }
+}
+
+.oni-buttonset {
+    font-size: 0;
+    @include inline-block();
+    _display: inline;
+    .#{$uiname} {
+        margin: 0;
+        float: left;
+        border-left-width: 0;
+    }
+    .#{$uiname}-first {
+        border-left-width: 1px;
+    }
+    .oni-icon {
+        *margin-top: 0;
+    }
+    .#{$uiname}-text {
+        *margin-top: 0;
+    }
+}
+.oni-buttonset-vertical {
+    _width: 100px;
+    .#{$uiname} {
+        display: block;
+        float: none;
+        border-left-width: 1px;
+        border-top-width: 0;
+    }
+    .#{$uiname}-first {
+        border-top-width: 1px;
+    }
+}

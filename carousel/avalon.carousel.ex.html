@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>carousel组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"
+        />
+        <script>
+            require(["carousel/avalon.carousel"], function() {
+				avalon.define("demo", function(vm) {
+					vm.$opt = {
+						pictures: [{
+							src: "http://7xkm02.com1.z0.glb.clouddn.com/1.jpeg",
+							href: "http://7xkm02.com1.z0.glb.clouddn.com/1.jpeg",
+							title: "图片1"
+						}, {
+							src: "http://7xkm02.com1.z0.glb.clouddn.com/2.jpeg",
+							href: "http://7xkm02.com1.z0.glb.clouddn.com/2.jpeg",
+							title: "图片2"
+						}, {
+							src: "http://7xkm02.com1.z0.glb.clouddn.com/3.jpeg",
+							href: "http://7xkm02.com1.z0.glb.clouddn.com/3.jpeg",
+							title: "图片3"
+						}, {
+							src: "http://7xkm02.com1.z0.glb.clouddn.com/4.jpeg",
+							href: "http://7xkm02.com1.z0.glb.clouddn.com/4.jpeg",
+							title: "图片4"
+						}, {
+							src: "http://7xkm02.com1.z0.glb.clouddn.com/5.jpeg",
+							href: "http://7xkm02.com1.z0.glb.clouddn.com/5.jpeg",
+							title: "图片5"
+						}]
+					}
+					vm.$skipArray = ["carousel"]
+				})
+				avalon.scan()
+			})
+        </script>
+    </head>
+    
+    <body ms-controller="demo">
+        <div class="wrapper">
+            <h1>图片轮播组件-默认配置图片轮播</h1>
+            <fieldset>
+                <legend>默认配置图片轮播</legend>
+                <div ms-widget="carousel, carousel, $opt"></div>
+            </fieldset>
+            <pre ms-skip class="brush:html;gutter:false;toolbar:false">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    
+    &lt;head&gt;
+        &lt;title&gt;carousel组件&lt;/title&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width"&gt;
+        &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+        &lt;script src="../highlight/shCore.js"&gt;&lt;/script&gt;
+        &lt;link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"
+        /&gt;
+        &lt;script&gt;
+            require(["carousel/avalon.carousel"], function() {
+				avalon.define("demo", function(vm) {
+					vm.$opt = {
+						pictures: [{
+							src: "http://7xkm02.com1.z0.glb.clouddn.com/1.jpeg",
+							href: "http://7xkm02.com1.z0.glb.clouddn.com/1.jpeg",
+							title: "图片1"
+						}, {
+							src: "http://7xkm02.com1.z0.glb.clouddn.com/2.jpeg",
+							href: "http://7xkm02.com1.z0.glb.clouddn.com/2.jpeg",
+							title: "图片2"
+						}, {
+							src: "http://7xkm02.com1.z0.glb.clouddn.com/3.jpeg",
+							href: "http://7xkm02.com1.z0.glb.clouddn.com/3.jpeg",
+							title: "图片3"
+						}, {
+							src: "http://7xkm02.com1.z0.glb.clouddn.com/4.jpeg",
+							href: "http://7xkm02.com1.z0.glb.clouddn.com/4.jpeg",
+							title: "图片4"
+						}, {
+							src: "http://7xkm02.com1.z0.glb.clouddn.com/5.jpeg",
+							href: "http://7xkm02.com1.z0.glb.clouddn.com/5.jpeg",
+							title: "图片5"
+						}]
+					}
+					vm.$skipArray = ["carousel"]
+				})
+				avalon.scan()
+			})
+        &lt;/script&gt;
+    &lt;/head&gt;
+    
+    &lt;body ms-controller="demo"&gt;
+        &lt;div class="wrapper"&gt;
+            &lt;h1&gt;图片轮播组件-默认配置图片轮播&lt;/h1&gt;
+            &lt;fieldset&gt;
+                &lt;legend&gt;默认配置图片轮播&lt;/legend&gt;
+                &lt;div ms-widget="carousel, carousel, $opt"&gt;&lt;/div&gt;
+            &lt;/fieldset&gt;
+        &lt;/div&gt;
+    &lt;/body&gt;
+
+&lt;/html&gt;
+</pre>
+        </div>
+    </body>
+
+</html>

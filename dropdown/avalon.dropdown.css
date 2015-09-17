@@ -1,0 +1,135 @@
+
+.oni-dropdown {
+    font: normal 12px/1.5 tahoma, arial, 'Hiragino Sans GB', '\5b8b\4f53', sans-serif; }
+
+/*
+这是每个都组件都应该引用的部分
+*/
+.oni-dropdown {
+    display: -moz-inline-stack;
+    display: inline-block;
+    vertical-align: middle;
+    *vertical-align: auto;
+    zoom: 1;
+    *display: inline;
+    outline: none; }
+.oni-dropdown .oni-dropdown-source {
+    border: 1px solid #cccccc;
+    background-color: white;
+    cursor: pointer; }
+.oni-dropdown .oni-dropdown-source .oni-dropdown-input {
+    display: -moz-inline-stack;
+    display: inline-block;
+    vertical-align: middle;
+    *vertical-align: auto;
+    zoom: 1;
+    *display: inline;
+    white-space: nowrap;
+    white-space: nowrap;
+    overflow: hidden;
+    -ms-text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    height: 18px;
+    padding: 3px 21px 3px 6px;
+    word-break: normal;
+    word-wrap: normal; }
+.oni-dropdown .oni-icon {
+    cursor: pointer;
+    font-size: 12px;
+    vertical-align: baseline; }
+.oni-dropdown.oni-state-hover .oni-dropdown-source {
+    border-color: #999999; }
+.oni-dropdown.oni-state-focus .oni-dropdown-source {
+    border-color: #3775c0; }
+.oni-dropdown.oni-state-disabled .oni-dropdown-source {
+    background-color: whitesmoke;
+    border-color: #d9d9d9;
+    color: #cccccc;
+    cursor: default; }
+.oni-dropdown.oni-state-disabled .oni-dropdown-icon {
+    cursor: default; }
+.oni-dropdown.oni-state-small .oni-dropdown-source {
+    border-radius: 2px; }
+.oni-dropdown.oni-state-small .oni-dropdown-input {
+    padding-top: 1px;
+    padding-bottom: 1px; }
+.oni-dropdown.oni-state-small .oni-dropdown-icon {
+    top: -19px; }
+.oni-dropdown.oni-state-error .oni-dropdown-source {
+    border-color: #ff8888; }
+.oni-dropdown.oni-state-error:hover .oni-dropdown-source {
+    border-color: #ff8888; }
+.oni-dropdown .oni-dropdown-icon {
+    display: none;
+    color: #b5b5b5;
+    cursor: pointer;
+    padding: 0 6px;
+    position: absolute;
+    right: 0;
+    text-align: center;
+    top: -21px; }
+.oni-dropdown .oni-dropdown-icon-wrap {
+    display: block;
+    position: relative;
+    height: 0; }
+.oni-dropdown .oni-dropdown-icon-wrap .oni-icon-angle-down {
+    display: block; }
+.oni-dropdown .oni-dropdown-icon-wrap .oni-icon-angle-up {
+    display: block; }
+.oni-dropdown.oni-dropdown-menu {
+    display: none;
+    left: 0;
+    position: absolute;
+    top: -1px;
+    width: 100%;
+    _width: auto !important;
+    z-index: 1001; }
+.oni-dropdown .oni-dropdown-menu-inner {
+    box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1);
+    background-color: white;
+    border: 1px solid #d4d4d4;
+    overflow-y: scroll;
+    padding: 3px 0; }
+.oni-dropdown .oni-dropdown-item {
+    white-space: nowrap;
+    overflow: hidden;
+    -ms-text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    white-space: nowrap;
+    overflow: hidden;
+    *zoom: 1;
+    width: 100%;
+    padding: 3px 0;
+    height: 24px;
+    line-height: 24px;
+    text-indent: 20px;
+    cursor: pointer;
+    word-break: normal;
+    word-wrap: normal; }
+.oni-dropdown .oni-dropdown-item.oni-dropdown-group {
+    font-size: 14px;
+    font-weight: bold;
+    text-indent: 10px; }
+.oni-dropdown .oni-dropdown-item.oni-dropdown-divider {
+    border-top: 1px solid #f2f2f2; }
+.oni-dropdown .oni-dropdown-item.oni-state-disabled {
+    border-color: #d9d9d9;
+    background-color: whitesmoke;
+    color: #999999; }
+.oni-dropdown .oni-dropdown-item.oni-state-hover {
+    border-color: #f8f8f8;
+    background-color: #f8f8f8;
+    color: black; }
+.oni-dropdown .oni-dropdown-item.oni-state-active {
+    border-color: #3775c0;
+    background-color: #3775c0;
+    color: white; }
+.oni-dropdown .oni-dropdown-item.oni-state-active .oni-icon {
+    color: white; }

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>验证框架</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js">
+
+        </script>
+        <script src="../highlight/shCore.js">
+
+        </script>
+        <style >
+            .error{
+                border:1px  solid red;
+            }
+            .success{
+                border:1px  solid greenyellow;
+            }
+            .error-tip{
+                color: red;
+                background:pink;
+            }
+        </style>
+        <script>
+            require(["validation/avalon.validation", "ready!"], function() {
+                var validationVM
+
+                function showError(el, data) {
+                    var next = el.nextSibling
+                    if (!(next && next.className === "error-tip")) {
+                        next = document.createElement("div")
+                        next.className = "error-tip"
+                        el.parentNode.appendChild(next)
+                    }
+                    next.innerHTML = data.getMessage()
+                }
+                function removeError(el) {
+                    var next = el.nextSibling
+                    if (next && next.className === "error-tip") {
+                        el.parentNode.removeChild(next)
+                    }
+                }
+                avalon.define({
+                    $id: "test",
+                    $skipArray: ["validation"],
+                    a: "xxxx",
+                    b: "a",
+                    c: "d",
+                    d: "",
+                    e: "",
+                    f: "",
+                    g: "",
+                    reset: function() {
+                        validationVM && validationVM.resetAll()
+                    },
+                    validation: {
+                        onInit: function(v) {
+                            validationVM = v
+                        },
+                        onReset: function(e, data) {
+                            data.valueResetor && data.valueResetor()
+                            avalon(this).removeClass("error success")
+                            removeError(this)
+                        },
+                        onError: function(reasons) {
+                            reasons.forEach(function(reason) {
+                                avalon(this).removeClass("success").addClass("error")
+                                showError(this, reason)
+                            }, this)
+                        },
+                        onSuccess: function() {
+                            avalon(this).removeClass("error").addClass("success")
+                            removeError(this)
+                        },
+                        onValidateAll: function(reasons) {
+                            reasons.forEach(function(reason) {
+                                avalon(reason.element).removeClass("success").addClass("error")
+                                showError(reason.element, reason)
+                            })
+                            if (reasons.length === 0) {
+                                avalon.log("全部验证成功！")
+                            }
+                        }
+                    }
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body>
+        <form ms-controller="test" ms-widget="validation">
+            <h3>验证组件</h3>
+            <p><input ms-duplex-required="a" placeholder="不能为空"></p>
+            <p><input ms-duplex-int="b" placeholder="必须输入整数"></p>
+            <p><input ms-duplex-decimal="c" placeholder="必须输入小数"></p>
+            <p><input ms-duplex-alpha="d" placeholder="必须输入字母"></p>
+            <p><input ms-duplex-chs="e" placeholder="必须输入中文"></p>
+            <p><input ms-duplex-ipv4="f" placeholder="请输入互联网协议（Internet Protocol，IP）的第四版"></p>
+            <p><input ms-duplex-phone="g" placeholder="必须输入手机号码"></p>
+            <button type="submit">submit
+            </button>
+            <button type="button" ms-click="reset">reset
+            </button>
+        </form>
+    </body>
+</html>

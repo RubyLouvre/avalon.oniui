@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>simplegrid</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js">
+
+        </script>
+        <script>
+            avalon.config({debug: false})
+            require(["simplegrid/avalon.simplegrid"], function() {
+                var createData = function(n) {
+                    var array = []
+                    for (var i = 0; i < n; i++) {
+                        array.push({
+                            xxx: Math.random().toString(36).substring(4, 10),
+                            yyy: Math.random().toString(36).substring(4, 10),
+                            zzz: i
+                        })
+                    }
+                    return array
+                }
+                avalon.define("test", function(vm) {
+
+                    vm.simplegrid = {
+                        columns: [
+                            {field: "zzz", text: "列三", resizable: true},
+                            {field: "yyy", text: "列二", resizable: true},
+                            {field: "xxx", text: "列一", resizable: true}
+                        ],
+                        getTemplate: function(str) {
+                            if (window.dispatchEvent) {
+                                return str//IE678不支持div:hover效果
+                            } else {
+                                return str.replace('ms-repeat-row="_data"', 'ms-repeat-row="_data" ms-class="{{evenClass}}:$index % 2 == 0" ')
+                            }
+                        },
+                        showRows: 10,
+                        pageable: true,
+                        pager: {
+                            perPages: 20,
+                            totalItems: 1000,
+                            showPages: 5,
+                            options: [10, 20, 30, 40]
+                        },
+                        columnsOrder: ["xxx", "yyy", "zzz"],
+                        data: createData(100)
+                    }
+                    vm.$skipArray = ["simplegrid"]
+                })
+                avalon.scan()
+            })
+        </script>
+        <style>
+
+            .ui-simplegrid-tbody tr.even td, .ui-simplegrid-tbody tr.even td div{
+                background:rgb(247,247,247);
+            }
+            .ui-simplegrid-tbody tr:nth-child(even) td, .ui-simplegrid-tbody tr:nth-child(even) td div{
+                background:rgb(247,247,247);
+            }
+
+        </style>
+    </head>
+    <body>
+
+        <fieldset ms-controller="test">
+            <legend>演示斑马线效果</legend>
+
+            <div ms-widget="simplegrid" style="width:99%">
+
+            </div>
+            <div>
+                <h3>要点</h3>
+                <p>默认地,avalon会为表格的tbody偶数行添加一个even的类名,你也可以通过evenClass属性来配置它.</p>  
+  
+                <br/>
+                <pre class="brush:html;gutter:false;toolbar:false;">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;simplegrid&lt;/title&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width"&gt;
+        &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+        &lt;script&gt;
+            avalon.config({debug: false})
+            require(["simplegrid/avalon.simplegrid"], function() {
+                var createData = function(n) {
+                    var array = []
+                    for (var i = 0; i &lt; n; i++) {
+                        array.push({
+                            xxx: Math.random().toString(36).substring(4, 10),
+                            yyy: Math.random().toString(36).substring(4, 10),
+                            zzz: i
+                        })
+                    }
+                    return array
+                }
+                avalon.define("test", function(vm) {
+
+                    vm.simplegrid = {
+                        columns: [
+                            {field: "zzz", text: "列三", resizable: true},
+                            {field: "yyy", text: "列二", resizable: true},
+                            {field: "xxx", text: "列一", resizable: true}
+                        ],
+                     
+                        showRows: 10,
+                        pageable: true,
+                        pager: {
+                            perPages: 20,
+                            totalItems: 1000,
+                            showPages: 5,
+                            options: [10, 20, 30, 40]
+                        },
+                        columnsOrder: ["xxx", "yyy", "zzz"],
+                        data: createData(100)
+                    }
+                    vm.$skipArray = ["simplegrid"]
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+        &lt;style&gt;
+
+            .ui-simplegrid-tbody tr.even td, .ui-simplegrid-tbody tr.even td div{
+                background:rgb(247,247,247);
+            }
+            .ui-simplegrid-tbody tr:nth-child(even) td, .ui-simplegrid-tbody tr:nth-child(even) td div{
+                background:rgb(247,247,247);
+            }
+
+        &lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body ms-controller="test" &gt;
+        &lt;div ms-widget="simplegrid" style="width:99%"&gt;
+        &lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+                </pre>
+            </div>
+        </fieldset>
+
+    </body>
+</html>

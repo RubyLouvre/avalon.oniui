@@ -1,0 +1,130 @@
+
+@import "../chameleon/oniui-theme";
+$uiname : "oni-simplegrid";
+$helper : "oni-helper";
+.#{$uiname}{
+    font: normal 12px/1.5 tahoma,arial,'Hiragino Sans GB','\5b8b\4f53',sans-serif;
+    width:100%;
+    border: 1px solid $ui-state-default-border-color;
+    position: relative;
+    @extend %oniui-font-setting;
+    .#{$uiname}-scroll-wrapper{
+        width:100%;
+        overflow:auto;
+        position: relative;
+        z-index: 0;
+    }
+    .#{$uiname}-wrapper{
+        width:100%;
+        position: absolute;
+    }
+    .#{$uiname}-thead{
+        width: 100%;
+        @include user-select();
+        border-collapse: collapse;
+    }
+    .#{$uiname}-thead td,.#{$uiname}-thead th {
+        border: 0 none;
+        padding: 10px 5px;
+        background-color: #f8f8f8;
+    }
+    .#{$uiname}-thead td,.#{$uiname}-thead th, .#{$uiname}-tbody td, .#{$uiname}-tbody th{
+        padding-left: 5px;
+    }
+
+    .#{$uiname}-tbody{
+        width: 100%;
+        border: 1px solid $ui-state-default-border-color;
+        border-left:none;
+        border-right:none;
+        border-collapse: collapse;
+    }
+    %cell-style{
+        border: 0 none;
+        padding: 7px 5px;
+    }
+    .#{$uiname}-tbody{
+        td, th{
+            @extend %cell-style;
+            border-bottom: 1px solid #f3f3f3;
+        }
+        .oni-state-hover{
+            td, th{
+                background-color: #e8f5fd;
+            }
+        }
+        .oni-state-selected {
+            td, th{
+                background-color: #fff7e6;
+            }
+        }
+    } 
+
+    .#{$uiname}-scroll-marker{
+        width:100%;
+        z-index: -1;
+    }
+
+    .#{$uiname}-pager-wrapper{
+        width: 100%;
+        padding:5px 0px;
+        overflow:hidden;
+        background-color: #f8f8f8;
+        border-top: 1px solid #d4d4d4;
+    }
+    .#{$uiname}-pager-options{
+        float: left;
+        height: 26px;
+        line-height: 26px;
+        padding-left: 5px;
+        .oni-dropdown {
+            margin: 0 5px;
+            vertical-align: top;
+        }
+    }
+
+    //====================
+    /*三种容器的规则*/
+    .#{$helper}-asc, .#{$helper}-desc,  .#{$helper}-ndb{
+        width:16px;
+        height:16px;
+        line-height: 1;
+        vertical-align: middle;
+        @include inline-block();
+        //display: inline-block;
+        position: relative;
+        cursor: pointer;
+    }
+    /*三种容器下三角形的共同点*/
+    .#{$helper}-asc span, .#{$helper}-desc span, .#{$helper}-ndb span{
+        position: absolute;
+        top: 0px;
+        left: 4px;
+    }
+    /*上三角*/
+    .#{$helper}-ndb .#{$helper}-sort-top, .#{$helper}-desc .#{$helper}-sort-top{
+        @include triangle(top, 12px, half, #ccc);
+        top: 0px;
+    }
+    .#{$helper}-asc .#{$helper}-sort-top{
+        @include triangle(top, 12px, half, #000);
+        top: 0px;
+    }
+    /*下三角*/
+    .#{$helper}-ndb .#{$helper}-sort-bottom, .#{$helper}-asc .#{$helper}-sort-bottom{
+        @include triangle(bottom, 12px, half, #ccc);
+        top: 8px;
+    }
+    .#{$helper}-desc .#{$helper}-sort-bottom{
+        @include triangle(bottom, 12px, half, #000);
+        top: 8px;
+    }
+
+    .oni-pager{
+        @include float-right();
+    }
+    .#{$uiname}-empty {
+        text-align: center;
+    }
+}
+

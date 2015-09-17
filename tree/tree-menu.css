@@ -1,0 +1,96 @@
+.menu-tree {
+  width: 200px;
+  position: relative;
+  box-shadow: 1px 1px 1px 1px #dadada; }
+  .menu-tree .oni-tree {
+    padding: 0;
+    border-top: 1px solid #dadada; }
+  .menu-tree .oni-tree li {
+    position: relative;
+    zoom: 1;
+    float: left;
+    width: 100%;
+    display: inline; }
+  .menu-tree .oni-tree li.level0 {
+    border: 1px solid #dadada;
+    border-top: none; }
+  .menu-tree .oni-tree li span.noline_docu {
+    display: none; }
+  .menu-tree .oni-tree li ul {
+    padding: 0;
+    zoom: 1;
+    overflow: hidden;
+    width: 100%;
+    float: left;
+    display: inline; }
+  .menu-tree .oni-tree li a:hover {
+    background: #f8f8f8;
+    color: #3775C0;
+    text-decoration: none; }
+  .menu-tree .oni-tree li a.level0 {
+    display: block;
+    font-weight: bolder;
+    border: none;
+    height: 32px;
+    line-height: 32px;
+    padding: 0 5px 0 10px; }
+  .menu-tree .oni-tree li a.level0 span {
+    line-height: 32px;
+    display: inline-block; }
+  .menu-tree .oni-tree li.level0 a.curSelectedNode {
+    background: #E0EEF5;
+    color: #3775C0;
+    font-weight: bolder; }
+  .menu-tree .oni-tree li span.button {
+    width: 14px;
+    height: 14px;
+    overflow: hidden; }
+  .menu-tree .oni-tree ul li.level1 a, .menu-tree .oni-tree ul li.level2 a {
+    display: block;
+    line-height: 26px;
+    height: 26px;
+    padding: 0 0 0 27px;
+    margin-top: 4px; }
+  .menu-tree li.level1 a span, .menu-tree li.level2 a span {
+    line-height: 26px; }
+  .menu-tree li.level1 a.curSelectedNode, .menu-tree li.level2 a.curSelectedNode {
+    background: #E0EEF5;
+    border: none;
+    color: #3775C0; }
+  .menu-tree .level1 span.switch {
+    position: absolute;
+    z-index: 10;
+    left: 10px;
+    top: 8px;
+    background: url(http://source.qunarzz.com/general/oniui/tree/menu-tree.gif) no-repeat 7px -104px; }
+  .menu-tree .level1 span.noline_open {
+    background-position: 7px -136px; }
+  .menu-tree .oni-leaf-selected span.noline_close {
+    background-position: 7px -168px; }
+  .menu-tree .oni-leaf-selected span.noline_open {
+    background-position: 7px -200px; }
+  .menu-tree .oni-menu-tree-swicth {
+    position: absolute;
+    width: 16px;
+    height: 15px;
+    top: 2px;
+    right: 2px;
+    z-index: 10;
+    background: url(http://source.qunarzz.com/general/oniui/tree/menu-tree.gif) no-repeat 0 -9px; }
+
+.oni-menu-tree-hidden {
+  width: 18px;
+  overflow: hidden;
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+  background: #f8f8f8; }
+  .oni-menu-tree-hidden .oni-tree {
+    visibility: hidden; }
+  .oni-menu-tree-hidden .oni-menu-tree-swicth {
+    background-position: 4px -73px; }
+
+.oni-state-hover .oni-menu-tree-swicth {
+  background-position: 4px -41px; }
+
+.menu-tree.oni-state-hover {
+  background: #E0EEF5; }

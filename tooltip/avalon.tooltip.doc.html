@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>气泡组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <meta name="descriptions" content=" 给一个元素或者给元素里满足配置条件的系列元素添加一个富UI及交互的气泡提示框">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    
+    <body>
+        <div class="wrapper">
+            <h2>tooltip</h2>
+            <fieldset>
+                <legend>气泡组件</legend>
+                <p>给一个元素或者给元素里满足配置条件的系列元素添加一个富UI及交互的气泡提示框</p>
+            </fieldset>
+            <h3 class="table-doc-title">使用说明</h3>
+            <table class="table-doc" border="1">
+                <colgroup>
+                    <col width="180">
+                        <col width="95">
+                            <col width="120">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>名字</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="4">配置参数</td>
+                    </tr>
+                    <tr>
+                        <td>toggle</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>组件是否显示，可以通过设置为false来隐藏组件，设置为true来显示【在原来的位置展示原来的内容，如果需要改变位置、内容，请使用showBy】</td>
+                    </tr>
+                    <tr>
+                        <td>collision</td>
+                        <td>String</td>
+                        <td>"none"</td>
+                        <td>溢出检测，当被定位元素在某些方向上溢出窗口，则移动它到另一个位置。与 my 和 at 选项相似，该选项会接受一个单一的值或一对 horizontal/vertical
+                            值。例如：flip、fit、fit flip、fit none。/nflip：翻转元素到目标的相对一边，再次运行 collision 检测一遍查看元素是否适合。无论哪一边允许更多的元素可见，则使用那一边。/nfit：把元素从窗口的边缘移开。/nflipfit：首先应用
+                            flip 逻辑，把元素放置在允许更多元素可见的那一边。然后应用 fit 逻辑，确保尽可能多的元素可见。/nnone: 不检测</td>
+                    </tr>
+                    <tr>
+                        <td>event</td>
+                        <td>String</td>
+                        <td>"mouseenter"</td>
+                        <td>显示tooltip的事件，默认hover的时候显示tooltip，为false的时候就不绑定事件，如果后面设置了自动隐藏，则mouseenter对应的是mouseleave,focus对应的是blur，进行自动隐藏事件侦听，使用代理的时候，目测不支持focus,blur，event可以配置为空，则不会添加事件侦听</td>
+                    </tr>
+                    <tr>
+                        <td>content</td>
+                        <td>Unary</td>
+                        <td>void 0</td>
+                        <td>tooltip显示内容，默认去获取element的title属性</td>
+                    </tr>
+                    <tr>
+                        <td>container</td>
+                        <td>Element</td>
+                        <td>void 0</td>
+                        <td>把tooltip元素append到container指定的这个元素内，可以是一个函数，用以返回一个元素</td>
+                    </tr>
+                    <tr>
+                        <td>width</td>
+                        <td>String</td>
+                        <td>"auto"</td>
+                        <td>tip宽度，默认是auto</td>
+                    </tr>
+                    <tr>
+                        <td>height</td>
+                        <td>String</td>
+                        <td>"auto"</td>
+                        <td>tip高度，默认是auto</td>
+                    </tr>
+                    <tr>
+                        <td>arrow</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>是否显示尖角图标，默认为true</td>
+                    </tr>
+                    <tr>
+                        <td>autohide</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>元素hoverout之后，是否自动隐藏tooltip，默认true</td>
+                    </tr>
+                    <tr>
+                        <td>delegate</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>元素是否只作为一个代理元素，这样适合对元素内多个子元素进行tooltip绑定</td>
+                    </tr>
+                    <tr>
+                        <td>disabled</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>禁用</td>
+                    </tr>
+                    <tr>
+                        <td>track</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>tooltip是否跟随鼠标，默认否</td>
+                    </tr>
+                    <tr>
+                        <td>animated</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>是否开启显示隐藏切换动画效果</td>
+                    </tr>
+                    <tr>
+                        <td>position</td>
+                        <td>String</td>
+                        <td>"rt"</td>
+                        <td>tooltip相对于element的位置，like: rt,rb,rc...</td>
+                    </tr>
+                    <tr>
+                        <td>positionMy</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>tooltip元素的定位点，like: left top+11</td>
+                    </tr>
+                    <tr>
+                        <td>positionAt</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>element元素的定位点，like: left top+11,positionAt &amp;&amp; positionMy时候忽略position设置</td>
+                    </tr>
+                    <tr>
+                        <td>hiddenDelay</td>
+                        <td>Number</td>
+                        <td>16</td>
+                        <td>tooltip自动隐藏时间，单位ms</td>
+                    </tr>
+                    <tr>
+                        <td>zIndex</td>
+                        <td>Number</td>
+                        <td>maxZIndex</td>
+                        <td>tooltip的z-index值，默认是body直接子元素中的最大z-index值</td>
+                    </tr>
+                    <tr>
+                        <td>onInit</td>
+                        <td>Member</td>
+                        <td>avalon.noop</td>
+                        <td>onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method</td>
+                    </tr>
+                    <tr>
+                        <td>contentGetter(elem)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>contentGetter() 获取内容接口，讲srcElement作为参数传递过来，默认是返回a标签的title，如果该函数返回为空，那么则不会显示tooltip</td>
+                    </tr>
+                    <tr>
+                        <td>_animateArrMaker(from,to)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>_animateArrMaker(from, to) 不支持css3动画效果步长生成器函数，返回一个数组，类似[0,xx,xx,xx,50]</td>
+                    </tr>
+                    <tr>
+                        <td>getTemplate(tmpl,opts)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>getTemplate(tpl, opts) 定制修改模板接口</td>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="4">接口方法与固有属性</td>
+                    </tr>
+                    <tr>
+                        <td>show(elem)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>show(elem) 用这个方法来刷新tooltip的位置</td>
+                    </tr>
+                    <tr>
+                        <td>hide(e)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>hide($event) 隐藏tooltip，参数是$event，可缺省</td>
+                    </tr>
+                    <tr>
+                        <td>showBy(obj,content)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>showBy($event, content) 参数满足 {target: elem}这样，或者是一个elem元素亦可，tooltip会按照elem定位，并作为参数传递给contentGetter，如果指定content，则忽略contentGetter的返回，直接显示content内容
+                            <table
+                            border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>obj</td>
+                                        <td></td>
+                                        <td>$event 定位参照物，可以是一个事件，也可以是一个元素，如果未提供有效的元素或者事件，则采用上一次定位的元素或者事件来定位</td>
+                                    </tr>
+                                    <tr>
+                                        <td>content</td>
+                                        <td></td>
+                                        <td>content 用来填充tooltip的内容</td>
+                                    </tr>
+                                </tbody>
+            </table>
+            </td>
+            </tr>
+            <tr>
+                <td>appendTo(ele)</td>
+                <td>Function</td>
+                <td></td>
+                <td>将toolTip元素注入到指定的元素内，请在调用appendTo之后再调用showBy
+                    <table border="1">
+                        <tbody>
+                            <tr>
+                                <th style="width:100px">参数名/返回值</th>
+                                <th style="width:70px">类型</th>
+                                <th>说明</th>
+                            </tr>
+                            <tr>
+                                <td>ele</td>
+                                <td></td>
+                                <td>目标元素</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            </tbody>
+            </table>
+            <ul class="example-links">
+                <li>
+                    <a href="avalon.tooltip.ex.html">input元素不绑定事件，人工触发</a>
+                </li>
+                <li>
+                    <a href="avalon.tooltip.ex1.html">input元素hover显示tip-父容器做代理</a>
+                </li>
+                <li>
+                    <a href="avalon.tooltip.ex2.html">不使用代理，各个方向绑定，改变位置，点击展示</a>
+                </li>
+                <li>
+                    <a href="avalon.tooltip.ex3.html">箭头位置自动调整，点击展示</a>
+                </li>
+                <li>
+                    <a href="avalon.tooltip.ex4.html">input元素获取焦点显示tip，不展示箭头</a>
+                </li>
+                <li>
+                    <a href="avalon.tooltip.ex5.html">鼠标跟随</a>
+                </li>
+                <li>
+                    <a href="avalon.tooltip.ex6.html">input元素获取焦点显示tip</a>
+                </li>
+                <li>
+                    <a href="avalon.tooltip.ex7.html">显示tooltip时动态获取最大z-index</a>
+                </li>
+            </ul>
+        </div>
+    </body>
+
+</html>

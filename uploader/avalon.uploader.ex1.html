@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>uploader demo 概览</title>
+<script src="../avalon.js"></script>
+<link rel="stylesheet" href="../style/avalon.doc.css"/>
+<style>
+	ul{
+		margin: 0;
+		padding: 0;
+	}
+	li{
+		list-style: none;
+	}
+	
+	.default .preview{
+		overflow: hidden;
+		zoom: 1;
+	}
+		.default .preview li{
+			float: left;
+			margin-right: 5px;
+		}
+	.default .add{
+		width: 100px;
+		height: 30px;
+		line-height: 30px;
+		text-align: center;
+		background: #38f;
+		color: #fff;
+	}
+	.default .add.disabled{
+		background: #ccc;
+	}
+
+	.info{
+		border-collapse: collapse;
+		text-align: center;
+	}
+	.info caption{
+		font-style: italic;
+		font-weight: bold;
+		padding: 5px 0;
+	}
+	.info th{
+		font-weight: normal;
+	}
+	.info th, .info td{
+		border: 1px solid #000;
+		padding: 5px 10px;
+	}
+
+
+	.weibo .browse{
+		overflow: hidden;
+	}
+		.weibo .preview{
+			float: left;
+		}
+			.weibo .preview li, .weibo .add{
+				float: left;
+				margin-right: 5px;
+				margin-bottom: 5px;
+				cursor: pointer;
+				width: 100px;
+				height: 100px;
+				box-sizing: border-box;
+			}
+			.weibo .preview li{
+				background: no-repeat center center;
+				background-size: cover;
+			}
+			.weibo .add{
+				display: inline-block;
+				border: 2px dashed #ccc;
+				position: relative;
+				text-align: center;
+				overflow: hidden;
+				*width: 96px;
+				*height: 96px;
+			}
+			.weibo .add:hover{
+				border-color: #FFA306;
+			}
+			.weibo .add.hidden{
+				visibility: hidden;
+				position: absolute;
+			}
+				.weibo .add .icon-add{
+					font-size: 40px;
+					line-height: 98px;
+					color: #ccc;
+				}
+
+	
+</style>
+</head>
+<body ms-controller="demo">
+
+	<h2>概览</h2>
+	
+	<fieldset class="default">  
+		<legend>多图片上传</legend>
+		<div ms-widget="uploader, $, $opts">
+	
+			<p>共{{files.length}}张，还能上传{{maxFileCount - files.length}}张</p>
+			
+			<ul class="preview">
+				<li ms-repeat="files">
+					<img ms-src="el.src" height="100" />
+				</li>
+			</ul>
+		
+			<p><div id="browse-btn" class="add" ms-class="disabled: files.length >= maxFileCount">上传图片</div></p>
+	
+			
+			<table class="info">
+				<caption>图片信息</caption>
+			    <thead>
+			        <tr>
+			            <th>序号</th>
+			            <th>名字</th>
+			            <th>操作</th>
+			        </tr>
+			    </thead>
+			    <tbody>
+					<tr ms-repeat="files">
+						<td>{{$index}}</td>
+						<td>{{el.name}}</td>
+						<td><a href="javascript:;" ms-click="deleteFile($index)">删除</a></td>
+					</tr>
+			    </tbody>
+			</table>
+		</div>
+	</fieldset>
+
+	<fieldset class="weibo">  
+		<legend>仿新浪微博</legend>
+		<div ms-widget="uploader, $, $opts_2">
+
+			<p>共{{files.length}}张，还能上传{{maxFileCount - files.length}}张</p>
+			
+			<div class="browse">
+				<ul class="preview">
+					<li ms-repeat="files" ms-click="deleteFile($index)" ms-css-background-image="'url(' + el.src + ')'" ms-css-filter="'progid:DXImageTransform.Microsoft.AlphaImageLoader(src=' + el.src + ', sizingMethod=scale)'"></li>
+				</ul>
+				<span id="browse-btn-2" class="add" ms-class="hidden: files.length >= maxFileCount">
+					<span class="icon-add">&#10010;</span>
+				</span>
+			</div>
+		
+			
+		</div>
+	</fieldset>
+
+	<script>
+		require(["uploader/avalon.uploader", "domReady!"], function(){
+			var model = avalon.define({
+				$id: "demo",
+				$opts: {
+					action: 'post.php',
+					browseButton: 'browse-btn',
+					maxFileCount: 4,
+					maxFileSize: 1048576000,
+					onFileSizeErr: function(fileName){
+						alert('自定义信息：' + fileName + '大小超过1M啦~')
+					}
+				},
+				$opts_2: {
+					action: 'post.php',
+					browseButton: 'browse-btn-2',
+					maxFileCount: 4,
+					maxFileSize: 1048576000,
+					onFileSizeErr: function(fileName) {
+						alert('自定义信息：' + fileName + '大小超过1M啦~')
+					}
+				}
+			});
+			avalon.scan();
+		});
+
+	</script>
+</body>
+</html>

@@ -1,0 +1,136 @@
+
+@import "../chameleon/oniui-theme";
+$uiname: "oni-pager";
+$pager-background-color: #FFFFFF;
+$pager-active-color: $ui-state-active-color;
+@if($oinui-theme == smoothness){
+    $pager-background-color: #FFFFFF;
+    $pager-active-color: #ff8888;
+}
+.#{$uiname} {
+    @include inline-block();
+    @extend %oniui-font-setting;
+    vertical-align: middle;
+    white-space: nowrap;
+    .#{$uiname}-items {
+        @include inline-block();
+        vertical-align: middle;
+    }
+    .#{$uiname}-prev, .#{$uiname}-next, .#{$uiname}-item {
+        @include inline-block();
+        background-color: $pager-background-color;
+        color: #333;
+        height: 24px;
+        line-height: 24px;
+        margin-right: 5px;
+        border: 1px solid $ui-state-default-border-color;
+        padding: 0 10px;
+        @include border-radius(2px);
+        cursor: pointer;
+        font-size: 12px;
+        vertical-align: middle;
+        @include user-select(none);
+        /*!当前页,没有边框*/
+        &.oni-state-active {
+            color: $pager-active-color;
+            border: 0 none;
+            padding: 1px 11px;
+            cursor: default;
+            background: transparent;
+        }
+        /*!掠过*/
+        &.oni-state-hover{
+            border-color:$pager-active-color;
+        }
+        /*!禁用*/
+        &.oni-state-disabled {
+            border-color:$ui-state-disabled-border-color;
+            background-color:$ui-state-disabled-background-color;
+            color: $ui-state-disabled-color;
+            cursor: default;
+        }
+    }
+    /*!省略掉的页数*/
+    .#{$uiname}-omit {
+        @include inline-block();
+        height: 24px;
+        line-height: 24px;
+        margin-right: 5px;
+        padding: 1px 0;
+        vertical-align: middle;
+        font-size: 12px;
+        @include user-select(none);
+        cursor: default;
+    }
+    /*!页面跳转部分的样式*/
+    .#{$uiname}-jump {
+        @include inline-block();
+        vertical-align: middle;
+        padding-left:5px;
+        padding-right: 5px;
+        vertical-align: middle;
+    }
+    /*!输入域的容器*/
+    .#{$uiname}-textbox-wrapper {
+        @include inline-block();
+        width:26px;
+        margin-left: 5px;
+        margin-right: 5px;
+        padding: 3px 5px;
+        vertical-align: middle;
+        font-size: 0;
+        outline: none;
+        background-color:$pager-background-color; 
+        border: 1px solid $ui-state-default-border-color;
+
+    }
+    /*!输入域*/
+    .#{$uiname}-textbox {
+        display: inline;
+        float: left;
+        position: relative;
+        width: 26px;
+        height: 18px;
+        line-height: 18px;
+        padding: 0;
+        border: 0 none;
+        font-size: 12px;
+        outline: medium none;
+        vertical-align: middle;
+        text-align: center;
+        @if($oinui-theme == smoothness){
+            color: #333333;
+            background: #fff;
+        }
+    }
+    /*!里面的按钮的样式*/
+    .#{$uiname}-button {
+        @include inline-block();
+        overflow: visible;
+        _overflow-y: hidden;
+        height: 26px;
+        margin-left: 5px;
+        border-radius: 2px;
+        outline: none;
+        cursor: pointer;
+        font-size: 12px;
+        vertical-align: middle;
+        padding: 0 10px;
+        text-decoration: none;
+        border: 1px solid #ccc;
+        background-color: #f8f8f8;
+        color: #333;
+        &:hover{
+            border-color: #bbb;
+        }
+    }
+    /*!里面的文本全部包在一个容器内，以便实现居中*/
+    .#{$uiname}-text {
+        @include inline-block();
+        font-size: 12px;
+        vertical-align: middle;
+    }
+}
+
+
+

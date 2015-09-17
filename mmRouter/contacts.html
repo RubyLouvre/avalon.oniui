@@ -1,0 +1,29 @@
+<div>
+    <h3>联系人</h3>
+    <table ms-controller="contacts" border="1" width="100%">
+        <tr>
+            <td width="300px" style="overflow:hidden;">
+                <ul>
+                    <li>
+                        <a href="#!/contacts">所有联系人</a>
+                    </li>
+                    <li ms-repeat="contacts" 
+                        ms-class="active:el.id==id" ms-if-loop="$index < 2">
+                        <a  ms-href="#!/contacts/{{el.id}}" >{{el.name}}</a>
+                    </li>
+                </ul>
+                <hr/>
+                <button class="btn" ms-click="goToRandom()">Show random contact</button>
+                <div class="oni-helper-clearfix slider oni-helper-reset">
+                    <div ms-view="tip" class="oni-mmRouter-slide">
+                        默认tip内容---搞得再复杂一点...
+                        <div ms-view="complex"></div>
+                    </div>
+                </div>
+            </td>
+            <td ms-view data-view-cache="true">
+
+            </td>
+        </tr>
+    </table>
+</div>

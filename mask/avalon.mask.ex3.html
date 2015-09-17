@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>duplexHooks</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=8" />
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <script>
+            require(["mask/avalon.mask.js"], function() {
+                avalon.define({
+                    $id: "test",
+                    aaa: "",
+                    bbb: ""
+                })
+                avalon.duplexHooks.money = {
+                    set: function(str, data) {
+                        str = String(str).replace(/[^1-9\.]/g, "")
+                        var ret = avalon.filters.number(str, 2)
+                        data.element.oldValue = ret
+                        return ret
+                    }
+                }
+                avalon.duplexHooks.nonumber = {
+                    set: function(str, data) {
+                      return  str = String(str).replace(/\d+/g, "")
+ 
+                    }
+                }
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body ms-controller="test">
+        <input  size='30'
+                ms-duplex-money-number="aaa" 
+                data-duplex-event="blur"/>
+          <input  size='30' ms-duplex-nonumber="bbb" 
+                />
+        必须输入数字与一个小数点
+        <pre class="brush:html;gutter:false;toolbar:false">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta charset="utf-8"&gt;
+        &lt;title&gt;duplexHooks&lt;/title&gt;
+        &lt;meta http-equiv="X-UA-Compatible" content="IE=8" /&gt;
+        &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+        &lt;script&gt;
+            require(["mask/avalon.mask.js"], function() {
+                avalon.define({
+                    $id: "test",
+                    aaa: ""
+                })
+                avalon.duplexHooks.money = {
+                    set: function(str, data) {
+                        str = String(str).replace(/[^1-9\.]/g, "")
+                        var ret = avalon.filters.number(str, 2)
+                        data.element.oldValue = ret
+                        return ret
+                    },
+                    get: function(a) {
+                        return a
+                    }
+                }
+                avalon.scan()
+            })
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body ms-controller="test"&gt;
+        &lt;input  size='30'
+                ms-duplex-money-number="aaa" 
+                data-duplex-event="blur"/&gt;
+        必须输入数字与一个小数点
+       
+    &lt;/body&gt;
+&lt;/html&gt;
+
+        </pre>
+    </body>
+</html>

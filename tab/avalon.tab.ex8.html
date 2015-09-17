@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>tab组件</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+    <script src="../avalon.js"></script>
+    <script src="../highlight/shCore.js"></script>
+    <script>
+        require(["tab/avalon.tab"], function() {
+            avalon.define("test", function(vm) {
+                vm.tab = {
+                    event: "click",
+                    preScanPannel: true
+                }
+                vm.$skipArray = ["tab"]
+                vm.tabs = ["tab1", "tab2"]
+                vm.panels = ["panel1", "panel2"]
+            })
+            avalon.scan()
+        })
+    </script>
+</head>
+<body>
+<div ms-controller="test">
+    <h1>使用ms-repeat生成html结构</h1>
+    <div ms-widget="tab">
+        <ul>
+            <li ms-repeat="tabs">
+                {{el}}
+            </li>
+        </ul>
+        <div>
+            <div ms-repeat="panels">
+                {{el}}
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

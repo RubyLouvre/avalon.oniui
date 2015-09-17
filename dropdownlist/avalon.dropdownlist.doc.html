@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>下拉提示搜索框</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <meta name="descriptions" content="dropdownlist使得可以通过下拉搜索功能减少显示内容，方便用户查找选择
+
+ ">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    
+    <body>
+        <div class="wrapper">
+            <h2>dropdownlist</h2>
+            <fieldset>
+                <legend>下拉提示搜索框</legend>
+                <p>dropdownlist使得可以通过下拉搜索功能减少显示内容，方便用户查找选择</p>
+            </fieldset>
+            <h3 class="table-doc-title">使用说明</h3>
+            <table class="table-doc" border="1">
+                <colgroup>
+                    <col width="180">
+                        <col width="95">
+                            <col width="120">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>名字</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="4">配置参数</td>
+                    </tr>
+                    <tr>
+                        <td>searchBox</td>
+                        <td>Object</td>
+                        <td>null</td>
+                        <td>搜索框对应的VM</td>
+                    </tr>
+                    <tr>
+                        <td>getSelected()</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>获取选项值
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>返回</td>
+                                        <td>String</td>
+                                        <td>选项值</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>render(data)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>重新渲染搜索选项列表
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>data</td>
+                                        <td>Array</td>
+                                        <td>选项列表，必传</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>widgetElement</td>
+                        <td>Identifier</td>
+                        <td>element</td>
+                        <td>绑定组件的元素引用</td>
+                    </tr>
+                    <tr>
+                        <td>placeholder</td>
+                        <td>String</td>
+                        <td>''</td>
+                        <td>搜索框的占位符</td>
+                    </tr>
+                    <tr>
+                        <td>realTimeData</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>是否动态的从远程获取数据</td>
+                    </tr>
+                    <tr>
+                        <td>enable</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>是否禁用组件</td>
+                    </tr>
+                    <tr>
+                        <td>getRealTimeData(search,dropdownlist)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>当需要实时获取搜索数据时设置realTimeData为true，组件就会调用此方法来实时渲染搜索列表
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>search</td>
+                                        <td>String</td>
+                                        <td>搜索内容</td>
+                                    </tr>
+                                    <tr>
+                                        <td>dropdownlist</td>
+                                        <td>Object</td>
+                                        <td>组件对应的VM</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>getTemplate(tmp,opts)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>模板函数,方便用户自定义模板
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>tmp</td>
+                                        <td>String</td>
+                                        <td>默认模板</td>
+                                    </tr>
+                                    <tr>
+                                        <td>opts</td>
+                                        <td>Object</td>
+                                        <td>vmodel</td>
+                                    </tr>
+                                    <tr>
+                                        <td>返回</td>
+                                        <td>String</td>
+                                        <td>新模板</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="others">
+                <p>dropdownlist组件继承于dropdown组件,因此许多参数请参考dropdown</p>
+                <p>我们可以通过dropdownVm.value得到当前选中项的value值, 也可以通过dropdownVm.getSelected()得到当前选中项的value值
+                    此外，我们也可能通过dropdownVm.activeIndex得到当前选中项的对应的索引值</p>
+            </div>
+            <ul class="example-links">
+                <li>
+                    <a href="avalon.dropdownlist.ex1.html">使用html配置dropdownlist组件</a>
+                </li>
+                <li>
+                    <a href="avalon.dropdownlist.ex2.html">使用data配置dropdownlist组件</a>
+                </li>
+                <li>
+                    <a href="avalon.dropdownlist.ex3.html">使用data分组配置dropdownlist组件</a>
+                </li>
+                <li>
+                    <a href="avalon.dropdownlist.ex4.html">通过搜索条件实时获取选项列表</a>
+                </li>
+                <li>
+                    <a href="avalon.dropdownlist.ex5.html">禁用dropdownlist</a>
+                </li>
+                <li>
+                    <a href="avalon.dropdownlist.ex6.html">获取选项值</a>
+                </li>
+            </ul>
+        </div>
+    </body>
+
+</html>

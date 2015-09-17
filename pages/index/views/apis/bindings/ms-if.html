@@ -1,0 +1,8 @@
+<h3 id="ms-if">插入绑定(ms-if)</h3>
+
+<p>这个功能是抄自knockout的，ms-if="bool",同样隐藏，但它是将元素移出DOM。</p>
+<p>此绑定多用于做切换卡。</p>
+<p>如果ms-if与ms-repeat用于同一标签，想执行完ms-repeat再执行ms-if，需要给ms-if加一个小尾巴，ms-if-loop。因为avalon各个循环的执行顺序是：</p>
+<blockquote>
+    ms-skip --> ms-important --> ms-controller --> ms-if --> ms-repeat --> ms-if-loop --> ...-->ms-each --> ms-with --> ms-duplex
+</blockquote>

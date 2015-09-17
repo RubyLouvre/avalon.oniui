@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>验证框架</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js"></script>
+        <style >
+            .error{
+                border:1px  solid red;
+            }
+            .success{
+                border:1px  solid greenyellow;
+            }
+            .error-tip{
+                color: red;
+                background:pink;
+            }
+        </style>
+        <script>
+            require(["validation/avalon.validation", "textbox/avalon.textbox", "ready!"], function() {
+                var validationVM
+
+                function showError(el, data) {
+                    var next = el.nextSibling
+                    if (!(next && next.className === "error-tip")) {
+                        next = document.createElement("div")
+                        next.className = "error-tip"
+                        el.parentNode.appendChild(next)
+                    }
+                    next.innerHTML = data.getMessage()
+                }
+                function removeError(el) {
+                    var next = el.nextSibling
+                    if (next && next.className === "error-tip") {
+                        el.parentNode.removeChild(next)
+                    }
+                }
+                avalon.define({
+                    $id: "test",
+                    $skipArray: ["validation"],
+                    x: "date",
+                    g: "xx",
+                    reset: function() {
+                        validationVM && validationVM.resetAll()
+                    },
+                    validation: {
+                        onInit: function(v) {
+                            validationVM = v
+                        },
+                        onReset: function(e, data) {
+                            data.valueResetor && data.valueResetor()
+                            avalon(this).removeClass("error success")
+                            removeError(this)
+                        },
+                        onError: function(reasons) {
+                            reasons.forEach(function(reason) {
+                                avalon(this).removeClass("success").addClass("error")
+                                showError(this, reason)
+                            }, this)
+                        },
+                        onSuccess: function() {
+                            avalon(this).removeClass("error").addClass("success")
+                            removeError(this)
+                        },
+                        onValidateAll: function(reasons) {
+                            console.log(reasons)  //这里可以看到reasons中有两项，这两项的element是同一个
+                            reasons.forEach(function(reason) {
+                                avalon(reason.element).removeClass("success").addClass("error")
+                                showError(reason.element, reason)
+                            })
+                            if (reasons.length === 0) {
+                                avalon.log("全部验证成功！")
+                            }
+                        }
+                    }
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body>
+        <form ms-controller="test" ms-widget="validation">
+            <h3>验证组件</h3>
+            <p><input ms-duplex-phone="g" ms-data-d="d" ms-widget="textbox" data-textbox-placeholder="必须输入手机号码"></p>
+            <button type="submit">submit
+            </button>
+            <button type="button" ms-click="reset">reset
+            </button>
+        </form>
+    </body>
+</html>

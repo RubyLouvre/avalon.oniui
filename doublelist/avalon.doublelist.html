@@ -1,0 +1,23 @@
+<div class="oni-doublelist oni-helper-reset oni-helper-clearfix oni-widget oni-helper-noselect"
+	 ms-visible="toggle">
+	<div class="oni-doublelist-data oni-doublelist-menu oni-widget-content" ms-widget="scrollbar,$left{{MS_OPTION_ID}}">
+		<ul class="oni-helper-reset oni-scrollbar-scroller" ms-each-item="data" data-each-rendered="updateScrollbar">
+		{{MS_OPTION_DATA}}
+		</ul>
+	</div>
+	<div class="oni-doublelist-option">
+		<div class="oni-dbl-button" ms-click="_update($event,'add')" 
+			ms-class-101="oni-state-disabled:dataTmpSelect.size()==0">
+			<span>&nbsp;添加&nbsp;&gt;</span>
+		</div>
+		<div class="oni-dbl-button" ms-click="_update($event,'delete')" 
+			ms-class-101="oni-state-disabled:selectTmpSelect.size()==0">
+			<span>&lt;&nbsp;删除&nbsp;</span>
+		</div>
+	</div>
+	<div class="oni-doublelist-select oni-doublelist-menu oni-widget-content" ms-widget="scrollbar,$right{{MS_OPTION_ID}}">
+		<ul class="oni-helper-reset oni-scrollbar-scroller" ms-each-item="_selectData" data-each-rendered="updateScrollbar">
+			{{MS_OPTION_SELECT}}
+		</ul>
+	</div>
+</div>

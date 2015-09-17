@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>Name 路由器</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <meta name="descriptions" content="旧版文档迁移教程
+ 路由器插件，实现类似angular ui-router的功能
+常见问题及解决方案
+
+1、TypeError: avalon.require is not a function  --mmState.js
+有什么办法，用的是aval">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    
+    <body>
+        <div class="wrapper">
+            <h2>mmRouter</h2>
+            <fieldset>
+                <legend>Name 路由器</legend>
+                <p>
+                    <a href="avalon.mmRouter.old.doc.html">旧版文档</a>
+                    <a href="https://github.com/gogoyqj/avalon.oniui/blob/master/mmRouter/README.md">迁移教程</a>
+                </p>
+                <p>路由器插件，实现类似angular ui-router的功能</p>
+                <h5>常见问题及解决方案</h5>
+                <div style="color:red;">1、TypeError: avalon.require is not a function --mmState.js 有什么办法，用的是avalon.shim.js
+                    - 重写avalon.controller.loader这个函数，参考下边具体的文档说明</div>
+                <br>
+                <a href="https://github.com/RubyLouvre/mmRouter/issues/71">更多问题</a>
+                <h5>mmRouter的使用</h5>1、引入依赖(直接依赖于mmRouter, 总共依赖于avalon, mmRouter, mmHistory)
+                <pre
+                class="brush:javascript;gutter:false;toolbar:false;">require(["mmRouter"], function() {})</pre>2、定义VM
+                    <pre class="brush:javascript;gutter:false;toolbar:false;">    var model = avalon.define('test', function(vm) {
+        vm.currPath = ""
+        vm.params = {}
+        vm.query = {}
+        vm.args = "[]"
+    })</pre>3、定义路由规则
+                    <pre class="brush:javascript;gutter:false;toolbar:false;"> function callback() {
+     model.currPath = this.path
+     var params = this.params
+     if ("time" in params) {
+         params.time = avalon.filters.date(params.time, "yyyy年M月dd日")
+     }
+     model.params = params
+     model.query = this.query
+     model.args = "[" + [].slice.call(arguments, 0) + "]"
+
+ }
+ avalon.router.get("/aaa/", callback)
+ avalon.router.get("/bbb", callback)
+ avalon.router.get("/ccc/:ccc", callback)
+ avalon.router.get("/ddd/{time:date}/", callback)
+ avalon.router.get("/eee/{count:\\d{4}}/", callback)
+ avalon.router.get("/fff", callback)</pre>4、启动历史管理器
+                    <pre class="brush:javascript;gutter:false;toolbar:false;"> avalon.history.start({
+     basepath: "/avalon"
+ })</pre>5、开始扫描
+                    <pre class="brush:javascript;gutter:false;toolbar:false;">avalon.scan()</pre>6、页面上的链接处理，所有不想跳转不想刷新整面的A标签，都需要以`#!`/或`#/`开头 （这个由历史管理器的`hashPrefix`参数决定，默认是`!`），target属性指向当前页面．
+                    <pre
+                    class="brush:html;gutter:false;toolbar:false;">&lt;ul&gt; &lt;li&gt; &lt;a href="#!/aaa"&gt;aaa&lt;/a&gt; &lt;/li&gt;
+                        &lt;li&gt; &lt;a href="#!/bbb?uu=3445345&amp;were=4324"&gt;bbb&lt;/a&gt;
+                        &lt;/li&gt; &lt;li&gt; &lt;a href="#!/ccc/etretr"&gt;ccc&lt;/a&gt; &lt;/li&gt;
+                        &lt;li&gt; &lt;a href="#!/ddd/2014-09-19"&gt;ddd&lt;/a&gt; &lt;/li&gt;
+                        &lt;li&gt; &lt;a href="#!/eee/2222"&gt;eee&lt;/a&gt; &lt;/li&gt; &lt;li&gt;
+                        &lt;a href="#!/fff?a=1&amp;nn=4&amp;dfg=676"&gt;fff&lt;/a&gt; &lt;/li&gt;
+                        &lt;/ul&gt;</pre>mmRouter与mmHistory的API列表
+                        <br>`avalon.history.start(opts)`， 开始监听URL变化，opts。 enter image description
+                        here
+                        <br>`avalon.history.stop()`， 中止监听URL变化。
+                        <br>`avalon.router.get(path, callback)`，用于添加路由规则。第一个为路由规则，
+                        <br>如"/aaa", "/bbb/:bbbId","/eee/{eeeId}/ddd/{dddId:[0-9]{6}}" 冒号后的东西或花括号的东西表示为参数，
+                        <br>花括号模式下还可以指定匹配规则。callback为回调函数，框架会将冒号后的或花括中的匹配内容传进来，
+                        <br>此外this对象，包含了path、 params、 query等对象与属性。
+                        <br>`'/hello/'` - 匹配'/hello/'或'/hello'
+                        <br>`'/user/:id'` - 匹配 '/user/bob' 或 '/user/1234!!!' 或 '/user/' 但不匹配 '/user'
+                        与 '/user/bob/details'
+                        <br>`'/user/{id}'` - 同上
+                        <br>`'/user/{id:[^/]*}'` - 同上
+                        <br>`'/user/{id:[0-9a-fA-F]{1,8}}'` - 要求ID匹配/[0-9a-fA-F]{1,8}/这个子正则
+                        <br>`'/files/{path:.*}'` - Matches any URL starting with '/files/' and captures
+                        the rest of the
+                        <br>path into the parameter 'path'.
+                        <br>`'/files/*path'` - ditto.
+                        <br>
+                        <pre class="brush:javascript;gutter:false;toolbar:false;"> avalon.router.get("/ddd/:dddID/", callback)
+ avalon.router.get("/ddd/{dddID}/", callback)
+ avalon.router.get("/ddd/{dddID:[0-9]{4}}/", callback)
+ avalon.router.get("/ddd/{dddID:int}/", callback)
+ 我们甚至可以在这里添加新的类型， avalon.router.$type.d4 = {
+     pattern: '[0-9]{4}',
+     decode: Number
+ }
+ avalon.router.get("/ddd/{dddID:d4}/", callback)</pre>`avalon.router.add(method, path, callback)` ， 添加回调，第一个为请求类型， 如GET，POST，DELETE什么，
+                        第2个为路由规则，第3个为回调函数 `avalon.router.error(callback)`，如果没有一条路由规则满足此请求，那么就转交此回调处理，
+                        我们可以在里面写跳转到404页面这样的逻辑 `avalon.router.navigate(path)`，强制触发对应路径的回调 `avalon.router.setLastPath(path)`
+                        ， 这是框架自己调用，保存最近一次跳转的路径 `avalon.router.getLastPath()` 取得最近一次跳转的路径，比如用户F5强制页面，你在ready回调中执行此方法，
+                        得到path，然后将它放进navigate中就能回到原来的页面了。
+                        <h3>路由器与多个VM的协作（每个VM定义在不同的JS文件中）</h3>
+            </fieldset>
+            <h3 class="table-doc-title">使用说明</h3>
+            <table class="table-doc" border="1">
+                <colgroup>
+                    <col width="180">
+                        <col width="95">
+                            <col width="120">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>名字</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="4">接口方法与固有属性</td>
+                    </tr>
+                    <tr>
+                        <td>start(options)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>avalon.history.start 开始监听历史变化
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>options</td>
+                                        <td></td>
+                                        <td>options 配置参数</td>
+                                    </tr>
+                                    <tr>
+                                        <td>options.hashPrefix</td>
+                                        <td></td>
+                                        <td>hash以什么字符串开头，默认是 "!"，对应实际效果就是"#!"</td>
+                                    </tr>
+                                    <tr>
+                                        <td>options.routeElementJudger</td>
+                                        <td></td>
+                                        <td>判断a元素是否是触发router切换的链接的函数，return true则触发切换，默认为avalon.noop，history内部有一个判定逻辑，是先判定a元素的href属性是否以hashPrefix开头，如果是则当做router切换元素，因此综合判定规则是
+                                            href.indexOf(hashPrefix) == 0 || routeElementJudger(ele, ele.href)，如果routeElementJudger返回true则跳转至href，如果返回的是字符串，则跳转至返回的字符串，如果返回false则返回浏览器默认行为</td>
+                                    </tr>
+                                    <tr>
+                                        <td>options.html5Mode</td>
+                                        <td></td>
+                                        <td>是否采用html5模式，即不使用hash来记录历史，默认false</td>
+                                    </tr>
+                                    <tr>
+                                        <td>options.fireAnchor</td>
+                                        <td></td>
+                                        <td>决定是否将滚动条定位于与hash同ID的元素上，默认为true</td>
+                                    </tr>
+                                    <tr>
+                                        <td>options.basepath</td>
+                                        <td></td>
+                                        <td>根目录，默认为"/"</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>redirect(hash)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>avalon.router.redirect
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>hash</td>
+                                        <td></td>
+                                        <td>hash 访问的url hash</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>navigate(hash,options)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>avalon.router.navigate
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>hash</td>
+                                        <td></td>
+                                        <td>hash 访问的url hash</td>
+                                    </tr>
+                                    <tr>
+                                        <td>options</td>
+                                        <td></td>
+                                        <td>options 扩展配置</td>
+                                    </tr>
+                                    <tr>
+                                        <td>options.replace</td>
+                                        <td></td>
+                                        <td>true替换history，否则生成一条新的历史记录</td>
+                                    </tr>
+                                    <tr>
+                                        <td>options.silent</td>
+                                        <td></td>
+                                        <td>true表示只同步url，不触发url变化监听绑定</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>when(path,redirect)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>avalon.router.when 配置重定向规则
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>path</td>
+                                        <td></td>
+                                        <td>path 被重定向的表达式，可以是字符串或者数组</td>
+                                    </tr>
+                                    <tr>
+                                        <td>redirect</td>
+                                        <td></td>
+                                        <td>redirect 重定向的表示式或者url</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>get(path,callback)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>avalon.router.get 添加一个router规则
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>path</td>
+                                        <td></td>
+                                        <td>path url表达式</td>
+                                    </tr>
+                                    <tr>
+                                        <td>callback</td>
+                                        <td></td>
+                                        <td>callback 对应这个url的回调</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>go(toName,params,options)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>avalon.router.go 跳转到一个已定义状态上，params对参数对象
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>toName</td>
+                                        <td></td>
+                                        <td>toName 状态name</td>
+                                    </tr>
+                                    <tr>
+                                        <td>params</td>
+                                        <td></td>
+                                        <td>params 附加参数</td>
+                                    </tr>
+                                    <tr>
+                                        <td>options</td>
+                                        <td></td>
+                                        <td>params.query 在hash后面附加的类似search的参数对</td>
+                                    </tr>
+                                    <tr>
+                                        <td>options</td>
+                                        <td></td>
+                                        <td>扩展配置</td>
+                                    </tr>
+                                    <tr>
+                                        <td>options.reload</td>
+                                        <td></td>
+                                        <td>true强制reload，即便url、参数并未发生变化</td>
+                                    </tr>
+                                    <tr>
+                                        <td>options.replace</td>
+                                        <td></td>
+                                        <td>true替换history，否则生成一条新的历史记录</td>
+                                    </tr>
+                                    <tr>
+                                        <td>options.confirmed</td>
+                                        <td></td>
+                                        <td>true不触发onBeforeUnload,$onBeforeUnload,onBeforeExit</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>state(stateName,opts)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>avalon.state 对avalon.router.get 进行重新封装，生成一个状态对象
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>stateName</td>
+                                        <td></td>
+                                        <td>stateName 指定当前状态名</td>
+                                    </tr>
+                                    <tr>
+                                        <td>opts</td>
+                                        <td></td>
+                                        <td>opts 配置</td>
+                                    </tr>
+                                    <tr>
+                                        <td>opts.url</td>
+                                        <td></td>
+                                        <td>当前状态对应的路径规则，与祖先状态们组成一个完整的匹配规则</td>
+                                    </tr>
+                                    <tr>
+                                        <td>opts.ignoreChange</td>
+                                        <td>Function</td>
+                                        <td>当mmState.currentState == this时，更新视图的时候调用该函数，return true mmRouter则不会去重写视图和scan，请确保该视图内用到的数据没有放到avalon
+                                            vmodel $skipArray内</td>
+                                    </tr>
+                                    <tr>
+                                        <td>opts.controller</td>
+                                        <td></td>
+                                        <td>如果不写views属性,则默认view为""，为默认的view指定一个控制器，该配置会直接作为avalon.controller的参数生成一个$ctrl对象</td>
+                                    </tr>
+                                    <tr>
+                                        <td>opts.controllerUrl</td>
+                                        <td></td>
+                                        <td>指定默认view控制器的路径，适用于模块化开发，该情形下默认通过avalon.controller.loader去加载一个符合amd规范，并返回一个avalon.controller定义的对象，传入opts.params作参数</td>
+                                    </tr>
+                                    <tr>
+                                        <td>opts.controllerProvider</td>
+                                        <td></td>
+                                        <td>指定默认view控制器的提供者，它可以是一个Promise，也可以为一个函数，传入opts.params作参数 @param opts.viewCache
+                                            是否缓存这个模板生成的dom，设置会覆盖dom元素上的data-view-cache，也可以分别配置到views上每个单独的view上</td>
+                                    </tr>
+                                    <tr>
+                                        <td>opts.views</td>
+                                        <td></td>
+                                        <td>如果不写views属性,则默认view【ms-view=""】为""，也可以通过指定一个viewname属性来配置【ms-view="viewname"】，对多个[ms-view]容器进行处理,每个对象应拥有template,
+                                            templateUrl, templateProvider，可以给每个对象搭配一个controller||controllerUrl||controllerProvider属性
+                                            views的结构为
+                                            <pre>{
+"": {template: "xxx"}
+"aaa": {template: "xxx"}
+"bbb@": {template: "xxx"}
+}
+</pre>views的每个键名(keyname)的结构为viewname@statename， 如果名字不存在@，则viewname直接为keyname，statename为opts.stateName
+                                            如果名字存在@, viewname为match[0], statename为match[1]</td>
+                                    </tr>
+                                    <tr>
+                                        <td>opts.views.{viewname}.template</td>
+                                        <td></td>
+                                        <td>指定当前模板，也可以为一个函数，传入opts.params作参数，* @param opts.views.viewname.cacheController
+                                            是否缓存view的控制器，默认true</td>
+                                    </tr>
+                                    <tr>
+                                        <td>opts.views.{viewname}.templateUrl</td>
+                                        <td></td>
+                                        <td>指定当前模板的路径，也可以为一个函数，传入opts.params作参数</td>
+                                    </tr>
+                                    <tr>
+                                        <td>opts.views.{viewname}.templateProvider</td>
+                                        <td></td>
+                                        <td>指定当前模板的提供者，它可以是一个Promise，也可以为一个函数，传入opts.params作参数</td>
+                                    </tr>
+                                    <tr>
+                                        <td>opts.views.{viewname}.ignoreChange</td>
+                                        <td></td>
+                                        <td>用法同state.ignoreChange，只是针对的粒度更细一些，针对到具体的view</td>
+                                    </tr>
+                                    <tr>
+                                        <td>opts.onBeforeEnter</td>
+                                        <td>Function</td>
+                                        <td>切入某个state之前触发，this指向对应的state，如果return false则会中断并退出整个状态机</td>
+                                    </tr>
+                                    <tr>
+                                        <td>opts.onEnter</td>
+                                        <td>Function</td>
+                                        <td>进入状态触发，可以返回false，或任意不为true的错误信息或一个promise对象，用法跟视图的$onEnter一致</td>
+                                    </tr>
+                                    <tr>
+                                        <td>onEnter.params</td>
+                                        <td>Function</td>
+                                        <td>视图所属的state的参数</td>
+                                    </tr>
+                                    <tr>
+                                        <td>onEnter.resolve</td>
+                                        <td>Function</td>
+                                        <td>$onEnter return false的时候，进入同步等待，直到手动调用resolve</td>
+                                    </tr>
+                                    <tr>
+                                        <td>onEnter.reject</td>
+                                        <td>Function</td>
+                                        <td>数据加载失败，调用</td>
+                                    </tr>
+                                    <tr>
+                                        <td>opts.onBeforeExit</td>
+                                        <td>Function</td>
+                                        <td>state退出前触发，this指向对应的state，如果return false则会中断并退出整个状态机</td>
+                                    </tr>
+                                    <tr>
+                                        <td>opts.onExit</td>
+                                        <td>Function</td>
+                                        <td>退出后触发，this指向对应的state</td>
+                                    </tr>
+                                    <tr>
+                                        <td>opts.ignoreChange.changeType</td>
+                                        <td></td>
+                                        <td>值为"param"，表示params变化，值为"query"，表示query变化</td>
+                                    </tr>
+                                    <tr>
+                                        <td>opts.ignoreChange.viewname</td>
+                                        <td></td>
+                                        <td>关联的ms-view name</td>
+                                    </tr>
+                                    <tr>
+                                        <td>opts.abstract</td>
+                                        <td></td>
+                                        <td>表示它不参与匹配，this指向对应的state</td>
+                                    </tr>
+                                    <tr>
+                                        <td>opts.parentState</td>
+                                        <td>private</td>
+                                        <td>父状态对象（框架内部生成）</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>config(config)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>avalon.state.config 全局配置
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>config</td>
+                                        <td>Object</td>
+                                        <td>config 配置对象</td>
+                                    </tr>
+                                    <tr>
+                                        <td>config.onBeforeUnload</td>
+                                        <td>Function</td>
+                                        <td>开始切前的回调，this指向router对象，第一个参数是fromState，第二个参数是toState，return false可以用来阻止切换进行</td>
+                                    </tr>
+                                    <tr>
+                                        <td>config.onAbort</td>
+                                        <td>Function</td>
+                                        <td>onBeforeUnload return false之后，触发的回调，this指向mmState对象，参数同onBeforeUnload</td>
+                                    </tr>
+                                    <tr>
+                                        <td>config.onUnload</td>
+                                        <td>Function</td>
+                                        <td>url切换时候触发，this指向mmState对象，参数同onBeforeUnload</td>
+                                    </tr>
+                                    <tr>
+                                        <td>config.onBegin</td>
+                                        <td>Function</td>
+                                        <td>开始切换的回调，this指向mmState对象，参数同onBeforeUnload，如果配置了onBegin，则忽略begin</td>
+                                    </tr>
+                                    <tr>
+                                        <td>config.onLoad</td>
+                                        <td>Function</td>
+                                        <td>切换完成并成功，this指向mmState对象，参数同onBeforeUnload</td>
+                                    </tr>
+                                    <tr>
+                                        <td>config.onViewEnter</td>
+                                        <td>Function</td>
+                                        <td>视图插入动画函数，有一个默认效果</td>
+                                    </tr>
+                                    <tr>
+                                        <td>config.onViewEnter.arguments[0]</td>
+                                        <td>Node</td>
+                                        <td>新视图节点</td>
+                                    </tr>
+                                    <tr>
+                                        <td>config.onViewEnter.arguments[1]</td>
+                                        <td>Node</td>
+                                        <td>旧的节点</td>
+                                    </tr>
+                                    <tr>
+                                        <td>config.onError</td>
+                                        <td>Function</td>
+                                        <td>出错的回调，this指向对应的state，第一个参数是一个object，object.type表示出错的类型，比如view表示加载出错，object.name则对应出错的view
+                                            name，object.xhr则是当使用默认模板加载器的时候的httpRequest对象，第二个参数是对应的state</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>getQuery()</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>state.getQuery 获取state的query，等价于state.query
+                            <pre>onEnter: function() {
+var query = this.getQuery()
+or
+this.query
+}
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>getParams()</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>state.getParams 获取state的params，等价于state.params
+                            <pre>onEnter: function() {
+var params = this.getParams()
+or
+this.params
+}
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>controller()</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>avalon.controller 给avalon.state视图对象配置控制器
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>name</td>
+                                        <td></td>
+                                        <td>控制器名字</td>
+                                    </tr>
+                                    <tr>
+                                        <td>factory</td>
+                                        <td>Function</td>
+                                        <td>控制器函数，传递一个内部生成的控制器对象作为参数</td>
+                                    </tr>
+                                    <tr>
+                                        <td>factory.arguments[0]</td>
+                                        <td>Object</td>
+                                        <td>$ctrl 控制器的第一个参数：实际生成的控制器对象</td>
+                                    </tr>
+                                    <tr>
+                                        <td>$ctrl.$vmodels</td>
+                                        <td>Object</td>
+                                        <td>给视图指定一个scan的vmodels数组，实际scan的时候$vmodels.concat(dom树上下文继承的vmodels)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>$ctrl.$onBeforeUnload</td>
+                                        <td>Function</td>
+                                        <td>该视图被卸载前触发，return false可以阻止视图卸载，并阻止跳转</td>
+                                    </tr>
+                                    <tr>
+                                        <td>$ctrl.$onEnter</td>
+                                        <td>Function</td>
+                                        <td>给该视图加载数据，可以返回false，或任意不为true的错误信息或一个promise对象，传递3个参数</td>
+                                    </tr>
+                                    <tr>
+                                        <td>$ctrl.$onEnter.arguments[0]</td>
+                                        <td>Object</td>
+                                        <td>params第一个参数：视图所属的state的参数</td>
+                                    </tr>
+                                    <tr>
+                                        <td>$ctrl.$onEnter.arguments[1]</td>
+                                        <td>Function</td>
+                                        <td>resolve $onEnter 第二个参数：return false的时候，进入同步等待，直到手动调用resolve</td>
+                                    </tr>
+                                    <tr>
+                                        <td>$ctrl.$onEnter.arguments[2]</td>
+                                        <td>Function</td>
+                                        <td>reject 第三个参数：数据加载失败，调用</td>
+                                    </tr>
+                                    <tr>
+                                        <td>$ctrl.$onRendered</td>
+                                        <td>Function</td>
+                                        <td>视图元素scan完成之后，调用</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>loader(url,callback)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>avalon.controller.loader avalon.controller异步引入模块的加载器，默认是通过avalon.require加载</td>
+                    </tr>
+                    <tr>
+                        <td>templateLoader(url,resolve,reject,reason)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>avalon.state.templateLoader 通过url异步加载模板的函数，默认是通过内置的httpRequest去加载，但是在node-webkit环境是不work的，因此开放了这个配置，用以自定义url模板加载器，会在一个promise实例里调用这个方法去加载模板
+                            <table
+                            border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>url</td>
+                                        <td></td>
+                                        <td>url 模板地址</td>
+                                    </tr>
+                                    <tr>
+                                        <td>resolve</td>
+                                        <td></td>
+                                        <td>resolve 加载成功，如果需要缓存模板，请调用
+                                            <br>resolve(avalon.templateCache[url] = templateString)
+                                            <br>否则，请调用
+                                            <br>resolve(templateString)
+                                            <br>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>reject</td>
+                                        <td></td>
+                                        <td>reject 加载失败，请调用reject(reason)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>reason</td>
+                                        <td></td>
+                                        <td>reason 挂在失败原因的对象</td>
+                                    </tr>
+                                </tbody>
+            </table>
+            </td>
+            </tr>
+            </tbody>
+            </table>
+            <ul class="example-links">
+                <li>
+                    <a href="avalon.mmRouter.ex.html">mmRouter综合实例一: avalon.get</a>
+                </li>
+                <li>
+                    <a href="avalon.mmRouter.ex1.html">mmRouter综合示例二: avalon.router + avalon.state</a>
+                </li>
+                <li>
+                    <a href="avalon.mmRouter.ex2.html">mmRouter综合示例三: scrolltoview</a>
+                </li>
+                <li>
+                    <a href="avalon.mmRouter.ex3.html">mmRouter试验田: 最新版mmRouter试验田</a>
+                </li>
+                <li>
+                    <a href="avalon.mmRouter.ex4.html">mmRouter: avalon.state</a>
+                </li>
+                <li>
+                    <a href="avalon.mmRouter.ex5.html">mmRouter综合示例五: html5Mode[pushState,popState]，可能需要服务器支持</a>
+                </li>
+                <li>
+                    <a href="avalon.mmRouter.ex6.html">mmRouter：登录跳转</a>
+                </li>
+                <li>
+                    <a href="avalon.mmRouter.ex7.html">mmRouter：异步</a>
+                </li>
+                <li>
+                    <a href="avalon.mmRouter.ex8.html">todos</a>
+                </li>
+                <li>
+                    <a href="avalon.mmRouter.ex9.html">mmRouter-基于状态机的路由器</a>
+                </li>
+            </ul>
+        </div>
+    </body>
+
+</html>

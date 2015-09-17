@@ -1,0 +1,99 @@
+
+/*
+这是每个都组件都应该引用的部分
+*/
+.oni-camera {
+  position: relative;
+  margin: 0 auto;
+  overflow: hidden;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none; }
+  .oni-camera .oni-camera-panel {
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden; }
+    .oni-camera .oni-camera-panel .oni-camera-item {
+      position: relative;
+      height: 100%;
+      display: -moz-inline-stack;
+      display: inline-block;
+      vertical-align: middle;
+      *vertical-align: auto;
+      zoom: 1;
+      *display: inline;
+      overflow: hidden;
+      text-align: center;
+      background-color: #f2f2f2; }
+      .oni-camera .oni-camera-panel .oni-camera-item img {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        -moz-transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        -o-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+        position: static\0;
+        transform: translate(0, 0) \0;
+        *top: 0;
+        *left: 0; }
+    .oni-camera .oni-camera-panel .oni-camera-fakehover {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0; }
+      .oni-camera .oni-camera-panel .oni-camera-fakehover .fakepart {
+        display: -moz-inline-stack;
+        display: inline-block;
+        vertical-align: middle;
+        *vertical-align: auto;
+        zoom: 1;
+        *display: inline;
+        position: absolute; }
+  .oni-camera .oni-camera-selection-wrap {
+    position: absolute;
+    bottom: 4%;
+    left: 50%; }
+    .oni-camera .oni-camera-selection-wrap a {
+      display: -moz-inline-stack;
+      display: inline-block;
+      vertical-align: middle;
+      *vertical-align: auto;
+      zoom: 1;
+      *display: inline;
+      width: 10px;
+      height: 10px;
+      margin: 0 5px;
+      background-color: white;
+      filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60);
+      opacity: 0.6;
+      border-radius: 50%;
+      cursor: pointer; }
+    .oni-camera .oni-camera-selection-wrap .selected {
+      background-color: #00a3c2; }
+  .oni-camera .arrow {
+    position: absolute;
+    top: 50%;
+    width: 30px;
+    height: 30px;
+    margin: -15px 0 0 -15px;
+    cursor: pointer; }
+  .oni-camera .prev {
+    left: 7%;
+    background: url(http://source.qunarzz.com/general/oniui/camera/arrows-left-icon.png) no-repeat; }
+  .oni-camera .prev:hover {
+    background: url(http://source.qunarzz.com/general/oniui/camera/arrows-left-hover-icon.png) no-repeat; }
+  .oni-camera .after {
+    left: 93%;
+    background: url(http://source.qunarzz.com/general/oniui/camera/arrows-right-icon.png) no-repeat; }
+  .oni-camera .after:hover {
+    background: url(http://source.qunarzz.com/general/oniui/camera/arrows-right-hover-icon.png) no-repeat; }
+
+/*# sourceMappingURL=avalon.camera.css.map */

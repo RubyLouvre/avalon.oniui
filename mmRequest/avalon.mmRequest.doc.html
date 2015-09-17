@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>Name ajax请求</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <meta name="descriptions" content="avalon AJAX组件
+ 它提供如下方法
+avalon.ajax 要求传入一个对象， 对象要有url, type, success, dataType等属性，这与jQuery的设置保持一致
+avlaon.get( url [, data ] [, success(data, textStatus, XHR) ] [, dataType ] )
+avlaon.post( url [, data ] [, success(data, textStatus, XHR) ] [, dataType ] )
+avlaon.upload( url, form [,">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    
+    <body>
+        <div class="wrapper">
+            <h2>mmRequest</h2>
+            <fieldset>
+                <legend>Name ajax请求</legend>
+                <p>avalon AJAX组件</p>它提供如下方法
+                <p>avalon.ajax 要求传入一个对象， 对象要有url, type, success, dataType等属性，这与jQuery的设置保持一致</p>
+                <p>avlaon.get( url [, data ] [, success(data, textStatus, XHR) ] [, dataType
+                    ] )</p>
+                <p>avlaon.post( url [, data ] [, success(data, textStatus, XHR) ] [, dataType
+                    ] )</p>
+                <p>avlaon.upload( url, form [,data] [,success(data, textStatus, XHR)] [,
+                    dataType])</p>
+                <p>avalon.getJSON( url [, data ] [, success( data, textStatus, jqXHR ) ]
+                    )</p>
+                <p>avalon.getScript( url [, success() ] )</p>
+                <p>avalon.param(obj) 将一个对象转换为字符串</p>
+                <p>avalon.unparam(str) 将一个字符串转换为对象</p>
+                <pre class="brush:javascript;gutter:false;toolbar:false;">   var b = avalon.unparam("a=1&amp;b=2")
+   console.log(b) == &gt; {
+       a: "1",
+       b: "2"
+   }
+   var b2 = avalon.unparam("a[]=1&amp;a[]=2&amp;a[]=3&amp;d=false")
+   console.log(b2) == &gt; {
+       a: ["1", "2", "3"],
+       d: false
+   }</pre>
+                <p>avalon.serializ(form) 将表单元素变字符串 用法与jQuery的同名方法用法完全一样，将avalon.js, mmRequest.js,
+                    mmDeferred.js放到同一目录下，然后</p>
+                <pre class="brush:html;gutter:false;toolbar:false;">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    
+    &lt;head&gt;
+        &lt;title&gt;&lt;/title&gt;
+        &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8"&gt;
+        &lt;script src="avalon.js"&gt;&lt;/script&gt;
+        &lt;!--不能直接用script引入mmRequest.js--&gt;
+        &lt;script&gt;
+            var avalonAjax
+            var model = avalon.define("test", function(vm) {
+                vm.username = ""
+                vm.password = ""
+                vm.email = ""
+                vm.ajax = function(e) {
+                    if (avalonAjax) {
+                        avalon.post("/registry", avalon.serialize(this), function(a) {
+                            alert(a)
+                        }, "text")
+                    }
+                    e.preventDefault()
+                }
+            })
+
+            require(["./mmRequest"], function(avalon) {
+                avalonAjax = avalon.ajax
+                avalon.log(avalonAjax)
+            })
+        &lt;/script&gt;
+    &lt;/head&gt;
+    
+    &lt;body&gt;
+        &lt;h3&gt;测试AJAX&lt;/h3&gt;
+        &lt;ul&gt;
+            &lt;li&gt;avalon.ajax&lt;/li&gt;
+            &lt;li&gt;avalon.post&lt;/li&gt;
+            &lt;li&gt;avalon.get&lt;/li&gt;
+            &lt;li&gt;avalon.upload&lt;/li&gt;
+        &lt;/ul&gt;
+        &lt;form action="/registry" ms-controller="test" ms-on-submit="ajax"&gt;
+            &lt;div&gt;帐号:
+                &lt;input name="username" ms-duplex="username"&gt;
+            &lt;/div&gt;
+            &lt;div&gt;密码:
+                &lt;input name="password" ms-duplex="password"&gt;
+            &lt;/div&gt;
+            &lt;div&gt;邮箱:
+                &lt;input name="email" ms-duplex="email"&gt;
+            &lt;/div&gt;
+            &lt;button type="submit"&gt;提交&lt;/button&gt;
+        &lt;/form&gt;
+    &lt;/body&gt;
+
+&lt;/html&gt;</pre>如果想上传东西,可以使用
+                <pre class="brush:javascript;gutter:false;toolbar:false;">  avalon.ajax({
+      contentType: "multipart/form-data",
+      data: formData //这是一个formData 对象,详看这里https://developer.mozilla.org/zh-CN/docs/Web/Guide/Using_FormData_Objects
+      type: "post", //get也可以
+      url: url,
+      success: callback,
+      dataType: dataType //你想返回什么类型的数据给你
+
+  })
+
+  //或者用upload方法
+  avalon.upload(url, form, data, callback ? , dataType ? )</pre>
+            </fieldset>
+            <h3 class="table-doc-title">使用说明</h3>
+            <table class="table-doc" border="1">
+                <colgroup>
+                    <col width="180">
+                        <col width="95">
+                            <col width="120">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>名字</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                        <th>说明</th>
+                    </tr>
+                </tbody>
+            </table>
+            <ul class="example-links">
+                <li>
+                    <a href="avalon.mmRequest.ex.html">mmRequest-getJSON</a>
+                </li>
+                <li>
+                    <a href="avalon.mmRequest.ex1.html">mmRequest-getScript</a>
+                </li>
+                <li>
+                    <a href="avalon.mmRequest.ex2.html">mmRequest-post</a>
+                </li>
+                <li>
+                    <a href="avalon.mmRequest.ex3.html">mmRequest-get</a>
+                </li>
+            </ul>
+        </div>
+    </body>
+
+</html>

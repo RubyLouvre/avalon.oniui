@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>验证框架</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js">
+
+        </script>
+        <script src="../highlight/shCore.js">
+
+        </script>
+        <style >
+            .error{
+                border:1px  solid red;
+            }
+            .success{
+                border:1px  solid greenyellow;
+            }
+            .error-tip{
+                color: red;
+                background:pink;
+            }
+        </style>
+        <script>
+            require(["validation/avalon.validation", "ready!"], function() {
+                var validationVM
+
+                function showError(el, data) {
+                    var next = el.nextSibling
+                    if (!(next && next.className === "error-tip")) {
+                        next = document.createElement("div")
+                        next.className = "error-tip"
+                        el.parentNode.appendChild(next)
+                    }
+                    next.innerHTML = data.getMessage()
+                }
+                function removeError(el) {
+                    var next = el.nextSibling
+                    while (next) {
+                        if (next.className === "error-tip") {
+                            el.parentNode.removeChild(next)
+                            break
+                        }
+                         next = next.nextSibling
+                    }
+
+                }
+                avalon.define({
+                    $id: "test",
+                    $skipArray: ["validation"],
+                    a: "",
+                    b: 4,
+                    c: false,
+                    d: [1, 5],
+                    reset: function() {
+                        validationVM && validationVM.resetAll()
+                    },
+                    validation: {
+                        onInit: function(v) {
+                            validationVM = v
+                        },
+                        resetInFocus: false,
+                        onReset: function(e, data) {
+                            data.valueResetor && data.valueResetor()
+                            avalon(this).removeClass("error success")
+                            removeError(this)
+                        },
+                        onError: function(reasons) {
+                            reasons.forEach(function(reason) {
+                                avalon(this).removeClass("success").addClass("error")
+                                showError(this, reason)
+                            }, this)
+                        },
+                        onSuccess: function() {
+                            avalon(this).removeClass("error").addClass("success")
+                            removeError(this)
+                        },
+                        onValidateAll: function(reasons) {
+                            reasons.forEach(function(reason) {
+                                avalon(reason.element).removeClass("success").addClass("error")
+                                showError(reason.element, reason)
+                            })
+                            if (reasons.length === 0) {
+                                avalon.log("全部验证成功！")
+                            }
+                        }
+                    }
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body>
+        <form ms-controller="test" ms-widget="validation">
+            <h3>验证组件</h3>
+            <p><input ms-duplex-required="a" placeholder="不能为空"></p>
+            <p><input ms-duplex-int-number="b" placeholder="必须输入整数"></p>
+            <p><input ms-duplex-contains-boolean="c" type="radio" value="true" data-duplex-contains="true"><input ms-duplex-boolean="c" type="radio" value="false"></p>
+            <p>
+                <input type="checkbox" ms-duplex-number="d" value="1" />
+                <input type="checkbox" ms-duplex-number="d" value="2" />
+                <input type="checkbox" ms-duplex-number="d" value="3"/>
+                <input type="checkbox" ms-duplex-number="d" value="4" />
+                <input type="checkbox" ms-duplex-number-contain="d" value="5" data-duplex-contain="2,3"/>
+            </p>
+
+            <button type="submit">submit
+            </button>
+            <button type="button" ms-click="reset">reset
+            </button>
+        </form>
+    </body>
+</html>

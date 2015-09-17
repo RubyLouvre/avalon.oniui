@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>kindeditor</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <meta name="descriptions" content="kindeditor文本编辑器组件
+ ">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    
+    <body>
+        <div class="wrapper">
+            <h2>kindeditor</h2>
+            <fieldset>
+                <legend>kindeditor</legend>
+                <p>kindeditor文本编辑器组件</p>
+            </fieldset>
+            <h3 class="table-doc-title">使用说明</h3>
+            <table class="table-doc" border="1">
+                <colgroup>
+                    <col width="180">
+                        <col width="95">
+                            <col width="120">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>名字</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="4">配置参数</td>
+                    </tr>
+                    <tr>
+                        <td>$options</td>
+                        <td>Object</td>
+                        <td>{ wellFormatMode: false //美化HTML数据，默认为false，美化HTML在duplex模式下会额外触发变量的改变事件
+                            }</td>
+                        <td>传递给kindeditor的配置项</td>
+                    </tr>
+                    <tr>
+                        <td>onInit</td>
+                        <td>Member</td>
+                        <td>avalon.noop</td>
+                        <td>初始化时执行方法</td>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="4">接口方法与固有属性</td>
+                    </tr>
+                    <tr>
+                        <td>$instance</td>
+                        <td>Object</td>
+                        <td>null</td>
+                        <td>kindeditor实例引用</td>
+                    </tr>
+                    <tr>
+                        <td>$init()</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>组件初始化函数</td>
+                    </tr>
+                    <tr>
+                        <td>remove()</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>textarea移除编辑器，删除属性并回收vmodel</td>
+                    </tr>
+                    <tr>
+                        <td>$remove()</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>当组件移出DOM树时,系统自动调用的销毁函数</td>
+                    </tr>
+                </tbody>
+            </table>
+            <ul class="example-links">
+                <li>
+                    <a href="avalon.kindeditor.ex1.html">默认配置</a>
+                </li>
+                <li>
+                    <a href="avalon.kindeditor.ex2.html">简单模式</a>
+                </li>
+                <li>
+                    <a href="avalon.kindeditor.ex3.html">异步加载</a>
+                </li>
+                <li>
+                    <a href="avalon.kindeditor.ex4.html">多语言设置</a>
+                </li>
+                <li>
+                    <a href="avalon.kindeditor.ex5.html">只读模式</a>
+                </li>
+                <li>
+                    <a href="avalon.kindeditor.ex6.html">统计字数</a>
+                </li>
+                <li>
+                    <a href="avalon.kindeditor.ex7.html">异步修改数据</a>
+                </li>
+            </ul>
+        </div>
+    </body>
+
+</html>

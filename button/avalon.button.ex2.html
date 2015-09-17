@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>button demo 2</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+        <script src="../highlight/shCore.js"></script>
+        <script type="text/javascript" src="../avalon.js"></script>
+        <style>
+            body {
+                padding-bottom: 200px;
+            }
+            fieldset > div {
+                margin-bottom: 20px;
+            }
+            .inline {
+                display: inline-block;
+            }
+        </style>
+    </head>
+    <body ms-controller="demo">
+        <fieldset>
+            <legend>size 、width 、color and disabled config</legend>
+            <div>
+                <button ms-widget="button" data-button-size="small" >size small</button>
+                <button ms-widget="button">size default</button>
+                <div ms-widget="button" data-button-width="100">custom width</div>
+                <button ms-widget="button" data-button-size="big">size big</button>
+                <button ms-widget="button" data-button-size="large">size large</button>
+            </div>
+            <div>
+                <button ms-widget="button" data-button-type="icon" data-button-icon="\&\#xf038;" data-button-icon-position="left" data-button-size="small" >icon only</button>
+                <button ms-widget="button" data-button-type="labeledIcon" data-button-icon="\&\#xf038;" data-button-icon-position="left">icon left</button>
+                <button ms-widget="button" data-button-type="labeledIcon" data-button-icon="\&\#xf038;" data-button-icon-position="left" data-button-width="120">icon left</button>
+                <button ms-widget="button" data-button-type="labeledIcon" data-button-icon="\&\#xf038;" data-button-icon-position="right" data-button-size="big">icon right</button>
+                <button ms-widget="button" data-button-type="labeledIcon" data-button-icon="\&\#xf047;-\&\#xf03e;" data-button-icon-position="left-right" data-button-size="large">icon left right</button>
+            </div>
+            <div>
+                <button ms-widget="button" data-button-type="icon" data-button-icon="\&\#xf038;" data-button-icon-position="left" data-button-size="small" data-button-color="primary">color primary</button>
+                <button ms-widget="button" data-button-type="labeledIcon" data-button-icon="\&\#xf038;" data-button-icon-position="left" data-button-color="warning">color warning</button>
+                <button ms-widget="button" data-button-type="labeledIcon" data-button-icon="\&\#xf038;" data-button-icon-position="left" data-button-color="inverse">color inverse</button>
+                <button ms-widget="button" data-button-type="labeledIcon" data-button-icon="\&\#xf038;" data-button-icon-position="left" data-button-width="120" data-button-color="danger">color danger</button>
+                <button ms-widget="button" data-button-type="labeledIcon" data-button-icon="\&\#xf038;" data-button-icon-position="right" data-button-size="big" data-button-color="success">color success</button>
+                <button ms-widget="button" data-button-type="labeledIcon" data-button-icon="\&\#xf047;-\&\#xf03e;" data-button-icon-position="left-right" data-button-size="large" data-button-color="info">color info</button>
+            </div>
+            <div>
+                <span ms-widget="button" data-button-disabled="true" data-button-type="icon" data-button-icon="\&\#xf038;" data-button-icon-position="left" data-button-size="small" data-button-color="primary">color primary</span>
+                <button ms-widget="button" data-button-disabled="true" data-button-type="labeledIcon" data-button-icon="\&\#xf038;" data-button-icon-position="left" data-button-color="warning">color warning</button>
+                <button ms-widget="button" data-button-disabled="true" data-button-type="labeledIcon" data-button-icon="\&\#xf038;" data-button-icon-position="left" data-button-color="inverse">color inverse</button>
+                <span ms-widget="button" data-button-disabled="true" data-button-type="labeledIcon" data-button-icon="\&\#xf038;" data-button-icon-position="left" data-button-width="120" data-button-color="danger">color danger</span>
+                <button ms-widget="button" data-button-disabled="true" data-button-type="labeledIcon" data-button-icon="\&\#xf038;" data-button-icon-position="right" data-button-size="big" data-button-color="success">color success</button>
+                <button ms-widget="button" data-button-disabled="true" data-button-type="labeledIcon" data-button-icon="\&\#xf047;-\&\#xf03e;" data-button-icon-position="left-right" data-button-size="large" data-button-color="info">color info</button>
+            </div>
+        </fieldset>
+        <script>
+            require(["./button/avalon.button"], function() {
+                avalon.define("demo", function(vm) {
+                    
+                })
+                avalon.scan()
+            })
+        </script>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;button demo 2&lt;/title&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width"&gt;
+        &lt;link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/&gt;
+        &lt;link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/&gt;
+        &lt;script src="../highlight/shCore.js"&gt;&lt;/script&gt;
+        &lt;script type="text/javascript" src="../avalon.js"&gt;&lt;/script&gt;
+        &lt;style&gt;
+            body {
+                padding-bottom: 200px;
+            }
+            fieldset &gt; div {
+                margin-bottom: 20px;
+            }
+            .inline {
+                display: inline-block;
+            }
+        &lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body ms-controller="demo"&gt;
+        &lt;fieldset&gt;
+            &lt;legend&gt;size 、width 、color and disabled config&lt;/legend&gt;
+            &lt;div&gt;
+                &lt;button ms-widget="button" data-button-size="small" &gt;size small&lt;/button&gt;
+                &lt;button ms-widget="button"&gt;size default&lt;/button&gt;
+                &lt;button ms-widget="button" data-button-width="100"&gt;custom width&lt;/button&gt;
+                &lt;button ms-widget="button" data-button-size="big"&gt;size big&lt;/button&gt;
+                &lt;button ms-widget="button" data-button-size="large"&gt;size large&lt;/button&gt;
+                
+            &lt;/div&gt;
+            &lt;div&gt;
+                &lt;button ms-widget="button" data-button-type="icon" data-button-icon="\&\#xf038;" data-button-icon-position="left" data-button-size="small" &gt;icon only&lt;/button&gt;
+                &lt;button ms-widget="button" data-button-type="labeledIcon" data-button-icon="\&\#xf038;" data-button-icon-position="left"&gt;icon left&lt;/button&gt;
+                &lt;button ms-widget="button" data-button-type="labeledIcon" data-button-icon="\&\#xf038;" data-button-icon-position="left" data-button-width="120"&gt;icon left&lt;/button&gt;
+                &lt;button ms-widget="button" data-button-type="labeledIcon" data-button-icon="\&\#xf038;" data-button-icon-position="right" data-button-size="big"&gt;icon right&lt;/button&gt;
+                &lt;button ms-widget="button" data-button-type="labeledIcon" data-button-icon="\&\#xf001;-\&\#xf06b;" data-button-icon-position="left-right" data-button-size="large"&gt;icon left right&lt;/button&gt;
+            &lt;/div&gt;
+            &lt;div&gt;
+                &lt;button ms-widget="button" data-button-type="icon" data-button-icon="\&\#xf038;" data-button-icon-position="left" data-button-size="small" data-button-color="primary"&gt;color primary&lt;/button&gt;
+                &lt;button ms-widget="button" data-button-type="labeledIcon" data-button-icon="\&\#xf038;" data-button-icon-position="left" data-button-color="warning"&gt;color warning&lt;/button&gt;
+                &lt;button ms-widget="button" data-button-type="labeledIcon" data-button-icon="\&\#xf038;" data-button-icon-position="left" data-button-color="inverse"&gt;color inverse&lt;/button&gt;
+                &lt;button ms-widget="button" data-button-type="labeledIcon" data-button-icon="\&\#xf038;" data-button-icon-position="left" data-button-width="120" data-button-color="danger"&gt;color danger&lt;/button&gt;
+                &lt;button ms-widget="button" data-button-type="labeledIcon" data-button-icon="\&\#xf038;" data-button-icon-position="right" data-button-size="big" data-button-color="success"&gt;color success&lt;/button&gt;
+                &lt;button ms-widget="button" data-button-type="labeledIcon" data-button-icon="\&\#xf001;-\&\#xf06b;" data-button-icon-position="left-right" data-button-size="large" data-button-color="info"&gt;color info&lt;/button&gt;
+            &lt;/div&gt;
+            &lt;div&gt;
+                &lt;button ms-widget="button" data-button-disabled="true" data-button-type="icon" data-button-icon="\&\#xf038;" data-button-icon-position="left" data-button-size="small" data-button-color="primary"&gt;color primary&lt;/button&gt;
+                &lt;button ms-widget="button" data-button-disabled="true" data-button-type="labeledIcon" data-button-icon="\&\#xf038;" data-button-icon-position="left" data-button-color="warning"&gt;color warning&lt;/button&gt;
+                &lt;button ms-widget="button" data-button-disabled="true" data-button-type="labeledIcon" data-button-icon="\&\#xf038;" data-button-icon-position="left" data-button-color="inverse"&gt;color inverse&lt;/button&gt;
+                &lt;button ms-widget="button" data-button-disabled="true" data-button-type="labeledIcon" data-button-icon="\&\#xf038;" data-button-icon-position="left" data-button-width="120" data-button-color="danger"&gt;color danger&lt;/button&gt;
+                &lt;button ms-widget="button" data-button-disabled="true" data-button-type="labeledIcon" data-button-icon="\&\#xf038;" data-button-icon-position="right" data-button-size="big" data-button-color="success"&gt;color success&lt;/button&gt;
+                &lt;button ms-widget="button" data-button-disabled="true" data-button-type="labeledIcon" data-button-icon="\&\#xf001;-\&\#xf06b;" data-button-icon-position="left-right" data-button-size="large" data-button-color="info"&gt;color info&lt;/button&gt;
+            &lt;/div&gt;
+        &lt;/fieldset&gt;
+        &lt;script&gt;
+            require(["./button/avalon.button"], function() {
+                avalon.define("demo", function(vm) {
+                    
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;     
+    &lt;/body&gt;
+&lt;/html&gt;       
+            </pre>
+        </div>
+    </body>
+</html>

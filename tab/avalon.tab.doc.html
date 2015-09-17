@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>tab组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <meta name="descriptions" content=" 实现扫描DOM结构或者接受数组传参，生成tab，支持click、mouseenter事件响应切换，支持mouseenter情形延迟响应切换，支持click情形tab选中情况下再次点击回调，支持自动切换效果，支持tab增删禁用启用并可混合设置同步tab可删除状态，支持混合配制panel内容类型并支持panel内容是ajax配置回调，注意扫描dom情形下，会销毁原有的dom，且会忽略所有的ol，ul，li元素上原有的绑定
+
+ ">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    
+    <body>
+        <div class="wrapper">
+            <h2>tab</h2>
+            <fieldset>
+                <legend>tab组件</legend>
+                <p>实现扫描DOM结构或者接受数组传参，生成tab，支持click、mouseenter事件响应切换，支持mouseenter情形延迟响应切换，支持click情形tab选中情况下再次点击回调，支持自动切换效果，支持tab增删禁用启用并可混合设置同步tab可删除状态，支持混合配制panel内容类型并支持panel内容是ajax配置回调，注意扫描dom情形下，会销毁原有的dom，且会忽略所有的ol，ul，li元素上原有的绑定</p>
+            </fieldset>
+            <h3 class="table-doc-title">使用说明</h3>
+            <table class="table-doc" border="1">
+                <colgroup>
+                    <col width="180">
+                        <col width="95">
+                            <col width="120">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>名字</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="4">配置参数</td>
+                    </tr>
+                    <tr>
+                        <td>target</td>
+                        <td>String</td>
+                        <td>"_blank"</td>
+                        <td>tab item链接打开的方式，可以使_blank,_self,_parent</td>
+                    </tr>
+                    <tr>
+                        <td>toggle</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>组件是否显示，可以通过设置为false来隐藏组件</td>
+                    </tr>
+                    <tr>
+                        <td>autoSwitch</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>是否自动切换，默认否，如果需要设置自动切换，请传递整数，例如200，即200ms</td>
+                    </tr>
+                    <tr>
+                        <td>active</td>
+                        <td>Number</td>
+                        <td>0</td>
+                        <td>默认选中的tab，默认第一个tab，可以通过动态设置该参数的值来切换tab，并可通过vmodel.tabs.length来判断active是否越界</td>
+                    </tr>
+                    <tr>
+                        <td>shallPanelAlwaysShow</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>shallPanelAlwaysShow() panel不通过display:none,block来切换，而是一直显示，通过其他方式切换到视野，默认为false</td>
+                    </tr>
+                    <tr>
+                        <td>event</td>
+                        <td>String</td>
+                        <td>"mouseenter"</td>
+                        <td>tab选中事件，默认mouseenter</td>
+                    </tr>
+                    <tr>
+                        <td>removable</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>是否支持删除，默认否，另外可能存在某些tab可以删除，某些不可以删除的情况，如果某些tab不能删除则需要在li元素或者tabs数组里给对应的元素指定removable
+                            : false，例如 li data-removable="false" or {title: "xxx", removable: false}</td>
+                    </tr>
+                    <tr>
+                        <td>preScanPannel</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>是否需要先扫面元素，再创建widget，默认否</td>
+                    </tr>
+                    <tr>
+                        <td>activeDelay</td>
+                        <td>Number</td>
+                        <td>0</td>
+                        <td>比较适用于mouseenter事件情形，延迟切换tab，例如200，即200ms</td>
+                    </tr>
+                    <tr>
+                        <td>collapsible</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>当切换面板的事件为click时，如果对处于激活状态的按钮再点击，将会它失去激活并且对应的面板会收起来,再次点击它时，它还原，并且对应面板重新出现</td>
+                    </tr>
+                    <tr>
+                        <td>contentType</td>
+                        <td>String</td>
+                        <td>"content"</td>
+                        <td>panel是静态元素，还是需要通过异步载入，还可取值为ajax，但是需要给对应的panel指定一个正确的ajax地址</td>
+                    </tr>
+                    <tr>
+                        <td>bottom</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>tab显示在底部</td>
+                    </tr>
+                    <tr>
+                        <td>dir</td>
+                        <td>String</td>
+                        <td>"h"</td>
+                        <td>tab排列方向，横向或纵向v - vertical，默认横向h - horizontal</td>
+                    </tr>
+                    <tr>
+                        <td>callInit</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>是否调用即初始化</td>
+                    </tr>
+                    <tr>
+                        <td>titleCutCount</td>
+                        <td>Number</td>
+                        <td>8</td>
+                        <td>tab title截取长度，默认是8</td>
+                    </tr>
+                    <tr>
+                        <td>distroyDom</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>扫描dom获取数据，是否销毁dom</td>
+                    </tr>
+                    <tr>
+                        <td>cutEnd</td>
+                        <td>String</td>
+                        <td>"..."</td>
+                        <td>tab title截取字符后，连接的字符，默认为省略号</td>
+                    </tr>
+                    <tr>
+                        <td>sliderStep</td>
+                        <td>String</td>
+                        <td>"100%"</td>
+                        <td>点击slider箭头移动的距离</td>
+                    </tr>
+                    <tr>
+                        <td>forceCut</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>强制截断，因为竖直方向默认是不截取的，因此添加一个强制截断，使得在纵向排列的时候title也可以被截断</td>
+                    </tr>
+                    <tr>
+                        <td>onInit</td>
+                        <td>Member</td>
+                        <td>avalon.noop</td>
+                        <td>onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method</td>
+                    </tr>
+                    <tr>
+                        <td>tabContainerGetter(element)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>tabContainerGetter(element) tab容器，如果指定，则到该容器内扫描tabs，参数为绑定组件的元素，默认返回element内第一个ul或者ol元素</td>
+                    </tr>
+                    <tr>
+                        <td>panelContainerGetter(element)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>panelContainerGetter(element) panel容器，如果指定，则到该容器内扫描panel，参数为绑定组件的元素，默认返回第element内第一个div元素</td>
+                    </tr>
+                    <tr>
+                        <td>onActivate</td>
+                        <td>Member</td>
+                        <td>avalon.noop</td>
+                        <td>onActivate(event, vmode) 选中tab后的回调，this指向对应的li元素，参数是事件对象，vm对象 fn(event,
+                            vmode)，默认为avalon.noop</td>
+                    </tr>
+                    <tr>
+                        <td>onClickActive</td>
+                        <td>Member</td>
+                        <td>avalon.noop</td>
+                        <td>onClickActive(event, vmode) 点击选中的tab，适用于event是"click"的情况，this指向对应的li元素，参数是事件对象，vm对象
+                            fn(event, vmode)，默认为avalon.noop</td>
+                    </tr>
+                    <tr>
+                        <td>onAjaxCallback</td>
+                        <td>Member</td>
+                        <td>avalon.noop</td>
+                        <td>onAjaxCallback panel内容是ajax，ajax响应后的回调函数，this指向对应的panel元素，无参数，默认为空函数</td>
+                    </tr>
+                    <tr>
+                        <td>getTemplate(template,vm,tplName)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>getTemplate(template, vm, tplName) 修改模板的接口，参数分别是模板字符串，vm对象，模板名字，返回如果是空字符串则对应的tplName(close,panel,tab)返回为空，return
+                            false,null,undedined等于返回组件自带的模板，其他情况为返回值，默认返回组件自带的模板</td>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="4">接口方法与固有属性</td>
+                    </tr>
+                    <tr>
+                        <td>disable(index,disable)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>disable(index) 禁用索引指向的tab，index为数字或者元素为数字的数组</td>
+                    </tr>
+                    <tr>
+                        <td>enable(index)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>enable(index) 启用索引指向的tab，index为数字或者元素为数字的数组</td>
+                    </tr>
+                    <tr>
+                        <td>add(config)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>add(config) 新增tab, config = {title: "tab title", removable: bool, disabled:
+                            bool, content: "panel content", contentType: "ajax" or "content"}</td>
+                    </tr>
+                    <tr>
+                        <td>remove(e,index)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>remove(e, index) 删除索引指向的tab，绑定情形下ms-click="remove($event, index)"，js调用则是vm.remove(index)</td>
+                    </tr>
+                </tbody>
+            </table>
+            <ul class="example-links">
+                <li>
+                    <a href="avalon.tab.ex.html">扫描dom树获取数据</a>
+                </li>
+                <li>
+                    <a href="avalon.tab.ex1.html">传参配置数据 - mouseenter切换tab</a>
+                </li>
+                <li>
+                    <a href="avalon.tab.ex2.html">传参配置数据 - 点击切换tab</a>
+                </li>
+                <li>
+                    <a href="avalon.tab.ex3.html">传参配置数据 - 自动切换tab</a>
+                </li>
+                <li>
+                    <a href="avalon.tab.ex4.html">传参配置数据 - mouseenter延迟切换tab - 纵向排列效果</a>
+                </li>
+                <li>
+                    <a href="avalon.tab.ex5.html">传参配置数据 - click切换tab，修改默认模板 - 纵向排列字数多出效果</a>
+                </li>
+                <li>
+                    <a href="avalon.tab.ex6.html">传参配置数据 - mouseenter延迟切换tab - 小尺寸横向排列效果</a>
+                </li>
+                <li>
+                    <a href="avalon.tab.ex7.html">传参配置数据 - click切换tab - 纵向排列字数多出强制截断并且不要省略号效果</a>
+                </li>
+                <li>
+                    <a href="avalon.tab.ex8.html">使用ms-repeat生成html结构</a>
+                </li>
+                <li>
+                    <a href="avalon.tab.ex9.html">tab很多以slider形式展示</a>
+                </li>
+            </ul>
+        </div>
+    </body>
+
+</html>

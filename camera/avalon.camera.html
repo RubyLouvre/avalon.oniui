@@ -1,0 +1,46 @@
+<div id="oni-camera"
+	 class="oni-camera"
+	 ms-css-width="pictureWidth"
+	 ms-css-height="pictureHeight"
+	 ms-mouseenter="stopPlay"
+	 ms-mouseleave="restartPlay('carousel')"
+	 >
+	<div id="oni-camera-panel"
+		 class="oni-camera-panel"
+		 >
+		<div class="oni-camera-item"
+			 ms-repeat="pictures"
+			 ms-css-width="pictureWidth"
+			 ms-css-height="pictureHeight"
+			 ms-visible="$index === pictureIndex"
+			 >
+			<img ms-src="{{el}}" alt=""/>
+		</div>
+		<div class="oni-camera-fakehover"
+			 ms-visible="fakehoverVisible">
+		</div>
+	</div>
+	<div class="oni-camera-selection-wrap"
+		 ms-visible="alwaysShowSelection"
+		 ms-css-margin-left="selectionWrapOffset"
+		 >
+		<a ms-class="selected:el==selectionIndex"
+		   ms-repeat="selections"
+		   ms-click="navselect($index,$event)"
+		   ms-mouseenter="navselect($index,$event)"
+			>
+		</a>
+	</div>
+	<a  ms-class="{{arrowLeftClass}}"
+		class="arrow prev png24"
+		ms-visible="arrowVisible"
+		ms-click="lastPicture"
+	>
+	</a>
+	<a  ms-class="{{arrowRightClass}}"
+		class="arrow after png24"
+		ms-visible="arrowVisible"
+		ms-click="nextPicture"
+	>
+	</a>
+</div>

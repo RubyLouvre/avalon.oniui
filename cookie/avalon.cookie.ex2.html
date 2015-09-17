@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>cookie组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js">
+
+        </script>
+        <script src="../highlight/shCore.js">
+
+        </script>
+        <style >
+            .cookieerror input{
+                border:1px  solid red;
+                background: orangered;
+            }
+        </style>
+        <script>
+            require(["cookie/avalon.cookie"], function() {
+                var cookie = avalon.cookie
+                function getData() {
+                    var array = []
+                    avalon.each(cookie.getAll(), function(name, value) {
+                        array.push({
+                            name: name,
+                            value: value
+                        })
+                    })
+                    return array
+                }
+                var array = getData()
+                avalon.define("test", function(vm) {
+                    vm.array = array
+                    vm.name = ""
+                    vm.value = ""
+                    vm.error = false
+                    vm.add = function() {
+                        var name = vm.name.trim(), value = vm.value.trim()
+                        if (name && value) {
+                            vm.error = false
+                            cookie.set(name, value)
+                            vm.array = getData()
+                            vm.name = ""
+                            vm.value = ""
+                        } else {
+                            vm.error = true
+                        }
+                    }
+                    vm.remove = function(el, action) {
+                        cookie.remove(el.name)
+                        action()
+                    }
+                    vm.clear = function() {
+                        cookie.clear()
+                        setTimeout(function() {
+                            vm.array = getData()
+                        }, 300)
+                    }
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body>
+        <div ms-controller="test">
+            <h3>cookie列表(页面2):</h3>
+            <ul>
+                <li ms-repeat="array">{{el.name}}:{{el.value}} &nbsp;<a href="javascript:void 0" ms-click="remove(el, $remove)">remove</a></li>
+            </ul>
+            <p ms-class="cookieerror: error">name:<input ms-duplex="name">&nbsp;value:<input ms-duplex="value"/> <button ms-click="add" type="button">add</button></p>
+            <p><a href="javascript:void 0" ms-click="clear">清空所有cookie</a> </p>
+            <p><a href="avalon.cookie.ex1.html">点我,打开新页面,看数据还存在不存在</a></p>
+        </div>
+    </body>
+</html>

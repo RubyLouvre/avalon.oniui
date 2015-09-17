@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>progressbar组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <script>
+            require(["progressbar/avalon.progressbar"], function() {
+                avalon.define("test", function(vm) {
+                    vm.progressbar = {
+                        onComplete: function() {
+                            avalon.log(this)
+                            avalon.log('this bar is complete')
+                        }
+                    }
+                    vm.$skipArray = ["progressbar"]
+                    var v = 0
+                        , timer = setInterval(function() {
+                            //avalon.vmodels.$aa.value = ((100 * Math.random()) >> 0)
+                        }, 1500)
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body>
+<div ms-controller="test">
+        <h1>占比进度条，带label，左右两段，接口调用</h1>
+        <div ms-widget="progressbar,$aa" data-progressbar-value="49" data-progressbar-label="true" data-progressbar-in-two="true">
+            
+        </div>
+        <p>------------------------------------------------------------------------</p>
+        <input value="随机分段" type="button" onclick="avalon.vmodels.$aa.value = ((100 * Math.random()) >> 0)">
+        <pre ms-skip class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;progressbar组件&lt;/title&gt;
+        &lt;meta charset=&quot;UTF-8&quot;&gt;
+        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;
+        &lt;script src=&quot;../avalon.js&quot;&gt;&lt;/script&gt;
+        
+        &lt;script&gt;
+            require([&quot;progressbar/avalon.progressbar&quot;], function() {
+                avalon.define(&quot;test&quot;, function(vm) {
+                    vm.progressbar = {
+                        onComplete: function() {
+                            avalon.log(this)
+                            avalon.log('this bar is complete')
+                        }
+                    }
+                    vm.$skipArray = [&quot;progressbar&quot;]
+                    var v = 0
+                        , timer = setInterval(function() {
+                            //avalon.vmodels.$aa.value = ((100 * Math.random()) &gt;&gt; 0)
+                        }, 1500)
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+&lt;div ms-controller=&quot;test&quot;&gt;
+        &lt;h1&gt;占比进度条，带label，左右两段，接口调用&lt;/h1&gt;
+        &lt;div ms-widget=&quot;progressbar,$aa&quot; data-progressbar-value=&quot;49&quot; data-progressbar-label=&quot;true&quot; data-progressbar-in-two=&quot;true&quot;&gt;
+            
+        &lt;/div&gt;
+        &lt;p&gt;------------------------------------------------------------------------&lt;/p&gt;
+        &lt;input value=&quot;随机分段&quot; type=&quot;button&quot; onclick=&quot;avalon.vmodels.$aa.value = ((100 * Math.random()) &gt;&gt; 0)&quot;&gt;
+        
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+    </div>
+</body>
+</html>

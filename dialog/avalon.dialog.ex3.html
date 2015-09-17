@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>dialog demo 3</title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>dialog demo 3</h1>
+        <p class="example">不显示关闭按钮的dialog
+        <p><span class="useDescription">说明：</span>此demo基本使用组件默认配置，只是通过showClose的配置使得组件不显示“关闭”按钮</p>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;不显示关闭按钮的dialog（&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;div class="demo-show" ms-controller="demo"&gt;
+                        &lt;fieldset&gt;  
+                            &lt;legend&gt;取消“close”按钮的dialog&lt;/legend&gt;
+                                &lt;button ms-click="show('aa')"&gt;打开对话框&lt;/button&gt;
+                                &lt;div ms-widget="dialog,aa,$aaOpts"&gt;
+                                    呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵
+                                &lt;/div&gt;
+                        &lt;/fieldset&gt;
+                        &lt;script&gt; 
+                            require(["dialog/avalon.dialog"], function(avalon) {
+                                avalon.define("demo", function(vm) {
+                                    vm.$aaOpts = {
+                                        title: "取消“close”按钮的dialog",
+                                        showClose: false
+                                    }
+                                    vm.show = function( id ){
+                                        avalon.vmodels[id].toggle = true;
+                                    }
+                                })
+                                avalon.scan();
+                            })
+                        &lt;/script&gt;
+                    &lt;/div&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+        <div class="demo-show" ms-controller="demo">
+            <fieldset>  
+                <legend>取消“close”按钮的dialog</legend>
+                    <button ms-click="show('aa')">打开对话框</button>
+                    <div ms-widget="dialog,aa,$aaOpts">
+                        呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵
+                    </div>
+            </fieldset>
+            <script> 
+                require(["dialog/avalon.dialog"], function(avalon) {
+                    avalon.define("demo", function(vm) {
+                        vm.$aaOpts = {
+                            title: "取消“close”按钮的dialog",
+                            showClose: false
+                        }
+                        vm.show = function( id ){
+                            avalon.vmodels[id].toggle = true;
+                        }
+                    })
+                    avalon.scan();
+                })
+            </script>
+        </div>
+    </div>
+</body>
+</html>
+

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>Name 具有提示功能的输入框</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <meta name="descriptions" content="通过给简单的表单输入域设置不同的配置项可以使表单拥有舒服的视觉效果，也可以使其具有提示补全功能
+
+ ">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    
+    <body>
+        <div class="wrapper">
+            <h2>textbox</h2>
+            <fieldset>
+                <legend>Name 具有提示功能的输入框</legend>
+                <p>通过给简单的表单输入域设置不同的配置项可以使表单拥有舒服的视觉效果，也可以使其具有提示补全功能</p>
+            </fieldset>
+            <h3 class="table-doc-title">使用说明</h3>
+            <table class="table-doc" border="1">
+                <colgroup>
+                    <col width="180">
+                        <col width="95">
+                            <col width="120">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>名字</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="4">配置参数</td>
+                    </tr>
+                    <tr>
+                        <td>suggest</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>配置输入框有自动提示补全功能，提示类型由用户自定义，默认配置为false，也就是不开启自动补全功能</td>
+                    </tr>
+                    <tr>
+                        <td>suggestDisableLetter</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>配置输入框进行自动提示补全时，是否对字母进行过滤，默认配置为false,也就是说输入值包含字母时也会进行自动补全</td>
+                    </tr>
+                    <tr>
+                        <td>autoTrim</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>是否自动过滤用户输入的内容头部和尾部的空格</td>
+                    </tr>
+                    <tr>
+                        <td>tabIndex</td>
+                        <td>Unary</td>
+                        <td>-1</td>
+                        <td>配置textbox在进行tab切换时的tabIndex，切换顺序从值小的开始，必须配置为大于0的值</td>
+                    </tr>
+                    <tr>
+                        <td>width</td>
+                        <td>Unary</td>
+                        <td>-1</td>
+                        <td>配置textbox的显示宽</td>
+                    </tr>
+                    <tr>
+                        <td>adaptiveHeight</td>
+                        <td>Object</td>
+                        <td>""</td>
+                        <td>使textbox自适应高度，并可以配置自适应时的minHeight/maxHeight</td>
+                    </tr>
+                    <tr>
+                        <td>autoFocus</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>如果想要鼠标悬停在textbox上时就focus textbox，设置此属性为true即可</td>
+                    </tr>
+                    <tr>
+                        <td>disabledClass</td>
+                        <td>String</td>
+                        <td>"oni-textbox-disabled"</td>
+                        <td>配置输入域disabled时组件包装元素设置的类，多个类以空格分隔</td>
+                    </tr>
+                    <tr>
+                        <td>getTemplate(tmp)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>模板函数,方便用户自定义模板
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>str</td>
+                                        <td>String</td>
+                                        <td>默认模板</td>
+                                    </tr>
+                                    <tr>
+                                        <td>opts</td>
+                                        <td>Object</td>
+                                        <td>vmodel</td>
+                                    </tr>
+                                    <tr>
+                                        <td>返回</td>
+                                        <td>String</td>
+                                        <td>新模板</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>stateClass</td>
+                        <td>String</td>
+                        <td>""</td>
+                        <td>为textbox添加样式，默认可以添加oni-textbox-error</td>
+                    </tr>
+                    <tr>
+                        <td>suggestOnChange</td>
+                        <td>String</td>
+                        <td>""</td>
+                        <td>配置提示补全时切换提示项之后的callback</td>
+                    </tr>
+                    <tr>
+                        <td>suggestFocus</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>特殊的suggest，当focus时即显示特定的提示列表</td>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="4">接口方法与固有属性</td>
+                    </tr>
+                    <tr>
+                        <td>widgetElement</td>
+                        <td>String</td>
+                        <td>""</td>
+                        <td>绑定组件元素的dom对象的引用</td>
+                    </tr>
+                </tbody>
+            </table>
+            <ul class="example-links">
+                <li>
+                    <a href="avalon.textbox.ex1.html">基本textbox、配置了width、tabIndex的textbox以及配置了disabledClass的textbox</a>
+                </li>
+                <li>
+                    <a href="avalon.textbox.ex2.html">拥有占位符的textbox</a>
+                </li>
+                <li>
+                    <a href="avalon.textbox.ex3.html">切换禁用textbox</a>
+                </li>
+                <li>
+                    <a href="avalon.textbox.ex4.html">有自动补全功能的textbox</a>
+                </li>
+                <li>
+                    <a href="avalon.textbox.ex5.html">无视用户输入的自动补全</a>
+                </li>
+                <li>
+                    <a href="avalon.textbox.ex6.html">添加回调操作的自动补全</a>
+                </li>
+                <li>
+                    <a href="avalon.textbox.ex7.html">自适应高度textarea</a>
+                </li>
+            </ul>
+        </div>
+    </body>
+
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>duplexHooks</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=8" />
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <script>
+            require(["mask/avalon.mask.js"], function() {
+                var a = avalon.define({
+                    $id: "test",
+                    aaa: "",
+                    bbb: "",
+                    ccc: "",
+                    ddd: "",
+                    eee: ""
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body ms-controller="test">
+        <p>日期 <input ms-duplex-mask="aaa"
+                     data-duplex-mask="9999/99/99"
+                     data-duplex-mask-show-if-hover="true"
+                     data-duplex-mask-clear-if-pristine="false" /></p>
+        <p>时间 <input ms-duplex-mask="bbb"
+                     data-duplex-mask="99/99/99"
+                     data-duplex-mask-show-if-hover="true"
+                     data-duplex-mask-clear-if-pristine="false" /></p>
+        <p>日期+时间 <input ms-duplex-mask="ccc"
+                        data-duplex-mask="9999/99/99 99:99:99"
+                        data-duplex-mask-show-if-hover="true"
+                        data-duplex-mask-clear-if-pristine="false" /></p>
+        <p>邮政编码 <input ms-duplex-mask="ddd"
+                       data-duplex-mask="999999"
+                       data-duplex-mask-show-if-hover="true"
+                       data-duplex-mask-translations="{S:{pattern: /[012]/}}"
+                       data-duplex-mask-clear-if-pristine="false" /></p>
+        <p>IP地址 <input ms-duplex-mask="eee"
+                       data-duplex-mask="S99.S99.S99.S99"
+                       data-duplex-mask-show-if-hover="true"
+                       data-duplex-mask-translations="{S:{pattern: /[012]/}}"
+                       data-duplex-mask-clear-if-pristine="false" /></p>
+        <pre class="brush:html;gutter:false;toolbar:false">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta charset="utf-8"&gt;
+        &lt;title&gt;duplexHooks&lt;/title&gt;
+        &lt;meta http-equiv="X-UA-Compatible" content="IE=8" /&gt;
+        &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+        &lt;script&gt;
+            require(["mask/avalon.mask.js"], function() {
+                var a = avalon.define({
+                    $id: "test",
+                    aaa: "",
+                    bbb: "",
+                    ccc: "",
+                    ddd: "",
+                    eee: ""
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body ms-controller="test"&gt;
+        &lt;p&gt;日期 &lt;input ms-duplex-mask="aaa"
+                     data-duplex-mask="9999/99/99"
+                     data-duplex-mask-show-if-hover="true"
+                     data-duplex-mask-clear-if-pristine="false" /&gt;&lt;/p&gt;
+        &lt;p&gt;时间 &lt;input ms-duplex-mask="bbb"
+                     data-duplex-mask="99/99/99"
+                     data-duplex-mask-show-if-hover="true"
+                     data-duplex-mask-clear-if-pristine="false" /&gt;&lt;/p&gt;
+        &lt;p&gt;日期+时间 &lt;input ms-duplex-mask="ccc"
+                        data-duplex-mask="9999/99/99 99:99:99"
+                        data-duplex-mask-show-if-hover="true"
+                        data-duplex-mask-clear-if-pristine="false" /&gt;&lt;/p&gt;
+        &lt;p&gt;邮政编码 &lt;input ms-duplex-mask="ddd"
+                       data-duplex-mask="999999"
+                       data-duplex-mask-show-if-hover="true"
+                       data-duplex-mask-translations="{S:{pattern: /[012]/}}"
+                       data-duplex-mask-clear-if-pristine="false" /&gt;&lt;/p&gt;
+        &lt;p&gt;IP地址 &lt;input ms-duplex-mask="eee"
+                       data-duplex-mask="S99.S99.S99.S99"
+                       data-duplex-mask-show-if-hover="true"
+                       data-duplex-mask-translations="{S:{pattern: /[012]/}}"
+                       data-duplex-mask-clear-if-pristine="false" /&gt;&lt;/p&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+      
+        </pre>
+    </body>
+</html>

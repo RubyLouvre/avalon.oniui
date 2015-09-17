@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>datepicker demo </title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>datepicker demo</h1>
+        <div class="demo-show" ms-controller="demo">
+            <fieldset style="position: relative; z-index: 2">
+                <legend>toggle切换日期的显示隐藏</legend>
+                <input ms-widget="datepicker, a"/>
+                <button ms-click="toggleDatepicker" style="float:right;">toggle calendar</button>
+                <p>说明：可以通过toggle切换datepicker的显示与隐藏</p>
+            </fieldset>
+            <fieldset style="position: relative; z-index: 1">
+                <legend>calendarLabel配置日历的说明label</legend>
+                <input ms-widget="datepicker" data-datepicker-calendar-label="选择你的日期" />
+                <p>说明：配置calendarLabel来显示你独特的日历说明</p>
+            </fieldset>
+            <script> 
+                require(["datepicker/avalon.datepicker"], function(avalon) {
+                    var model = avalon.define("demo", function(vm) {
+                        vm.toggleDatepicker = function(event) {
+                            avalon.vmodels.a.toggle = !avalon.vmodels.a.toggle;
+                            event.stopPropagation();
+                        }
+                    })
+                    avalon.scan();
+                })
+            </script>
+        </div>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;datepicker demo&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;div class="demo-show" ms-controller="demo"&gt;
+                        &lt;fieldset style="position: relative; z-index: 2"&gt;
+                            &lt;legend&gt;toggle切换日期的显示隐藏&lt;/legend&gt;
+                            &lt;input ms-widget="datepicker, a"/&gt;
+                            &lt;button ms-click="toggleDatepicker" style="float:right;"&gt;toggle calendar&lt;/button&gt;
+                            &lt;p&gt;说明：可以通过toggle切换datepicker的显示与隐藏&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset style="position: relative; z-index: 1"&gt;
+                            &lt;legend&gt;calendarLabel配置日历的说明label&lt;/legend&gt;
+                            &lt;input ms-widget="datepicker" data-datepicker-calendar-label="选择你的日期" /&gt;
+                            &lt;p&gt;说明：配置calendarLabel来显示你独特的日历说明&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;script&gt; 
+                            require(["datepicker/avalon.datepicker"], function(avalon) {
+                                var model = avalon.define("demo", function(vm) {
+                                    vm.toggleDatepicker = function(event) {
+                                        avalon.vmodels.a.toggle = !avalon.vmodels.a.toggle;
+                                        event.stopPropagation();
+                                    }
+                                })
+                                avalon.scan();
+                            })
+                        &lt;/script&gt;
+                    &lt;/div&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+    </div>
+</body>
+</html>
+

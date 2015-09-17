@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>draggable</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../highlight/shCore.js">
+
+        </script>
+        <script src="../avalon.js">
+
+        </script>
+        <script>
+            require(["resizable/avalon.resizable"], function() {
+                avalon.define("test", function() {
+                })
+                avalon.scan()
+            })
+
+        </script>
+        <style>
+            .drag {
+                position: absolute;
+                border: 1px solid #89B;
+                background: #BCE;
+                height: 100px;
+                width: 100px;
+                top: 120px;
+            }     
+        </style>
+    </head>
+    <body>
+        <h1>缩放textarea, select,  input等元素</h1>
+        <div ms-controller="test">
+            <textarea class="drag" style="left:20px;" ms-resizable ></textarea>
+            <select style=" position: absolute;top:300px" ms-resizable>
+                <option>111</option>
+                <option>222</option>
+                <option>333</option>
+            </select>
+
+            <input style=" position: absolute;top:300px;left:400px" value="这个也可以放缩" ms-resizable>
+        </div>
+
+
+    </body>
+</html>

@@ -1,0 +1,51 @@
+<div class="oni-dropdown"
+     ms-class="oni-state-disabled:!enable"
+     ms-class-1="{{titleClass}}"
+     ms-css-width="{{width}}"
+     ms-class-2="oni-state-focus: focusClass"
+     ms-hover="oni-state-hover"
+     ms-mouseenter="_titleenter"
+     ms-mouseleave="_titleleave"
+     ms-keydown="_keydown"
+     tabindex="0">
+    <div class="oni-dropdown-source">
+        <div class="oni-dropdown-input"
+             ms-attr-title="title"
+             ms-css-width="titleWidth"
+             id="title-MS_OPTION_ID">{{label|sanitize|html}}</div>
+        <div class="oni-dropdown-icon-wrap">
+            <i class="oni-dropdown-icon oni-icon oni-icon-angle-up"
+               ms-visible="toggle">&#xf028;</i>
+            <i class="oni-dropdown-icon oni-icon oni-icon-angle-down"
+               ms-visible="!toggle">&#xf032;</i>
+        </div>
+    </div>
+</div>
+MS_OPTION_TEMPLATE
+<div class="oni-dropdown"
+     ms-class="oni-dropdown-menu:!multiple"
+     ms-class-1="{{listClass}}"
+     ms-css-width="{{listWidth}}"
+     ms-mouseenter="_listenter"
+     ms-mouseleave="_listleave"
+     ms-visible="toggle||multiple">
+    <div class="oni-dropdown-menu-inner"
+         ms-css-width="menuWidth"
+         ms-css-height="menuHeight"
+         ms-widget="scrollbar,scrollbar-MS_OPTION_ID" id="menu-MS_OPTION_ID">
+        <div class="oni-scrollbar-scroller"
+             id="list-MS_OPTION_ID">
+            <div ms-repeat="data" class="oni-dropdown-item"
+                 ms-click-12="_select($index, $event)"
+                 ms-attr-title="el.title||el.label"
+                 ms-visible="el.toggle"
+                 ms-hover="oni-state-hover: el.enable"
+                 ms-class-1="oni-state-disabled:!el.enable"
+                 ms-class-2="oni-state-active:isActive(el, multipleChange)"
+                 ms-class-4="oni-dropdown-group:el.group"
+                 ms-class-5="oni-dropdown-divider:el.group && !$first"
+                 data-repeat-rendered="repeatRendered"
+                 >{{el.label|sanitize|html}}</div>
+        </div>
+    </div>
+</div>

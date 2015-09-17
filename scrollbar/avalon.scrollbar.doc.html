@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>滚动条组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <meta name="descriptions" content=" 自定义滚动条样式，绑定ms-widget=&quot;scrollbar&quot;的元素内必须包含一个class=&quot;oni-scrollbar-scroller&quot;的视窗元素
+ ">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    
+    <body>
+        <div class="wrapper">
+            <h2>scrollbar</h2>
+            <fieldset>
+                <legend>滚动条组件</legend>
+                <p>自定义滚动条样式，绑定ms-widget="scrollbar"的元素内必须包含一个class="oni-scrollbar-scroller"的视窗元素</p>
+            </fieldset>
+            <h3 class="table-doc-title">使用说明</h3>
+            <table class="table-doc" border="1">
+                <colgroup>
+                    <col width="180">
+                        <col width="95">
+                            <col width="120">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>名字</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="4">配置参数</td>
+                    </tr>
+                    <tr>
+                        <td>disabled</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>组件是否被禁用，默认为否</td>
+                    </tr>
+                    <tr>
+                        <td>toggle</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>组件是否显示，可以通过设置为false来隐藏组件</td>
+                    </tr>
+                    <tr>
+                        <td>position</td>
+                        <td>String</td>
+                        <td>"right"</td>
+                        <td>scrollbar出现的位置,right右侧，bottom下侧，可能同时出现多个方向滚动条</td>
+                    </tr>
+                    <tr>
+                        <td>limitRateV</td>
+                        <td>Number</td>
+                        <td>1.5</td>
+                        <td>竖直方向，拖动头最小高度和拖动头宽度比率</td>
+                    </tr>
+                    <tr>
+                        <td>limitRateH</td>
+                        <td>Number</td>
+                        <td>1.5</td>
+                        <td>水平方向，拖动头最小宽度和高度的比率</td>
+                    </tr>
+                    <tr>
+                        <td>scrollTop</td>
+                        <td>Number</td>
+                        <td>0</td>
+                        <td>竖直方向滚动初始值，负数会被当成0，设置一个极大值等价于将拖动头置于bottom</td>
+                    </tr>
+                    <tr>
+                        <td>scrollLeft</td>
+                        <td>Number</td>
+                        <td>0</td>
+                        <td>水平方向滚动初始值，负数会被当成0处理，极大值等价于拖动头置于right</td>
+                    </tr>
+                    <tr>
+                        <td>show</td>
+                        <td>String</td>
+                        <td>"always"</td>
+                        <td>never一直不可见，scrolling滚动和hover时候可见，always一直可见</td>
+                    </tr>
+                    <tr>
+                        <td>showBarHeader</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>是否显示滚动条两端的上下箭头</td>
+                    </tr>
+                    <tr>
+                        <td>draggerHTML</td>
+                        <td>String</td>
+                        <td>""</td>
+                        <td>滚动条拖动头里，注入的html碎片</td>
+                    </tr>
+                    <tr>
+                        <td>breakOutCallback</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>breakOutCallback(["h", "up"], vmodel) 滚动到极限位置的回调，用来实现无线下拉等效果 breakOutCallback(["h",
+                            "up"], vmodel) 第一个参数是一个数组，分别是滚动条方向【h水平，v竖直】和超出极限的方向【up是向上或者向左，down是向右或者向下】，第三个参数是一个对象，包含滚动条的元素，宽高等信息</td>
+                    </tr>
+                    <tr>
+                        <td>onInit</td>
+                        <td>Member</td>
+                        <td>avalon.noop</td>
+                        <td>onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method</td>
+                    </tr>
+                    <tr>
+                        <td>viewHeightGetter(viewElement)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>viewHeightGetter(viewElement) 配置计算视窗高度计函数，默认返回innerHeight</td>
+                    </tr>
+                    <tr>
+                        <td>viewWidthGetter(viewElement)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>viewWidthGetter(viewElement) 配置计算视窗宽度计函数，默认返回innerWidth</td>
+                    </tr>
+                    <tr>
+                        <td>getTemplate(tmpl,opts)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>getTemplate(tpl, opts) 定制修改模板接口</td>
+                    </tr>
+                    <tr>
+                        <td>onScroll(newValue,oldValue,diretion,vmodel)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>onScroll(newValue, oldValue, diretion, vmodel) 滚动回调,scrollLeft or scrollTop变化的时候触发，参数为newValue,
+                            oldValue, diretion, vmodel diretion = h 水平方向，= v 竖直方向</td>
+                    </tr>
+                    <tr>
+                        <td>size</td>
+                        <td>String</td>
+                        <td>"normal"</td>
+                        <td>srollbar size,normal为10px，small为8px，large为14px</td>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="4">接口方法与固有属性</td>
+                    </tr>
+                    <tr>
+                        <td>getBars()</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>getBars()返回所有的滚动条元素，avalon元素对象</td>
+                    </tr>
+                    <tr>
+                        <td>getScroller()</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>getScroller()返回scroller avalon对象</td>
+                    </tr>
+                    <tr>
+                        <td>update(ifInit,x,y)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>update()更新滚动条状态，windowresize，内容高度变化等情况下调用，不能带参数</td>
+                    </tr>
+                    <tr>
+                        <td>scrollTo(x,y)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>scrollTo(x,y) 滚动至 x,y</td>
+                    </tr>
+                </tbody>
+            </table>
+            <ul class="example-links">
+                <li>
+                    <a href="avalon.scrollbar.ex.html">scrollbar-document.body带上下小箭头</a>
+                </li>
+                <li>
+                    <a href="avalon.scrollbar.ex1.html">scrollbar-元素带上下小箭头双滚动条</a>
+                </li>
+                <li>
+                    <a href="avalon.scrollbar.ex2.html">scrollbar-带上下小箭头嵌套</a>
+                </li>
+                <li>
+                    <a href="avalon.scrollbar.ex3.html">scrollbar-元素无上下小箭头双滚动条</a>
+                </li>
+                <li>
+                    <a href="avalon.scrollbar.ex4.html">scrollbar-滚动条hover或者滚动时候可见，初始不可见</a>
+                </li>
+                <li>
+                    <a href="avalon.scrollbar.ex5.html">scrollbar-滚动条不可见</a>
+                </li>
+            </ul>
+        </div>
+    </body>
+
+</html>

@@ -1,0 +1,19 @@
+<div class="oni-textbox" 
+     ms-class="MS_OPTION_DISABLEDCLASS:elementDisabled"
+     ms-hover="oni-textbox-hover" 
+     ms-class-1="oni-textbox-focus: focusClass" 
+     ms-class-2="{{stateClass}}">
+    <div class="oni-textbox-input-wrap">
+        <span class="oni-textbox-placeholder"
+              ms-if="!placeholderOrigin"  
+              ms-visible="toggle"
+              ms-click = "hidePlaceholder"
+              ms-css-width="placeWidth"
+        >{{placehold}}</span>
+    </div>
+    MS_OPTION_ICON
+</div>
+MS_OPTION_SUGGEST
+<div class="oni-textbox-suggest" 
+     ms-widget = "suggest,$,$suggestopts" data-suggest-notpuresuggest=true>
+</div>

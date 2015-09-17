@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>Name 图片轮播组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <meta name="descriptions" content="图片轮播，采用跑马灯效果
+">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    
+    <body>
+        <div class="wrapper">
+            <h2>carousel</h2>
+            <fieldset>
+                <legend>Name 图片轮播组件</legend>图片轮播，采用跑马灯效果</fieldset>
+            <h3 class="table-doc-title">使用说明</h3>
+            <table class="table-doc" border="1">
+                <colgroup>
+                    <col width="180">
+                        <col width="95">
+                            <col width="120">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>名字</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="4">配置参数</td>
+                    </tr>
+                    <tr>
+                        <td>pictures</td>
+                        <td>Array</td>
+                        <td>[]</td>
+                        <td>轮播图片素材，每个图片可以用对象方式配置src,alt,href,title,description</td>
+                    </tr>
+                    <tr>
+                        <td>pictureWidth</td>
+                        <td>Number</td>
+                        <td>500</td>
+                        <td>组件宽度</td>
+                    </tr>
+                    <tr>
+                        <td>pictureHeight</td>
+                        <td>Number</td>
+                        <td>200</td>
+                        <td>组件高度</td>
+                    </tr>
+                    <tr>
+                        <td>effect</td>
+                        <td>String</td>
+                        <td>"slide"</td>
+                        <td>图片切换类型，none:无特效 / fade:渐隐 / slide:滑动</td>
+                    </tr>
+                    <tr>
+                        <td>easing</td>
+                        <td>String</td>
+                        <td>"easeInOut"</td>
+                        <td>缓动类型， linear:无缓动效果 / easeIn:在过渡的开始提供缓动效果 / easeOut:在过渡的结尾提供缓动效果 / easeInOut
+                            在过渡的开始和结尾提供缓动效果</td>
+                    </tr>
+                    <tr>
+                        <td>timeout</td>
+                        <td>Number</td>
+                        <td>2500</td>
+                        <td>图片切换时间间隔</td>
+                    </tr>
+                    <tr>
+                        <td>duration</td>
+                        <td>Number</td>
+                        <td>300</td>
+                        <td>图片切换速度</td>
+                    </tr>
+                    <tr>
+                        <td>showDescription</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>显示图片描述</td>
+                    </tr>
+                    <tr>
+                        <td>alwaysShowArrow</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>显示左右切换箭头</td>
+                    </tr>
+                    <tr>
+                        <td>alwaysShowSelection</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>显示底部圆形切换部件</td>
+                    </tr>
+                    <tr>
+                        <td>autoSlide</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>自动播放</td>
+                    </tr>
+                    <tr>
+                        <td>hoverStop</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>鼠标经过停止播放</td>
+                    </tr>
+                    <tr>
+                        <td>eventType</td>
+                        <td>String</td>
+                        <td>"click"</td>
+                        <td>触发导航切换图片的事件类型，click\mouseenter\both</td>
+                    </tr>
+                    <tr>
+                        <td>arrowLeftNormalSrc</td>
+                        <td>String</td>
+                        <td>"default.png"</td>
+                        <td>左箭头正常状态图标</td>
+                    </tr>
+                    <tr>
+                        <td>arrowRightNormalSrc</td>
+                        <td>String</td>
+                        <td>"default.png"</td>
+                        <td>右箭头正常状态图标</td>
+                    </tr>
+                    <tr>
+                        <td>arrowLeftHoverSrc</td>
+                        <td>String</td>
+                        <td>"default.png"</td>
+                        <td>左箭头hover状态图标</td>
+                    </tr>
+                    <tr>
+                        <td>arrowRightHoverSrc</td>
+                        <td>String</td>
+                        <td>"default.png"</td>
+                        <td>右箭头hover状态图标</td>
+                    </tr>
+                    <tr>
+                        <td>lazyload</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>图片懒加载</td>
+                    </tr>
+                    <tr>
+                        <td>lazyloadImg</td>
+                        <td>String</td>
+                        <td>"default.png"</td>
+                        <td>懒加载loading图</td>
+                    </tr>
+                </tbody>
+            </table>
+            <ul class="example-links">
+                <li>
+                    <a href="avalon.carousel.ex.html">图片轮播组件-默认配置</a>
+                </li>
+                <li>
+                    <a href="avalon.carousel.ex1.html">图片轮播组件-自定义宽高</a>
+                </li>
+                <li>
+                    <a href="avalon.carousel.ex2.html">图片轮播组件-自定义图片切换时间间隔 / 图片切换速度</a>
+                </li>
+                <li>
+                    <a href="avalon.carousel.ex3.html">图片轮播组件-配置小部件</a>
+                </li>
+                <li>
+                    <a href="avalon.carousel.ex4.html">图片轮播组件-自定义切换动画效果</a>
+                </li>
+                <li>
+                    <a href="avalon.carousel.ex5.html">图片轮播组件-自定义动画缓动类型</a>
+                </li>
+                <li>
+                    <a href="avalon.carousel.ex6.html">图片轮播组件-自适应容器尺寸</a>
+                </li>
+                <li>
+                    <a href="avalon.carousel.ex7.html">图片轮播组件-自定义图片标题和描述</a>
+                </li>
+                <li>
+                    <a href="avalon.carousel.ex8.html">图片轮播组件-自定义懒加载loading图</a>
+                </li>
+            </ul>
+        </div>
+    </body>
+
+</html>

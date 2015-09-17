@@ -1,0 +1,22 @@
+<div class="oni-helper-reset oni-helper-clearfix oni-widget">
+     <div class="oni-helper-reset oni-helper-clearfix oni-widget oni-loading-modal" 
+          ms-class-100="oni-helper-max-index:toggle" 
+          ms-if="modal" 
+          ms-attr-id="'modal'+$loadingID" 
+          style="z-index:999;" 
+          ms-css-opacity="modalOpacity" 
+          ms-css-background-color="modalBackground" 
+          ms-visible="toggle">
+          <iframe allowTransparency="true" frameborder="none" src="javascript:''"></iframe>
+          </div>
+     <div class="oni-helper-reset oni-helper-clearfix oni-widget oni-widget-content oni-loading" 
+          ms-class-100="oni-helper-max-index:toggle" 
+          ms-visible="toggle" 
+          ms-css-width="width" 
+          ms-css-height="height" 
+          ms-css-margin-left="-width/2+'px'" 
+          ms-css-margin-top="-height/2+'px'" 
+          ms-attr-id="'oni-loading-'+$loadingID"><div 
+          ms-css-width="width" 
+          ms-css-height="height">{{MS_WIDGET_HTML}}</div></div>
+</div>

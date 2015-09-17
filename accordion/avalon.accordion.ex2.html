@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>accordion demo </title>
+<style>
+    input {
+        margin: 20px 10px;
+    }
+</style>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>accordion demo 2</h1>
+        <div class="demo-show" ms-controller="demo">
+            <div ms-widget="accordion,aa,$aaOpts">
+            </div>
+            <input type="button" ms-click="setData" value="setData"/>
+            <input type="button" ms-click="refreshData" value="refreshData"/>
+            <script>
+                require(["accordion/avalon.accordion"], function($$) {
+                    $$.define('demo',function(vm){
+                        vm.$aaOpts = {
+                            data: [{
+                                'title': '标题1',
+                                'content': '正文1<p>fasdfsdaf</p>'
+                            }, {
+                                'title': '标题2',
+                                'content': '正文2'
+                            }],
+                            mode: "nav",
+                            autoRun: false
+                        }
+                        vm.setData = function() {
+                            var data = [
+                                {
+                                    title: "new title 1",
+                                    content: "new content 1"
+                                },
+                                {
+                                    title: "new title 2",
+                                    content: "new content 2"
+                                },
+                                {
+                                    title: "new title 3",
+                                    content: "new content 3"
+                                },
+                                {
+                                    title: "new title 4",
+                                    content: "new content 4"
+                                }]
+                            avalon.vmodels["aa"].setData(data)
+                        }
+                        vm.refreshData = function() {
+                            var data = [
+                                {
+                                    title: "refresh title one",
+                                    content: "refresh content one"
+                                },{
+                                    title: "refresh title two",
+                                    content: "refresh content two"
+                                },{
+                                    title: "refresh title three",
+                                    content: "refresh content three"
+                                },{
+                                    title: "refresh title four",
+                                    content: "refresh content four"
+                                },{
+                                    title: "refresh title five",
+                                    content: "refresh content five"
+                                }]
+                            avalon.vmodels["aa"].refresh(data);
+                        }
+                    });
+                    $$.scan();
+                    avalon.vmodels["aa"].refresh();
+                });
+            </script>
+        </div>
+        <p class="example">组件面板的title和content可更新</p>
+        <p><span class="use-description">说明：</span>组件默认是“caret”mode，也就是对应caret模板，下面demo设置mode为“nav”，相应的也就应用了nav模板；并且设置autoRun为false，需要在合适的时机手动调用refresh方法渲染组件；通过调用setData方法可以重新渲染组件；调用refresh方法并传入格式正确的data也可以达到相同的效果</p>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;最基本的dialog组件&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;div class="demo-show" ms-controller="demo"&gt;
+                        &lt;div ms-widget="accordion,aa,$aaOpts"&gt;
+                        &lt;/div&gt;
+                        &lt;input type="button" ms-click="setData" value="setData"/&gt;
+                        &lt;input type="button" ms-click="refreshData" value="refreshData"/&gt;
+                        &lt;script&gt; 
+                            require(["accordion/avalon.accordion"], function($$) {
+                                $$.define('demo',function(vm){
+                                    vm.$aaOpts = {
+                                        data: [{
+                                            'title': '标题1',
+                                            'content': '正文1&lt;p&gt;fasdfsdaf&lt;/p&gt;'
+                                        }, {
+                                            'title': '标题2',
+                                            'content': '正文2'
+                                        }],
+                                        mode: "nav",
+                                        autoRun: false
+                                    }
+                                    vm.setData = function() {
+                                        var data = [
+                                            {
+                                                title: "new title 1",
+                                                content: "new content 1"
+                                            },
+                                            {
+                                                title: "new title 2",
+                                                content: "new content 2"
+                                            },
+                                            {
+                                                title: "new title 3",
+                                                content: "new content 3"
+                                            },
+                                            {
+                                                title: "new title 4",
+                                                content: "new content 4"
+                                            }]
+                                        avalon.vmodels["aa"].setData(data)
+                                    }
+                                    vm.refreshData = function() {
+                                        var data = [
+                                            {
+                                                title: "refresh title one",
+                                                content: "refresh content one"
+                                            },{
+                                                title: "refresh title two",
+                                                content: "refresh content two"
+                                            },{
+                                                title: "refresh title three",
+                                                content: "refresh content three"
+                                            },{
+                                                title: "refresh title four",
+                                                content: "refresh content four"
+                                            },{
+                                                title: "refresh title five",
+                                                content: "refresh content five"
+                                            }]
+                                        avalon.vmodels["aa"].refresh(data);
+                                    }
+                                });
+                                $$.scan();
+                                avalon.vmodels["aa"].refresh();
+                            });
+                        &lt;/script&gt;
+                    &lt;/div&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+
+    </div>
+</body>
+</html>
+

@@ -1,0 +1,108 @@
+
+@import "../chameleon/oniui-theme";
+@mixin transition($duration) {
+    -webkit-transition: $duration;
+    -moz-transition: $duration;
+    -ms-transition: $duration;
+    -o-transition: $duration;
+    transition: $duration;
+}
+$uiname : "oni-camera";
+@if($oinui-theme == smoothness) {
+	$camera: (
+		bg: #fff,
+		borderColor:#aaaaaa
+	) !global
+}
+
+.#{$uiname} {
+	// current style
+	// means #{$uiname}-bar
+	position: relative;
+	margin: 0 auto;
+	overflow: hidden;
+	@include user-select();
+	.#{$uiname}-panel {
+		height: 100%;
+		position: absolute;
+		top: 0;
+		left: 0;
+		overflow: hidden;
+
+		.#{$uiname}-item {
+			position: relative;
+			height: 100%;
+			@include inline-block();
+			overflow: hidden;
+			text-align: center;
+			background-color: #f2f2f2;
+
+			img{
+				width: 100%;
+				height: 100%;
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				@include transform(translate(-50%, -50%));
+				position: static\0;
+				transform: translate(0, 0)\0;
+				*top: 0;
+				*left: 0;
+			}
+		}
+
+		.#{$uiname}-fakehover{
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+
+			.fakepart{
+				@include inline-block();
+				position: absolute;
+			}
+		}
+	}
+	.#{$uiname}-selection-wrap{
+		position: absolute;
+		bottom: 4%;
+		left: 50%;
+		a{
+			@include inline-block();
+			width: 10px;
+			height: 10px;
+			margin: 0 5px;
+			background-color: rgb(255,255,255);
+			@include opacity(0.6);
+			border-radius: 50%;
+			cursor: pointer;
+		}
+		.selected{
+			background-color: #00a3c2;
+		}
+		
+	}
+	.arrow{
+		position: absolute;
+		top:50%;
+		width: 30px;
+		height: 30px;
+		margin: -15px 0 0 -15px;
+		cursor: pointer;
+	}
+	.prev{
+		left: 7%;
+		background: url(http://source.qunarzz.com/general/oniui/camera/arrows-left-icon.png) no-repeat;
+	}
+	.prev:hover{
+		background: url(http://source.qunarzz.com/general/oniui/camera/arrows-left-hover-icon.png) no-repeat;
+	}
+	.after{
+		left: 93%;
+		background: url(http://source.qunarzz.com/general/oniui/camera/arrows-right-icon.png) no-repeat;
+	}
+	.after:hover{
+		background: url(http://source.qunarzz.com/general/oniui/camera/arrows-right-hover-icon.png) no-repeat;
+	}
+}

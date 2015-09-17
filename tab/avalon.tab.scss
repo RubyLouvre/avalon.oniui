@@ -1,0 +1,176 @@
+
+@import "../chameleon/oniui-theme";
+$uiname : ".oni-tab";
+@if($oinui-theme == smoothness) {
+	$tab: (
+		tabBg:#f8f8f8,
+		tabHoverBg:#fff,
+		tabActiveBg:#fff,
+		tabDisabledBg:#f8f8f8,
+		tabActiveBorderColor:#fff,
+		closeBorderColor:#f8f8f8,
+		closHovereBorder:#dedede,
+		closeColor:#666,
+		smallActiveBorderColor:#3775C0,
+		tabColor:#000,
+		tabHoverColor:#000,
+		tabActiveColor:#000,
+		tabDisabledColor:$ui-state-disabled-color
+	) !global;
+} @else {
+}
+div#{$uiname} {
+	border: none;
+}
+
+#{$uiname} {
+	&-slider{
+		position:relative;
+		overflow: hidden;
+		&-enable {
+			width: 10000px;
+		}
+		&-button{
+			text-decoration: none;
+			position: absolute;
+			right: 0px;
+			top: 0px;
+			padding: 10px 4px;
+			width: 8px;
+			font-weight: bold;
+			background: #ccc;
+			z-index: 10;
+			cursor: pointer;
+			color: #000;
+			&-left{
+				left: 0;
+			}
+		}
+	}
+	& &-nav{
+		float: left;
+	}
+	& &-nav .oni-state-default{
+	    float: left;
+	    display: inline;
+	    list-style: none;
+	    text-align: center;
+	    font-size:12px;
+	    padding: 10px 20px;
+	    position: relative;
+	    background-color: map-get($tab, tabBg);
+	    cursor: pointer;
+	    border: 1px solid $ui-state-default-border-color;
+	    border-right-width: 0;
+	    color: map-get($tab, tabColor);
+	}
+	& &-nav .oni-state-default a,& &-nav .oni-state-default:link,& &-nav .oni-state-default a:hover{
+		color: map-get($tab, tabColor);
+		text-decoration: none;
+		font-size:12px;
+	}
+	& &-nav .oni-state-hover{
+		color: map-get($tab, tabHoverColor);
+		background: map-get($tab, tabHoverBg);
+		a {
+			color: map-get($tab, tabHoverColor);
+		}
+		a:link {
+			color: map-get($tab, tabHoverColor);
+		}
+		#{$uiname}-close{
+	    	border-color: map-get($tab, tabHoverBg);
+	    }
+	}
+	& &-nav .oni-state-active {
+		border-bottom-color: map-get($tab, tabActiveBg);
+		background:map-get($tab, tabActiveBg);
+		color: map-get($tab, tabActiveColor);
+		a {
+			color: map-get($tab, tabActiveColor);
+		}
+		a:link {
+			color: map-get($tab, tabActiveColor);
+		}
+		#{$uiname}-close{
+	    	border-color: map-get($tab, tabActiveBg);
+	    }
+	}
+	& &-nav .oni-state-disabled {
+		color: map-get($tab, tabDisabledColor);
+		cursor: default;
+		a {
+			color: map-get($tab, tabDisabledColor);
+			cursor: default;
+		}
+		a:link {
+			color: map-get($tab, tabDisabledColor);
+			cursor: default;
+		}
+	}
+	& &-nav #{$uiname}-last{
+	    border-right-width:1px; 
+	}
+	/*dir=v, small size*/
+	&-small {
+		#{$uiname}-nav .oni-state-default{
+		    border-right-width: 1px;
+		    margin-right: -1px;
+		    z-index: 1;
+		    padding: 7px 10px;
+		}
+		#{$uiname}-nav .oni-state-active{
+		    border-color: map-get($tab, smallActiveBorderColor);
+		    z-index: 10;
+		}
+	}
+	/*dir=v, normal size*/
+	&-vertical {
+		#{$uiname}-nav .oni-state-default{
+		    float:none;
+		    display: block;
+		    text-align: left;
+		    border-right-width: 1px;
+		    border-bottom-width: 0;
+		}
+		#{$uiname}-nav .oni-state-active{
+		    border-right-color: map-get($tab, tabActiveBg);
+		    border-bottom-color: $ui-state-default-border-color;
+		}
+		#{$uiname}-nav #{$uiname}-last{
+		    border-bottom-width: 1px;
+		}
+	}
+	&-click .oni-state-default{
+	    cursor: pointer;
+	}
+	&-removable{
+	    padding-right: 30px;
+	}
+	&-nav &-item &-close{
+	    position: absolute;
+	    right: 0px;
+	    top:7px;
+	    padding: 3px;
+	    height: 12px;
+	    width: 12px;
+	    overflow: hidden;
+	    border: 1px solid map-get($tab, closeBorderColor);
+	    border-right-width:0; 
+	    color: map-get($tab, closeColor);
+	    text-indent: 0;
+	    line-height: 14px;
+	    font-family: Helvetica, Arial, sans-serif;
+	}
+
+	& &-nav .oni-state-active &-close-hover {
+	    background: map-get($tab, tabActiveBg);
+	    border-color: $ui-state-default-border-color;
+	    cursor: pointer;
+	}
+	& &-nav .oni-state-hover &-close-hover{
+	    background: map-get($tab, tabHoverBg);
+	    border-color: $ui-state-default-border-color;
+	    cursor: pointer;
+	}
+}

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+        <script src="../highlight/shCore.js"></script>
+        <script src="../avalon.js"></script>
+    </head>
+    <body>
+        <div class="wrapper">
+            <h1>slider demo</h1>
+            <p class="example">通过配置range为true、max或者min来使slider具有同时存在两个手柄分别进行拖动或者一端固定拖动另一端的效果。当range为true时，设置values可以初始slider的拖动范围</p>
+            <div ms-skip>
+                <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                    &lt;!DOCTYPE HTML&gt;
+                    &lt;html&gt;
+                    &lt;head&gt;
+                        &lt;meta charset='utf-8'/&gt;
+                        &lt;title&gt;slider demo 4&lt;/title&gt;
+                        &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                    &lt;/head&gt;
+                    &lt;body&gt;
+                        &lt;div class="demo-show" ms-controller = "theme"&gt;
+                            &lt;div style="width:70%"&gt;
+                                &lt;p&gt;固定最小值(range = "min")&lt;/p&gt;
+                                &lt;input ms-widget="slider, kk" data-slider-range="min" data-slider-value="20"&gt;
+                                &lt;p ms-controller="kk"&gt;值为{{value}}，百分比为{{percent}}%; min为{{$valueMin}}, max为{{$valueMax}}&lt;/p&gt;
+                                &lt;p&gt;固定最大值(range="max")&lt;/p&gt;
+                                &lt;input ms-widget="slider, b" data-slider-range="max" data-slider-max="10" data-slider-value="2"&gt;
+
+                                &lt;p ms-controller="b"&gt;值为{{value}},百分比为{{percent}}%; min为{{$valueMin}}, max为{{$valueMax}}&lt;/p&gt;
+
+                                &lt;input ms-widget="slider,bbb" data-slider-range="true" data-slider-values="[ 25,50 ]" data-slider-min ="20" data-slider-max="100"&gt;
+                                &lt;p ms-controller="bbb"&gt;
+                                    $twohandlebars is : {{$twohandlebars}}&lt;br /&gt;
+                                    这是分开写的： {{ percent0 }}% {{ percent1 }}%&lt;br/&gt;这是并在一起的 {{ value }} min为{{$valueMin}}, max为{{$valueMax}}
+                                &lt;/p&gt;
+                            &lt;/div&gt;
+                            &lt;script&gt;
+                                require(["slider/avalon.slider"], function() {
+                                    var model = avalon.define("theme", function(vm) {
+                                        
+                                    })
+                                    avalon.scan()
+                                })
+                            &lt;/script&gt;
+                        &lt;/div&gt;
+                    &lt;/body&gt;
+                    &lt;/html&gt;
+                </pre>
+            </div>
+            <div class="demo-show" ms-controller = "theme">
+                <div style="width:70%">
+                    <p>固定最小值(range = "min")</p>
+                    <input ms-widget="slider, kk" data-slider-range="min" data-slider-value="20">
+                    <p ms-controller="kk">值为{{value}}，百分比为{{percent}}%; min为{{$valueMin}}, max为{{$valueMax}}</p>
+                    <p>固定最大值(range="max")</p>
+                    <input ms-widget="slider, b" data-slider-range="max" data-slider-max="10" data-slider-value="2">
+
+                    <p ms-controller="b">值为{{value}},百分比为{{percent}}%; min为{{$valueMin}}, max为{{$valueMax}}</p>
+
+                    <input ms-widget="slider,bbb" data-slider-range="true" data-slider-values="[ 25,50 ]" data-slider-min ="20" data-slider-max="100">
+                    <p ms-controller="bbb">
+                        $twohandlebars is : {{$twohandlebars}}<br />
+                        这是分开写的： {{ percent0 }}% {{ percent1 }}%<br/>这是并在一起的 {{ value }} min为{{$valueMin}}, max为{{$valueMax}}
+                    </p>
+                </div>
+                <script>
+                    require(["slider/avalon.slider"], function() {
+                        var model = avalon.define("theme", function(vm) {
+                            
+                        })
+                        avalon.scan()
+                    })
+                </script>
+            </div>
+        </div>
+    </body>
+</html>

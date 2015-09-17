@@ -1,0 +1,89 @@
+<h3 id="ms-duplex">双工绑定(ms-duplex)</h3>
+<p>这功能抄自angular，原名ms-model起不得太好，姑且认为利用VM中的某些属性对表单元素进行双向绑定。</p>
+<p>这个绑定，它除了负责将VM中对应的值放到表单元素的value中，还对元素偷偷绑定一些事件，用于监听用户的输入从而自动刷新VM。具体如下：</p>
+
+<dl>
+    <dt>ms-duplex="prop"</dt>
+    <dd>
+        <div><b style="color:green;">当元素为text, password, textarea时</b>，要求prop为一个字符串，当我们改动它的内容时，avalon就会将此元素的value值赋给prop（在默认情况下，是使用input事件进行绑定，即每改动一个字符，都会进行同步，大家也可以指定<b>data-duplex-event="change"</b>，改用change事件进行绑定）</div>
+        <div><b style="color:green;">当元素为radio时</b>，要求prop为一个布尔， 当我们改动它的内容时，avalon就会将此元素的checked值（布尔）赋给prop</div>
+        <div><b style="color:green;">当元素为checkbox时</b>，要求prop为一个数组， 当我们改动它的内容时，avalon就会将此元素的value值push进prop</div>
+        <div><b style="color:green;">当元素为select时</b>，要求prop为一个字符串或数组（视multiple的值）， 当我们选中它的某一个项时，avalon就会将此option元素的value值或text值（没有value时）push进prop。
+        </div>
+    </dd>
+    <dt>ms-duplex-string="prop"(即原来的<b>ms-duplex-text</b>)</dt>
+    <dd>强制将元素的element.value转换为字符串或字符串数组(select-multiple标签,checkbox标签)，然后再赋给prop</dd>
+    <dt>ms-duplex-boolean="prop"(即原来的<b>ms-duplex-bool</b>)</dt>
+    <dd>强制将元素的element.value转换为布尔或布尔数组(select-multiple标签,checkbox标签)，然后再赋给prop </dd>
+    <dt>ms-duplex-number="prop"</dt>
+    <dd>强制将元素的element.value转换为布尔或布尔数组(select-multiple标签,checkbox标签)，然后再赋给prop </dd>
+    <dt>ms-duplex-radio="prop"</dt>
+    <dd>只能用于checkbox，<b style="color:orange">用于模拟radio控件的行为</b>， 要求prop为一个布尔，当我们选中某一个checkbox时，avalon就会将此元素的checked值（布尔）赋给prop <a href="http://rubylouvre.github.io/mvvm/avalon.grid.html">多用于实现GRID中的全选/全不选功能</a> </dd>
+
+</dl>
+<p>如果想让text, textarea, password等控件在变化后获得焦点，可以使用<span style="color:violet">data-duplex-focus="true"</span>或ms-data-duplex-focus="isFocus"辅助指令．</p>
+<p style="color:red">注意：ms-duplex与ms-checked不能在同时使用于一个元素节点上。</p>
+<p style="color:red">注意：如果表单元素同时绑定了ms-duplex=xxx与ms-click或ms-change，而事件回调要立即得到这个vm.xxx的值，input[type=radio]是存在问题，它不能立即得到当前值，而是之前的值，需要在回调里面加个setTimeout。</p>
+<p>ms-duplex-text, ms-duplex-radio与ms-duplex的用法，大家可以通过<a href="https://github.com/RubyLouvre/avalon/blob/master/index_duplex.html">这个页面</a>进行学习。</p>
+<pre class="brush:javascript;gutter:false;toolbar:false;">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;ms-duplex&lt;/title&gt;
+        &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8"&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;div ms-controller="box"&gt;
+            &lt;ul&gt;
+                &lt;li&gt;&lt;input type="checkbox" ms-click="checkAll" ms-checked="checkAllbool"/&gt;全选&lt;/li&gt;
+                &lt;li ms-repeat="arr" &gt;&lt;input type="checkbox" ms-value="el" ms-duplex="selected"/&gt;{{el}}&lt;/li&gt;
+            &lt;/ul&gt;
+        &lt;/div&gt;
+        &lt;script src="avalon.js" &gt;&lt;/script&gt;
+        &lt;script&gt;
+            var model = avalon.define("box", function(vm) {
+                vm.arr = ["1", '2', "3", "4"]
+                vm.selected = ["2", "3"]
+                vm.checkAllbool = vm.arr.length === vm.selected.length
+                vm.checkAll = function() {
+                    if (this.checked) {
+                        vm.selected = vm.arr
+                    } else {
+                        vm.selected.clear()
+                    }
+                }
+            })
+            model.selected.$watch("length", function(n) {
+                model.checkAllbool = n === model.arr.size()
+            })
+        &lt;/script&gt; 
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+<p>对于非radio, checkbox, select的控件，我们可以通过data-duplex-changed来指定一个回调，传参为元素的value值，this指向元素本身，要求必须有返回值。</p>
+<pre class="brush:html;gutter:false;toolbar:false;">
+
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta http-equiv="Content-Type" content="text/html; charset=utf-8" /&gt;
+        &lt;title&gt;data-duplex-changed&lt;/title&gt;
+        &lt;script src="avalon.js"&gt;&lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body ms-controller="duplex"&gt;
+        &lt;input ms-duplex="username" data-duplex-changed="callback"&gt;
+        &lt;script type="text/javascript"&gt;
+            avalon.define('duplex', function(vm) {
+                vm.username = "司徒正美"
+                vm.callback = function(val){
+                    avalon.log(val)
+                    avalon.log(this)
+                    return this.value = val.slice(0, 10)//不能超过10个字符串
+                }
+            });
+
+        &lt;/script&gt;
+
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>

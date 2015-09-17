@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>提示组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <meta name="descriptions" content="notice组件用来向用户显示一些提示信息。
+ ">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    
+    <body>
+        <div class="wrapper">
+            <h2>notice</h2>
+            <fieldset>
+                <legend>提示组件</legend>notice组件用来向用户显示一些提示信息。</fieldset>
+            <h3 class="table-doc-title">使用说明</h3>
+            <table class="table-doc" border="1">
+                <colgroup>
+                    <col width="180">
+                        <col width="95">
+                            <col width="180">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>名字</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="4">配置参数</td>
+                    </tr>
+                    <tr>
+                        <td>type</td>
+                        <td>String</td>
+                        <td>"info"</td>
+                        <td>notice类型,可以选择为"success"、"error"或者默认的"info</td>
+                    </tr>
+                    <tr>
+                        <td>header</td>
+                        <td>String</td>
+                        <td>"notice title"</td>
+                        <td>notice的标题</td>
+                    </tr>
+                    <tr>
+                        <td>title</td>
+                        <td>String</td>
+                        <td>"notice title"</td>
+                        <td>notice的标题</td>
+                    </tr>
+                    <tr>
+                        <td>timer</td>
+                        <td>Number</td>
+                        <td>0</td>
+                        <td>notice显示之后自动隐藏的定时器，0表示不自动隐藏</td>
+                    </tr>
+                    <tr>
+                        <td>hasCloseBtn</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>是否显示关闭按钮，设为false不显示</td>
+                    </tr>
+                    <tr>
+                        <td>toggle</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>显示或隐藏notice， true显示，false隐藏</td>
+                    </tr>
+                    <tr>
+                        <td>isPlace</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>是否占位，false不占位，true占位，占位时notice显示在自定义的container中，不占位时append到body元素下</td>
+                    </tr>
+                    <tr>
+                        <td>isAffix</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>是否吸顶，非占位元素不吸顶，占位元素当滚动距离大于元素距页面顶部距离时吸顶，否则保持原位置</td>
+                    </tr>
+                    <tr>
+                        <td>successClass</td>
+                        <td>String</td>
+                        <td>"oni-notice-info"</td>
+                        <td>type为success时的提示类名</td>
+                    </tr>
+                    <tr>
+                        <td>errorClass</td>
+                        <td>String</td>
+                        <td>"oni-notice-danger"</td>
+                        <td>type为error时的提示类名</td>
+                    </tr>
+                    <tr>
+                        <td>infoClass</td>
+                        <td>String</td>
+                        <td>""</td>
+                        <td>type为info时的提示类名</td>
+                    </tr>
+                    <tr>
+                        <td>zIndex</td>
+                        <td>String</td>
+                        <td>'auto'</td>
+                        <td>提示组件的zindex css值</td>
+                    </tr>
+                    <tr>
+                        <td>getTemplate(str,options)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>用于重写模板的函数
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>str</td>
+                                        <td>String</td>
+                                        <td>tmpl</td>
+                                    </tr>
+                                    <tr>
+                                        <td>options</td>
+                                        <td>Object</td>
+                                        <td>opts</td>
+                                    </tr>
+                                    <tr>
+                                        <td>返回</td>
+                                        <td>String</td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="4">接口方法与固有属性</td>
+                    </tr>
+                    <tr>
+                        <td>content</td>
+                        <td>String</td>
+                        <td>""</td>
+                        <td>要显示的内容,可以是DOM对象|String|DOM String</td>
+                    </tr>
+                    <tr>
+                        <td>container</td>
+                        <td>String</td>
+                        <td>""</td>
+                        <td>显示notice的容器，可以配置为自己想要包裹notice的元素对象或者元素id，id的话必须是"#ID"的格式,默认为绑定组件的元素</td>
+                    </tr>
+                    <tr>
+                        <td>onShow</td>
+                        <td>Member</td>
+                        <td>avalon.noop</td>
+                        <td>notice显示之后回调
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>data</td>
+                                        <td>Object</td>
+                                        <td>与此数组相关的数据对象</td>
+                                    </tr>
+                                    <tr>
+                                        <td>vmodels</td>
+                                        <td>Array</td>
+                                        <td>位于此组件上方的vmodels组成的数组</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>onHide</td>
+                        <td>Member</td>
+                        <td>avalon.noop</td>
+                        <td>notice关闭之后回调
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>data</td>
+                                        <td>Object</td>
+                                        <td>与此数组相关的数据对象</td>
+                                    </tr>
+                                    <tr>
+                                        <td>vmodels</td>
+                                        <td>Array</td>
+                                        <td>位于此组件上方的vmodels组成的数组</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>widgetElement</td>
+                        <td>String</td>
+                        <td>""</td>
+                        <td>accordion容器</td>
+                    </tr>
+                </tbody>
+            </table>
+            <ul class="example-links">
+                <li>
+                    <a href="avalon.notice.ex.html">notice组件概览，具体使用demo及说明请看avalon.notice.ex1...6</a>
+                </li>
+                <li>
+                    <a href="avalon.notice.ex1.html">使用默认配置的notice组件，可以动态改变其content、header、type</a>
+                </li>
+                <li>
+                    <a href="avalon.notice.ex2.html">自定义notice的container，设置isPlace可以决定notice是占位还是不占位</a>
+                </li>
+                <li>
+                    <a href="avalon.notice.ex3.html">当配置notice占位且可吸顶时，notice会在页面滚动到它所在位置时吸顶显示</a>
+                </li>
+                <li>
+                    <a href="avalon.notice.ex4.html">自定义notice的回调</a>
+                </li>
+                <li>
+                    <a href="avalon.notice.ex5.html">设置timer使得notice在显示一段时间之后隐藏</a>
+                </li>
+                <li>
+                    <a href="avalon.notice.ex6.html">自定义notice type的样式类</a>
+                </li>
+            </ul>
+        </div>
+    </body>
+
+</html>

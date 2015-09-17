@@ -1,0 +1,92 @@
+<html>
+<head>
+    <title></title>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+    <script src="../avalon.js"></script>
+    <script src="../highlight/shCore.js"></script>
+    <script type="text/javascript">
+        require(['miniswitch/avalon.miniswitch.js'], function() {
+            avalon.ready(function() {
+                //multiple select vmodel
+                avalon.define('miniswitch', function(vm) {
+                    vm.$opts = {
+                        switchOpt: [{
+                            value: 1,
+                            label : ' 配置启用',
+                            cls: 'g-icon-start',
+                            title: '启用',
+                            font: '&#xf111;'
+                        },
+                            {
+                                value: 2,
+                                label : ' 配置暂停',
+                                cls: 'g-icon-pause',
+                                title: '暂停',
+                                font: '&#xf04c;'
+                            }],
+                        value: 2
+                    };
+                });
+                avalon.scan();
+            });
+        });
+    </script>
+</head>
+<body>
+<div class="wrapper">
+    <div ms-controller="miniswitch">
+        <h2>图标式下拉开关（miniswitch）</h2>
+        <p>用options配置组件</p>
+        <select ms-widget="miniswitch,$,$opts"></select>
+    </div>
+    <pre class="brush:html;gutter:false;toolbar:false;" ms-skip>
+        &lt;html&gt;
+        &lt;head&gt;
+            &lt;title&gt;&lt;/title&gt;
+            &lt;meta http-equiv="content-type" content="text/html;charset=utf-8" /&gt;
+            &lt;meta http-equiv="x-ua-compatible" content="ie=edge" /&gt;
+            &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+            &lt;script type="text/javascript"&gt;
+                require('miniswitch/avalon.miniswitch.js', function() &#123;
+                    avalon.ready(function() &#123;
+                        //multiple select vmodel
+                        avalon.define('miniswitch', function(vm) &#123;
+                            vm.$opts = &#123;
+                                switchOpt: [&#123;
+                                    value: 1,
+                                    label : ' 配置启用',
+                                    cls: 'g-icon-start',
+                                    title: '启用',
+                                    font: '&amp;#xf111;'
+                                &#125;,
+                                    &#123;
+                                        value: 2,
+                                        label : ' 配置暂停',
+                                        cls: 'g-icon-pause',
+                                        title: '暂停',
+                                        font: '&amp;#xf04c;'
+                                    &#125;],
+                                value: 2
+                            &#125;;
+                        &#125;);
+                        avalon.scan();
+                    &#125;);
+                &#125;);
+            &lt;/script&gt;
+        &lt;/head&gt;
+        &lt;body&gt;
+        &lt;div class="wrapper"&gt;
+            &lt;div ms-controller="miniswitch"&gt;
+                &lt;h2&gt;图标式下拉开关（miniswitch）&lt;/h2&gt;
+                &lt;p&gt;用options配置组件&lt;/p&gt;
+                &lt;select ms-widget="miniswitch,$,$opts"&gt;&lt;/select&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;/body&gt;
+        &lt;/html&gt;
+    </pre>
+</div>
+</body>
+</html>

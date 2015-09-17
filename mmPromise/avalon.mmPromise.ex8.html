@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Promise组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js">
+
+        </script>
+        <script src="../highlight/shCore.js">
+
+        </script>
+        <script>
+            require(["mmPromise/mmPromise", "domReady!"], function() {
+
+
+                function aaa() {
+                    return new Promise(function(resolve) {
+                        setTimeout(function() {
+                            resolve(1000)
+                        }, 1000)
+                    })
+                }
+                function bbb() {
+                    return new Promise(function(resolve) {
+                        setTimeout(function() {
+                            resolve(2000)
+                        }, 2000)
+                    })
+                }
+                function ccc() {
+                    return new Promise(function(resolve) {
+                        setTimeout(function() {
+                            resolve(3000)
+                        }, 5000)
+                    })
+                }
+
+                //待到所有完成才触发
+                Promise.all([aaa(), bbb(), ccc()]).then(function(a) {
+                    console.log(a)
+                })
+            })
+        </script>
+    </head>
+    <body>
+        <div>mmPromise的all方法可以传入多个Promise对象作为参数</div>
+        <div>原生Promise的all方法只能传入一个Promise对象数组作为参数</div>
+    </body>
+</html>

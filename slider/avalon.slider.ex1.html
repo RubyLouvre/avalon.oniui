@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+        <script src="../highlight/shCore.js"></script>
+        <script src="../avalon.js"></script>
+    </head>
+    <body>
+        <div class="wrapper">
+            <h1>slider demo</h1>
+            <p class="example">基本的slider，step默认为1，min默认为0，max默认为100，默认水平拖动(orientation为“horizontal”)，range默认为false，这里配置了onDragStart、onDrag、onDragEnd回调，回调的参数都是对应事件的event对象和拖动的数据信息data，请打开控制台看看回调中打印的参数</p>
+            <div ms-skip>
+                <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                    &lt;!DOCTYPE HTML&gt;
+                    &lt;html&gt;
+                    &lt;head&gt;
+                        &lt;meta charset='utf-8'/&gt;
+                        &lt;title&gt;slider demo 1&lt;/title&gt;
+                        &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                    &lt;/head&gt;
+                    &lt;body&gt;
+                        &lt;div class="demo-show" ms-controller = "theme"&gt;
+                            &lt;div style="width:70%"&gt;
+                                &lt;input ms-widget="slider,aaa, $aaaOpts" &gt;
+                                &lt;p ms-controller="aaa"&gt;值为{{value}}，百分比为{{percent}}%; min为{{$valueMin}}, max为{{$valueMax}}&lt;/p&gt;
+                            &lt;/div&gt;
+                            &lt;script&gt;
+                                require(["slider/avalon.slider"], function() {
+                                    var model = avalon.define("theme", function(vm) {
+                                        vm.$aaaOpts = {
+                                            onDragStart: function(event, data){
+                                                avalon.log("start dragging");
+                                                avalon.log(event);
+                                                avalon.log(data);
+                                            },
+                                            onDrag: function(event, data) {
+                                                avalon.log("dragging");
+                                                avalon.log(event);
+                                                avalon.log(data);
+                                            },
+                                            onDragEnd: function(data) {
+                                                avalon.log("dragend");
+                                                avalon.log(data);
+                                            }
+                                        }
+                                    })
+                                    avalon.scan()
+                                })
+                            &lt;/script&gt;
+                        &lt;/div&gt;
+                    &lt;/body&gt;
+                    &lt;/html&gt;
+                </pre>
+            </div>
+            <div class="demo-show" ms-controller = "theme">
+                <div style="width:70%">
+                    <input ms-widget="slider,aaa, $aaaOpts" >
+                    <p ms-controller="aaa">值为{{value}}，百分比为{{percent}}%; min为{{$valueMin}}, max为{{$valueMax}}</p>
+                </div>
+                <script>
+                    require(["slider/avalon.slider"], function() {
+                        var model = avalon.define("theme", function(vm) {
+                            vm.$aaaOpts = {
+                                onDragStart: function(event, data){
+                                    avalon.log("start dragging");
+                                    avalon.log(event);
+                                    avalon.log(data);
+                                },
+                                onDrag: function(event, data) {
+                                    avalon.log("dragging");
+                                    avalon.log(event);
+                                    avalon.log(data);
+                                },
+                                onDragEnd: function(data) {
+                                    avalon.log("dragend");
+                                    avalon.log(data);
+                                }
+                            }
+                        })
+                        avalon.scan()
+                    })
+                </script>
+            </div>
+        </div>
+    </body>
+</html>

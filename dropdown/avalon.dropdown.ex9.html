@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+    <script src="../avalon.js"></script>
+    <script type="text/javascript">
+        require(['dropdown/avalon.dropdown.js', "ready!"], function() {
+            avalon.define('dropdown', function(vm) {
+                vm.value = 2;
+                vm.data = [
+                    {
+                        value: 1,
+                        label: '1'
+                    }, {
+                        value: 2,
+                        label: '2label'
+                    }, {
+                        value: 3
+                    }, {
+                        value: 4,
+                        text: '4text'
+                    }
+                ];
+            });
+            avalon.scan();
+        });
+    </script>
+    <script src="../highlight/shCore.js"></script>
+</head>
+<body>
+<div class="wrapper">
+    <div ms-controller="dropdown">
+        <h2>dropdown（下拉框）</h2>
+        <p>options可以使用repeat生成</p>
+        <select ms-widget="dropdown"
+                ms-duplex="value"
+                > 
+            <option ms-repeat="data" ms-attr-value="el.value" ms-attr-label="el.label" ms-selected="el.value==1">{{el.text}}</option>
+        </select>
+        <p>{{value}}</p>
+    </div>
+    <pre class="brush:html;gutter:false;toolbar:false;" ms-skip>
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;&lt;/title&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width"&gt;
+    &lt;link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/&gt;
+    &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+    &lt;script type="text/javascript"&gt;
+        require(['dropdown/avalon.dropdown.js', "ready!"], function() &#123;
+            avalon.define('dropdown', function(vm) &#123;
+                vm.value = 1;
+                vm.data = [
+                    &#123;
+                        value: 1,
+                        label: '1'
+                    &#125;, &#123;
+                        value: 2,
+                        label: '2'
+                    &#125;
+                ];
+            &#125;);
+            avalon.scan();
+        &#125;);
+    &lt;/script&gt;
+    &lt;script src="../highlight/shCore.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class="wrapper"&gt;
+    &lt;div ms-controller="dropdown"&gt;
+        &lt;h2&gt;dropdown（下拉框）&lt;/h2&gt;
+        &lt;p&gt;options可以使用repeat生成&lt;/p&gt;
+        &lt;select ms-widget="dropdown"
+                ms-duplex="value"&gt;
+            &lt;option ms-repeat="data" ms-attr-value="el.value" ms-attr-label="el.label"&gt;&lt;/option&gt;
+        &lt;/select&gt;
+        &lt;p&gt;&#123;&#123;value&#125;&#125;&lt;/p&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+</div>
+</body>
+</html>

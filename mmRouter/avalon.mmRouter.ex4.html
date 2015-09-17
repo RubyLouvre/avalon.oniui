@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>mmRouter组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js"></script>
+        <style>
+        * {word-wrap: break-word;margin:0;padding:0}
+        a,a:link {
+            color: #000;
+            text-decoration: none;
+        }
+        p {
+            padding: 10px;
+        }
+        .contents {
+            margin-top: 20px;
+        }
+        .contents div {
+            padding: 10px;
+            margin: 10px;
+            border: 1px solid #ccc;
+        }
+
+    </style>
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    <body>
+        <h1>mmRouter: avalon.state</h1>
+        <div class="contents" ms-controller="test">
+            <p 
+               ms-repeat-as="a">
+               <a 
+                    ms-href="'#!/'+as">{{as}}</a>
+            </p>
+            <p>------</p>
+            <div 
+                 ms-controller="form">
+                <div>数据库名：{{db_name}}</div>
+                <div ms-view></div>
+                <div ms-view='table'></div>
+                <div ms-view='sql'></div>
+            </div>
+        </div>
+        <script>
+        require(["ready!", "mmRouter/mmState"], function () {
+            avalon.define('test', function(vm) {
+                vm.a = [
+                    "sql",
+                    "sql/user",
+                    "sql/user/user",
+                    "sql/user/admin",
+                    "sql/user/user/sql",
+                    "sql/user/admin/sql"
+                ]
+            })
+            avalon.define('form', function(vm) {
+                vm.db_name = '暂未获取'
+            })
+
+            avalon.define("table", function(vm) {
+                vm.table_name = 'table'
+            })
+            avalon.state("form", {
+                controller: "test",
+                url: "/{source_type}/{db_name}",
+                views: {
+                    "": {
+                        template:  "<div>状态：form</div>"
+                    }
+                },
+                onEnter: function() {
+                    avalon.vmodels.form.db_name = this.params ? this.params.db_name + "【从/*/*获取】" : "未获取到db_name"
+                }
+            })
+            avalon.state("form.table", {
+                controller: "form",
+                url: "/{table_name}",
+                views: {
+                    "table@": {
+                        template: "数据库名：{{db_name}}"
+                    }
+                },
+                // abstract: true,
+                onEnter: function() {
+                    avalon.vmodels.form.db_name = this.params ? this.params.db_name + "【从/*/*/*获取】" : "未获取到db_name"
+                }
+            });
+
+            avalon.state("form.table.sql", {
+                controller: "table",
+                url: "/sql",
+                views: {
+                    "sql@": {
+                        template: "表名：{{table_name}}"
+                    }
+                },
+                onEnter: function() {
+                    avalon.vmodels.table.table_name = this.params.table_name;
+                    avalon.vmodels.form.db_name = this.params ? this.params.db_name + "【从/*/*/*/sql获取】" : "未获取到db_name"
+                }
+            });
+            avalon.history.start({
+                basepath: "/mmRouter",
+                fireAnchor: false
+            })
+            avalon.scan();
+        });
+        </script>
+        <pre ms-skip class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;mmRouter组件&lt;/title&gt;
+        &lt;meta charset=&quot;UTF-8&quot;&gt;
+        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;
+        &lt;script src=&quot;../avalon.js&quot;&gt;&lt;/script&gt;
+        &lt;style&gt;
+        * {word-wrap: break-word;margin:0;padding:0}
+        a,a:link {
+            color: #000;
+            text-decoration: none;
+        }
+        p {
+            padding: 10px;
+        }
+        .contents {
+            margin-top: 20px;
+        }
+        .contents div {
+            padding: 10px;
+            margin: 10px;
+            border: 1px solid #ccc;
+        }
+
+    &lt;/style&gt;
+        
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;h1&gt;mmRouter: avalon.state&lt;/h1&gt;
+        &lt;div class=&quot;contents&quot; ms-controller=&quot;test&quot;&gt;
+            &lt;p 
+               ms-repeat-as=&quot;a&quot;&gt;
+               &lt;a 
+                    ms-href=&quot;'#!/'+as&quot;&gt;{{as}}&lt;/a&gt;
+            &lt;/p&gt;
+            &lt;p&gt;------&lt;/p&gt;
+            &lt;div 
+                 ms-controller=&quot;form&quot;&gt;
+                &lt;div&gt;数据库名：{{db_name}}&lt;/div&gt;
+                &lt;div ms-view&gt;&lt;/div&gt;
+                &lt;div ms-view='table'&gt;&lt;/div&gt;
+                &lt;div ms-view='sql'&gt;&lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;script&gt;
+        require([&quot;ready!&quot;, &quot;mmRouter/mmState&quot;], function () {
+            avalon.define('test', function(vm) {
+                vm.a = [
+                    &quot;sql&quot;,
+                    &quot;sql/user&quot;,
+                    &quot;sql/user/user&quot;,
+                    &quot;sql/user/admin&quot;,
+                    &quot;sql/user/user/sql&quot;,
+                    &quot;sql/user/admin/sql&quot;
+                ]
+            })
+            avalon.define('form', function(vm) {
+                vm.db_name = '暂未获取'
+            })
+
+            avalon.define(&quot;table&quot;, function(vm) {
+                vm.table_name = 'table'
+            })
+            avalon.state(&quot;form&quot;, {
+                controller: &quot;test&quot;,
+                url: &quot;/{source_type}/{db_name}&quot;,
+                views: {
+                    &quot;&quot;: {
+                        template:  &quot;&lt;div&gt;状态：form&lt;/div&gt;&quot;
+                    }
+                },
+                onEnter: function() {
+                    avalon.vmodels.form.db_name = this.params ? this.params.db_name + &quot;【从/*/*获取】&quot; : &quot;未获取到db_name&quot;
+                }
+            })
+            avalon.state(&quot;form.table&quot;, {
+                controller: &quot;form&quot;,
+                url: &quot;/{table_name}&quot;,
+                views: {
+                    &quot;table@&quot;: {
+                        template: &quot;数据库名：{{db_name}}&quot;
+                    }
+                },
+                // abstract: true,
+                onEnter: function() {
+                    avalon.vmodels.form.db_name = this.params ? this.params.db_name + &quot;【从/*/*/*获取】&quot; : &quot;未获取到db_name&quot;
+                }
+            });
+
+            avalon.state(&quot;form.table.sql&quot;, {
+                controller: &quot;table&quot;,
+                url: &quot;/sql&quot;,
+                views: {
+                    &quot;sql@&quot;: {
+                        template: &quot;表名：{{table_name}}&quot;
+                    }
+                },
+                onEnter: function() {
+                    avalon.vmodels.table.table_name = this.params.table_name;
+                    avalon.vmodels.form.db_name = this.params ? this.params.db_name + &quot;【从/*/*/*/sql获取】&quot; : &quot;未获取到db_name&quot;
+                }
+            });
+            avalon.history.start({
+                basepath: &quot;/mmRouter&quot;,
+                fireAnchor: false
+            })
+            avalon.scan();
+        });
+        &lt;/script&gt;
+        
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+    </body>
+</html>

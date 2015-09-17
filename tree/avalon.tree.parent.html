@@ -1,0 +1,39 @@
+<span class="button switch" 
+      ms-class-100="{{levelClass(leaf)}}" 
+      ms-class="{{computeLineClass(leaf, $first, $last)}}"
+      ms-click="toggleOpenStatue($event,leaf)" 
+      ms-if="exprAnd(leaf, view.showSwitch)"></span>
+{{MS_CHECK_HTML}}
+<a {{MS_EDIT_BINDING}} 
+   ms-class-100="{{levelClass(leaf)}}" 
+   ms-class="curSelectedNode:hasClassSelect(leaf)" 
+   ms-click="excute('click',$event,leaf,'selectFun')" 
+   ms-attr-target="leaf.target || '_blank'" 
+   ms-attr-href="leaf.url || '#'" 
+   ms-on-mousedown="excute('mousedown', $event, leaf)" 
+   ms-on-mouseup="excute('mouseup', $event, leaf)" 
+   ms-attr-title="exprAnd(leaf, view.showTitle, leaf.title || leaf.name)" 
+	 ms-dblclick="excute('dblClick', $event, leaf,'toggleOpenStatue')">
+    <span class="button" 
+          ms-attr-id="'treeIcon'+leaf.$id" 
+          ms-css-background="{{computeIcon(leaf)}}" 
+          ms-class-100="{{levelClass(leaf)}}" 
+          ms-if="shallIconShow(leaf, leaf.icon_close, leaf.icon_open)" 
+          ms-class="{{computeIconClass(leaf)}}"></span>
+    <span class="button" 
+          ms-attr-id="'treeIcon'+leaf.$id" 
+          ms-class-100="{{levelClass(leaf)}}" 
+          ms-if="shallIconShowReverse(leaf, leaf.icon_close, leaf.icon_open)" 
+          ms-class="{{computeIconClass(leaf)}}"></span>
+  	<span 
+          ms-class-100="{{levelClass(leaf)}}" >{{view.nameShower(leaf)|html}}</span>
+    {{MS_EDIT_HTML}}
+</a>
+<ul class="line" 
+    ms-class-100="{{levelClass(leaf, 1)}}" 
+    ms-if="hasChildren(leaf)" 
+    ms-class-2="noline_docu:!optionToBoolen(view.showLine,leaf)"
+    ms-visible="hasChildren(leaf, 'visible')"
+    ms-attr-id="'c'+leaf.$id">
+	  {{loadNodes("levelGT0")|html}}
+    </ul>

@@ -1,0 +1,17 @@
+
+/*
+这是每个都组件都应该引用的部分
+*/
+.oni-dialog { position: absolute; text-align: left; }
+.oni-dialog .oni-dialog-inner { box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1); background-color: #ffffff; border: 1px solid #cccccc; }
+.oni-dialog .oni-dialog-inner .oni-dialog-header { background-color: #f3f3f3; }
+.oni-dialog .oni-dialog-inner .oni-dialog-header .oni-dialog-close { display: inline; display: inline; float: right; padding: 1px 10px 1px 9px; margin-top: 5px; cursor: pointer; background-color: #f3f3f3; color: #666666; }
+.oni-dialog .oni-dialog-inner .oni-dialog-header .oni-dialog-close .oni-icon { cursor: pointer; }
+.oni-dialog .oni-dialog-inner .oni-dialog-header .oni-dialog-close:hover { border-right: 0; padding: 0 10px 0 8px; background-color: #ffffff; border: 1px solid #dedede; }
+.oni-dialog .oni-dialog-inner .oni-dialog-header .oni-dialog-title { padding: 7px 10px; font-size: 12px; line-height: 20px; font-weight: 700; }
+.oni-dialog .oni-dialog-inner .oni-dialog-content { font-size: 12px; padding: 17px 20px; }
+.oni-dialog .oni-dialog-inner .oni-dialog-footer { padding: 8px 5px; background-color: #f8f8f8; }
+.oni-dialog .oni-dialog-inner .oni-dialog-footer .oni-dialog-btns { display: inline; display: inline; float: right; font-size: 0; }
+.oni-dialog .oni-dialog-inner .oni-dialog-footer .oni-dialog-btns .oni-button { margin-left: 10px; }
+
+.oni-dialog-layout { display: none; *position: absolute; left: 0; top: 0; bottom: 0; right: 0; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); opacity: 0.6; zoom: 1; z-index: 1; background: #000; }

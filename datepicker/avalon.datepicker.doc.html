@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>日期选择器</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <meta name="descriptions" content="datepicker组件方便快速创建功能齐备的日历组件，通过不同的配置日历可以满足显示多个月份、通过prev、next切换月份、或者通过下拉选择框切换日历的年份、月份，当然也可以手动输入日期，日历组件也会根据输入域中的日期值高亮显示对应日期等等各种需求
+ ">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    
+    <body>
+        <div class="wrapper">
+            <h2>datepicker</h2>
+            <fieldset>
+                <legend>日期选择器</legend>
+                <p>datepicker组件方便快速创建功能齐备的日历组件，通过不同的配置日历可以满足显示多个月份、通过prev、next切换月份、或者通过下拉选择框切换日历的年份、月份，当然也可以手动输入日期，日历组件也会根据输入域中的日期值高亮显示对应日期等等各种需求</p>
+            </fieldset>
+            <h3 class="table-doc-title">使用说明</h3>
+            <table class="table-doc" border="1">
+                <colgroup>
+                    <col width="180">
+                        <col width="95">
+                            <col width="120">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>名字</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="4">配置参数</td>
+                    </tr>
+                    <tr>
+                        <td>calendarWidth</td>
+                        <td>Number</td>
+                        <td>196</td>
+                        <td>设置日历展示宽度</td>
+                    </tr>
+                    <tr>
+                        <td>startDay</td>
+                        <td>Number</td>
+                        <td>1</td>
+                        <td>设置每一周的第一天是哪天，0代表Sunday，1代表Monday，依次类推, 默认从周一开始</td>
+                    </tr>
+                    <tr>
+                        <td>minute</td>
+                        <td>Number</td>
+                        <td>0</td>
+                        <td>设置time的默认minute</td>
+                    </tr>
+                    <tr>
+                        <td>hour</td>
+                        <td>Number</td>
+                        <td>0</td>
+                        <td>设置time的hour</td>
+                    </tr>
+                    <tr>
+                        <td>width</td>
+                        <td>Number</td>
+                        <td>90</td>
+                        <td>设置日历框宽度</td>
+                    </tr>
+                    <tr>
+                        <td>showTip</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>是否显示节日提示</td>
+                    </tr>
+                    <tr>
+                        <td>disabled</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>是否禁用日历组件</td>
+                    </tr>
+                    <tr>
+                        <td>changeMonthAndYear</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>是否可以通过下拉框选择月份或者年份</td>
+                    </tr>
+                    <tr>
+                        <td>mobileMonthAndYear</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>PC端可以通过设置changeMonthAndYear为true使用dropdown的形式选择年份或者月份，但是移动端只能通过设置mobileMonthAndYear为true来选择月份、年份</td>
+                    </tr>
+                    <tr>
+                        <td>showOtherMonths</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>是否显示非当前月的日期</td>
+                    </tr>
+                    <tr>
+                        <td>numberOfMonths</td>
+                        <td>Number</td>
+                        <td>1</td>
+                        <td>一次显示的日历月份数, 默认一次显示一个</td>
+                    </tr>
+                    <tr>
+                        <td>allowBlank</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>是否允许日历框为空</td>
+                    </tr>
+                    <tr>
+                        <td>minDate</td>
+                        <td>Object</td>
+                        <td>null</td>
+                        <td>最小的可选日期，可以配置为Date对象，也可以是yyyy-mm-dd格式的字符串，或者当分隔符是“/”时，可以是yyyy/mm/dd格式的字符串</td>
+                    </tr>
+                    <tr>
+                        <td>maxDate</td>
+                        <td>Object</td>
+                        <td>null</td>
+                        <td>最大的可选日期，可以配置为Date对象，也可以是yyyy-mm-dd格式的字符串，或者当分隔符是“/”时，可以是yyyy/mm/dd格式的字符串</td>
+                    </tr>
+                    <tr>
+                        <td>stepMonths</td>
+                        <td>Number</td>
+                        <td>1</td>
+                        <td>当点击next、prev链接时应该跳过几个月份, 默认一个月份</td>
+                    </tr>
+                    <tr>
+                        <td>toggle</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>设置日历的显示或者隐藏，false隐藏，true显示</td>
+                    </tr>
+                    <tr>
+                        <td>separator</td>
+                        <td>String</td>
+                        <td>"-"</td>
+                        <td>日期格式的分隔符,默认“-”，可以配置为"/"，而且默认日期格式必须是yyyy-mm-dd</td>
+                    </tr>
+                    <tr>
+                        <td>calendarLabel</td>
+                        <td>String</td>
+                        <td>"选择日期"</td>
+                        <td>日历组件的说明label</td>
+                    </tr>
+                    <tr>
+                        <td>onChangeMonthYear</td>
+                        <td>Function</td>
+                        <td>avalon.noop</td>
+                        <td>当month或者year更新时调用的回调
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>year</td>
+                                        <td>Number</td>
+                                        <td>当前日期的year</td>
+                                    </tr>
+                                    <tr>
+                                        <td>month</td>
+                                        <td>Number</td>
+                                        <td>当前日期的month(0-11)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>vmodel</td>
+                                        <td>Number</td>
+                                        <td>日历组件对应vmodel</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>dateCellRender</td>
+                        <td>Function</td>
+                        <td>false</td>
+                        <td>格式化输出日期单元格内容
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>date</td>
+                                        <td>Date</td>
+                                        <td>当前的日期</td>
+                                    </tr>
+                                    <tr>
+                                        <td>vmodel</td>
+                                        <td>Vmodel</td>
+                                        <td>日历组件对应vmodel</td>
+                                    </tr>
+                                    <tr>
+                                        <td>dateItem</td>
+                                        <td>Object</td>
+                                        <td>对应的包含日期相关信息的对象</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>watermark</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>是否显示水印文字</td>
+                    </tr>
+                    <tr>
+                        <td>zIndex</td>
+                        <td>Unary</td>
+                        <td>-1</td>
+                        <td>设置日历的z-index</td>
+                    </tr>
+                    <tr>
+                        <td>showDatepickerAlways</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>是否总是显示datepicker</td>
+                    </tr>
+                    <tr>
+                        <td>timer</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>是否在组件中可选择时间</td>
+                    </tr>
+                    <tr>
+                        <td>position</td>
+                        <td>String</td>
+                        <td>''</td>
+                        <td>设置datepicker的显示位置，可以为"rb"、"lt"、"rt"或者自定义的class,默认""</td>
+                    </tr>
+                    <tr>
+                        <td>onBeforeRender</td>
+                        <td>Function</td>
+                        <td>null</td>
+                        <td>在渲染日期前的准备工作，比如格式化日期前需请求的服务器数据
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>vmodel</td>
+                                        <td>Object</td>
+                                        <td>当前日期组件对应的Vmodel</td>
+                                    </tr>
+                                    <tr>
+                                        <td>month</td>
+                                        <td>Number</td>
+                                        <td>当前month(0-11)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>year</td>
+                                        <td>Number</td>
+                                        <td>当前year</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>onSelect</td>
+                        <td>Function</td>
+                        <td>avalon.noop</td>
+                        <td>选中日期后的回调
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>date</td>
+                                        <td>String</td>
+                                        <td>当前选中的日期</td>
+                                    </tr>
+                                    <tr>
+                                        <td>vmodel</td>
+                                        <td>Object</td>
+                                        <td>当前日期组件对应的Vmodel</td>
+                                    </tr>
+                                    <tr>
+                                        <td>data</td>
+                                        <td>Object</td>
+                                        <td>绑定组件的元素的data属性组成的集合</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>onClose</td>
+                        <td>Function</td>
+                        <td>avalon.noop</td>
+                        <td>日历关闭的回调
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>date</td>
+                                        <td>Object</td>
+                                        <td>当前日期</td>
+                                    </tr>
+                                    <tr>
+                                        <td>vmodel</td>
+                                        <td>Object</td>
+                                        <td>当前日期组件对应的Vmodel</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>onSelectTime</td>
+                        <td>Function</td>
+                        <td>avalon.noop</td>
+                        <td>在设置了timer为true时，选择日期、时间后的回调
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>vmodel</td>
+                                        <td>Object</td>
+                                        <td>当前日期组件对应的Vmodel</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>parseDate</td>
+                        <td>Function</td>
+                        <td>parseDate</td>
+                        <td>将符合日期格式要求的字符串解析为date对象并返回，不符合格式的字符串返回null,用户可以根据自己需要自行配置解析过程
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>str</td>
+                                        <td>String</td>
+                                        <td>要解析的日期字符串</td>
+                                    </tr>
+                                    <tr>
+                                        <td>返回</td>
+                                        <td>Date</td>
+                                        <td>Date格式的日期</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>formatDate(date)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>将日期对象转换为符合要求的日期字符串
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>date</td>
+                                        <td>Date</td>
+                                        <td>要格式化的日期对象</td>
+                                    </tr>
+                                    <tr>
+                                        <td>返回</td>
+                                        <td>String</td>
+                                        <td>格式化后的日期</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <ul class="example-links">
+                <li>
+                    <a href="avalon.datepicker.ex1.html">默认配置的日历框、allowBlank为true时的不同</a>
+                </li>
+                <li>
+                    <a href="avalon.datepicker.ex2.html">配置日历周一-周日的对应的显示名、使日历的每一周从周日开始、通过下拉选框切换选择日历显示年份、月份</a>
+                </li>
+                <li>
+                    <a href="avalon.datepicker.ex3.html">显示非当前月日期、通过prev、next每次切换3个月、一次显示多个月份</a>
+                </li>
+                <li>
+                    <a href="avalon.datepicker.ex4.html">设置日期可选的最小日期、最大日期、以及初始值异常的显示情况</a>
+                </li>
+                <li>
+                    <a href="avalon.datepicker.ex5.html">设置toggle切换日历显示与隐藏、calendarLabel配置日历顶部说明文字</a>
+                </li>
+                <li>
+                    <a href="avalon.datepicker.ex6.html">ms-duplex初始化日期、allowBlank为false or true时组件对不同初始值的处理方式</a>
+                </li>
+                <li>
+                    <a href="avalon.datepicker.ex7.html">组件选择日期后的change回调、关闭时的onClose回调、切换月份、年份的onChangeMonthYear回调</a>
+                </li>
+                <li>
+                    <a href="avalon.datepicker.ex8.html">自定义parseDate、formatDate方法正确解析和显示日期</a>
+                </li>
+                <li>
+                    <a href="avalon.datepicker.ex9.html">切换日历组件的禁用与否，以及手动输入日期的结果</a>
+                </li>
+                <li>
+                    <a href="avalon.datepicker.ex10.html">移动端日期、年份选择</a>
+                </li>
+                <li>
+                    <a href="avalon.datepicker.ex11.html">具有时间选择功能的datepicker</a>
+                </li>
+                <li>
+                    <a href="avalon.datepicker.ex12.html">带格式化输出配置的datepicker</a>
+                </li>
+                <li>
+                    <a href="avalon.datepicker.ex13.html">多语言支持</a>
+                </li>
+                <li>
+                    <a href="avalon.datepicker.ex14.html">datepicker的验证</a>
+                </li>
+                <li>
+                    <a href="avalon.datepicker.ex15.html">datepicker显示位置的设置</a>
+                </li>
+                <li>
+                    <a href="avalon.datepicker.ex16.html">datepicker宽度、格式自定义</a>
+                </li>
+                <li>
+                    <a href="avalon.datepicker.ex17.html">onBeforRender异步获取数据格式化日历</a>
+                </li>
+            </ul>
+        </div>
+    </body>
+
+</html>

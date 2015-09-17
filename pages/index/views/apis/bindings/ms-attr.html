@@ -1,0 +1,75 @@
+<h3 id="ms-attr">属性绑定(ms-attr-*)</h3>
+<p>此绑定还是ms-disabled, ms-enabled, ms-readonly, ms-checked, ms-selected的内部实现。</p>
+
+
+<script>
+    avalon.define("ms-attr-*", function(vm) {
+        vm.aaa = true
+        vm.click = function() {
+            vm.aaa = !vm.aaa
+        }
+        vm.bbb = "@@@"
+        vm.ccc = "&&&"
+    })
+
+</script>
+<fieldset><legend>示例</legend>
+    <form method="get" action="aaa.html" ms-controller="ms-attr-*">
+        <input ms-enabled="aaa" name="a1" value="12345"/>
+        <input ms-disabled="aaa" name="a2" value="67890"/>
+        <input ms-readonly="aaa" name="a3" value="readonly" />
+        <input ms-checked="aaa" type="checkbox" value="checkbox" name="a4"/>
+        <select name="a5">
+            <option>222</option>
+            <option ms-selected="aaa">555</option>
+        </select>
+        <input ms-attr-value="bbb + ccc" name="a6" value="改" />
+        <button type="button" ms-click="click">
+            点我
+        </button>
+        <input type="submit" value="提交"/>
+    </form>
+</fieldset>
+<pre class="brush:html;gutter:false;toolbar:false;">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;ms-attr-*&lt;/title&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width"&gt;
+        &lt;script src="avalon.js"&gt;&lt;/script&gt;
+
+        &lt;script&gt;
+            avalon.define("ms-attr-*", function(vm) {
+                vm.aaa = true
+                vm.click = function() {
+                    vm.aaa = !vm.aaa
+                }
+                vm.bbb ="@@@"
+                vm.ccc = "&&&"
+            })
+
+        &lt;/script&gt;
+
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;form method="get" action="aaa.html" ms-controller="ms-attr-*"&gt;
+            &lt;input ms-enabled="aaa" name="a1" value="12345"/&gt;
+            &lt;input ms-disabled="aaa" name="a2" value="67890"/&gt;
+            &lt;input ms-readonly="aaa" name="a3" value="readonly" /&gt;
+
+            &lt;input ms-checked="aaa" type="checkbox" value="checkbox" name="a4"/&gt;
+            &lt;select name="a5"&gt;
+                &lt;option&gt;222&lt;/option&gt;
+                &lt;option ms-selected="aaa"&gt;555&lt;/option&gt;
+            &lt;/select&gt;
+            &lt;input ms-attr-value="bbb + ccc" name="a6" value="改" /&gt;
+            &lt;button type="button" ms-click="click"&gt;
+                点我
+            &lt;/button&gt;
+            &lt;input type="submit" value="提交"/&gt;
+        &lt;/form&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+
+</pre>

@@ -1,0 +1,32 @@
+<div ms-repeat-pos="_position" class="oni-scrollbar oni-helper-reset oni-helper-clearfix oni-widget"
+     ms-visible="!disabled"
+	 ms-class-100="oni-scrollbar-{{pos}}" 
+	 ms-class-101="oni-scrollbar-{{size}} oni-scrollbar-{{pos}}-{{size}}" 
+	 ms-class-102="oni-state-disabled:disabled" 
+	 ms-mouseenter="_show($event, 'always', $index)" 
+	 ms-visible="toggle">
+	<div ms-if="showBarHeader" class="oni-scrollbar-arrow oni-scrollbar-arrow-up" 
+	 ms-click="_arrClick($event, 'up', pos, $index)" 
+	 ms-mousedown="_arrDown($event,'up', pos, $index)" 
+	 ms-class-100="oni-state-disabled:disabled" 
+	 ms-mouseup="_arrDown($event,'up', pos, $index,'release')" 
+	 ms-hover="oni-state-hover oni-scrollbar-arrow-hover"><b class="oni-scrollbar-trangle  oni-scrollbar-trangle-up"></b></div>
+	<div class="oni-scrollbar-draggerpar" ms-click="_barClick($event, pos, $index)">
+		<div class="oni-scrollbar-dragger"
+		ms-attr-data-draggable-axis="pos == 'left' || pos == 'right' ? 'y' : 'x'" 
+		ms-click="_stopPropagation($event)" 
+		ms-class-100="oni-state-disabled:disabled" 
+		ms-mouseover="_show($event,'always',$index)" 
+		ms-mousedown="_draggerDown($event, true)" 
+		ms-mouseup="_draggerDown($event, false)" 
+		ms-mouseout="_draggerDown($event, false)" 
+		ms-hover="oni-state-hover"
+		>{{draggerHTML | html}}</div>
+	</div>
+	<div ms-if="showBarHeader" class="oni-scrollbar-arrow oni-scrollbar-arrow-down"
+	 ms-click="_arrClick($event, 'down', pos, $index)"
+	 ms-mousedown="_arrDown($event,'down', pos, $index)" 
+	 ms-mouseup="_arrDown($event,'down', pos, $index,'release')" 
+	 ms-class-100="oni-state-disabled:disabled" 
+	 ms-hover="oni-state-hover"><b class="oni-scrollbar-trangle oni-scrollbar-trangle-down"></b></div>
+</div>

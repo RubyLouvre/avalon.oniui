@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>camera组件</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+    <script src="../avalon.js"></script>
+    <script src="../highlight/shCore.js"></script>
+    <script>
+        avalon.config({
+            paths: {
+                jquery: "./mocha/jquery.js"
+            },
+            shim: {
+                jquery: {
+                    exports: "jQuery"
+                }
+            }
+        })
+        require(["camera/avalon.camera"], function () {
+            avalon.define("demo", function (vm) {
+                vm.$opt1 = {
+                    pictures: [
+                        "http://placehold.it/800x150/903/fff.jpg&text=img1",
+                        "http://placehold.it/800x150/f36/fff.jpg&text=img2",
+                        "http://placehold.it/800x150/669/fff.jpg&text=img3",
+                        "http://placehold.it/800x150/0cf/fff.jpg&text=img4",
+                        "http://placehold.it/800x150/09f/fff.jpg&text=img5",
+                    ]
+                }
+                vm.$opt2 = {
+                    pictures: [
+                        "http://placehold.it/400x400/903/fff.jpg&text=img1",
+                        "http://placehold.it/400x400/f36/fff.jpg&text=img2",
+                        "http://placehold.it/400x400/669/fff.jpg&text=img3",
+                        "http://placehold.it/400x400/0cf/fff.jpg&text=img4",
+                        "http://placehold.it/400x400/09f/fff.jpg&text=img5",
+                    ]
+                }
+                vm.$skipArray = ["camera"]
+            })
+            avalon.scan()
+        })
+    </script>
+    <style type="text/css">
+        .widget1 {
+            width: 800px;
+            height: 150px;
+            margin: 0 auto;
+        }
+        .widget2 {
+            width: 400px;
+            height: 400px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper"  ms-controller="demo">
+        <h1>图片百叶窗切换组件-自定义宽高</h1>
+        <fieldset>
+            <legend>800*150</legend>
+            <div class="widget1" ms-widget="camera,camera1,$opt1"></div>
+        </fieldset>
+        <fieldset>
+            <legend>400*400</legend>
+            <div class="widget2" ms-widget="camera,camera1,$opt2"></div>
+        </fieldset>
+        <pre ms-skip class="brush:html;gutter:false;toolbar:false">
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;camera组件&lt;/title&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width"&gt;
+    &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+    &lt;script src="../highlight/shCore.js"&gt;&lt;/script&gt;
+    &lt;script&gt;
+        avalon.config({
+            paths: {
+                jquery: "./mocha/jquery.js"
+            },
+            shim: {
+                jquery: {
+                    exports: "jQuery"
+                }
+            }
+        })
+        require(["camera/avalon.camera"], function () {
+            avalon.define("demo", function (vm) {
+                vm.$opt1 = {
+                    pictures: [
+                        "http://placehold.it/800x150/903/fff.jpg&text=img1",
+                        "http://placehold.it/800x150/f36/fff.jpg&text=img2",
+                        "http://placehold.it/800x150/669/fff.jpg&text=img3",
+                        "http://placehold.it/800x150/0cf/fff.jpg&text=img4",
+                        "http://placehold.it/800x150/09f/fff.jpg&text=img5",
+                    ]
+                }
+                vm.$opt2 = {
+                    pictures: [
+                        "http://placehold.it/400x400/903/fff.jpg&text=img1",
+                        "http://placehold.it/400x400/f36/fff.jpg&text=img2",
+                        "http://placehold.it/400x400/669/fff.jpg&text=img3",
+                        "http://placehold.it/400x400/0cf/fff.jpg&text=img4",
+                        "http://placehold.it/400x400/09f/fff.jpg&text=img5",
+                    ]
+                }
+                vm.$skipArray = ["camera"]
+            })
+            avalon.scan()
+        })
+    &lt;/script&gt;
+    &lt;style type="text/css"&gt;
+        .widget1 {
+            width: 800px;
+            height: 150px;
+            margin: 0 auto;
+        }
+        .widget2 {
+            width: 400px;
+            height: 400px;
+            margin: 0 auto;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class="wrapper"  ms-controller="demo"&gt;
+    &lt;h1&gt;图片百叶窗切换组件-自定义宽高&lt;/h1&gt;
+    &lt;fieldset&gt;
+        &lt;legend&gt;800*150&lt;/legend&gt;
+        &lt;div class="widget1" ms-widget="camera,camera1,$opt1"&gt;&lt;/div&gt;
+    &lt;/fieldset&gt;
+    &lt;fieldset&gt;
+        &lt;legend&gt;400*400&lt;/legend&gt;
+        &lt;div class="widget2" ms-widget="camera,camera1,$opt2"&gt;&lt;/div&gt;
+    &lt;/fieldset&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+        </pre>
+    </div>
+</body>
+</html>

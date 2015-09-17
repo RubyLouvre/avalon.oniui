@@ -1,0 +1,86 @@
+
+@import "../chameleon/oniui-theme";
+$uiname : ".oni-tooltip";
+@if($oinui-theme == smoothness) {
+	$tooltip: (
+		bg: #FFE44F,
+		borderColor:#FFC805,
+		fontColor:#A65A00
+	) !global
+}
+.oni-tooltip-hidden{
+	visibility: hidden;
+}
+div#{$uiname}{
+	// current style
+	padding: 10px;
+	position: absolute;
+	max-width: 300px;
+	overflow: visible;
+	background: map-get($tooltip, bg);
+	border:1px solid map-get($tooltip, borderColor);
+	color: map-get($tooltip, fontColor);
+	font-size: 12px;
+	border-radius: 0 0 0 0;
+	a, a:link, a:hover{
+		color: map-get($tooltip, fontColor);
+		cursor: pointer;
+	}
+	#{$uiname}-arrow-in, #{$uiname}-arrow-out{
+	    overflow: visible;
+	    position: absolute;
+	}
+}
+#{$uiname} {
+	&-top {
+		#{$uiname}-arrow-in{
+		    @include triangle($direction: top, $width: 8px, $height: 5px, $color: map-get($tooltip, bg));
+		    left: 29px;
+		    top: -5px;
+		}	
+		#{$uiname}-arrow-out{
+		    @include triangle($direction: top, $width: 10px, $height: 6px, $color: map-get($tooltip, borderColor));
+		    left: 28px;
+		    top: -6px;
+		}
+	}
+	&-right{
+		#{$uiname}-arrow-in{
+			@include triangle($direction: right, $width: 8px, $height: 5px, $color: map-get($tooltip, bg));
+		    right: -4px;
+		    top: 29px;
+		}
+		#{$uiname}-arrow-out{
+			@include triangle($direction: right, $width: 10px, $height: 6px, $color: map-get($tooltip, borderColor));
+			left: auto;
+		    right: -5px;
+		    top: 28px;
+		}
+	}
+	&-bottom{
+		#{$uiname}-arrow-in{
+		    @include triangle($direction: bottom, $width: 8px, $height: 5px, $color: map-get($tooltip, bg));
+		    bottom: -5px;
+		    left: 29px;
+		    top: auto;
+		}
+		#{$uiname}-arrow-out{
+		    @include triangle($direction: bottom, $width: 10px, $height: 6px, $color: map-get($tooltip, borderColor));
+		    bottom: -6px;
+		    left: 28px;
+		    top: auto;
+		}
+	}
+	&-left{
+		#{$uiname}-arrow-in{
+			@include triangle($direction: left, $width: 8px, $height: 5px, $color: map-get($tooltip, bg));
+		    left: -4px;
+		    top: 29px;
+		}
+		#{$uiname}-arrow-out{
+			@include triangle($direction: left, $width: 10px, $height: 6px, $color: map-get($tooltip, borderColor));
+		    left: -5px;
+		    top: 28px;
+		}
+	}
+}

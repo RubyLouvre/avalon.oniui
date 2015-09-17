@@ -1,0 +1,76 @@
+
+/*
+这是每个都组件都应该引用的部分
+*/
+.oni-textbox {
+  display: -moz-inline-stack;
+  display: inline-block;
+  vertical-align: middle;
+  *vertical-align: auto;
+  zoom: 1;
+  *display: inline;
+  outline: medium none;
+  font-size: 0;
+  padding: 3px 5px;
+  line-height: 18px;
+  background-color: #FFFFFF;
+  border: 1px solid #CCCCCC; }
+  .oni-textbox .oni-textbox-input-wrap {
+    position: relative;
+    display: -moz-inline-stack;
+    display: inline-block;
+    vertical-align: middle;
+    *vertical-align: auto;
+    zoom: 1;
+    *display: inline;
+    line-height: 18px; }
+    .oni-textbox .oni-textbox-input-wrap span {
+      display: -moz-inline-stack;
+      display: inline-block;
+      vertical-align: middle;
+      *vertical-align: auto;
+      zoom: 1;
+      *display: inline;
+      height: 18px;
+      line-height: 18px;
+      font-size: 12px;
+      margin: 0;
+      padding: 0;
+      cursor: pointer; }
+
+.oni-timer {
+  overflow: hidden;
+  position: relative; }
+  .oni-timer .oni-timer-date, .oni-timer .oni-timer-hour, .oni-timer .oni-timer-minute {
+    position: absolute;
+    top: 0;
+    z-index: 1;
+    zoom: 1; }
+    .oni-timer .oni-timer-date ul, .oni-timer .oni-timer-hour ul, .oni-timer .oni-timer-minute ul {
+      font-size: 0;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      -moz-user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      user-select: none; }
+      .oni-timer .oni-timer-date ul li, .oni-timer .oni-timer-hour ul li, .oni-timer .oni-timer-minute ul li {
+        font-size: 14px;
+        color: #333;
+        height: 30px;
+        line-height: 30px;
+        padding: 0 20px;
+        margin: 0; }
+        .oni-timer .oni-timer-date ul li.oni-state-active, .oni-timer .oni-timer-hour ul li.oni-state-active, .oni-timer .oni-timer-minute ul li.oni-state-active {
+          font-weight: bold; }
+  .oni-timer .oni-timer-mask {
+    position: absolute;
+    z-index: 0;
+    zoom: 1;
+    margin: 0;
+    padding: 0;
+    height: 30px;
+    line-height: 30px;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc; }

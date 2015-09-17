@@ -1,0 +1,18 @@
+
+//这里是放置各种工具函数
+//http://sass-lang.com/documentation/Sass/Script/Functions.html
+@import "tools/reset";
+@import "tools/float";
+@import "tools/min";
+@import "tools/clearfix";
+@import "tools/color";
+@import "tools/pseudo-element";
+
+@import "tools/effect";//except ribbon
+@import "tools/background";
+@import "tools/text";
+@import "tools/animation";
+@import "tools/shape";
+@import "tools/shadow";
+@import "tools/list";
+

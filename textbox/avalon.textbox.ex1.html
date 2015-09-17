@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>textbox demo 1</title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>textbox demo 1</h1>
+        <p class="example">最基本的textbox组件（<span class="statement">ms-widget="textbox"</span>）</p>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;基本的textbox组件&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;div class="demo-show" ms-controller="demo1"&gt;
+                        &lt;form&gt;
+                            &lt;table style="width:100%; border:1px solid #000;"&gt;
+                                &lt;tbody&gt;
+                                    &lt;tr&gt;
+                                        &lt;td class="pad30"&gt;
+                                            &lt;input ms-widget="textbox, b, $bOpts" type="text" id="test"/&gt;
+                                            &lt;p&gt;设置tabIndex为2&lt;/p&gt;
+                                        &lt;/td&gt;
+
+                                        &lt;td class="pad30"&gt;
+                                            &lt;input ms-widget="textbox, a, $aOpts" data-textbox-auto-focus="true" type="text"/&gt;
+                                            &lt;p&gt;设置width、tabIndex为1&lt;/p&gt;
+                                        &lt;/td&gt;
+                                    &lt;/tr&gt;
+                                    &lt;tr&gt;
+                                        &lt;td colspan = "2" class="pad30"&gt;
+                                            &lt;input ms-widget="textbox, c, $cOpts" ms-attr-disabled="disable" type="text"/&gt;
+                                            &lt;p&gt;设置disabledClass为"oni-textbox-disabled disableClass2"&lt;/p&gt;
+                                        &lt;/td&gt;
+                                    &lt;/tr&gt;
+                                &lt;/tbody&gt;
+                            &lt;/table&gt;
+                        &lt;/form&gt;
+                    &lt;/div&gt;
+                    &lt;script&gt;
+                        require(["textbox/avalon.textbox"], function() {
+                            avalon.define("demo1", function(vm) {
+                                vm.$aOpts = {
+                                    width: 300,
+                                    tabIndex: 1
+                                }
+                                vm.$bOpts = {
+                                    tabIndex: 2
+                                }
+                                vm.$cOpts = {
+                                    disabledClass: "oni-textbox-disabled disableClass2"
+                                }
+                                vm.disable = true
+                            })
+                            avalon.scan();
+                        })
+                    &lt;/script&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+
+        <div class="demo-show" ms-controller="demo1">
+            <form>
+                <table style="width:100%; border:1px solid #000;">
+                    <tbody>
+                        <tr>
+                            <td class="pad30">
+                                <input ms-widget="textbox, b, $bOpts" type="text" id="test"/>
+                                <p>设置tabIndex为2</p>
+                            </td>
+
+                            <td class="pad30">
+                                <input ms-widget="textbox, a, $aOpts" data-textbox-auto-focus="true" type="text"/>
+                                <p>设置width、tabIndex为1</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan = "2" class="pad30">
+                                <input ms-widget="textbox, c, $cOpts" ms-attr-disabled="disable" type="text"/>
+                                <p>设置disabledClass为"oni-textbox-disabled disableClass2"</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+        <script>
+            require(["textbox/avalon.textbox"], function() {
+                avalon.define("demo1", function(vm) {
+                    vm.$aOpts = {
+                        width: 300,
+                        tabIndex: 1
+                    }
+                    vm.$bOpts = {
+                        tabIndex: 2
+                    }
+                    vm.$cOpts = {
+                        disabledClass: "oni-textbox-disabled disableClass2"
+                    }
+                    vm.disable = true
+                })
+                avalon.scan();
+            })
+        </script>
+    </div>
+</body>
+</html>

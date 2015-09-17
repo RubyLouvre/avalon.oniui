@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+    <script src="../avalon.js"></script>
+    <script type="text/javascript">
+        require(['dropdown/avalon.dropdown.js', 'dialog/avalon.dialog.js', "ready!"], function() {
+            avalon.define('dropdown', function(vm) {
+                vm.dup = 2;
+                vm.data = [
+                    {
+                        value: 1,
+                        label: '1'
+                    }, {
+                        value: 2,
+                        label: '2label'
+                    }, {
+                        value: 3
+                    }, {
+                        value: 4,
+                        text: '4text'
+                    }
+                ];
+                vm.dropdown = {
+                    onChange: function(newVal, oldValue, vmodel, valueStateKeep) {
+                        if (newVal == "3") {
+                            avalon.vmodels.dia.toggle = true
+                            avalon.vmodels.dia.valueStateKeep = valueStateKeep
+                            return false
+                        }
+                    }
+                }
+                vm.dialog = {
+                    onConfirm: function() {
+                        avalon.vmodels.dia.valueStateKeep(false)
+                    },
+                    onCancel: function() {
+                        avalon.vmodels.dia.valueStateKeep(true)
+                    }
+                }
+            });
+            avalon.scan();
+        });
+    </script>
+    <script src="../highlight/shCore.js"></script>
+</head>
+<body>
+<div class="wrapper">
+    <div ms-controller="dropdown">
+        <h2>dropdown（下拉框）</h2>
+        <p>options可以使用repeat生成</p>
+        <select ms-widget="dropdown"
+                ms-duplex="dup"
+                > 
+            <option ms-repeat="data" ms-attr-value="el.value" ms-attr-label="el.label" ms-selected="el.value==1">{{el.text}}</option>
+        </select>
+        <p>{{dup}}</p>
+        <div ms-widget="dialog, dia">dropdown 状态保持demo</div>
+    </div>
+
+</div>
+</body>
+</html>

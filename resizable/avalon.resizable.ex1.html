@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>draggable</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../highlight/shCore.js">
+
+        </script>
+        <script src="../avalon.js">
+
+        </script>
+        <script>
+            require(["resizable/avalon.resizable"], function() {
+                avalon.define("test", function(vm) {
+                    vm.resizable = {
+                        start: function() {
+                            avalon.log("resize start")
+                        },
+                        resize: function() {
+                            avalon.log("resizing")
+                        },
+                        stop: function() {
+                            avalon.log("resize stop")
+                        }
+                    }
+                    vm.$skipArray = ["resizable"]
+                })
+                avalon.scan()
+            })
+
+        </script>
+        <style>
+            #aaa{
+                width:200px;
+                height: 200px;
+                position: absolute;
+                background: red;
+                z-index: 10;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>四个方向都可以拖动</h1>
+        <div id="aaa" ms-controller="test" ms-resizable >
+
+        </div>
+
+
+    </body>
+</html>

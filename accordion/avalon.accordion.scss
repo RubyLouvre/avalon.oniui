@@ -1,0 +1,158 @@
+
+@import "../chameleon/oniui-theme";
+$uiname: "oni-accordion";
+$corner-radius: 4px;
+.#{$uiname} {
+    @include inline-block();
+    vertical-align: middle;
+    width: 100%;
+    font-family: $oniui-font-size * 1.1;
+    font-size: $oniui-font-size;
+    .oni-corner-all {
+        border-radius: $corner-radius;
+    }
+    .oni-corner-top {
+        border-top-left-radius: $corner-radius;
+        border-top-right-radius: $corner-radius;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+    .oni-corner-bottom {
+        border-bottom-right-radius: $corner-radius;
+        border-bottom-left-radius: $corner-radius;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+    &.#{$uiname}-mode-nav {
+        margin-top: -1px;
+        .#{$uiname}-inner {
+            border-top: 0 none;
+            .#{$uiname}-header {
+                padding: 7px 10px;
+            }
+            &.#{$uiname}-horizontal div {
+                float: left;
+                &.#{$uiname}-header {
+                    margin: 0;
+                    position: relative;
+                    h2 {
+                        -webkit-transform-origin: 0 0;
+                        -moz-transform-origin: 0 0;
+                        -ms-transform-origin: 0 0;
+                        -o-transform-origin: 0 0;
+                        transform-origin: 0 0;
+                        -webkit-transform: rotate(-90deg);
+                        -moz-transform: rotate(-90deg);
+                        -ms-transform: rotate(-90deg);
+                        -o-transform: rotate(-90deg);
+                        transform: rotate(-90deg);
+                        position: absolute;
+                        left: 10px;
+                        margin: 0;
+                        padding: 0;
+                    }
+                }
+                &.#{$uiname}-content {
+                    overflow: hidden;
+                }
+            }
+        }
+    }
+    &.#{$uiname}-mode-caret {
+        .#{$uiname}-inner {
+            border: 0 none;
+        }
+    }
+    .#{$uiname}-header {
+        display: block;
+        min-height: 0;
+        position: relative;
+        margin: 2px 0 0 0;
+        padding: 7px 10px;
+        cursor: pointer;
+        font-size: 100%;
+        &.oni-state-default {
+            border: 1px solid #d3d3d3;
+            background-color: #e6e6e6;
+            font-weight: normal;
+            color: #555;
+        }
+        .oni-icon-caret-right {
+            display: inline;
+        }
+        .oni-icon-caret-down {
+            display: none;
+        }
+        &.oni-state-hover {
+            @if($oinui-theme == smoothness) {
+                border: 1px solid #999999;
+                background: #dadada;
+                font-weight: normal;
+                color: #212121;
+            }
+        }
+        &.oni-state-active {
+            @if($oinui-theme == smoothness) {
+                background: #fff;
+                border: 1px solid #aaa;
+                color: #212121;
+            }
+            .oni-icon-caret-down {
+                display: inline;
+            }
+            .oni-icon-caret-right {
+                display: none;
+            }
+        }
+    }
+    .#{$uiname}-icons {
+        padding-left: 2.2em;
+        .#{$uiname}-icons {
+            padding-left: 2.2em;
+        }
+    }
+    .#{$uiname}-icon-wrap {
+        @include inline-block();
+        width: 14px;
+        vertical-align: middle;
+        text-align: right;
+        cursor: pointer;
+        .oni-icon {
+            cursor: pointer;
+        }
+    }
+    .#{$uiname}-content {
+        border-top: 0;
+        padding: 7px 10px;
+        overflow: auto;
+        font-size: 12px;
+        &.oni-state-default {
+            @if($oinui-theme == smoothness) {
+                border: 1px solid #aaa;
+                background: #fff;
+                color: #000;
+            }
+        }
+        &.oni-state-active {
+            @if($oinui-theme == smoothness) {
+                background: #fff;
+                border: 1px solid #aaa;
+            }
+        }
+        &.oni-state-hover {
+            @if($oinui-theme == smoothness) {
+                border: 1px solid #999999;
+                background: #dadada;
+                font-weight: normal;
+                color: #212121;
+            }
+        }
+        .#{$uiname}-content {
+            @if($oinui-theme == smoothness) {
+                border: 1px solid #aaa;
+                background: #fff;
+                color: #333;
+            } 
+        }
+    }
+}

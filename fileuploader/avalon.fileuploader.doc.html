@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>上传组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <meta name="descriptions" content="文件上传组件。支持预览、大文件和分块上传。">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    
+    <body>
+        <div class="wrapper">
+            <h2>FileUploader</h2>
+            <fieldset>
+                <legend>上传组件</legend>
+                <p>文件上传组件。支持预览、大文件和分块上传。</p>
+            </fieldset>
+            <h3 class="table-doc-title">使用说明</h3>
+            <table class="table-doc" border="1">
+                <colgroup>
+                    <col width="180">
+                        <col width="95">
+                            <col width="120">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>名字</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="4">配置参数</td>
+                    </tr>
+                    <tr>
+                        <td>maxFileSize</td>
+                        <td>Number</td>
+                        <td>1024*1024*10</td>
+                        <td>单个文件的大小限制</td>
+                    </tr>
+                    <tr>
+                        <td>filePoolSize</td>
+                        <td>Number</td>
+                        <td>1024*1024*200</td>
+                        <td>未上传文件的总大小限制。</td>
+                    </tr>
+                    <tr>
+                        <td>chunkSize</td>
+                        <td>Number</td>
+                        <td>1024 * 1024</td>
+                        <td>分块上传时的分块大小。</td>
+                    </tr>
+                    <tr>
+                        <td>chunked</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>是否开启分块上传。</td>
+                    </tr>
+                    <tr>
+                        <td>addButtonText</td>
+                        <td>String</td>
+                        <td>"Add Files"</td>
+                        <td>添加文件按钮的文本</td>
+                    </tr>
+                    <tr>
+                        <td>uploadButtonText</td>
+                        <td>String</td>
+                        <td>"Upload"</td>
+                        <td>上传按钮的文本</td>
+                    </tr>
+                    <tr>
+                        <td>acceptFileTypes</td>
+                        <td>String</td>
+                        <td>"*.*"</td>
+                        <td>可接收的文件类型</td>
+                    </tr>
+                    <tr>
+                        <td>previewWidth</td>
+                        <td>Number</td>
+                        <td>100</td>
+                        <td>预览图的宽度</td>
+                    </tr>
+                    <tr>
+                        <td>previewHeight</td>
+                        <td>Number</td>
+                        <td>85</td>
+                        <td>预览图的高度</td>
+                    </tr>
+                    <tr>
+                        <td>enablePreviewGenerating</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>是否开启预览图的生成功能</td>
+                    </tr>
+                    <tr>
+                        <td>showPreview</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>是否显示预览图</td>
+                    </tr>
+                    <tr>
+                        <td>showProgress</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>是否显示进度条</td>
+                    </tr>
+                    <tr>
+                        <td>enableRemoteKeyGen</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>分块上传时，是否预先和服务器握手，获取一个文件Id</td>
+                    </tr>
+                    <tr>
+                        <td>serverConfig</td>
+                        <td>Object</td>
+                        <td>{ }</td>
+                        <td>服务器请求配置对象。具体属性参看下表
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>timeout</td>
+                                        <td>Number</td>
+                                        <td>请求超时的毫秒数。默认为30000（30秒）</td>
+                                    </tr>
+                                    <tr>
+                                        <td>concurrentRequest</td>
+                                        <td>Number</td>
+                                        <td>并发的请求最大数量。默认为3</td>
+                                    </tr>
+                                    <tr>
+                                        <td>blobRetryTimes</td>
+                                        <td>Number</td>
+                                        <td>发生错误后的重试次数。默认为1</td>
+                                    </tr>
+                                    <tr>
+                                        <td>userName</td>
+                                        <td>String</td>
+                                        <td>发生错误后的重试次数。默认为1</td>
+                                    </tr>
+                                    <tr>
+                                        <td>password</td>
+                                        <td>String</td>
+                                        <td>发生错误后的重试次数。默认为1</td>
+                                    </tr>
+                                    <tr>
+                                        <td>url</td>
+                                        <td>String</td>
+                                        <td>提交文件数据的接口地址。无默认值。必选</td>
+                                    </tr>
+                                    <tr>
+                                        <td>previewUrl</td>
+                                        <td>String</td>
+                                        <td>IE6-9开启图片预览时，图片服务的地址。无默认值。</td>
+                                    </tr>
+                                    <tr>
+                                        <td>keyGenUrl</td>
+                                        <td>String</td>
+                                        <td>分块上传时生成文件key的服务地址。无默认值。</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>requiredParamsConfig</td>
+                        <td>Object</td>
+                        <td>{ }</td>
+                        <td>服务器Ajax请求参数配置对象，这个属性用于配置Ajax请求的参数名称。具体属性参看下表
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>blobParamName</td>
+                                        <td>String</td>
+                                        <td>文件数据领域的参数名。默认为"blob"</td>
+                                    </tr>
+                                    <tr>
+                                        <td>fileTokenParamName</td>
+                                        <td>String</td>
+                                        <td>文件标识领域的参数名。默认为"fileKey"</td>
+                                    </tr>
+                                    <tr>
+                                        <td>totalChunkParamName</td>
+                                        <td>String</td>
+                                        <td>分块总数的参数名称。默认为"total"</td>
+                                    </tr>
+                                    <tr>
+                                        <td>chunkIndexParamName</td>
+                                        <td>String</td>
+                                        <td>分块的序列号参数名称。默认为"chunk"</td>
+                                    </tr>
+                                    <tr>
+                                        <td>fileNameParamName</td>
+                                        <td>String</td>
+                                        <td>文件名领域的参数名。默认为"fileName"</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>enableDragDrop</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>是否开启文件拖放，只支持Chrome、FireFox、Safari及IE10+。默认关闭</td>
+                    </tr>
+                    <tr>
+                        <td>noPreviewPath</td>
+                        <td>String</td>
+                        <td>"http://source.qunarzz.com/general/oniui/fileuploader/no-preview.png"</td>
+                        <td>无预览的图片文件地址。</td>
+                    </tr>
+                    <tr>
+                        <td>previewFileTypes</td>
+                        <td>Object</td>
+                        <td>{ }</td>
+                        <td>为不同类型后缀名配置预览图的配置对象。</td>
+                    </tr>
+                    <tr>
+                        <td>onFileOverSize</td>
+                        <td>Function</td>
+                        <td>avalon.noop</td>
+                        <td>新增加的文件超过了fileSize配置时的回调函数。
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>opts</td>
+                                        <td>Object</td>
+                                        <td>vmodel</td>
+                                    </tr>
+                                    <tr>
+                                        <td>fileTokenParamName</td>
+                                        <td>Object</td>
+                                        <td>试图添加的文件对象。</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>onSameFileAdded</td>
+                        <td>Function</td>
+                        <td>avalon.noop</td>
+                        <td>新增的文件被识别为重复文件时的回调函数。
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>opts</td>
+                                        <td>Object</td>
+                                        <td>vmodel</td>
+                                    </tr>
+                                    <tr>
+                                        <td>fileTokenParamName</td>
+                                        <td>Object</td>
+                                        <td>试图添加的文件基本信息。</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>onFilePoolOverSize</td>
+                        <td>Function</td>
+                        <td>avalon.noop</td>
+                        <td>托管文件超过了filePoolSize配置时的回调函数。
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>opts</td>
+                                        <td>Object</td>
+                                        <td>vmodel</td>
+                                    </tr>
+                                    <tr>
+                                        <td>fileTokenParamName</td>
+                                        <td>Object</td>
+                                        <td>试图添加的文件对象。</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>madeRequestParams</td>
+                        <td>Function</td>
+                        <td>avalon.noop</td>
+                        <td>用于自定义Ajax请求的数据。发送Blob数据时，组件会调用此函数。返回的Object键值对会被加入到Ajax请求中。
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>fileObj</td>
+                                        <td>Object</td>
+                                        <td>文件对象</td>
+                                    </tr>
+                                    <tr>
+                                        <td>blobObj</td>
+                                        <td>Object</td>
+                                        <td>文件分块对象</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>uploadAll(opts)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>开启所有的文件的上传。
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>opts</td>
+                                        <td>Object</td>
+                                        <td>vmodel</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>uploadFile(opts,index)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>开启某个文件的上传。
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>opts</td>
+                                        <td>Object</td>
+                                        <td>vmodel</td>
+                                    </tr>
+                                    <tr>
+                                        <td>index</td>
+                                        <td></td>
+                                        <td>index {Number or String} 文件的Index或者LocalToken。</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>remoteFileKeyGen(opts,fileObj,resolve,reject)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>分块上传时，为文件生成一个RemoteKey的方法。enableRemoteKeyGen配置为true时，会调用此方法。重写此方法时，生成key成功后，调用resolve(key)来结束此方法。
+                            <table
+                            border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>opts</td>
+                                        <td>Object</td>
+                                        <td>vmodel</td>
+                                    </tr>
+                                    <tr>
+                                        <td>fileLocalToken</td>
+                                        <td>String</td>
+                                        <td>文件的LocalToken。</td>
+                                    </tr>
+                                    <tr>
+                                        <td>resolve</td>
+                                        <td>Function</td>
+                                        <td>Promise的resolve函数。</td>
+                                    </tr>
+                                    <tr>
+                                        <td>reject</td>
+                                        <td>Object</td>
+                                        <td>Promise的reject函数。</td>
+                                    </tr>
+                                </tbody>
+            </table>
+            </td>
+            </tr>
+            <tr>
+                <td>localFileKeyGen(opts,fileObj,resolve,reject)</td>
+                <td>Function</td>
+                <td></td>
+                <td>分块上传时，为文件生成一个RemoteKey的方法。enableRemoteKeyGen配置为false时，会调用此方法。重写此方法时，生成key成功后，调用resolve(key)来结束此方法。
+                    <table
+                    border="1">
+                        <tbody>
+                            <tr>
+                                <th style="width:100px">参数名/返回值</th>
+                                <th style="width:70px">类型</th>
+                                <th>说明</th>
+                            </tr>
+                            <tr>
+                                <td>opts</td>
+                                <td>Object</td>
+                                <td>vmodel</td>
+                            </tr>
+                            <tr>
+                                <td>fileLocalToken</td>
+                                <td>String</td>
+                                <td>文件的LocalToken。</td>
+                            </tr>
+                            <tr>
+                                <td>resolve</td>
+                                <td>Function</td>
+                                <td>Promise的resolve函数。</td>
+                            </tr>
+                            <tr>
+                                <td>reject</td>
+                                <td>Object</td>
+                                <td>Promise的reject函数。</td>
+                            </tr>
+                        </tbody>
+                        </table>
+                </td>
+            </tr>
+            <tr>
+                <td>getFileMessageText(fileObj)</td>
+                <td>Function</td>
+                <td></td>
+                <td>获取文件预览上的文本信息。重写此方法可以自定义文件上传时的文本。当文件被加入、开始上传、进度变更、上传完毕以及发生错误时都会调用此方法。
+                    <table
+                    border="1">
+                        <tbody>
+                            <tr>
+                                <th style="width:100px">参数名/返回值</th>
+                                <th style="width:70px">类型</th>
+                                <th>说明</th>
+                            </tr>
+                            <tr>
+                                <td>fileObj</td>
+                                <td>Object</td>
+                                <td>文件对象</td>
+                            </tr>
+                        </tbody>
+                        </table>
+                </td>
+            </tr>
+            <tr>
+                <td align="center" colspan="4">接口方法与固有属性</td>
+            </tr>
+            <tr>
+                <td>onPreviewRemoveClicked(el)</td>
+                <td>Function</td>
+                <td></td>
+                <td>侦听Preview上的x按钮。负责移除Preview和runtime的FileObj。</td>
+            </tr>
+            <tr>
+                <td>addFileClicked(e)</td>
+                <td>Function</td>
+                <td></td>
+                <td>侦听Add按钮的Click事件。</td>
+            </tr>
+            <tr>
+                <td>registInput(opts,target,isH5)</td>
+                <td>Function</td>
+                <td></td>
+                <td>Add按钮首次点击或者首次接收Drop文件时调用此函数，生成InputProxy、FlashEventHub和runtime的实例。</td>
+            </tr>
+            <tr>
+                <td>uploadClicked(event)</td>
+                <td>Function</td>
+                <td></td>
+                <td>上传按钮的事件侦听函数。</td>
+            </tr>
+            <tr>
+                <td>getInputAcceptTypes(_isFalsh)</td>
+                <td>Function</td>
+                <td></td>
+                <td>Flash和H5都会调用此方法来生成文件扩展名过滤。根据acceptTypes配置返回文件类型的Filter。</td>
+            </tr>
+            <tr>
+                <td>getPreviewByToken(opts,fileLocalToken)</td>
+                <td>Function</td>
+                <td></td>
+                <td>使用localToken获取一个Preview的VM对象
+                    <table border="1">
+                        <tbody>
+                            <tr>
+                                <th style="width:100px">参数名/返回值</th>
+                                <th style="width:70px">类型</th>
+                                <th>说明</th>
+                            </tr>
+                            <tr>
+                                <td>opts</td>
+                                <td>Object</td>
+                                <td>vmodel</td>
+                            </tr>
+                            <tr>
+                                <td>fileLocalToken</td>
+                                <td>String</td>
+                                <td>文件的LocalToken。</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>getFileKey(opts,fileObj,callback,scope)</td>
+                <td>Function</td>
+                <td></td>
+                <td>分块上传时，为文件生成一个RemoteKey的方法。enableRemoteKeyGen配置为true时，会调用remoteFileKeyGen方法生成key。否则使用localFileKeyGen。
+                    <table
+                    border="1">
+                        <tbody>
+                            <tr>
+                                <th style="width:100px">参数名/返回值</th>
+                                <th style="width:70px">类型</th>
+                                <th>说明</th>
+                            </tr>
+                            <tr>
+                                <td>opts</td>
+                                <td>Object</td>
+                                <td>vmodel</td>
+                            </tr>
+                            <tr>
+                                <td>fileLocalToken</td>
+                                <td>String</td>
+                                <td>文件的LocalToken。</td>
+                            </tr>
+                            <tr>
+                                <td>callback</td>
+                                <td>Function</td>
+                                <td>生成成功后的回调函数。</td>
+                            </tr>
+                            <tr>
+                                <td>scope</td>
+                                <td>Object</td>
+                                <td>callback的作用域。</td>
+                            </tr>
+                        </tbody>
+                        </table>
+                </td>
+            </tr>
+            <tr>
+                <td>compareFileObjects(f1,f2)</td>
+                <td>Function</td>
+                <td></td>
+                <td>比较两个文件对象，并返回true或者false表示是否为相同的文件。
+                    <table border="1">
+                        <tbody>
+                            <tr>
+                                <th style="width:100px">参数名/返回值</th>
+                                <th style="width:70px">类型</th>
+                                <th>说明</th>
+                            </tr>
+                            <tr>
+                                <td>f1</td>
+                                <td>Object</td>
+                                <td>第一个文件对象</td>
+                            </tr>
+                            <tr>
+                                <td>f2</td>
+                                <td>Object</td>
+                                <td>第二个文件对象</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            </tbody>
+            </table>
+            <ul class="example-links">
+                <li>
+                    <a href="avalon.fileuploader.ex1.html">uploader基础配置项</a>
+                </li>
+                <li>
+                    <a href="avalon.fileuploader.ex2.html">预览图和进度条配置</a>
+                </li>
+                <li>
+                    <a href="avalon.fileuploader.ex3.html">大文件和分块配置</a>
+                </li>
+                <li>
+                    <a href="avalon.fileuploader.ex5.html">文件Ajax请求参数的配置</a>
+                </li>
+            </ul>
+        </div>
+    </body>
+
+</html>

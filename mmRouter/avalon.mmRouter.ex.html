@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>mmRouter组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../avalon.js"></script>
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <style>
+        * {word-wrap: break-word;margin:0;padding:0}
+        body {background: #f9f9f9;font-size: 14px;}
+        .tb {margin-top: 10px;padding-left: 5px;line-height: 30px;border-bottom: 1px solid #CDCDCD;}
+        .cl {zoom: 1;}
+        .cl::after {content: ".";display: block;height: 0px;clear: both;visibility: hidden;}
+        .contents {width: 862px;margin:30px 0 0 20px;background: #FFF;}
+        ul li{list-style: none;}
+        .tb li {float: left;margin: 0 3px -1px 0;}
+        .tb li {_width: 120px;*width:120px: ;}
+        a {color: #333;text-decoration: none;}
+        .tb a {display: block;padding: 0 10px;border: 1px solid #CDCDCD;background: #E5EDF2;}
+        .tb .a a{border-bottom-color: #fff;background: #FFF;font-weight: 700;}
+        .tb li {_width:120px;*width:120px;}
+        a.tbtxt1 {float:left;border-right-width:0;}
+        a.tbtxt2 {float:left;}
+        a.tbclose {float:left;border-left-width:0;width:12px;}
+    </style>
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    <body>
+        <h1>mmRouter综合实例一: avalon.get</h1>
+        <div class="contents" ms-controller="box">
+            <ul class="tb cl">
+                <li ms-repeat="tab.page" ms-class="a:tab.currpage===el.name"><a ms-href="el.url" ms-class-1="tbtxt1:el.name!=='tab1'" ms-class-2="tbtxt2:el.name==='tab1'">{{ el.title }}</a><a ms-if="el.name!='tab1'" ms-click="tab_close(el.name)" href="javascript:;" class="tbclose">X</a></li>
+            </ul>
+            <div id="main" class="cl" style="margin:10px 5px 5px 10px;width:500px;height:300px">
+                <p>{{tab.content}}</p>
+            </div>
+            <div>
+                <a href="#!/tab1">显示tab1</a> <a href="#!/tab2">显示tab2</a> <a href="#!/tab3">显示tab3</a>
+            </div>
+        </div>
+        <script>
+        require(["mmRouter/mmRouter"], function () {
+            var model = avalon.define('box', function(vm) {
+                vm.tab = {currpage:'tab1',content:'tab1', page:[{name:'tab1', title:'选项卡一',url:'#!/tab1'}]};
+                vm.tab_close = function (tname) {
+                    while(true) {
+                        var l = vm.tab.page.length;
+                        if (l===1) break;
+                        loaded[vm.tab.page[l-1].name] = 0;
+                        if (vm.tab.page[l-1].name===tname) {
+                            vm.tab.page.pop();
+                            break;
+                        } else {
+                            vm.tab.page.pop();
+                        }
+                    }
+                    avalon.router.navigate("/tab1");
+                    vm.tab.currpage = 'tab1';
+                }
+            });
+            var loaded = {};
+            avalon.router.when(["/nihao/:id"], "/tab:id")
+            avalon.router.get("/tab1", function(a) {
+                var page = 'tab1';
+                model.tab.content = "页面："+page;
+                model.tab.currpage = page;
+            });
+            avalon.router.get("/tab2", function(a) {
+                var page = 'tab2';
+                var a = {name:page, title:'选项卡二', url:'#!/tab2'};
+                if (!loaded[page]) {
+                    loaded[page] = 1;
+                    model.tab.page.push(a);
+                }
+                model.tab.content = "页面："+page;
+                model.tab.currpage = page;
+            });
+            avalon.router.get("/tab3", function(a) {
+                var page = 'tab3';
+                var a = {name:page, title:'选项卡三', url:'#!/tab3'};
+                if(!loaded[page]) {
+                    loaded[page] = 1;
+                    model.tab.page.push(a);
+                }
+                model.tab.content = "页面："+page;
+                model.tab.currpage = page;
+            });
+            avalon.router.error(function(a) {
+                avalon.router.navigate("/tab1");
+            })
+            avalon.history.start({html5Mode: false});
+            avalon.scan();
+        });
+        </script>
+        <pre ms-skip class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;mmRouter组件&lt;/title&gt;
+        &lt;meta charset=&quot;UTF-8&quot;&gt;
+        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;
+        &lt;script src=&quot;../avalon.js&quot;&gt;&lt;/script&gt;
+        &lt;style&gt;
+        * {word-wrap: break-word;margin:0;padding:0}
+        body {background: #f9f9f9;font-size: 14px;}
+        .tb {margin-top: 10px;padding-left: 5px;line-height: 30px;border-bottom: 1px solid #CDCDCD;}
+        .cl {zoom: 1;}
+        .cl::after {content: &quot;.&quot;;display: block;height: 0px;clear: both;visibility: hidden;}
+        .contents {width: 862px;margin:30px 0 0 20px;background: #FFF;}
+        ul li{list-style: none;}
+        .tb li {float: left;margin: 0 3px -1px 0;}
+        .tb li {_width: 120px;*width:120px: ;}
+        a {color: #333;text-decoration: none;}
+        .tb a {display: block;padding: 0 10px;border: 1px solid #CDCDCD;background: #E5EDF2;}
+        .tb .a a{border-bottom-color: #fff;background: #FFF;font-weight: 700;}
+        .tb li {_width:120px;*width:120px;}
+        a.tbtxt1 {float:left;border-right-width:0;}
+        a.tbtxt2 {float:left;}
+        a.tbclose {float:left;border-left-width:0;width:12px;}
+    &lt;/style&gt;
+        
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;h1&gt;mmRouter综合实例一: avalon.get&lt;/h1&gt;
+        &lt;div class=&quot;contents&quot; ms-controller=&quot;box&quot;&gt;
+            &lt;ul class=&quot;tb cl&quot;&gt;
+                &lt;li ms-repeat=&quot;tab.page&quot; ms-class=&quot;a:tab.currpage===el.name&quot;&gt;&lt;a ms-href=&quot;el.url&quot; ms-class-1=&quot;tbtxt1:el.name!=='tab1'&quot; ms-class-2=&quot;tbtxt2:el.name==='tab1'&quot;&gt;{{ el.title }}&lt;/a&gt;&lt;a ms-if=&quot;el.name!='tab1'&quot; ms-click=&quot;tab_close(el.name)&quot; href=&quot;javascript:;&quot; class=&quot;tbclose&quot;&gt;X&lt;/a&gt;&lt;/li&gt;
+            &lt;/ul&gt;
+            &lt;div id=&quot;main&quot; class=&quot;cl&quot; style=&quot;margin:10px 5px 5px 10px;width:500px;height:300px&quot;&gt;
+                &lt;p&gt;{{tab.content}}&lt;/p&gt;
+            &lt;/div&gt;
+            &lt;div&gt;
+                &lt;a href=&quot;#!/tab1&quot;&gt;显示tab1&lt;/a&gt; &lt;a href=&quot;#!/tab2&quot;&gt;显示tab2&lt;/a&gt; &lt;a href=&quot;#!/tab3&quot;&gt;显示tab3&lt;/a&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;script&gt;
+        require([&quot;mmRouter/mmRouter&quot;], function () {
+            var model = avalon.define('box', function(vm) {
+                vm.tab = {currpage:'tab1',content:'tab1', page:[{name:'tab1', title:'选项卡一',url:'#!/tab1'}]};
+                vm.tab_close = function (tname) {
+                    while(true) {
+                        var l = vm.tab.page.length;
+                        if (l===1) break;
+                        loaded[vm.tab.page[l-1].name] = 0;
+                        if (vm.tab.page[l-1].name===tname) {
+                            vm.tab.page.pop();
+                            break;
+                        } else {
+                            vm.tab.page.pop();
+                        }
+                    }
+                    avalon.router.navigate(&quot;/tab1&quot;);
+                    vm.tab.currpage = 'tab1';
+                }
+            });
+            var loaded = {};
+            avalon.router.when([&quot;/nihao/:id&quot;], &quot;/tab:id&quot;)
+            avalon.router.get(&quot;/tab1&quot;, function(a) {
+                var page = 'tab1';
+                model.tab.content = &quot;页面：&quot;+page;
+                model.tab.currpage = page;
+            });
+            avalon.router.get(&quot;/tab2&quot;, function(a) {
+                var page = 'tab2';
+                var a = {name:page, title:'选项卡二', url:'#!/tab2'};
+                if (!loaded[page]) {
+                    loaded[page] = 1;
+                    model.tab.page.push(a);
+                }
+                model.tab.content = &quot;页面：&quot;+page;
+                model.tab.currpage = page;
+            });
+            avalon.router.get(&quot;/tab3&quot;, function(a) {
+                var page = 'tab3';
+                var a = {name:page, title:'选项卡三', url:'#!/tab3'};
+                if(!loaded[page]) {
+                    loaded[page] = 1;
+                    model.tab.page.push(a);
+                }
+                model.tab.content = &quot;页面：&quot;+page;
+                model.tab.currpage = page;
+            });
+            avalon.router.error(function(a) {
+                avalon.router.navigate(&quot;/tab1&quot;);
+            })
+            avalon.history.start({html5Mode: false});
+            avalon.scan();
+        });
+        &lt;/script&gt;
+        
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+    </body>
+</html>

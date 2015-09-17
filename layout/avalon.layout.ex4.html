@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Resize Layout demo</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+        <script src="../highlight/shCore.js"></script>
+        <script type="text/javascript" src="../avalon.js"></script>
+    </head>
+    <body ms-controller="demo">
+        <div style="padding: 10px 0 0 50px;">
+            <input ms-widget="textbox" ms-duplex-number="layoutWidth" type="textbox"/>
+            <input ms-widget="textbox" ms-duplex-number="layoutHeight" type="textbox" />
+            <div ms-css-width="layoutWidth" ms-css-height="layoutHeight" style="margin: 10px 0 0;overflow:hidden;">
+                <div ms-widget="layout,layoutVM,$layoutVMOptions" class="container">
+                    <div ms-layout-dock="north">
+                        北区配置尺寸为{{northRegion.size}}。
+                    </div>
+                    <div ms-layout-dock="west">
+                        西区配置尺寸为{{westRegion.size}}。
+                    </div>
+                    <div ms-layout-dock="east">
+                        东区配置尺寸为{{eastRegion.size}}。
+                    </div>
+                    <div ms-layout-dock="centre">
+                        直接改变Layout的大小时，各区域会按照百分比配置重新计算。但是经过拖放改变区域尺寸后，该区域配置的百分比失效并被实际尺寸覆盖。
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            require(["./layout/avalon.layout", "./button/avalon.button", "./textbox/avalon.textbox"], function() {
+                avalon.define("demo", function(vm) {
+                    vm.$layoutVMOptions = {
+                        northRegion: {
+                            size: "20%",
+                            resizable: true,
+                            regionClass: "north"
+                        },
+                        eastRegion: {
+                            size: 120,
+                            resizable: true
+                        },
+                        westRegion: {
+                            size: "20%",
+                            resizable: true
+                        },
+                        stretchMax: true,
+                        resizerSize: 5,
+                        regionBorderWidth: 1
+                    };
+                    vm.layoutWidth = 600;
+                    vm.layoutHeight = 500;
+                    var resizeFn = function() {
+                        avalon.vmodels.layoutVM.updateLayoutSize(avalon.vmodels.layoutVM);
+                    };
+                    vm.$watch('layoutWidth', resizeFn);
+                    vm.$watch('layoutHeight', resizeFn);
+                })
+                avalon.scan()
+            })
+        </script>
+        <pre class="brush:html;gutter:false;">
+            &lt;!DOCTYPE html&gt;
+            &lt;html&gt;
+                &lt;head&gt;
+                    &lt;title&gt;Resize Layout demo&lt;/title&gt;
+                    &lt;meta charset="UTF-8"&gt;
+                    &lt;meta name="viewport" content="width=device-width"&gt;
+                    &lt;link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/&gt;
+                    &lt;link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/&gt;
+                    &lt;script src="../highlight/shCore.js"&gt;&lt;/script&gt;
+                    &lt;script type="text/javascript" src="../avalon.js"&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body ms-controller="demo"&gt;
+                    &lt;div style="padding: 10px 0 0 50px;"&gt;
+                        &lt;input ms-widget="textbox" ms-duplex-number="layoutWidth" type="textbox"/&gt;
+                        &lt;input ms-widget="textbox" ms-duplex-number="layoutHeight" type="textbox" /&gt;
+                        &lt;div ms-css-width="layoutWidth" ms-css-height="layoutHeight" style="margin: 10px 0 0;overflow:hidden;"&gt;
+                            &lt;div ms-widget="layout,layoutVM,$layoutVMOptions" class="container"&gt;
+                                &lt;div ms-layout-dock="north"&gt;
+                                    北区配置尺寸为&#123;&#123;northRegion.size&#125;&#125;。
+                                &lt;/div&gt;
+                                &lt;div ms-layout-dock="west"&gt;
+                                    西区配置尺寸为&#123;&#123;westRegion.size&#125;&#125;。
+                                &lt;/div&gt;
+                                &lt;div ms-layout-dock="east"&gt;
+                                    东区配置尺寸为&#123;&#123;eastRegion.size&#125;&#125;。
+                                &lt;/div&gt;
+                                &lt;div ms-layout-dock="centre"&gt;
+                                    直接改变Layout的大小时，各区域会按照百分比配置重新计算。但是经过拖放改变区域尺寸后，该区域配置的百分比失效并被实际尺寸覆盖。
+                                &lt;/div&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;script&gt;
+                        require(["./layout/avalon.layout", "./button/avalon.button", "./textbox/avalon.textbox"], function() &#123;
+                            avalon.define("demo", function(vm) &#123;
+                                vm.$layoutVMOptions = &#123;
+                                    northRegion: &#123;
+                                        size: "20%",
+                                        resizable: true,
+                                        regionClass: "north"
+                                    &#125;,
+                                    eastRegion: &#123;
+                                        size: 120,
+                                        resizable: true
+                                    &#125;,
+                                    westRegion: &#123;
+                                        size: "20%",
+                                        resizable: true
+                                    &#125;,
+                                    stretchMax: true,
+                                    resizerSize: 5,
+                                    regionBorderWidth: 1
+                                &#125;;
+                                vm.layoutWidth = 600;
+                                vm.layoutHeight = 500;
+                                var resizeFn = function() &#123;
+                                    avalon.vmodels.layoutVM.updateLayoutSize(avalon.vmodels.layoutVM);
+                                &#125;;
+                                vm.$watch('layoutWidth', resizeFn);
+                                vm.$watch('layoutHeight', resizeFn);
+                            &#125;)
+                            avalon.scan()
+                        &#125;)
+                    &lt;/script&gt;
+                &lt;/body&gt;
+            &lt;/html&gt;
+        </pre>
+    </body>
+</html>

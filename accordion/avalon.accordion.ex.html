@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>accordion demo </title>
+<script src="../avalon.js"></script>
+</head>
+<body class="ms-controller" ms-controller="demo">
+    <div ms-widget="accordion,aa,$aaOpts">
+    </div>
+    <script> 
+        require(["accordion/avalon.accordion"], function($$) {
+            $$.define('demo',function(vm){
+                vm.$ccOpts = {
+                    data: [
+                        {
+                            title: "三层嵌套标题一",
+                            content: "三层嵌套内容一"
+                        },
+                        {
+                            title: "三层嵌套标题二",
+                            content: "三层嵌套内容二"
+                        },
+                        {
+                            title: "三层嵌套标题三",
+                            content: "三层嵌套内容三"
+                        }
+                    ],
+                    mode: "nav"
+                }
+                vm.$bbOpts = {
+                    data:  [
+                        {
+                            title: "雪儿",
+                            content: 'heelfifsfsd<div ms-widget="accordion,cc,$ccOpts" id="test"></div>'
+                        },
+                        {
+                            title: "静儿",
+                            content: '很好，我喜欢，继续额'
+                        }
+                    ],
+                    multiple: true
+                }
+                vm.$aaOpts = {
+                    data: [{
+                        'title': '标题1',
+                        'content': '正文1<p>fasdfsdaf</p>'
+                    }, {
+                        'title': '标题2',
+                        'content': '正文2<div ms-widget="accordion,bb,$bbOpts" id="test"></div>'
+                    }],
+                    controlCls: "xueerAddClass",
+                    initIndex: 1,
+                    // mode: "nav",
+                    width: "800",
+                    beforeSwitch: function() {
+                        avalon.log(this);
+                        avalon.log(arguments);
+                        avalon.log("beforeSwitch callback");
+                    },
+                    onSwitch: function() {
+                        avalon.log("onSwitch callback");
+                    },
+                    //autoRun: false,
+                    mode: "custom",
+                    template: '<div class="oni-accordion-inner" ms-each-item="data"><h3 class="oni-accordion-header oni-state-default" ms-class="MS_OPTION_ACTIVECLASS:currentIndex == $index">{{item.title}}</h3><div class="oni-accordion-content oni-state-default oni-widget-content" ms-visible="currentIndex == $index">{{item.content|html}}</div>',
+                    multiple: true,
+                }
+                
+            });
+            $$.scan();
+        });
+    </script>
+</body>
+</html>
+

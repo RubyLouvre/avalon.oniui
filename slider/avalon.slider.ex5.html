@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+        <script src="../highlight/shCore.js"></script>
+        <script src="../avalon.js"></script>
+    </head>
+    <body>
+        <div class="wrapper">
+            <h1>slider demo</h1>
+            <p class="example">配置step为50，使得每次slider的更新都是以50为基础</p>
+            <div ms-skip>
+                <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                    &lt;!DOCTYPE HTML&gt;
+                    &lt;html&gt;
+                    &lt;head&gt;
+                        &lt;meta charset='utf-8'/&gt;
+                        &lt;title&gt;slider demo 5&lt;/title&gt;
+                        &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                    &lt;/head&gt;
+                    &lt;body&gt;
+                        &lt;div class="demo-show" ms-controller = "theme"&gt;
+                            &lt;div style="width:70%"&gt;
+                                &lt;p&gt;配置step为50，使得slider在只有拖动了一定距离才同步数据&lt;/p&gt;
+                                &lt;input ms-widget="slider, d" data-slider-min="0" data-slider-max="500" data-slider-value="100" data-slider-step="50" /&gt;
+                                &lt;p ms-controller="d"&gt;值为{{value}},百分比为{{percent}}%; min为{{$valueMin}}, max为{{$valueMax}}&lt;/p&gt;
+                                &lt;br/&gt;
+                            &lt;/div&gt;
+                            &lt;script&gt;
+                                require(["slider/avalon.slider"], function() {
+                                    var model = avalon.define("theme", function(vm) {
+
+                                    })
+                                    avalon.scan()
+                                })
+                            &lt;/script&gt;
+                        &lt;/div&gt;
+                    &lt;/body&gt;
+                    &lt;/html&gt;
+                </pre>
+            </div>
+            <div class="demo-show" ms-controller = "theme">
+                <div style="width:70%">
+                    <p>配置step为50，使得slider在只有拖动了一定距离才同步数据</p>
+                    <input ms-widget="slider, d" data-slider-min="0" data-slider-max="500" data-slider-value="60" data-slider-step="50" />
+                    <p ms-controller="d">值为{{value}},百分比为{{percent}}%; min为{{$valueMin}}, max为{{$valueMax}}</p>
+                    <br/>
+                </div>
+                <script>
+                    require(["slider/avalon.slider"], function() {
+                        var model = avalon.define("theme", function(vm) {
+                        })
+                        avalon.scan()
+                    })
+                </script>
+            </div>
+        </div>
+    </body>
+</html>

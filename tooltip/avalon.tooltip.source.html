@@ -1,0 +1,11 @@
+<p>
+组件在不跟随鼠标移动时候，会自动将箭头对齐元素中间的位置，当tooltip没有元素高或者宽时，会自动调整tip显示在元素高度或者宽度居中的地方
+</p>
+<p>tooltip 组件有一个重要的contentGetter方法,见源码：</p>
+<pre class="brush:js;gutter:false;toolbar:false;" ms-skip>
+   "contentGetter": function(elem) {
+        if(elem.tagName.toLowerCase() != "a") return
+        return elem.title
+    }
+</pre>
+<p>该函数有无返回值，将决定是否展示tooltip</p>

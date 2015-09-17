@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>datepicker demo </title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>datepicker demo</h1>
+        <div class="demo-show" ms-controller="demo">
+            <fieldset style="position:relative; z-index: 3">
+                <legend>切换日历的禁用与否</legend>
+                <input ms-widget="datepicker, a" ms-disabled="disabled" />
+                <p>说明：初始禁用输入域，也就禁用了日历的显示，可以通过点击旁边的“切换禁用”按钮，使得日历可用</p>
+                <button ms-click="toggleDisabled" style="position:absolute;right:0;top: 20px;">切换禁用</button>
+            </fieldset>
+            <fieldset style="position:relative; z-index: 2">
+                <legend>初始化日期，显示日历时高亮初始日期</legend>
+                <input ms-widget="datepicker"  ms-duplex="date"/>
+                <p>说明：可以通过ms-duplex初始化日期输入域，也可以通过input的value属性直接设置，不过ms-duplex更灵活, 试着点击右边的“change date”看看会发生什么</p>
+                <button ms-click="changeDate" style="position:absolute;right:0;top: 20px;">change date</button>
+            </fieldset>
+            <fieldset style="position:relative; z-index: 1">
+                <legend>手动输入日期使输入域失去焦点，看看date的变化</legend>
+                <input ms-widget="datepicker" ms-duplex="date1"/>
+                <p>说明：手动输入日期然后使输入域失去焦点，看看date的变化。datepicker有自动校正的能力，也就是说当你的初始值不符合日期格式(包括无初始值的情况)而且allowBlank为默认的false时，datepicker会自动将初始值设置为今天</p>
+                <p>date: {{date1}}</p>
+            </fieldset>
+            <script> 
+                require(["datepicker/avalon.datepicker"], function(avalon) {
+                    var model = avalon.define("demo", function(vm) {
+                        vm.disabled = true;
+                        vm.toggleDisabled = function() {
+                            model.disabled = !model.disabled;
+                        }
+                        vm.date = "2014-06-02";
+                        vm.date1 = "2012-;"
+                        vm.changeDate = function() {
+                            var arr = avalon.range(10, 20);
+                            vm.date = "2014-06-"+arr[Math.floor(Math.random()*11)];
+                        }
+                    })
+                    avalon.scan();
+                })
+            </script>
+        </div>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;datepicker demo&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;div class="demo-show" ms-controller="demo"&gt;
+                        &lt;fieldset style="position:relative; z-index: 3"&gt;
+                            &lt;legend&gt;切换日历的禁用与否&lt;/legend&gt;
+                            &lt;input ms-widget="datepicker, a" ms-disabled="disabled" /&gt;
+                            &lt;p&gt;说明：初始禁用输入域，也就禁用了日历的显示，可以通过点击旁边的“切换禁用”按钮，使得日历可用&lt;/p&gt;
+                            &lt;button ms-click="toggleDisabled" style="position:absolute;right:0;top: 20px;"&gt;切换禁用&lt;/button&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset style="position:relative; z-index: 2"&gt;
+                            &lt;legend&gt;初始化日期，显示日历时高亮初始日期&lt;/legend&gt;
+                            &lt;input ms-widget="datepicker"  ms-duplex="date"/&gt;
+                            &lt;p&gt;说明：可以通过ms-duplex初始化日期输入域，也可以通过input的value属性直接设置，不过ms-duplex更灵活, 试着点击右边的“change date”看看会发生什么&lt;/p&gt;
+                            &lt;button ms-click="changeDate" style="position:absolute;right:0;top: 20px;"&gt;change date&lt;/button&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset style="position:relative; z-index: 1"&gt;
+                            &lt;legend&gt;手动输入日期使输入域失去焦点，看看date的变化&lt;/legend&gt;
+                            &lt;input ms-widget="datepicker" ms-duplex="date1"/&gt;
+                            &lt;p&gt;说明：手动输入日期然后使输入域失去焦点，看看date的变化。datepicker有自动校正的能力，也就是说当你的初始值不符合日期格式(包括无初始值的情况)而且allowBlank为默认的false时，datepicker会自动将初始值设置为今天&lt;/p&gt;
+                            &lt;p&gt;date: {{date1}}&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;script&gt; 
+                            require(["datepicker/avalon.datepicker"], function(avalon) {
+                                var model = avalon.define("demo", function(vm) {
+                                    vm.disabled = true;
+                                    vm.toggleDisabled = function() {
+                                        model.disabled = !model.disabled;
+                                    }
+                                    vm.date = "2014-06-02";
+                                    vm.date1 = "2012-;"
+                                    vm.changeDate = function() {
+                                        var arr = avalon.range(10, 20);
+                                        vm.date = "2014-06-"+arr[Math.floor(Math.random()*11)];
+                                    }
+                                })
+                                avalon.scan();
+                            })
+                        &lt;/script&gt;
+                    &lt;/div&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+    </div>
+</body>
+</html>
+

@@ -1,0 +1,144 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>textbox demo 4</title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>textbox demo 4</h1>
+        <p class="example">表单域的自动补全功能（<span class="statement">通过data-textbox-suggest来声明需要自动补全功能，且值说明补全的提示信息类型</span>）</p>
+        <p><span class="useDescription">说明：</span>根据data-textbox-suggest的值来判定使用哪种数据补全类型，而这数据是由用户自定义的</p>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;输入域的自动补全&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                &lt;div class="demo-show" ms-controller="demo4"&gt;
+                        &lt;form&gt;
+                            &lt;table style="width:100%; border:1px solid #000;"&gt;
+                                &lt;tbody&gt;
+                                    &lt;tr&gt;
+                                        &lt;td class="pad30"&gt;
+                                            &lt;input ms-widget="textbox" ms-duplex="x" type="textbox" data-textbox-suggest="test" data-textbox-limit="5" /&gt;
+                                            &lt;p&gt;输入框的值是： {{x}}&lt;/p&gt;
+                                        &lt;/td&gt;
+
+                                        &lt;td class="pad30"&gt;
+                                            &lt;input ms-widget="textbox" type="textbox" ms-duplex="p" data-textbox-suggest="test1"/&gt;
+                                            &lt;p&gt;输入框的值是： {{p}}&lt;/p&gt;
+                                        &lt;/td&gt;
+                                    &lt;/tr&gt;
+                                &lt;/tbody&gt;
+                            &lt;/table&gt;
+                        &lt;/form&gt;
+                    &lt;/div&gt;
+
+                    &lt;script&gt;
+                        require(["textbox/avalon.textbox"], function() {
+                            avalon.define("demo4", function(vm) {
+                                // 注意不可通过suggest重写suggest值，要不然就不能加载suggest插件
+                                vm.x = "";
+                                vm.p = "";
+                            })
+                            // 根据提示类型的不同提供提示信息，也就是信息的过滤方式完全由用户自己决定
+                            avalon.scan();
+
+                            avalon.ui["suggest"].strategies["test"] = function(value, done){
+                                // 添加策略
+                                // done(array ) {callback}
+                                setTimeout(function(){
+                                    done(value ? [
+                                        value + "1" ,
+                                        value + "2" ,
+                                        value + "3 这个建议项有点点长哦哦哦哦哦哦哦" ,
+                                        value + "4" ,
+                                        value + "5" ,
+                                        value + "6" ,
+                                        value + "7"  
+                                    ] : [] )
+                                },100)
+                            }
+                               
+
+                            avalon.ui["suggest"].strategies['test1'] = function( value , done ) {
+                                setTimeout(function(){
+                                    var arr = value ? ["xueer", "shirly"] : []
+                                    done(arr)
+                                },100)
+                            }
+                        })
+                    &lt;/script&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+
+        <div class="demo-show" ms-controller="demo4">
+            <form>
+                <table style="width:600px; border:1px solid #000;border-collapse: collapse">
+                    <tbody>
+                        <tr>
+                            <td style="width: 260px; border: 1px solid #000; padding: 20px">
+                                <input ms-widget="textbox" ms-duplex="x" type="textbox" data-textbox-suggest="test" data-textbox-limit="5" />
+                                <p>输入框的值是： {{x}}</p>
+                            </td>
+
+                            <td style="border: 1px solid #000; padding: 20px">
+                                <input ms-widget="textbox" type="textbox" ms-duplex="p" data-textbox-suggest="test1"/>
+                                <p>输入框的值是： {{p}}</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+
+        <script>
+            require(["textbox/avalon.textbox"], function() {
+                avalon.define("demo4", function(vm) {
+                    // 注意不可通过suggest重写suggest值，要不然就不能加载suggest插件
+                    vm.x = "";
+                    vm.p = "";
+                })
+                // 根据提示类型的不同提供提示信息，也就是信息的过滤方式完全由用户自己决定
+                avalon.scan();
+
+                avalon.ui["suggest"].strategies["test"] = function(value, done){
+                    // 添加策略
+                    // done( err , array ) {callback}
+                    setTimeout(function(){
+                        done(value ? [
+                            value + "1" ,
+                            value + "2" ,
+                            value + "3 这个建议项有点点长哦哦哦哦哦哦哦" ,
+                            value + "4" ,
+                            value + "5" ,
+                            value + "6" ,
+                            value + "7"  
+                        ] : [] )
+                    },100)
+                }
+                   
+
+                avalon.ui["suggest"].strategies['test1'] = function( value , done ) {
+                    setTimeout(function(){
+                        var arr = value ? ["xueer", "shirly"] : []
+                        done(arr)
+                    },100)
+                }
+            })
+        </script>
+    </div>
+</body>
+</html>

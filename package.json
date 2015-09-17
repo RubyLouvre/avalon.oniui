@@ -1,0 +1,16 @@
+{
+  "name": "oniui",
+  "version": "0.2.8",
+  "description": "基于avalon的组件库,由去哪儿网前端架构组倾力打造",
+  "scripts": {
+    "test": "elves"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RubyLouvre/avalon.oniui.git"
+  },
+  "bugs": {
+    "url": "https://github.com/RubyLouvre/avalon.oniui/issues"
+  },
+  "homepage": "http://ued.qunar.com/oniui/home.htm"
+}

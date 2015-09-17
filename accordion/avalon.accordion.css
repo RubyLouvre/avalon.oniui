@@ -1,0 +1,33 @@
+
+/*
+这是每个都组件都应该引用的部分
+*/
+.oni-accordion { display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; vertical-align: middle; width: 100%; font-family: 1.1em; font-size: 1em; }
+.oni-accordion .oni-corner-all { border-radius: 4px; }
+.oni-accordion .oni-corner-top { border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+.oni-accordion .oni-corner-bottom { border-bottom-right-radius: 4px; border-bottom-left-radius: 4px; border-top-left-radius: 0; border-top-right-radius: 0; }
+.oni-accordion.oni-accordion-mode-nav { margin-top: -1px; }
+.oni-accordion.oni-accordion-mode-nav .oni-accordion-inner { border-top: 0 none; }
+.oni-accordion.oni-accordion-mode-nav .oni-accordion-inner .oni-accordion-header { padding: 7px 10px; }
+.oni-accordion.oni-accordion-mode-nav .oni-accordion-inner.oni-accordion-horizontal div { float: left; }
+.oni-accordion.oni-accordion-mode-nav .oni-accordion-inner.oni-accordion-horizontal div.oni-accordion-header { margin: 0; position: relative; }
+.oni-accordion.oni-accordion-mode-nav .oni-accordion-inner.oni-accordion-horizontal div.oni-accordion-header h2 { -webkit-transform-origin: 0 0; -moz-transform-origin: 0 0; -ms-transform-origin: 0 0; -o-transform-origin: 0 0; transform-origin: 0 0; -webkit-transform: rotate(-90deg); -moz-transform: rotate(-90deg); -ms-transform: rotate(-90deg); -o-transform: rotate(-90deg); transform: rotate(-90deg); position: absolute; left: 10px; margin: 0; padding: 0; }
+.oni-accordion.oni-accordion-mode-nav .oni-accordion-inner.oni-accordion-horizontal div.oni-accordion-content { overflow: hidden; }
+.oni-accordion.oni-accordion-mode-caret .oni-accordion-inner { border: 0 none; }
+.oni-accordion .oni-accordion-header { display: block; min-height: 0; position: relative; margin: 2px 0 0 0; padding: 7px 10px; cursor: pointer; font-size: 100%; }
+.oni-accordion .oni-accordion-header.oni-state-default { border: 1px solid #d3d3d3; background-color: #e6e6e6; font-weight: normal; color: #555; }
+.oni-accordion .oni-accordion-header .oni-icon-caret-right { display: inline; }
+.oni-accordion .oni-accordion-header .oni-icon-caret-down { display: none; }
+.oni-accordion .oni-accordion-header.oni-state-hover { border: 1px solid #999999; background: #dadada; font-weight: normal; color: #212121; }
+.oni-accordion .oni-accordion-header.oni-state-active { background: #fff; border: 1px solid #aaa; color: #212121; }
+.oni-accordion .oni-accordion-header.oni-state-active .oni-icon-caret-down { display: inline; }
+.oni-accordion .oni-accordion-header.oni-state-active .oni-icon-caret-right { display: none; }
+.oni-accordion .oni-accordion-icons { padding-left: 2.2em; }
+.oni-accordion .oni-accordion-icons .oni-accordion-icons { padding-left: 2.2em; }
+.oni-accordion .oni-accordion-icon-wrap { display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; width: 14px; vertical-align: middle; text-align: right; cursor: pointer; }
+.oni-accordion .oni-accordion-icon-wrap .oni-icon { cursor: pointer; }
+.oni-accordion .oni-accordion-content { border-top: 0; padding: 7px 10px; overflow: auto; font-size: 12px; }
+.oni-accordion .oni-accordion-content.oni-state-default { border: 1px solid #aaa; background: #fff; color: #000; }
+.oni-accordion .oni-accordion-content.oni-state-active { background: #fff; border: 1px solid #aaa; }
+.oni-accordion .oni-accordion-content.oni-state-hover { border: 1px solid #999999; background: #dadada; font-weight: normal; color: #212121; }
+.oni-accordion .oni-accordion-content .oni-accordion-content { border: 1px solid #aaa; background: #fff; color: #333; }

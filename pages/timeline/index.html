@@ -1,0 +1,42 @@
+<div class="ms-controller" ms-controller="www_uiguide">
+
+    <div ms-if="!isLowIE" id="parallax" class="parallax-container" ms-css-height="outerHeight">
+        <div class="parallax parallax2">
+            <div class="circle-box">
+                <span ms-repeat="circles" ms-class="circle circle-{{$index + 1}}" data-repeat-rendered="circleCb"></span>
+            </div>
+        </div>
+        <div class="parallax parallax1">
+            <div class="month-box">
+                <span ms-repeat-m="months" ms-class="month month--m{{m.key}}"></span>
+            </div>
+        </div>
+        <div class="parallax parallax0">
+            <div class="tree">
+                <div class="month-wrapper" ms-repeat-m="months">
+                    <div class="tree__item"  data-repeat-rendered="cb"  ms-repeat-leaf="m.item" ms-class="{{(nowIndex[m.key]  + $index) % 2 === 0 ? ('tree__item--m' + m.key) : ('tree__item--m' + m.key + ' tree__item--right')}}">
+                        <div class="tree__item__main" ms-click="showBigPic(leaf.cover)">
+                            <a href="javascript:void 0;"><img width="430" height="245" ms-src="{{leaf.cover}}"/></a>
+                            <div class="des">
+                                <div class="des__bg"></div>
+                                <a href="javascript:void 0;" class="des__main">
+                                    <span class="des__title">{{leaf.title}}</span>
+                                    <span class="des__content">{{leaf.des}}</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="icon-1 icon__marker"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="tree-foot"></div>
+        </div>
+    </div>
+    <div ms-if="isLowIE" class="low-ie">
+        <h3>请使用高级浏览器，推荐使用 chrome。</h3>
+    </div>
+    <div ms-widget="dialog, treeLeafBig, $dialogOpts">
+        <img ms-src="imgUrl" width="800" height="500">
+    </div>
+    <script src="pages/timeline/dest/base.js"></script>
+</div>

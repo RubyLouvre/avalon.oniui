@@ -1,0 +1,174 @@
+<table class='table-doc'>
+    <tr>
+        <td class="events"><h3>事件</h3>
+            <ul>
+                <li>bind()</li>
+                <li>unbind()</li>
+
+            </ul>
+        </td> 
+
+        <td class="styles"><h3>样式</h3>
+            <ul>
+                <li>width()</li>
+                <li>height()</li>
+                <li>innerWidth()</li>
+                <li>innerHeight()</li>
+                <li>outerWidth()</li>
+                <li>outerHeight()</li>
+                <li>position()</li>
+                <li>offset()</li>
+                <li>offsetParent()</li>
+                <li>scrollLeft()</li>
+                <li>scrollTop()</li>
+                <li>addClass()</li>
+                <li>removeClass()</li>
+                <li>hasClass()</li>
+                <li>toggleClass()</li>
+            </ul>
+        </td> 
+        <td class="attributes"><h3>属性</h3>
+            <ul>
+                <li>attr()</li>
+                <li>data()</li>
+                <li>val()</li>
+            </ul>
+        </td> 
+    </tr>
+</table>
+<fieldset>
+    <legend>事件的扩展</legend>
+    <p>对事件的兼容与修复向来是让人头大的事情，avalon不可能做到面面俱多，因此留下足够多的地方让用户进行扩展。</p>
+    <p>首先是最基础avalon.bind, avalon.unbind方法，它可以通过avalon.eventHooks进行扩展。我们先看其源码：</p>
+    <pre class="brush:javascript;gutter:false;toolbar:false;">
+        bind: function(el, type, fn, phase) {
+            var hooks = avalon.eventHooks
+            var hook = hooks[type]
+            if (typeof hook === "object") {
+                type = hook.type
+                if (hook.deel) {
+                    fn = hook.deel(el, fn)
+                }
+            }
+            var callback = W3C ? fn : function(e) {
+                fn.call(el, fixEvent(e));
+            }
+            if (W3C) {
+                el.addEventListener(type, callback, !!phase)
+            } else {
+                el.attachEvent("on" + type, callback)
+            }
+            return callback
+        },
+        /*卸载事件*/
+        unbind: function(el, type, fn, phase) {
+            var hooks = avalon.eventHooks
+            var hook = hooks[type]
+            var callback = fn || noop
+            if (typeof hook === "object") {
+                type = hook.type
+            }
+            if (W3C) {
+                el.removeEventListener(type, callback, !!phase)
+            } else {
+                el.detachEvent("on" + type, callback)
+            }
+        },
+    </pre>
+    <p>我们可以在eventHooks对象为需要修复的事件，添加一个对象，此对象上有type新事件名，
+        及一个叫deel的修复函数。目前avalon内部通过它修复了mousewheel，animationend，
+        mouseenter, mousewheel, input等事件。</p>
+    <pre class="brush:javascript;gutter:false;toolbar:false;">
+ var eventHooks = avalon.eventHooks
+    //针对firefox, chrome修正mouseenter, mouseleave
+    if (!("onmouseenter" in root)) {
+        avalon.each({
+            mouseenter: "mouseover",
+            mouseleave: "mouseout"
+        }, function(origType, fixType) {
+            eventHooks[origType] = {
+                type: fixType,
+                deel: function(elem, fn) {
+                    return function(e) {
+                        var t = e.relatedTarget
+                        if (!t || (t !== elem && !(elem.compareDocumentPosition(t) & 16))) {
+                            delete e.type
+                            e.type = origType
+                            return fn.call(elem, e)
+                        }
+                    }
+                }
+            }
+        })
+    }
+    //针对IE9+, w3c修正animationend
+    avalon.each({
+        AnimationEvent: "animationend",
+        WebKitAnimationEvent: "webkitAnimationEnd"
+    }, function(construct, fixType) {
+        if (window[construct] && !eventHooks.animationend) {
+            eventHooks.animationend = {
+                type: fixType
+            }
+        }
+    })
+    //针对IE6-8修正input
+    if (!("oninput" in document.createElement("input"))) {
+        eventHooks.input = {
+            type: "propertychange",
+            deel: function(elem, fn) {
+                return function(e) {
+                    if (e.propertyName === "value") {
+                        e.type = "input"
+                        return fn.call(elem, e)
+                    }
+                }
+            }
+        }
+    }
+    if (document.onmousewheel === void 0) {
+        /* IE6-11 chrome mousewheel wheelDetla 下 -120 上 120
+         firefox DOMMouseScroll detail 下3 上-3
+         firefox wheel detlaY 下3 上-3
+         IE9-11 wheel deltaY 下40 上-40
+         chrome wheel deltaY 下100 上-100 */
+        eventHooks.mousewheel = {
+            type: "DOMMouseScroll",
+            deel: function(elem, fn) {
+                return function(e) {
+                    e.wheelDelta = e.detail > 0 ? -120 : 120
+                    if (Object.defineProperty) {
+                        Object.defineProperty(e, "type", {
+                            value: "mousewheel"
+                        })
+                    }
+                    fn.call(elem, e)
+                }
+            }
+        }
+    }
+    </pre>
+    <p>此外，我们还可以对ms-click, ms-mousedown等绑定进行扩展。我们可以设法拿到data对象，
+        在它上面添加specialBind, specialUnbind进行特殊处理。ms-live-*绑定，及移动端上的ms-click, ms-scroll就是这么干的。</p>
+    <pre class="brush:javascript;gutter:false;toolbar:false;">
+          if (typeof data.specialBind === "function") {
+               data.specialBind(elem, callback)
+            } else {
+                var removeFn = avalon.bind(elem, eventType, callback)
+            }
+            data.rollback = function() {
+                if (typeof data.specialUnbind === "function") {
+                    data.specialUnbind()
+                } else {
+                    avalon.unbind(elem, eventType, removeFn)
+                }
+            }
+    </pre>
+    <p>更高级的是在avalon.bindingHandlers.on对象上添加clickHooks, scrollHooks等方法来处理。</p>
+    <pre class="brush:javascript;gutter:false;toolbar:false;">
+            var eventType = data.param.replace(/-\d+$/, "") // ms-on-mousemove-10
+            if (typeof bindingHandlers.on[eventType + "Hook"] === "function") {
+               bindingHandlers.on[eventType + "Hook"](data)
+            }
+    </pre>
+</fieldset>

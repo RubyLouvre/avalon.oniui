@@ -1,0 +1,212 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>daterangepicker demo </title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>daterangepicker demo</h1>
+        <div class="demo-show ms-controller" ms-controller="demo">
+            <fieldset>
+                <legend>日期范围框 支持onSelect、onOpen、onClose回调函数</legend>
+                <div ms-widget="daterangepicker, A, $AOpts" data-daterangepicker-rules="$rules"></div>
+                <p>onSelect是在点击日历框下的确定按钮后的回调方法，参数分别是起始日期fromDate、 结束日期toDate、 上次选中的日期范围的起始日期和结束日期组成的数组、绑定元素生成的widget VM的引用 vmodel, 绑定元素上的配置数据形成的数据对象data</p>
+            </fieldset>
+            <fieldset>
+                <legend>日期范围框 显示格式</legend>
+                <div ms-widget="daterangepicker,$,customOpts"></div>
+                <p>datesDisplayFormat设置模拟的输入域的显示格式，msgFormat设置日历框下方动态显示选择日期的说明文字格式</p>
+            </fieldset> 
+            <fieldset>
+                <legend>日期范围框 默认值为空</legend>
+                <div ms-widget="daterangepicker" data-daterangepicker-duplex="fromEmpty, toEmpty" data-daterangepicker-rules="opts2"></div>
+                <p>fromEmpty is : {{fromEmpty}}</p>
+                <p>toEmpty is : {{toEmpty}}</p>
+                <p>初始日期和结束日期为空的情况下，模拟的输入域会显示"不限日期"的label</p>
+            </fieldset>
+            <fieldset>
+                <legend>日期范围框setDate</legend>
+                <div ms-widget="daterangepicker, dp" data-daterangepicker-duplex="from3, to3"></div>
+                <p>fromEmpty is : {{from3}}</p>
+                <p>toEmpty is : {{to3}}</p>
+                <button ms-click="setdates">设置时间为'2013-09-09', '2014-09-09'</button>
+                <button ms-click="setlabel">设置标签为'我是label'</button>
+            </fieldset>
+            <script> 
+                require(["datepicker/avalon.daterangepicker"], function(avalon) {
+                    var model = avalon.define("demo", function(vm) {
+                        vm.$AOpts = {
+                            onOpen: function(vmodel) {
+                                avalon.log("datepicker 的 open回调，参数是组件对应的vmodel")
+                                avalon.log(vmodel)
+                            },
+                            onClose: function(vmodel) {
+                                avalon.log("datepicker 的 close回调，参数是组件对应的vmodel")
+                                avalon.log(vmodel)
+                            },
+                            onSelect: function(fromDate, toDate, oldValue, vmodel, data) {
+                                avalon.log("选择日期范围之后的回调");
+                                avalon.log("fromDate");
+                                avalon.log(fromDate);
+                                avalon.log("toDate");
+                                avalon.log(toDate);
+                                avalon.log("oldValue");
+                                avalon.log(oldValue);
+                                avalon.log("daterangepicker vmodel");
+                                avalon.log(vmodel);
+                                avalon.log("data is : ");
+                                avalon.log(data);
+                            }
+                        }
+                        //最小开始日期为2014-02-14，两天最小相隔5天，最大相隔10天
+                        vm.opts2 = {
+                            rules : 'null, 5D, 10D',
+                            fromMinDate: '2014-02-14'
+                        };
+                        vm.from3 = '2014-01-05';
+                        vm.to3 = '2014-01-11';
+                        vm.fromEmpty = null;
+                        vm.toEmpty = null;
+                        //最小开始日期为2014-02-14，两天最小相隔5天，最大相隔10天
+                        vm.opts2 = {
+                            rules : 'null, 5D, 10D',
+                            fromMinDate: '2014-02-14'
+                        };
+                        vm.$rules = {
+                            rules: "null, 0D, 8D",
+                            fromMinDate: "2014-06-04"
+                        }
+                        vm.setdates = function() {
+                            avalon.vmodels['dp'].setDates('2013-09-09', '2014-09-09');
+                        };
+                        vm.setlabel = function() {
+                            avalon.vmodels['dp'].setLabel('我是label');
+                        };
+                        vm.customOpts = {
+                            opts: {
+                                msgFormat: function(from, to) {
+                                    return '已选时间段：' + from.getRawValue() + ' 至 ' + to.getRawValue() + ' 共计' + (Math.floor( (to.getDate().getTime() - from.getDate().getTime())/1000/60/60/24 + 1 ) - 1) + '晚';
+                                },
+                                datesDisplayFormat: function(label, fromDate, toDate) {
+                                    return '从 ' + fromDate + ' 到 ' + toDate;
+                                }
+                            }
+                        };
+                    })
+                    avalon.scan();
+                })
+            </script>
+        </div>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;daterangepicker demo&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;div class="demo-show ms-controller" ms-controller="demo"&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;日期范围框 支持onSelect、onOpen、onClose回调函数&lt;/legend&gt;
+                            &lt;div ms-widget="daterangepicker, A, $AOpts" data-daterangepicker-rules="$rules"&gt;&lt;/div&gt;
+                            &lt;p&gt;onSelect是在点击日历框下的确定按钮后的回调方法，参数分别是起始日期fromDate、 结束日期toDate、 上次选中的日期范围的起始日期和结束日期组成的数组、绑定元素生成的widget VM的引用 vmodel, 绑定元素上的配置数据形成的数据对象data&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;日期范围框 显示格式&lt;/legend&gt;
+                            &lt;div ms-widget="daterangepicker,$,customOpts"&gt;&lt;/div&gt;
+                            &lt;p&gt;datesDisplayFormat设置模拟的输入域的显示格式，msgFormat设置日历框下方动态显示选择日期的说明文字格式&lt;/p&gt;
+                        &lt;/fieldset&gt; 
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;日期范围框 默认值为空&lt;/legend&gt;
+                            &lt;div ms-widget="daterangepicker" data-daterangepicker-duplex="fromEmpty, toEmpty" data-daterangepicker-rules="opts2"&gt;&lt;/div&gt;
+                            &lt;p&gt;fromEmpty is : {{fromEmpty}}&lt;/p&gt;
+                            &lt;p&gt;toEmpty is : {{toEmpty}}&lt;/p&gt;
+                            &lt;p&gt;初始日期和结束日期为空的情况下，模拟的输入域会显示"不限日期"的label&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;日期范围框setDate&lt;/legend&gt;
+                            &lt;div ms-widget="daterangepicker, dp" data-daterangepicker-duplex="from3, to3"&gt;&lt;/div&gt;
+                            &lt;button ms-click="setdates"&gt;设置时间为'2013-09-09', '2014-09-09'&lt;/button&gt;
+                            &lt;button ms-click="setlabel"&gt;设置标签为'我是label'&lt;/button&gt;
+                        &lt;/fieldset&gt;
+                        &lt;script&gt; 
+                            require(["datepicker/avalon.daterangepicker"], function(avalon) {
+                                var model = avalon.define("demo", function(vm) {
+                                    vm.$AOpts = {
+                                        onOpen: function(vmodel) {
+                                            avalon.log("datepicker 的 open回调，参数是组件对应的vmodel")
+                                            avalon.log(vmodel)
+                                        },
+                                        onClose: function(vmodel) {
+                                            avalon.log("datepicker 的 close回调，参数是组件对应的vmodel")
+                                            avalon.log(vmodel)
+                                        },
+                                        onSelect: function(fromDate, toDate, oldValue, vmodel, data) {
+                                            avalon.log("选择日期范围之后的回调");
+                                            avalon.log("fromDate");
+                                            avalon.log(fromDate);
+                                            avalon.log("toDate");
+                                            avalon.log(toDate);
+                                            avalon.log("oldValue");
+                                            avalon.log(oldValue);
+                                            avalon.log("daterangepicker vmodel");
+                                            avalon.log(vmodel);
+                                            avalon.log("data is : ");
+                                            avalon.log(data);
+                                        }
+                                    }
+                                    //最小开始日期为2014-02-14，两天最小相隔5天，最大相隔10天
+                                    vm.opts2 = {
+                                        rules : 'null, 5D, 10D',
+                                        fromMinDate: '2014-02-14'
+                                    };
+                                    vm.from3 = '2014-01-05';
+                                    vm.to3 = '2014-01-11';
+                                    vm.fromEmpty = null;
+                                    vm.toEmpty = null;
+                                    //最小开始日期为2014-02-14，两天最小相隔5天，最大相隔10天
+                                    vm.opts2 = {
+                                        rules : 'null, 5D, 10D',
+                                        fromMinDate: '2014-02-14'
+                                    };
+                                    vm.$rules = {
+                                        rules: "null, 0D, 8D",
+                                        fromMinDate: "2014-06-04"
+                                    }
+                                    vm.setdates = function() {
+                                        avalon.vmodels['dp'].setDates('2013-09-09', '2014-09-09');
+                                    };
+                                    vm.setlabel = function() {
+                                        avalon.vmodels['dp'].setLabel('我是label');
+                                    };
+                                    vm.customOpts = {
+                                        opts: {
+                                            msgFormat: function(from, to) {
+                                                return '已选时间段：' + from.getRawValue() + ' 至 ' + to.getRawValue() + ' 共计' + (Math.floor( (to.getDate().getTime() - from.getDate().getTime())/1000/60/60/24 + 1 ) - 1) + '晚';
+                                            },
+                                            datesDisplayFormat: function(label, fromDate, toDate) {
+                                                return '从 ' + fromDate + ' 到 ' + toDate;
+                                            }
+                                        }
+                                    };
+                                })
+                                avalon.scan();
+                            })
+                        &lt;/script&gt;
+                    &lt;/div&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+    </div>
+</body>
+</html>
+

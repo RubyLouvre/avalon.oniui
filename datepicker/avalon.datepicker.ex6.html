@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>datepicker demo </title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>datepicker demo</h1>
+        <div class="demo-show" ms-controller="demo">
+            <fieldset style="position: relative; z-index: 7">
+                <legend>ms-duplex初始化日期，并可手动输入日期</legend>
+                <input ms-widget="datepicker" ms-duplex="date"/>
+                <p>说明：日期输入域默认的日期格式是yyyy-mm-dd，手动输入有效的日期试试看</p>
+                <p>date: {{date}}</p>
+            </fieldset>
+            <fieldset style="position: relative; z-index: 6">
+                <legend>allowBlank为true时，不同初始化日期的表现情况</legend>
+                <input ms-widget="datepicker" data-datepicker-allow-blank="true" value="2014-06-07"/>
+                <p>说明：allowBlank为true，初始化日期为2014-06-07</p>
+            </fieldset>
+            <fieldset style="position: relative; z-index: 5">
+                <legend>allowBlank为true时，不同初始化日期的表现情况</legend>
+                <input ms-widget="datepicker" data-datepicker-allow-blank="true" value="2014-06-ff"/>
+                <p>说明：allowBlank为true，初始化日期为2014-06-ff，是一个不符合日期要求的初始值，这时输入域会警示说明“格式错误”</p>
+            </fieldset>
+            <fieldset style="position: relative; z-index: 4">
+                <legend>allowBlank为true时，不同初始化日期的表现情况</legend>
+                <input ms-widget="datepicker" data-datepicker-allow-blank="true"/>
+                <p>说明：allowBlank为true，无初始日期</p>
+            </fieldset>
+            <fieldset style="position: relative; z-index: 3">
+                <legend>allowBlank为true时，不同初始化日期的表现情况</legend>
+                <input ms-widget="datepicker" data-datepicker-allow-blank="true" value="2014-06-07" data-datepicker-min-date="2014-06-02" data-datepicker-max-date="2014-06-16"/>
+                <p>说明：allowBlank为true，minDate为2014-06-02，maxDate为2014-06-16；初始日期为2014-06-07，正常显示</p>
+            </fieldset>
+            <fieldset style="position: relative; z-index: 2">
+                <legend>allowBlank为true时，不同初始化日期的表现情况</legend>
+                <input ms-widget="datepicker" data-datepicker-allow-blank="true" value="2014-06-07" data-datepicker-min-date="2014-06-10" data-datepicker-max-date="2014-06-16"/>
+                <p>说明：allowBlank为true，minDate为2014-06-10，maxDate为2014-06-16；初始日期为2014-06-07，超出范围，组件自动修正为minDate || maxDate</p>
+            </fieldset>
+            <fieldset style="position: relative; z-index: 1">
+                <legend>allowBlank为false，自动更正初始值</legend>
+                <input ms-widget="datepicker" data-datepicker-watermark="false"/>
+                <p>说明：当allowBlank为默认false时，日历组件会在初始值不符合日期显示格式要求(date对象或者yyyy-mm-dd格式的字符串)的情况下自动修正初始值为“今天”的日期， 当前绑定datepicker的输入域没有初始值，所以将初试日期修正为今天的日期</p>
+                <p>如果不想显示水印效果，则配置watermark为false</p>
+            </fieldset>
+            <script> 
+                require(["datepicker/avalon.datepicker"], function(avalon) {
+                    var model = avalon.define("demo", function(vm) {
+                        vm.date = "2014-06-29";
+                    })
+                    avalon.scan();
+                })
+            </script>
+        </div>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;datepicker demo&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;div class="demo-show" ms-controller="demo"&gt;
+                        &lt;fieldset style="position: relative; z-index: 7"&gt;
+                            &lt;legend&gt;ms-duplex初始化日期，并可手动输入日期&lt;/legend&gt;
+                            &lt;input ms-widget="datepicker" ms-duplex="date"/&gt;
+                            &lt;p&gt;说明：日期输入域默认的日期格式是yyyy-mm-dd，手动输入有效的日期试试看&lt;/p&gt;
+                            &lt;p&gt;date: {{date}}&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset style="position: relative; z-index: 6"&gt;
+                            &lt;legend&gt;allowBlank为true时，不同初始化日期的表现情况&lt;/legend&gt;
+                            &lt;input ms-widget="datepicker" data-datepicker-allow-blank="true" value="2014-06-07"/&gt;
+                            &lt;p&gt;说明：allowBlank为true，初始化日期为2014-06-07&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset style="position: relative; z-index: 5"&gt;
+                            &lt;legend&gt;allowBlank为true时，不同初始化日期的表现情况&lt;/legend&gt;
+                            &lt;input ms-widget="datepicker" data-datepicker-allow-blank="true" value="2014-06-ff"/&gt;
+                            &lt;p&gt;说明：allowBlank为true，初始化日期为2014-06-ff，是一个不符合日期要求的初始值，这时输入域会警示说明“格式错误”&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset style="position: relative; z-index: 4"&gt;
+                            &lt;legend&gt;allowBlank为true时，不同初始化日期的表现情况&lt;/legend&gt;
+                            &lt;input ms-widget="datepicker" data-datepicker-allow-blank="true"/&gt;
+                            &lt;p&gt;说明：allowBlank为true，无初始日期&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset style="position: relative; z-index: 3"&gt;
+                            &lt;legend&gt;allowBlank为true时，不同初始化日期的表现情况&lt;/legend&gt;
+                            &lt;input ms-widget="datepicker" data-datepicker-allow-blank="true" value="2014-06-07" data-datepicker-min-date="2014-06-02" data-datepicker-max-date="2014-06-16"/&gt;
+                            &lt;p&gt;说明：allowBlank为true，minDate为2014-06-02，maxDate为2014-06-16；初始日期为2014-06-07，正常显示&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset style="position: relative; z-index: 2"&gt;
+                            &lt;legend&gt;allowBlank为true时，不同初始化日期的表现情况&lt;/legend&gt;
+                            &lt;input ms-widget="datepicker" data-datepicker-allow-blank="true" value="2014-06-07" data-datepicker-min-date="2014-06-10" data-datepicker-max-date="2014-06-16"/&gt;
+                            &lt;p&gt;说明：allowBlank为true，minDate为2014-06-10，maxDate为2014-06-16；初始日期为2014-06-07，超出范围，组件自动修正为minDate || maxDate&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset style="position: relative; z-index: 1"&gt;
+                            &lt;legend&gt;allowBlank为false，自动更正初始值&lt;/legend&gt;
+                            &lt;input ms-widget="datepicker" data-datepicker-watermark="false"/&gt;
+                            &lt;p&gt;说明：当allowBlank为默认false时，日历组件会在初始值不符合日期显示格式要求(date对象或者yyyy-mm-dd格式的字符串)的情况下自动修正初始值为“今天”的日期， 当前绑定datepicker的输入域没有初始值，所以将初试日期修正为今天的日期&lt;/p&gt;
+                            &lt;p&gt;如果不想显示水印效果，则配置watermark为false&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;script&gt; 
+                            require(["datepicker/avalon.datepicker"], function(avalon) {
+                                var model = avalon.define("demo", function(vm) {
+                                    vm.date = "2014-06-29";
+                                })
+                                avalon.scan();
+                            })
+                        &lt;/script&gt;
+                    &lt;/div&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+    </div>
+</body>
+</html>
+

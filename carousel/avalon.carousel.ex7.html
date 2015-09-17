@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>carousel组件</title>
+        <meta charset='UTF-8'>
+        <meta name='viewport' content='width=device-width'>
+        <script src='../avalon.js'></script>
+        <script src='../highlight/shCore.js'></script>
+        <link type='text/css' rel='stylesheet' href='../style/avalon.doc.css'
+        />
+        <style>
+            h3{
+				margin: 0 0 5px;
+			}
+        </style>
+        <script>
+            require(['carousel/avalon.carousel'], function() {
+				avalon.define('demo', function(vm) {
+					vm.description = "图片描述内容："
+					vm.$opt = {
+						pictures: [{
+							src: 'http://7xkm02.com1.z0.glb.clouddn.com/s11.jpeg',
+							href: 'http://7xkm02.com1.z0.glb.clouddn.com/s11.jpeg',
+							title: "title1",
+                            description: '<h3>图片描述一</h3>{{description}}<i>图片1</i>'
+						}, {
+							src: 'http://7xkm02.com1.z0.glb.clouddn.com/s12.jpeg',
+                            href: 'http://7xkm02.com1.z0.glb.clouddn.com/s12.jpeg',
+                            title: "title2",
+							description: '<h3>图片描述二</h3>{{description}}<i>图片2</i>'
+						}, {
+							src: 'http://7xkm02.com1.z0.glb.clouddn.com/s13.jpeg',
+                            href: 'http://7xkm02.com1.z0.glb.clouddn.com/s13.jpeg',
+                            title: "title3",
+							description: '<h3>图片描述三</h3>{{description}}<i>图片3</i>'
+						}, {
+							src: 'http://7xkm02.com1.z0.glb.clouddn.com/s14.jpeg',
+                            href: 'http://7xkm02.com1.z0.glb.clouddn.com/s14.jpeg',
+                            title: "title4",
+							description: '<h3>图片描述四</h3>{{description}}<i>图片4</i>'
+						}, {
+							src: 'http://7xkm02.com1.z0.glb.clouddn.com/s15.jpeg',
+                            href: 'http://7xkm02.com1.z0.glb.clouddn.com/s15.jpeg',
+                            title: "title5",
+							description: '<h3>图片描述五</h3>{{description}}<i>图片5</i>'
+						}],
+                        showDescription: true
+					}
+					vm.$skipArray = ['carousel']
+				})
+				avalon.scan()
+			})
+        </script>
+    </head>
+    
+    <body ms-controller='demo'>
+        <div class='wrapper'>
+            <h1>图片轮播组件-自定义图片标题和描述</h1>
+            <fieldset>
+                <legend>自定义图片图片标题和描述</legend>
+                <div ms-widget='carousel, carousel, $opt'></div>
+            </fieldset>
+            <pre ms-skip class='brush:html;gutter:false;toolbar:false'>
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    
+    &lt;head&gt;
+        &lt;title&gt;carousel组件&lt;/title&gt;
+        &lt;meta charset='UTF-8'&gt;
+        &lt;meta name='viewport' content='width=device-width'&gt;
+        &lt;script src='../avalon.js'&gt;&lt;/script&gt;
+        &lt;script src='../highlight/shCore.js'&gt;&lt;/script&gt;
+        &lt;link type='text/css' rel='stylesheet' href='../style/avalon.doc.css'
+        /&gt;
+        &lt;style&gt;
+            h3{
+				margin: 0 0 5px;
+			}
+        &lt;/style&gt;
+        &lt;script&gt;
+            require(['carousel/avalon.carousel'], function() {
+				avalon.define('demo', function(vm) {
+					vm.description = "图片描述内容："
+					vm.$opt = {
+						pictures: [{
+							src: 'http://7xkm02.com1.z0.glb.clouddn.com/s11.jpeg',
+							href: 'http://7xkm02.com1.z0.glb.clouddn.com/s11.jpeg',
+							title: "title1",
+                            description: '&lt;h3&gt;图片描述一&lt;/h3&gt;{{description}}&lt;i&gt;图片1&lt;/i&gt;'
+						}, {
+							src: 'http://7xkm02.com1.z0.glb.clouddn.com/s12.jpeg',
+                            href: 'http://7xkm02.com1.z0.glb.clouddn.com/s12.jpeg',
+                            title: "title2",
+							description: '&lt;h3&gt;图片描述二&lt;/h3&gt;{{description}}&lt;i&gt;图片2&lt;/i&gt;'
+						}, {
+							src: 'http://7xkm02.com1.z0.glb.clouddn.com/s13.jpeg',
+                            href: 'http://7xkm02.com1.z0.glb.clouddn.com/s13.jpeg',
+                            title: "title3",
+							description: '&lt;h3&gt;图片描述三&lt;/h3&gt;{{description}}&lt;i&gt;图片3&lt;/i&gt;'
+						}, {
+							src: 'http://7xkm02.com1.z0.glb.clouddn.com/s14.jpeg',
+                            href: 'http://7xkm02.com1.z0.glb.clouddn.com/s14.jpeg',
+                            title: "title4",
+							description: '&lt;h3&gt;图片描述四&lt;/h3&gt;{{description}}&lt;i&gt;图片4&lt;/i&gt;'
+						}, {
+							src: 'http://7xkm02.com1.z0.glb.clouddn.com/s15.jpeg',
+                            href: 'http://7xkm02.com1.z0.glb.clouddn.com/s15.jpeg',
+                            title: "title5",
+							description: '&lt;h3&gt;图片描述五&lt;/h3&gt;{{description}}&lt;i&gt;图片5&lt;/i&gt;'
+						}],
+                        showDescription: true
+					}
+					vm.$skipArray = ['carousel']
+				})
+				avalon.scan()
+			})
+        &lt;/script&gt;
+    &lt;/head&gt;
+    
+    &lt;body ms-controller='demo'&gt;
+        &lt;div class='wrapper'&gt;
+            &lt;h1&gt;图片轮播组件-自定义图片标题和描述&lt;/h1&gt;
+            &lt;fieldset&gt;
+                &lt;legend&gt;自定义图片图片标题和描述&lt;/legend&gt;
+                &lt;div ms-widget='carousel, carousel, $opt'&gt;&lt;/div&gt;
+            &lt;/fieldset&gt;
+        &lt;/div&gt;
+    &lt;/body&gt;
+
+&lt;/html&gt;
+</pre>
+        </div>
+    </body>
+
+</html>

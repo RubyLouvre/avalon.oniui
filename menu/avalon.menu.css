@@ -1,0 +1,64 @@
+
+/*
+这是每个都组件都应该引用的部分
+*/
+ul.oni-menu, ol.oni-menu {
+  border: 1px solid #d4d4d4;
+  background: white;
+  overflow: visible;
+  font-size: 12px;
+  padding: 0; }
+
+.oni-menu {
+  width: 156px;
+  position: relative;
+  z-index: 5;
+  zoom: 1; }
+  .oni-menu ul.oni-helper-hidden {
+    visibility: hidden; }
+  .oni-menu .oni-menu-icon {
+    position: absolute;
+    right: 3px;
+    left: auto;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 12px; }
+  .oni-menu .oni-menu-item {
+    position: relative;
+    list-style: none;
+    padding: 3px;
+    cursor: pointer;
+    color: #555555;
+    font-size: 12px;
+    line-height: 18px;
+    margin: 0;
+    width: 150px; }
+    .oni-menu .oni-menu-item a, .oni-menu .oni-menu-item a:hover, .oni-menu .oni-menu-item a:link {
+      text-decoration: none; }
+  .oni-menu li.oni-state-hover {
+    background: #f8f8f8; }
+  .oni-menu li.oni-state-active {
+    background: #3775c0;
+    color: white; }
+  .oni-menu .oni-menu-sub {
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    left: 100%;
+    width: 100%;
+    top: 0; }
+  .oni-menu-vertical .oni-menu-item-1 {
+    border-right: 1px solid #d4d4d4;
+    border-left: 1px solid #d4d4d4;
+    margin-left: -1px; }
+  .oni-menu-vertical .oni-menu-depth-2 {
+    left: -1px;
+    top: 100%; }
+  .oni-menu .oni-state-disabled, .oni-menu .oni-state-disabled a, .oni-menu .oni-state-disabled a:link, .oni-menu .oni-state-disabled a:hover {
+    color: #999999;
+    cursor: default; }
+  .oni-menu-vertical {
+    width: auto; }
+    .oni-menu-vertical .oni-menu-item {
+      float: left;
+      width: 150px;
+      display: inline; }

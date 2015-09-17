@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Promise组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js">
+
+        </script>
+        <script src="../highlight/shCore.js">
+
+        </script>
+        <script>
+            require(["mmPromise/mmPromise", "domReady!"], function() {
+                var vmodel = avalon.define("test", function(vm) {
+                    vm.array = ["准备开始"]
+                })
+                avalon.scan()
+                var originalThenable = {
+                    id: "originalThenable",
+                    then: function(onFulfilled, onRejected) {
+                        vmodel.array.push(this.id)
+                        setTimeout(function() {
+                            onRejected('original reason');
+                        }, 2000);
+                    }
+                };
+                var promise = new Promise(function(resolve) {
+                    resolve(originalThenable);
+                });
+//                  var promise = new avalon.mmPromise(function(resolve) {
+//                      resolve(originalThenable);
+//                  });
+                promise.then(function() {
+                    vmodel.array.push("resolve")
+                }, function(reason) {
+                    vmodel.array.push("reject")
+                    vmodel.array.push(reason === 'original reason');
+                });
+            })
+        </script>
+    </head>
+    <body ms-controller="test">
+        <ul>
+            <li ms-repeat="array">{{el}}</li>
+        </ul>
+        <pre class="brush:javascript;gutter:false;toolbar:false;">
+            require(["mmPromise/mmPromise", "ready!"], function() {
+                var vmodel = avalon.define("test", function(vm) {
+                    vm.array = ["准备开始"]
+                })
+                avalon.scan()
+                var originalThenable = {
+                    id: "originalThenable",
+                    then: function(onFulfilled, onRejected) {
+                        vmodel.array.push(this.id)
+                        setTimeout(function() {
+                            onRejected('original reason');
+                        }, 2000);
+                    }
+                };
+                var promise = new Promise(function(resolve) {
+                    resolve(originalThenable);
+                });
+//                  var promise = new avalon.mmPromise(function(resolve) {
+//                      resolve(originalThenable);
+//                  });
+                promise.then(function() {
+                    vmodel.array.push("resolve")
+                }, function(reason) {
+                    vmodel.array.push("reject")
+                    vmodel.array.push(reason === 'original reason');
+                });
+            })
+        </pre>
+    </body>
+</html>
+

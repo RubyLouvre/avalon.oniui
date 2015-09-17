@@ -1,0 +1,53 @@
+
+@import "../chameleon/oniui-theme";
+$uiname: "oni-notice";
+.#{$uiname}-flow {
+    margin-bottom: 10px;
+}
+.#{$uiname}-detach {
+    position: relative;
+    width: 100%;
+    z-index: 1000;
+}
+.#{$uiname}-detach .#{$uiname} {
+    position: absolute;
+}
+.#{$uiname} {
+    position:relative;
+    overflow:hidden;
+    transition: height 0.6s;
+    height: 0;
+    width: 100%;
+    *zoom: 1;
+    font-size: 12px;
+    @if($oinui-theme == smoothness) {
+        background-color: #ffe44f;
+        color: #a65a00;
+    }
+}
+.#{$uiname}-inner {
+    padding: 7px 10px;
+}
+.#{$uiname}-header {
+    font-weight: 700;
+}
+.#{$uiname}-close {
+    cursor: pointer;
+    text-decoration: underline;
+}
+.#{$uiname}-info {
+    @if($oinui-theme == smoothness) {
+        background-color: #58b359;
+        color: #ffffff;
+    }
+}
+.#{$uiname}-danger {
+    @if($oinui-theme == smoothness) {
+        background-color: #bb0000;
+        color: #ffffff;
+    }
+}
+.#{$uiname}-content a, #{$uiname}-content a:hover {
+    color: #a65a00;
+    text-decoration: underline;
+}

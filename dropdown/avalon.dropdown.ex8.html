@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+    <script src="../avalon.js"></script>
+    <script type="text/javascript">
+        require(['dropdown/avalon.dropdown.js'], function() {
+            avalon.ready(function() {
+                avalon.define('dropdown', function(vm) {
+                    vm.$skipArray = ['opts'];
+                    vm.opts = {
+                        data: [
+                            {
+                                value: '1',
+                                label: '1'
+                            }, {
+                                value: 2,
+                                label: '2'
+                            }, {
+                                label: 'group1',
+                                options: [
+                                    {
+                                        value: false,
+                                        label: 'false'
+                                    },
+                                    {
+                                        value: null,
+                                        label: 'null'
+                                    }
+                                ]
+                            }, {
+                                label: 'group2',
+                                options: [
+                                    {
+                                        value: 'disabled',
+                                        label: 'disabled',
+                                        enable: false
+                                    }
+                                ]
+                            }
+                        ],
+                        readOnly: true
+                    };
+                    vm.value = ['1'];
+                });
+                avalon.scan();
+            });
+        });
+    </script>
+    <script src="../highlight/shCore.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <div ms-controller="dropdown">
+            <h2>dropdown（下拉框）</h2>
+            <p>设置组件状态为readOnly</p>
+            <select ms-widget="dropdown,$,opts"
+                    ms-duplex="value">
+            </select>
+            <p>{{value}}</p>
+        </div>
+        <pre class="brush:html;gutter:false;toolbar:false;" ms-skip>
+        &lt;!DOCTYPE html&gt;
+        &lt;html&gt;
+        &lt;head&gt;
+            &lt;title&gt;&lt;/title&gt;
+            &lt;meta charset="UTF-8"&gt;
+            &lt;meta name="viewport" content="width=device-width"&gt;
+            &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+            &lt;script type="text/javascript"&gt;
+                require('dropdown/avalon.dropdown.js', function() {
+                    avalon.ready(function() {
+                        avalon.define('dropdown', function(vm) {
+                            vm.$skipArray = ['opts'];
+                            vm.opts = {
+                                data: [
+                                    {
+                                        value: '1',
+                                        label: '1'
+                                    }, {
+                                        value: 2,
+                                        label: '2'
+                                    }, {
+                                        label: 'group1',
+                                        options: [
+                                            {
+                                                value: false,
+                                                label: 'false'
+                                            },
+                                            {
+                                                value: null,
+                                                label: 'null'
+                                            }
+                                        ]
+                                    }, {
+                                        label: 'group2',
+                                        options: [
+                                            {
+                                                value: 'disabled',
+                                                label: 'disabled',
+                                                enable: false
+                                            }
+                                        ]
+                                    }
+                                ],
+                                readOnly: true
+                            };
+                            vm.value = ['1'];
+                        });
+                        avalon.scan();
+                    });
+                });
+            &lt;/script&gt;
+        &lt;/head&gt;
+        &lt;body&gt;
+        &lt;div class="frame" ms-controller="dropdown"&gt;
+            &lt;h2&gt;dropdown（下拉框）&lt;/h2&gt;
+            &lt;p&gt;使用option配置并使用duplex绑定&lt;/p&gt;
+            &lt;select ms-widget="dropdown,$,opts"
+                    ms-duplex="value"&gt;
+            &lt;/select&gt;
+            &lt;p&gt;{{value}}&lt;/p&gt;
+        &lt;/div&gt;
+        &lt;/body&gt;
+        &lt;/html&gt;
+        </pre>
+    </div>
+</body>
+</html>

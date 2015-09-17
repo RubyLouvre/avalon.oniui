@@ -1,0 +1,6 @@
+<ul class='oni-suggest' ms-each-item='list' ms-visible='toggle'>
+    <li class='oni-suggest-item' 
+        ms-click='clickcallback($index,$event)' 
+        ms-class='oni-suggest-item-selected:list[selectedIndex] == item' tabindex='-1' 
+        ms-hover='oni-suggest-item-hover'>{{_renderItem(item)|html}}</li>
+</ul>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>分页栏组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js">
+
+        </script>
+        <script src="../highlight/shCore.js">
+
+        </script>
+        <script>
+            require(["pager/avalon.pager"], function() {
+                avalon.define("test", function(vm) {
+                    vm.pager = {
+                        totalItems: 150,
+                        perPages: 5,
+                        getTemplate: function(tmpl) {
+                            return "<select  ms-duplex='perPages' style='float:left;height:24px;' ><option ms-repeat='options'>{{el.text}}</option></select>" + tmpl
+                        },
+                        options: [5, 10, 15]
+                    }
+                    vm.$skipArray = ["pager"]
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body ms-controller="test">
+        <h1>改变每页显示的数量</h1>
+        <div ms-widget="pager, pp"></div>
+        <pre class="brush:html;gutter:false;toolbar:false">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;分页栏组件&lt;/title&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width"&gt;
+        &lt;script src="../avalon.js"&gt;
+
+        &lt;/script&gt;
+        &lt;script&gt;
+            require(["pager/avalon.pager"], function() {
+                avalon.define("test", function(vm) {
+                    vm.pager = {
+                        totalItems: 150,
+                        perPages: 5
+                    }
+                    vm.perPages = 5
+                    vm.$watch("perPages", function(a) {
+                        var widget = avalon.vmodels.pp
+                        if (widget) {
+                            widget.perPages = a
+                        }
+                    })
+                    vm.$skipArray = ["pager"]
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body ms-controller="test"&gt;
+        &lt;h1&gt;改变每页显示的数量&lt;/h1&gt;
+        &lt;div ms-widget="pager, pp"&gt;&lt;/div&gt;
+        &lt;select ms-duplex="perPages"&gt;
+            &lt;option&gt;5&lt;/option&gt;
+            &lt;option&gt;10&lt;/option&gt;
+            &lt;option&gt;15&lt;/option&gt;
+        &lt;/select&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+  
+        </pre>
+    </body>
+</html>

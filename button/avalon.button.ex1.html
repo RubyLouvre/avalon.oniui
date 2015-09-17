@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>button demo 1</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+        <script src="../highlight/shCore.js"></script>
+        <script type="text/javascript" src="../avalon.js"></script>
+        <style>
+            body {
+                padding-bottom: 200px;
+            }
+            fieldset > div {
+                margin-bottom: 20px;
+            }
+            .inline {
+                display: inline-block;
+            }
+        </style>
+    </head>
+    <body ms-controller="demo">
+        <fieldset>
+            <legend>button type and iconPosition 、 icon 、corner、label config</legend>
+            <div>
+                <input ms-widget="button" value="input元素" type="button"/>
+                <button ms-widget="button" data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf038;">button元素</button>
+                <button ms-widget="button" data-button-type="icon" data-button-icon-position="left-right" data-button-icon="\&\#xf047;-\&\#xf03e;">button元素</button>
+                <a href="#" ms-widget="button" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf088;">a元素</a>
+                <div href="#" ms-widget="button" data-button-type="labeledIcon" data-button-icon-position="right" data-button-icon="\&\#xf06b;">div元素</div>
+                <a href="#" ms-widget="button" data-button-type="labeledIcon" data-button-icon-position="left-right" data-button-icon="\&\#xf047;-\&\#xf03e;">a元素</a>
+            </div>
+            <div>
+                <input ms-widget="button" value="input元素" type="button" data-button-corner="4"/>
+                <button ms-widget="button" data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf038;" data-button-corner="4">button元素</button>
+                <button ms-widget="button" data-button-type="icon" data-button-icon-position="left-right" data-button-icon="\&\#xf047;-\&\#xf03e;" data-button-corner="4">button元素</button>
+                <a href="#" ms-widget="button" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf088;" data-button-corner="4">a元素</a>
+                <div href="#" ms-widget="button" data-button-type="labeledIcon" data-button-icon-position="right" data-button-icon="\&\#xf06b;" data-button-corner="4" data-button-label="icon right">div元素</div>
+                <a href="#" ms-widget="button" data-button-type="labeledIcon" data-button-icon-position="left-right" data-button-icon="\&\#xf047;-\&\#xf03e;" data-button-corner="4">a元素</a>
+            </div>
+        </fieldset>
+        <script>
+            require(["./button/avalon.button"], function() {
+                avalon.define("demo", function(vm) {
+
+                })
+                avalon.scan()
+            })
+        </script>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;button demo 1&lt;/title&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width"&gt;
+        &lt;script type="text/javascript" src="../avalon.js"&gt;&lt;/script&gt;
+        &lt;!-- &lt;link href="avalon.buttons.css" type="text/css" rel="stylesheet" media="screen, projection" charset="utf-8" /&gt; --&gt;
+        &lt;style&gt;
+            body {
+                padding-bottom: 200px;
+            }
+            fieldset &gt; div {
+                margin-bottom: 20px;
+            }
+            .inline {
+                display: inline-block;
+            }
+        &lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body ms-controller="demo"&gt;
+        &lt;fieldset&gt;
+            &lt;legend&gt;button type&lt;/legend&gt;
+            &lt;div&gt;
+                &lt;input ms-widget="button" value="input元素"&gt;
+                &lt;button ms-widget="button" data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf038;"&gt;button元素&lt;/button&gt;
+                &lt;button ms-widget="button" data-button-type="icon" data-button-icon-position="left-right" data-button-icon="\&\#xf047;-\&\#xf03e;"&gt;button元素&lt;/button&gt;
+                &lt;a href="#" ms-widget="button" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf088;"&gt;a元素&lt;/a&gt;
+                &lt;div href="#" ms-widget="button" data-button-type="labeledIcon" data-button-icon-position="right" data-button-icon="\&\#xf06b;"&gt;div元素&lt;/div&gt;
+                &lt;a href="#" ms-widget="button" data-button-type="labeledIcon" data-button-icon-position="left-right" data-button-icon="\&\#xf047;-\&\#xf03e;"&gt;a元素&lt;/a&gt;
+            &lt;/div&gt;
+            &lt;div&gt;
+                &lt;input ms-widget="button" value="input元素" data-button-corner="4"/&gt;
+                &lt;button ms-widget="button" data-button-type="icon" data-button-icon-position="left" data-button-icon="\&\#xf038;" data-button-corner="4"&gt;button元素&lt;/button&gt;
+                &lt;button ms-widget="button" data-button-type="icon" data-button-icon-position="left-right" data-button-icon="\&\#xf047;-\&\#xf03e;" data-button-corner="4"&gt;button元素&lt;/button&gt;
+                &lt;a href="#" ms-widget="button" data-button-type="labeledIcon" data-button-icon-position="left" data-button-icon="\&\#xf088;" data-button-corner="4"&gt;a元素&lt;/a&gt;
+                &lt;div href="#" ms-widget="button" data-button-type="labeledIcon" data-button-icon-position="right" data-button-icon="\&\#xf06b;" data-button-corner="4" data-button-label="icon right"&gt;div元素&lt;/div&gt;
+                &lt;a href="#" ms-widget="button" data-button-type="labeledIcon" data-button-icon-position="left-right" data-button-icon="\&\#xf047;-\&\#xf03e;" data-button-corner="4"&gt;a元素&lt;/a&gt;
+            &lt;/div&gt;
+        &lt;/fieldset&gt;
+        &lt;script&gt;
+            require(["./button/avalon.button"], function() {
+                avalon.define("demo", function(vm) {
+                    
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;     
+    &lt;/body&gt;
+&lt;/html&gt;       
+            </pre>
+        </div>
+    </body>
+</html>

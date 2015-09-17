@@ -1,0 +1,21 @@
+<span class="button ebutton add"
+      ms-on-dblclick="editDblclick" 
+	  ms-if="exprAnd(leaf, edit.enable, edit.showAddBtn, !data.keep.leaf || leaf.isParent)" 
+	  ms-click="excute('nodeCreated', $event, leaf, 'addFun')" 
+	  ms-attr-title="optionToBoolen(edit.addTitle,leaf)"></span>
+<span class="button ebutton edit" 
+      ms-on-dblclick="editDblclick" 
+	  ms-if="exprAnd(leaf, edit.enable, edit.showRenameBtn)" 
+	  ms-click="excute('edit', $event, leaf, 'editName')" 
+	  ms-attr-title="optionToBoolen(edit.renameTitle, leaf)"></span>
+<span class="button ebutton remove" 
+      ms-on-dblclick="editDblclick" 
+	  ms-if="exprAnd(leaf, edit.enable, edit.showRemoveBtn)" 
+	  ms-click="excute('remove', $event, leaf, 'removeFun')" 
+	  ms-attr-title="optionToBoolen(edit.removeTitle, leaf)"></span>
+<span class="edit-input"><input type="text" class="rename" 
+      ms-attr-id="'input'+leaf.$id"
+      ms-attr-value="leaf.name" 
+      ms-if="exprAnd(leaf, edit.enable)" 
+      ms-on-focus="excute('focus',$event,leaf,'editFocus')"
+      ms-on-blur="excute('blur',$event,leaf,'saveChange')"></span> 

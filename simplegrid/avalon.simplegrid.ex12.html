@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>simplegrid</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js">
+
+        </script>
+        <script id="summarizing" type="summarizing">
+            <td></td> <td ms-repeat="columns"
+            ms-css-width="el.width" 
+            ms-css-text-align="el.align" 
+            ms-visible="el.toggle" 
+            >{{getSummarizing(summarizing, el.field) | html}}
+            </td>
+        </script>
+        <script>
+            avalon.config({debug: false})
+            require(["simplegrid/avalon.simplegrid"], function() {
+                function range(s, b) {
+                    return s + Math.floor((b - s) * Math.random())
+                }
+                var createData = function(n) {
+                    var array = []
+                    for (var i = 0; i < n; i++) {
+                        array.push({
+                            plan: "北上广经济型计划",
+                            state: i % 2 === 0,
+                            budget: range(3000, 6000),
+                            emerge: range(70000, 200000),
+                            click: range(3000, 50000),
+                            consume: range(8000, 20000),
+                            clickprice: (1 + 3 * Math.random()).toFixed(2),
+                            checked: false
+                        })
+                    }
+                    return array
+                }
+
+                avalon.define("test", function(vm) {
+
+                    vm.simplegrid = {
+                        summarizing: {
+                            plan: "所有汇总",
+                            state: "",
+                            budget: "预算汇总<br/>￥38000",
+                            emerge: "展现汇总<br/>135346460",
+                            click: "平均点击率<br/>50.21%",
+                            consume: "消费汇总<br/>￥1135800",
+                            clickprice: "平均点击价格<br/>￥1.82"
+                        },
+                        theadRenderedCallback: function(vmodel) {
+                            var tbody = this
+                            var tr = document.createElement("tr")
+                            tr.className = "summarizing"
+                            tbody.appendChild(tr)
+                            avalon.innerHTML(tr, document.getElementById("summarizing").text)
+                            avalon.scan(tbody, vmodel)
+                            vmodel.theadHeight = 85;
+                        },
+                        getSummarizing: function(obj, key) {
+                            return obj[key]
+                        },
+                        columns: [
+                            {field: "plan", text: "竞价计划推广", resizable: true, width: 180},
+                            {field: "state", text: "状态", resizable: true, align: "center", width: 80},
+                            {field: "budget", text: "预算", resizable: true, align: "right"},
+                            {field: "emerge", text: "展现", resizable: true, align: "right"},
+                            {field: "click", text: "点击", resizable: true, align: "right"},
+                            {field: "consume", text: "消费", resizable: true, align: "right"},
+                            {field: "clickprice", text: "平均点击价格", align: "right", resizable: true}
+                        ],
+                        addUnit: function(val, name) {
+                            switch (name) {
+                                case  "budget":
+                                case "clickprice":
+                                    return "￥" + val
+                                case "state":
+                                    return val ? "√" : "×"
+                                default:
+                                    return val
+                            }
+                        },
+                        allchecked: false,
+                        getColumn: function(el) {
+                            el.checked = true
+                        },
+                          checkAll: function() {
+                            var vmodel = avalon.vmodels.xxx
+                            var bool = vmodel.allchecked = this.checked
+                            vmodel._data.forEach(function(el) {
+                                el.checked = bool
+                            })
+                            vmodel.data.forEach(function(el) {
+                                el.checked = bool
+                            })
+                        },
+                        checkOne: function() {
+                            var vmodel = avalon.vmodels.xxx
+                            var index =  vmodel.startIndex + (avalon(this).data("index") || 0)
+                            vmodel.data[index] = this.checked
+                            if (!this.checked) {
+                                vmodel.allchecked = false
+                            } else {
+                                vmodel.allchecked = vmodel._data.every(function(el) {
+                                    return el.checked
+                                })
+                            }
+                        },
+                        theadTemplate: function(str) {
+                            return "<th style='width:60px'><input type='checkbox' ms-duplex-radio='allchecked' data-duplex-changed='checkAll' /></th>" + str
+                        },
+                        tbodyTemplate: function() {
+                            return '<th style="width: 60px"><input type="checkbox" ms-duplex-radio="row.checked"  ms-data-index="$index" data-duplex-changed="checkOne" '
+                                    + 'class="ui-helper-checkone"/></th><td class="ui-grid-td" data-with-sorted="getColumnsOrder" ms-repeat="row" ms-css-width="getCellProperty($key,\'width\')" ms-css-text-align="getCellProperty($key,\'align\')">{{addUnit($val,$key)}}</td>'
+
+                        },
+                        showRows: 10,
+                        pageable: true,
+                        pager: {
+                            perPages: 20,
+                            totalItems: 1000,
+                            showPages: 5,
+                            options: [10, 20, 30, 40]
+                        },
+                        columnsOrder: ["plan", "state", "budget", "emerge", "click", "consume", "clickprice"],
+                        data: createData(100)
+                    }
+                    vm.$skipArray = ["simplegrid"]
+                })
+                avalon.scan()
+            })
+        </script>
+        <style>
+            .ui-simplegrid tr.summarizing td{
+                background:rgb(253,253,253);
+                color:#999;
+                height: 20px!important;
+                line-height: 20px;
+            }
+        </style>
+    </head>
+    <body>
+
+        <fieldset ms-controller="test">
+            <legend>演示theadRenderedCallback的使用(汇总效果)</legend>
+
+            <div ms-widget="simplegrid,xxx" style="width:99%">
+
+            </div>
+            <div>
+                <h3>要点</h3>
+                <p>在theadRenderedCallback的回调里,给表头再插入一行,数据由后端计算好,然后调整表头的高度</p>  
+                <pre class="brush:javascript;gutter:false;toolbdar:false;">
+                      summarizing: {
+                            plan: "所有汇总",
+                            state: "",
+                            budget: "预算汇总<br/>￥38000",
+                            emerge: "展现汇总<br/>135346460",
+                            click: "平均点击率<br/>50.21%",
+                            consume: "消费汇总<br/>￥1135800",
+                            clickprice: "平均点击价格<br/>￥1.82"
+                        },
+                        theadRenderedCallback: function(vmodel) {
+                            var tbody = this
+                            var tr = document.createElement("tr")
+                            tr.className = "summarizing"
+                            tbody.appendChild(tr)
+                            avalon.innerHTML(tr, document.getElementById("summarizing").text)
+                            avalon.scan(tbody, vmodel)
+                            vmodel.theadHeight = 85;
+                        },
+                        getSummarizing: function(obj, key) {
+                            return obj[key]
+                        },                 
+                </pre>
+                <br/>
+                <pre class="brush:html;gutter:false;toolbar:false;">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;simplegrid&lt;/title&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width"&gt;
+        &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+
+        &lt;script id="summarizing" type="summarizing"&gt;
+            &lt;td&gt;&lt;/td&gt; &lt;td ms-repeat="columns"
+            ms-css-width="el.width" 
+            ms-css-text-align="el.align" 
+            ms-visible="el.toggle" 
+            &gt;{{getSummarizing(summarizing, el.field) | html}}
+            &lt;/td&gt;
+        &lt;/script&gt;
+        &lt;script&gt;
+            avalon.config({debug: false})
+            require(["simplegrid/avalon.simplegrid"], function() {
+                function range(s, b) {
+                    return s + Math.floor((b - s) * Math.random())
+                }
+                var createData = function(n) {
+                    var array = []
+                    for (var i = 0; i &lt; n; i++) {
+                        array.push({
+                            plan: "北上广经济型计划",
+                            state: i % 2 === 0,
+                            budget: range(3000, 6000),
+                            emerge: range(70000, 200000),
+                            click: range(3000, 50000),
+                            consume: range(8000, 20000),
+                            clickprice: (1 + 3 * Math.random()).toFixed(2),
+                            checked: false
+                        })
+                    }
+                    return array
+                }
+
+                avalon.define("test", function(vm) {
+
+                    vm.simplegrid = {
+                        summarizing: {
+                            plan: "所有汇总",
+                            state: "",
+                            budget: "预算汇总&lt;br/&gt;￥38000",
+                            emerge: "展现汇总&lt;br/&gt;135346460",
+                            click: "平均点击率&lt;br/&gt;50.21%",
+                            consume: "消费汇总&lt;br/&gt;￥1135800",
+                            clickprice: "平均点击价格&lt;br/&gt;￥1.82"
+                        },
+                        theadRenderedCallback: function(vmodel) {
+                            var tbody = this
+                            var tr = document.createElement("tr")
+                            tr.className = "summarizing"
+                            tbody.appendChild(tr)
+                            avalon.innerHTML(tr, document.getElementById("summarizing").text)
+                            avalon.scan(tbody, vmodel)
+                            vmodel.theadHeight = 85;
+                        },
+                        getSummarizing: function(obj, key) {
+                            return obj[key]
+                        },
+                        columns: [
+                            {field: "plan", text: "竞价计划推广", resizable: true, width: 180},
+                            {field: "state", text: "状态", resizable: true, align: "center", width: 80},
+                            {field: "budget", text: "预算", resizable: true, align: "right"},
+                            {field: "emerge", text: "展现", resizable: true, align: "right"},
+                            {field: "click", text: "点击", resizable: true, align: "right"},
+                            {field: "consume", text: "消费", resizable: true, align: "right"},
+                            {field: "clickprice", text: "平均点击价格", align: "right", resizable: true}
+                        ],
+                        addUnit: function(val, name) {
+                            switch (name) {
+                                case  "budget":
+                                case "clickprice":
+                                    return "￥" + val
+                                case "state":
+                                    return val ? "√" : "×"
+                                default:
+                                    return val
+                            }
+                        },
+                        allchecked: false,
+                        getColumn: function(el) {
+                            el.checked = true
+                        },
+                        checkAll: function() {
+                            var vmodel = avalon.vmodels.xxx
+                            var bool = vmodel.allchecked = this.checked
+                            vmodel._data.forEach(function(el) {
+                                el.checked = bool
+                            })
+                            vmodel.data.forEach(function(el) {
+                                el.checked = bool
+                            })
+                        },
+                        checkOne: function() {
+                            var vmodel = avalon.vmodels.xxx
+                            var index =  vmodel.startIndex + (avalon(this).data("index") || 0)
+                            vmodel.data[index] = this.checked
+                            if (!this.checked) {
+                                vmodel.allchecked = false
+                            } else {
+                                vmodel.allchecked = vmodel._data.every(function(el) {
+                                    return el.checked
+                                })
+                            }
+                        },
+                        theadTemplate: function(str) {
+                            return "&lt;th style='width:60px'&gt;&lt;input type='checkbox' ms-duplex-radio='allchecked' data-duplex-changed='checkAll'  /&gt;&lt;/th&gt;" + str
+                        },
+                        tbodyTemplate: function() {
+                            return '&lt;th style="width: 60px"&gt;&lt;input type="checkbox" ms-duplex-radio="row.checked" ms-data-index="$index" data-duplex-changed="checkOne" '
+                                    + 'class="ui-helper-checkone"/&gt;&lt;/th&gt;&lt;td class="ui-grid-td" data-with-sorted="getColumnsOrder" ms-repeat="row" ms-css-width="getCellProperty($key,\'width\')" ms-css-text-align="getCellProperty($key,\'align\')"&gt;{{addUnit($val,$key)}}&lt;/td&gt;'
+
+                        },
+                        showRows: 10,
+                        pageable: true,
+                        pager: {
+                            perPages: 20,
+                            totalItems: 1000,
+                            showPages: 5,
+                            options: [10, 20, 30, 40]
+                        },
+                        columnsOrder: ["plan", "state", "budget", "emerge", "click", "consume", "clickprice"],
+                        data: createData(100)
+                    }
+                    vm.$skipArray = ["simplegrid"]
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+        &lt;style&gt;
+            .ui-simplegrid tr.summarizing td{
+                background:rgb(253,253,253);
+                color:#999;
+                height: 40px!important;
+            }
+        &lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+      &lt;div ms-controller="test" ms-widget="simplegrid,xxx" style="width:99%"&gt;
+
+      &lt;/div&gt;
+          
+
+    &lt;/body&gt;
+&lt;/html&gt;
+
+                </pre>
+            </div>
+        </fieldset>
+
+    </body>
+</html>

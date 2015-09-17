@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>cookie组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js">
+
+        </script>
+        <script src="../highlight/shCore.js">
+
+        </script>
+        <style >
+            .cookieerror input{
+                border:1px  solid red;
+                background: orangered;
+            }
+            ul{
+                margin: 10px 0 30px;
+            }
+        </style>
+        <script>
+            require(["browser/avalon.browser"], function(avalon) {
+                var a = avalon.define("test", function(vm) {
+                    vm.browser = avalon.browser
+                    vm.engine = avalon.engine
+                    vm.platform = avalon.platform
+                })
+
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body>
+        <div ms-controller="test">
+            <div>操作系统</div>
+            <ul style="list-style-type:circle">
+                <li ms-repeat="platform" >{{$key}}:{{$val}}</li>
+            </ul>
+            <div>浏览器</div>
+            <ul  >
+                <li ms-repeat="browser" >{{$key}}:{{$val}}</li>
+            </ul>
+            <div>渲染引擎</div>
+            <ul style="list-style-type:square">
+                <li ms-repeat="engine"  >{{$key}}:{{$val}}</li>
+            </ul>
+        </div>
+    </body>
+</html>

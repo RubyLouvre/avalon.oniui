@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>uploader demo 回调</title>
+<script src="../avalon.js"></script>
+<link rel="stylesheet" href="../style/avalon.doc.css"/>
+<style>
+	ul{
+		margin: 0;
+		padding: 0;
+	}
+	li{
+		list-style: none;
+	}
+	
+	.default .preview{
+		overflow: hidden;
+		zoom: 1;
+	}
+		.default .preview li{
+			float: left;
+			margin-right: 5px;
+		}
+	.default .add{
+		width: 100px;
+		height: 30px;
+		line-height: 30px;
+		text-align: center;
+		background: #38f;
+		color: #fff;
+	}
+	.default .add.disabled{
+		background: #ccc;
+	}
+
+	.info{
+		border-collapse: collapse;
+		text-align: center;
+	}
+	.info caption{
+		font-style: italic;
+		font-weight: bold;
+		padding: 5px 0;
+	}
+	.info th{
+		font-weight: normal;
+	}
+	.info th, .info td{
+		border: 1px solid #000;
+		padding: 5px 10px;
+	}
+
+	
+</style>
+</head>
+<body ms-controller="demo">
+	
+	<h2>回调</h2>
+	
+	<fieldset class="default">  
+		<legend>多图片上传</legend>
+		<div ms-widget="uploader, $, $opts">
+
+			<p>共{{files.length}}张，还能上传{{maxFileCount - files.length}}张</p>
+			
+			<ul class="preview">
+				<li ms-repeat="files">
+					<img ms-src="el.src" height="100" />
+				</li>
+			</ul>
+		
+			<p><div id="browse-btn" class="add" ms-class="disabled: files.length >= maxFileCount">上传图片</div></p>
+
+			
+			<table class="info">
+				<caption>图片信息</caption>
+			    <thead>
+			        <tr>
+			            <th>序号</th>
+			            <th>名字</th>
+			            <th>操作</th>
+			        </tr>
+			    </thead>
+			    <tbody>
+					<tr ms-repeat="files">
+						<td>{{$index}}</td>
+						<td>{{el.name}}</td>
+						<td><a href="javascript:;" ms-click="deleteFile($index)">删除</a></td>
+					</tr>
+			    </tbody>
+			</table>
+		</div>
+	</fieldset>
+
+	<script>
+		require(["uploader/avalon.uploader", "domReady!"], function(){
+			var model = avalon.define({
+				$id: "demo",
+				$opts: {
+					action: 'post.php',
+					browseButton: 'browse-btn',
+					maxFileCount: 4,
+					maxFileSize: 1048576000,
+					onInit: function(vmodel, options, vmodels){
+						avalon.log('初始化完成！');
+					},
+					onSuccess: function(files, data){
+						avalon.log('上传完成！');
+					},
+					onSingleFailed: function(fileName){
+						avalon.log('上传失败：' + fileName);
+					},
+					onFileSizeErr: function(fileName){
+						alert('自定义信息：' + fileName + '大小超过1M啦~')
+					},
+					onFileCountErr: function(availableNum, selectNum){
+						alert('超出 ' + (selectNum - availableNum) + ' 个！');
+					},
+					onDeleteSuccess: function(data){
+						avalon.log('删除成功！');
+					},
+					onDeleteFailed: function(data){
+						avalon.log('删除失败！');
+					}
+				}
+			});
+			avalon.scan();
+		});
+
+	</script>
+</body>
+</html>

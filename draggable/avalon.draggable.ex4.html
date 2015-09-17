@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>draggable</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../highlight/shCore.js">
+
+        </script>
+        <script src="../avalon.js">
+
+        </script>
+        <script>
+            require(["draggable/avalon.draggable"], function() {
+                avalon.define("test", function(vm) {
+                })
+                avalon.scan()
+            })
+
+        </script>
+        <style>
+            #aaa{
+                width:100px;
+                height: 100px;
+                position: absolute;
+                background: red;
+                z-index: 10;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div ms-controller="test" ms-draggable data-draggable-ghosting="true" id="aaa">
+
+        </div>
+       
+        <h1>影子拖动 ghosting </h1>
+        <pre class="brush:html;gutter:false;toolbar:false;">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;draggable&lt;/title&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width"&gt;
+        &lt;script src="../highlight/shCore.js"&gt;
+
+        &lt;/script&gt;
+        &lt;script src="../avalon.js"&gt;
+
+        &lt;/script&gt;
+        &lt;script&gt;
+            require(["draggable/avalon.draggable"], function() {
+                avalon.define("test", function(vm) {
+                })
+                avalon.scan()
+            })
+
+        &lt;/script&gt;
+        &lt;style&gt;
+            #aaa{
+                width:100px;
+                height: 100px;
+                position: absolute;
+                background: red;
+                z-index: 10;
+            }
+
+        &lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;div ms-controller="test" ms-draggable data-draggable-ghosting="true" id="aaa"&gt;
+
+        &lt;/div&gt;
+       
+        &lt;h1&gt;影子拖动 ghosting &lt;/h1&gt;
+
+    &lt;/body&gt;
+&lt;/html&gt;
+
+        </pre>
+    </body>
+</html>

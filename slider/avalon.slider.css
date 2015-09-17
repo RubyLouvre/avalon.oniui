@@ -1,0 +1,22 @@
+
+/*
+这是每个都组件都应该引用的部分
+*/
+.oni-slider { position: relative; text-align: left; display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; width: 100%; background: #e6e6e6; }
+.oni-slider .oni-helper-hidden-accessible { position: absolute; height: 1px; width: 1px; overflow: hidden; border: 0 none; margin: -1px; padding: 0; clip: rect(0px 0px 0px 0px); }
+.oni-slider .oni-corner-all { -webkit-border-radius: 5px; -moz-border-radius: 5px; -ms-border-radius: 5px; -o-border-radius: 5px; border-radius: 5px; }
+.oni-slider .oni-slider-handle { position: absolute; display: block; cursor: default; height: 14px; width: 14px; line-height: 0px; z-index: 2; -webkit-border-radius: 7px; -moz-border-radius: 7px; -ms-border-radius: 7px; -o-border-radius: 7px; border-radius: 7px; font-size: 0px; background: #3775c0; }
+.oni-slider .oni-slider-handle.oni-state-hover { background: #82aadb; }
+.oni-slider .oni-slider-handle.oni-state-active, .oni-slider .oni-slider-handle.oni-state-focus { background: #22dddd; }
+.oni-slider .oni-slider-range { position: absolute; display: block; z-index: 1; line-height: 0px; border: 0 none; font-size: 0px; background: #afd9fc; }
+.oni-slider.oni-slider-vertical { height: 100px; width: 8px; }
+.oni-slider.oni-slider-vertical .oni-slider-handle { left: -3px; margin-bottom: -7px; margin-left: 0; margin-top: -7px; }
+.oni-slider.oni-slider-vertical .oni-slider-range { left: 0; width: 100%; }
+.oni-slider.oni-slider-vertical .oni-slider-range.oni-slider-range-min { bottom: 0; }
+.oni-slider.oni-slider-vertical .oni-slider-range.oni-slider-range-max { top: 0; }
+.oni-slider.oni-slider-horizontal { height: 8px; }
+.oni-slider.oni-slider-horizontal .oni-slider-handle { margin-left: -7px; top: -3px; }
+.oni-slider.oni-slider-horizontal .oni-slider-range { height: 100%; top: 0; }
+.oni-slider.oni-slider-horizontal .oni-slider-range.oni-slider-range-min { left: 0; }
+.oni-slider.oni-slider-horizontal .oni-slider-range.oni-slider-range-max { right: 0; }
+.oni-slider.oni-state-disabled .oni-slider-handle, .oni-slider.oni-state-disabled .oni-slider-range { background: #ccc; }

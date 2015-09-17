@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    
+    <head>
+        <meta http-equiv="content-type" content="text/html;charset=utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>timer文档说明</title>
+        <meta name="description" content="移动端的时间选择器、timer">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+    </head>
+    
+    <body class="doc">
+        <div class="wrapper">
+            <h2>timer</h2>
+            <fieldset>
+                <legend>时间选择器</legend>timer可用于移动端和PC端来选择时间，PC端可以通过mousewheel或者鼠标拖动的方式来操作时间的选择，移动端通过滑动的方式操作时间的选择</fieldset>
+            <h3
+            class="table-doc-title">使用说明</h3>
+                <table class="table-doc">
+                    <colgroup>
+                        <col width="180">
+                            <col width="95">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>名字</th>
+                            <th>默认值</th>
+                            <th>说明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="3" align="center">配置参数</td>
+                        </tr>
+                        <tr>
+                            <td>showItems</td>
+                            <td>9</td>
+                            <td>可视的时间信息条数</td>
+                        </tr>
+                        <tr>
+                            <td>showYears</td>
+                            <td>false</td>
+                            <td>日期部分是否显示年份</td>
+                        </tr>
+                        <tr>
+                            <td>dialog</td>
+                            <td>{title: "选择时间", width: 300, showClose: false}</td>
+                            <td>弹层dialog的配置项</td>
+                        </tr>
+                        <tr>
+                            <td>width</td>
+                            <td>180</td>
+                            <td>时间选择框的宽度</td>
+                        </tr>
+                        <tr>
+                            <td>placeHolder</td>
+                            <td>"请选择时间"</td>
+                            <td>配置时间选择器的提示文案</td>
+                        </tr>
+                        <tr>
+                            <td>getTimeText(timeDate, placeHolder)</td>
+                            <td>
+                                <pre>getTimeText: function(timeDate, placeHolder) {
+    var timeText = placeHolder
+    if (timeDate) {
+        timeText = timeDate.toLocaleString()
+    } 
+    return timeText
+}
+                                </pre>
+                            </td>
+                            <td>选择时间之后的展示格式, timeDate是当前选择时间，如果未选择则为null，选择的话是个Date对象，placeHolder参数是用户配置的时间选择器的提示文案，默认是"请选择时间"</td>
+                        </tr>
+                        <tr>
+                            <td>eventType</td>
+                            <td>"touch"</td>
+                            <td>设置触发时间选择的事件，配置为"mousewheel"会通过鼠标滚动的方式触发，配置为""或者不配置，组件会根据浏览器支持选择鼠标拖动或者移动的touch事件</td>
+                        </tr>
+                        <tr>
+                            <td>mouseWheelSpeed</td>
+                            <td>20</td>
+                            <td>每触发一次mousewheel，元素滚动的距离</td>
+                        </tr>
+                        <tr>
+                            <td>useTransform</td>
+                            <td>true</td>
+                            <td>是否可以使用css3变换</td>
+                        </tr>
+                        <tr>
+                            <td>getDates()</td>
+                            <td>avalon.noop</td>
+                            <td>获取日期部分显示的内容,是一个日期信息集合而成的数组，格式为
+                                <pre>[{
+    date: "09月16日",
+    year: 2014,
+    month: 8, 
+    day: 16, 
+    color: "rgba(51, 51, 51, 1)"
+}, {
+    date: "09月17日",
+    year: 2014,
+    month: 8, 
+    day: 17, 
+    color: "rgba(51, 51, 51, 1)"
+},...]
+                                </pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>getHours()</td>
+                            <td>avalon.noop</td>
+                            <td>获取hour部分显示的内容，是一个hour对象结合而成的数组，格式为：
+                                <pre>[{
+    hour: "05", 
+    _hour: 5, 
+    color: "rgba(51, 51, 51, 1)"
+}, {
+    hour: "06", 
+    _hour: 6, 
+    color: "rgba(51, 51, 51, 1)"
+},...]
+                                </pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>getMinutes()</td>
+                            <td>avalon.noop</td>
+                            <td>获取minute部分显示的内容，是一个minute对象结合而成的数组，格式为:
+                                <pre>[{
+    minute: "05", 
+    _minute: 5, 
+    color: "rgba(51, 51, 51, 1)"
+}, {
+    minute: "10", 
+    _minute: 10, 
+    color: "rgba(51, 51, 51, 1)"
+},...]
+                                </pre>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>getTemplate(str, options)</td>
+                            <td>
+                                <pre>function(str, options) {
+    return str
+}
+                                </pre>
+                            </td>
+                            <td>用于修改模板，传入默认模板与配置对象</td>
+                        </tr>
+                        <tr>
+                            <td>onInit(vmodel, options, vmodels)</td>
+                            <td></td>
+                            <td>初始化时触发的回调</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" align="center">外部调用接口</td>
+                        </tr>
+                        <tr>
+                            <td>timeDate</td>
+                            <td></td>
+                            <td>获取当前选择时间，返回的是个Date对象,如果没有选择时间，则返回null</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <h3>demo示例：</h3>
+                <ol class="example-links">
+                    <li>
+                        <a href="avalon.timer.ex1.html">通过鼠标拖动来分别选择dates、hour、minute</a>
+                    </li>
+                    <li>
+                        <a href="avalon.timer.ex2.html">通过鼠标滚动来分别选择dates、hour、minute</a>
+                    </li>
+                </ol>
+        </div>
+    </body>
+
+</html>

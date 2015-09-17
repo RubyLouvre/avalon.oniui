@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>flipswitch组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <script>
+            require(["flipswitch/avalon.flipswitch"], function() {
+                avalon.define("test", function(vm) {
+                    vm["flipswitch"] = {
+                        onInit: function() {
+                            this.style.display = "block"
+                        }
+                    }
+                    vm.goal = false
+                    vm.$skipArray = ["flipswitch"]
+                    vm.hehe = [{c: true}, {c: false}]
+                })
+                avalon.vmodels.test.$watch("goal", function(v) {
+                    console.log(v)
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body>
+<div ms-controller="test">
+        <h1>不同大小size，默认设置，选中状态</h1>
+        <div>
+            <b>支持ms-repeat</b>
+            <div ms-repeat-item="hehe">
+                <input type="checkbox" ms-widget="flipswitch" ms-duplex="item.c" ms-attr-title="item.c">
+            </div>
+            <p>---------size=mini---------</p>
+            <div class="this-for-test-3">
+                checked属性优先级低于duplex
+                <input checked="checked" 
+                       ms-duplex="goal" type="checkbox" ms-widget="flipswitch" data-flipswitch-size="mini">
+            </div>
+            <p>---------size=small---------</p>
+            <div class="this-for-test">
+                <input checked="checked" type="checkbox" ms-widget="flipswitch" data-flipswitch-size="small">
+            </div>
+            <p>---------size=normal---------</p>
+            <div class="this-for-test-4">
+                <input checked="checked" type="checkbox" ms-widget="flipswitch" data-flipswitch-size="normal">
+            </div>
+            <p>---------size=large---------</p>
+            <div class="this-for-test-2">
+                <input checked="checked" type="checkbox" ms-widget="flipswitch" data-flipswitch-size="large">
+            </div>
+            <p>------------------</p>
+        </div>
+        <pre ms-skip class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;flipswitch组件&lt;/title&gt;
+        &lt;meta charset=&quot;UTF-8&quot;&gt;
+        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;
+        &lt;style type=&quot;text/css&quot;&gt;
+            
+        &lt;/style&gt;
+        &lt;script src=&quot;../avalon.js&quot;&gt;&lt;/script&gt;
+        
+        &lt;script&gt;
+            require([&quot;flipswitch/avalon.flipswitch&quot;], function() {
+                avalon.define(&quot;test&quot;, function(vm) {
+                    vm[&quot;flipswitch&quot;] = {
+                        onInit: function() {
+                            this.style.display = &quot;block&quot;
+                        }
+                    }
+                    vm.goal = []
+                    vm.$skipArray = [&quot;flipswitch&quot;]
+                })
+                avalon.vmodels.test.$watch("goal", function(v) {
+                    console.log(v)
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+&lt;div ms-controller=&quot;test&quot;&gt;
+        &lt;h1&gt;不同大小size，默认设置，选中状态&lt;/h1&gt;
+        &lt;div&gt;
+            &lt;p&gt;---------size=mini---------&lt;/p&gt;
+            &lt;div class=&quot;this-for-test-3&quot;&gt;
+                &lt;input checked=&quot;checked&quot; 
+                       ms-duplex=&quot;goal&quot; type=&quot;checkbox&quot; ms-widget=&quot;flipswitch&quot; data-flipswitch-size=&quot;mini&quot;&gt;
+            &lt;/div&gt;
+            &lt;p&gt;---------size=small---------&lt;/p&gt;
+            &lt;div class=&quot;this-for-test&quot;&gt;
+                &lt;input checked=&quot;checked&quot; type=&quot;checkbox&quot; ms-widget=&quot;flipswitch&quot; data-flipswitch-size=&quot;small&quot;&gt;
+            &lt;/div&gt;
+            &lt;p&gt;---------size=normal---------&lt;/p&gt;
+            &lt;div class=&quot;this-for-test-4&quot;&gt;
+                &lt;input checked=&quot;checked&quot; type=&quot;checkbox&quot; ms-widget=&quot;flipswitch&quot; data-flipswitch-size=&quot;normal&quot;&gt;
+            &lt;/div&gt;
+            &lt;p&gt;---------size=large---------&lt;/p&gt;
+            &lt;div class=&quot;this-for-test-2&quot;&gt;
+                &lt;input checked=&quot;checked&quot; type=&quot;checkbox&quot; ms-widget=&quot;flipswitch&quot; data-flipswitch-size=&quot;large&quot;&gt;
+            &lt;/div&gt;
+            &lt;p&gt;------------------&lt;/p&gt;
+        &lt;/div&gt;
+        
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+    </div>
+</body>
+</html>

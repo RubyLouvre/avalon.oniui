@@ -1,0 +1,23 @@
+
+/*
+这是每个都组件都应该引用的部分
+*/
+.oni-notice-flow { margin-bottom: 10px; }
+
+.oni-notice-detach { position: relative; width: 100%; z-index: 1000; }
+
+.oni-notice-detach .oni-notice { position: absolute; }
+
+.oni-notice { position: relative; overflow: hidden; transition: height 0.6s; height: 0; width: 100%; *zoom: 1; font-size: 12px; background-color: #ffe44f; color: #a65a00; }
+
+.oni-notice-inner { padding: 7px 10px; }
+
+.oni-notice-header { font-weight: 700; }
+
+.oni-notice-close { cursor: pointer; text-decoration: underline; }
+
+.oni-notice-info { background-color: #58b359; color: #ffffff; }
+
+.oni-notice-danger { background-color: #bb0000; color: #ffffff; }
+
+.oni-notice-content a, oni-notice-content a:hover { color: #a65a00; text-decoration: underline; }

@@ -1,0 +1,118 @@
+html {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    font-family: "Helvetica Neue", Helvetica, Verdana, sans-serif;
+}
+h1, h2, h3, h4, h5, div, p, ol, ul, li, pre, blockquote, img {
+    margin: 0;
+    padding: 0;
+}
+body {
+    height: 100%;
+    width: 100%;
+}
+.slider-view {
+    width: 200%;
+    height: 100%;
+    overflow: hidden;
+}
+.slider-item {
+    width: 50%;
+    height: 100%;
+    float: left;
+    display: inline;
+    transition: margin-left .5s;
+    overflow-y: auto;
+}
+.slider-1 {
+    width: 800px;
+    margin: 0 auto;
+    height: 50%;
+    margin-top: 200px;
+    position: relative;
+}
+.slider-1 h5 {
+    text-align: right;
+    padding-right: 130px;
+    margin-top: 30px;
+}
+h5 {
+    font-size: 20px;
+}
+.slider-1 h1 {
+    text-align: center;
+    font-size: 40px;
+}
+.slider-page {
+    padding: 20px 10% 0;
+}
+.slider-page a {
+    color: #000;
+}
+.slider-page h2 {
+    font-size: 40px;
+    line-height: 80px;
+    text-align: center;
+}
+.slider-page h4 {
+    font-size: 28px;
+    line-height: 40px;
+}
+.slider-page p {
+    font-size: 18px;
+    line-height: 24px;
+}
+.slider-page ol {
+    margin-left: 20px;
+}
+pre {
+    padding: 5px;
+    margin-left: 5px;
+    display: block;
+    width: auto;
+    overflow: auto !important;
+    margin-bottom: 10px;
+}
+pre, code {
+    font-family: Consolas, 'Bitstream Vera Sans Mono', 'Courier New', Courier, monospace;
+    background-color: #eee;
+}
+blockquote {
+    margin-left: 5px;
+    padding: 1px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-left: 1px solid #999;
+    background-color: #eee;
+    line-height: 1;
+    margin-bottom: 10px;
+}
+.slider-page blockquote p {
+    text-indent: 0;
+}
+p img {
+    vertical-align: top;
+}
+.list {
+    position: fixed;
+    right: 0;
+    top: 0;
+}
+.list li {
+	list-style: none;
+}
+.toggle {
+	/*visibility: hidden;*/
+}
+.hover-show {
+	display: none;
+}
+.hover-show a {
+	color: #000;
+}
+.hover .hover-show {
+	display: list-item;
+}

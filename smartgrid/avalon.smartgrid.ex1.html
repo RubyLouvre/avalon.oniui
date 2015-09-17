@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>简单的表格组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    <body ms-controller="test">
+        <div style="width:960px; margin: 0 auto">
+            <h1>除设置columns和data外都是默认配置的smartgrid</h1>
+            <p>设置column的customClass可以定义单个列的样式</p>
+            <p>ps: 通过getDatas设置数据，通过改变数据的条数看看smartgrid对数据的渲染性能如何，这里重新渲染数据时设置的是500条</p>
+            <div ms-widget="smartgrid, sg1, opts" style='margin-bottom:20px;'></div>
+            <button ms-click="reRenderData">重新渲染数据</button>
+            <button ms-click="clearData">清空数据</button>
+        </div>
+        <script>
+            require(["smartgrid/avalon.smartgrid"], function() {
+                function getDatas(number) {
+                    var data = []
+                    for (var i = 0; i < number; i++) {
+                        data.push({
+                            name: "shirly"+i,
+                            age: parseInt(10 + Math.random() * 20),
+                            selected: i%3 ? false: true,
+                            salary: parseInt(Math.random() * 100),
+                            operate : i % 5 ? 0 : 1,
+                            busy : !i%3 && !i%5 ? 0 : 1
+                        })
+                    }
+                    return data
+                } 
+                
+                avalon.define("test", function(vm) {
+                    vm.$skipArray = ["opts"]
+                    vm.reRenderData = function() {
+                        var sg1 = avalon.vmodels.sg1
+                        sg1.data = getDatas(500)
+                        sg1.render()
+                        // 或者直接通过sg1.render(getDatas(500))重新渲染数据
+                    }
+                    vm.clearData = function() {
+                        var sg1 = avalon.vmodels.sg1
+                        sg1.data = []
+                        sg1.render()
+                    }
+                    vm.opts = {
+                        onInit: function(){
+                            avalon.log("--init---")
+                        },
+                        autoResize: false,
+                        columns: [
+                            {
+                                key : "name", //列标识
+                                name : "姓名", //列名
+                                sortable : true, //是否可排序
+                                isLock : true, //是否锁死列让其始终显示
+                                align: "left", //列的对象方式
+                                defaultValue: "shirly", //列的默认值
+                                customClass: "ddd", //自定义此列单元格类
+                                toggle: false, //控制列的显示隐藏
+                                width: 400 //设置列的宽度
+                            }, {
+                                key : "age",
+                                name : "年龄",
+                                sortable : true,
+                                width: 300,
+                                type: "Number"
+                            }, {
+                                key : "salary",
+                                name : "薪水",
+                                type : "Number",
+                                sortable : true,
+                                align: "right",
+                                width: 300
+                            }
+                        ],
+                        data: getDatas(100)
+                    }
+                })
+                avalon.scan()
+            })
+        </script>
+        <div ms-skip style="width:960px; margin: 0 auto">
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;smartgrid demo&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body ms-controller="test"&gt;
+                    &lt;h1&gt;除设置columns和data外都是默认配置的smartgrid&lt;/h1&gt;
+                    &lt;p&gt;ps: 通过getDatas设置数据，通过改变数据的条数看看smartgrid对数据的渲染性能如何，这里重新渲染数据时设置的是500条&lt;/p&gt;
+                    &lt;div ms-widget="smartgrid, sg1" &gt;&lt;/div&gt;
+                    &lt;button ms-click="reRenderData"&gt;重新渲染数据&lt;/button&gt;
+                    &lt;button ms-click="clearData"&gt;清空数据&lt;/button&gt;
+                    &lt;script&gt;
+                        require(["smartgrid/avalon.smartgrid"], function() {
+                            function getDatas(number) {
+                                var data = []
+                                for (var i = 0; i &lt; number; i++) {
+                                    data.push({
+                                        name: "shirly"+i,
+                                        age: parseInt(10 + Math.random() * 20),
+                                        selected: i%3 ? false: true,
+                                        salary: parseInt(Math.random() * 100),
+                                        operate : i % 5 ? 0 : 1,
+                                        busy : !i%3 && !i%5 ? 0 : 1
+                                    })
+                                }
+                                return data
+                            } 
+                            
+                            avalon.define("test", function(vm) {
+                                vm.$skipArray = ["smartgrid"]
+                                vm.reRenderData = function() {
+                                    var sg1 = avalon.vmodels.sg1
+                                    sg1.data = getDatas(500)
+                                    sg1.render()
+                                    // 或者直接通过sg1.render(getDatas(500))重新渲染数据
+                                }
+                                vm.clearData = function() {
+                                    var sg1 = avalon.vmodels.sg1
+                                    sg1.data = []
+                                    sg1.render()
+                                }
+                                vm.smartgrid = {
+                                    autoResize: false,
+                                    columns: [
+                                        {
+                                            key : "name", //列标识
+                                            name : "姓名", //列名
+                                            sortable : true, //是否可排序
+                                            isLock : true, //是否锁死列让其始终显示
+                                            align: "left", //列的对象方式
+                                            defaultValue: "shirly", //列的默认值
+                                            customClass: "ddd", //自定义此列单元格类
+                                            toggle: false, //控制列的显示隐藏
+                                            width: 400 //设置列的宽度
+                                        }, {
+                                            key : "age",
+                                            name : "年龄",
+                                            sortable : true,
+                                            width: 300
+                                        }, {
+                                            key : "salary",
+                                            name : "薪水",
+                                            type : "Number",
+                                            sortable : true,
+                                            align: "right",
+                                            width: 300
+                                        }
+                                    ],
+                                    data: getDatas(100)
+                                }
+                            })
+                            avalon.scan()
+                        })
+                    &lt;/script&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+    </body>
+</html>

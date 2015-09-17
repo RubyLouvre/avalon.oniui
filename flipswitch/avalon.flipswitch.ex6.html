@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>flipswitch组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <script>
+            require(["flipswitch/avalon.flipswitch", "tooltip/avalon.tooltip"], function() {
+                var id = 0;
+                var vmodel = avalon.define("test", function(vm) {
+                    vm["flipswitch"] = {
+                        getTemplate: function(tpl) {
+                            id++;
+                            return tpl.replace(/^<div/, "<div ms-class='checked:checked' ")
+                        }
+                        , onChange: function(v) {
+                            if(avalon.vmodels.$b2) {
+                                avalon.vmodels.$b2.content = "单击" + (v ? "关闭" : "打开")
+                            }
+                        }
+                    }
+                    vm.$ttOpt = {
+                        contentGetter: function(elem) {
+                            var elem = avalon(elem)
+                            if(elem.hasClass("oni-flipswitch")) return "单击" + (elem.hasClass("checked") ? "关闭" : "打开")
+                        },
+                        position: "tc"
+                        , delegate: true,
+                        autohide: false
+                    }
+                    vm.$skipArray = ["flipswitch"]
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body>
+<div ms-controller="test">
+        <h1>flipswitch + tooltip</h1>
+        <div ms-widget="tooltip,$b2,$ttOpt">
+            <p>---------size=normal---------</p>
+            <div class="this-for-test-4">
+                <input rank="3" checked="checked" type="checkbox" ms-widget="flipswitch,$dd" data-flipswitch-size="normal">
+                <input type="button" value="disable" onclick="avalon.vmodels.$dd.disable()">
+                <input type="button" value="enable" onclick="avalon.vmodels.$dd.enable()">
+            </div>
+            <p>---------size=large---------</p>
+            <div class="this-for-test-2">
+                <input rank="4" checked="checked" type="checkbox" ms-widget="flipswitch" data-flipswitch-size="large">
+            </div>
+            <p>------------------</p>
+        </div>
+        <pre ms-skip class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;flipswitch组件&lt;/title&gt;
+        &lt;meta charset=&quot;UTF-8&quot;&gt;
+        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;
+        &lt;style type=&quot;text/css&quot;&gt;
+            
+        &lt;/style&gt;
+        &lt;script src=&quot;../avalon.js&quot;&gt;&lt;/script&gt;
+        
+        &lt;script&gt;
+            require([&quot;flipswitch/avalon.flipswitch&quot;, &quot;tooltip/avalon.tooltip&quot;], function() {
+                var id = 0;
+                var vmodel = avalon.define(&quot;test&quot;, function(vm) {
+                    vm[&quot;flipswitch&quot;] = {
+                        getTemplate: function(tpl) {
+                            id++;
+                            return tpl.replace(/^&lt;div/, &quot;&lt;div ms-class='checked:checked' &quot;)
+                        }
+                        , onChange: function(v) {
+                            if(avalon.vmodels.$b2) {
+                                avalon.vmodels.$b2.content = &quot;单击&quot; + (v ? &quot;关闭&quot; : &quot;打开&quot;)
+                            }
+                        }
+                    }
+                    vm.$ttOpt = {
+                        contentGetter: function(elem) {
+                            var elem = avalon(elem)
+                            if(elem.hasClass(&quot;oni-flipswitch&quot;)) return &quot;单击&quot; + (elem.hasClass(&quot;checked&quot;) ? &quot;关闭&quot; : &quot;打开&quot;)
+                        },
+                        position: &quot;tc&quot;
+                        , delegate: true,
+                        autohide: false
+                    }
+                    vm.$skipArray = [&quot;flipswitch&quot;]
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+&lt;div ms-controller=&quot;test&quot;&gt;
+        &lt;h1&gt;flipswitch + tooltip&lt;/h1&gt;
+        &lt;div ms-widget=&quot;tooltip,$b2,$ttOpt&quot;&gt;
+            &lt;p&gt;---------size=normal---------&lt;/p&gt;
+            &lt;div class=&quot;this-for-test-4&quot;&gt;
+                &lt;input rank=&quot;3&quot; checked=&quot;checked&quot; type=&quot;checkbox&quot; ms-widget=&quot;flipswitch,$dd&quot; data-flipswitch-size=&quot;normal&quot;&gt;
+                &lt;input type=&quot;button&quot; value=&quot;disable&quot; onclick=&quot;avalon.vmodels.$dd.disable()&quot;&gt;
+                &lt;input type=&quot;button&quot; value=&quot;enable&quot; onclick=&quot;avalon.vmodels.$dd.enable()&quot;&gt;
+            &lt;/div&gt;
+            &lt;p&gt;---------size=large---------&lt;/p&gt;
+            &lt;div class=&quot;this-for-test-2&quot;&gt;
+                &lt;input rank=&quot;4&quot; checked=&quot;checked&quot; type=&quot;checkbox&quot; ms-widget=&quot;flipswitch&quot; data-flipswitch-size=&quot;large&quot;&gt;
+            &lt;/div&gt;
+            &lt;p&gt;------------------&lt;/p&gt;
+        &lt;/div&gt;
+        
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+    </div>
+</body>
+</html>

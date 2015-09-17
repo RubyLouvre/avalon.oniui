@@ -1,0 +1,322 @@
+@import "../chameleon/oniui-theme";
+$uiname: "oni-datepicker";
+$uiname-dropdown: "oni-dropdown";
+
+.#{$uiname} {
+    position: relative;
+    display: block;
+    font-size: 0;
+    white-space: nowrap;
+    color: #333;
+    z-index: 10;
+    width: auto;
+    margin-left: -1px;
+    tr, td, th {
+        border: 0;
+    }
+    .oni-icon {
+        text-indent: 0;
+    }
+    .oni-icon-calendar-o {
+        padding: 0 6px;
+        vertical-align: top;
+        text-indent: 0;
+        display: inline;
+    }
+    .oni-dropdown-source {
+        margin-top: -2px;
+        *margin-top: 0;
+        .oni-dropdown-input {
+            padding: 0 21px 0 6px;
+            line-height: 20px;
+            height: 20px;
+        }
+        .oni-dropdown-icon {
+            top: -20px;
+            line-height: 20px;
+        }
+    }
+}
+.#{$uiname}-wrapper {
+    padding: 9px 0 9px 10px;
+    border: 1px solid #cccccc;
+    box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1);
+    position: absolute;
+    background: #fff;
+}
+.#{$uiname}-wrapper-right {
+    right: -1px;
+}
+.#{$uiname}-wrapper-top {
+    bottom: 24px;
+}
+.#{$uiname}-wrapper-top-right {
+    bottom: 24px;
+    right: -1px;
+}
+.#{$uiname}-content {
+    border: 1px solid #e5e5e5;
+    font-size: 12px;
+    margin-right: 10px;
+    background: #fff;
+
+}
+.#{$uiname}-label {
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #e5e5e5;
+    font-weight: 700;
+    padding: 7px 0;
+    text-align: center;
+}
+.#{$uiname}-timer {
+    border-top: 1px solid #efefef;
+    padding: 5px 0;
+    .oni-btn {
+        height: 26px;
+        overflow: visible;
+        _overflow-y: hidden;
+        padding: 0 10px;
+        @include border-radius(2px);
+        @if($oinui-theme == smoothness) {
+            font-size: 12px;
+            color: #333333;
+            background-color: #f8f8f8;
+            border: 1px solid #cccccc;
+        }
+        cursor: pointer;
+    }
+    .oni-btn:hover {
+        box-shadow: 1px 1px 0 0 rgba(0,0,0,0.1);
+        @if($oinui-theme == smoothness) {
+            background-color: #f8f8f8;
+            border-color: #bbbbbb;
+            color: #333333;
+        }
+    }
+    .oni-btn-small {
+        height: 22px;
+        padding: 0 5px;
+        font-size: 12px;
+    }
+    p, label {
+        margin: 0;
+        span {
+            @include inline-block();
+            width: 50px;
+        }
+    }
+}
+.#{$uiname}-content-content {
+    padding: 0 10px;
+    position: relative;
+    @include inline-block();
+    white-space: normal;
+    word-break: break-word;
+}
+.#{$uiname}-watermark {
+    position: absolute;
+    top: 60px;
+    left: 10px;
+    background: transparent;
+    color: #000;
+    _color: lighten(#000, 95%);
+    @include opacity(0.05);
+    text-align: center;
+}
+.#{$uiname}-month-year {
+    span {
+        display: block;
+        width: 23%;
+        height: 42px;
+        line-height: 42px;
+        float: left;
+        margin: 1%;
+        cursor: pointer;
+        text-align: center;
+        _margin-left: -1px;
+    }
+    .#{$uiname}-prev, .#{$uiname}-next {
+        height: auto;
+        line-height: auto;
+        position: relative;
+        width: auto;
+    }
+    .#{$uiname}-day-hover {
+        background: #dbebff;
+    }
+    .#{$uiname}-selected {
+        background: #3775c0;
+        color: #fff;
+    }
+    .#{$uiname}-prev-year, .#{$uiname}-next-year {
+        color: #999999;
+    }
+    .oni-state-disabled {
+        color: #cccccc;
+        cursor: default;
+        background: transparent;
+    }
+}
+.#{$uiname}-header {
+    position: relative;
+    height: 30px;
+    line-height: 30px;
+}
+.#{$uiname} .#{$uiname}-prev, .#{$uiname} .#{$uiname}-next {
+    color: #3775c0;
+    cursor: pointer;
+    height: 30px;
+    line-height: 30px;
+    position: absolute;
+    text-align: center;
+    width: 20px;
+    z-index: 1;
+}
+.#{$uiname} .#{$uiname}-prev {
+    left: 0;
+}
+.#{$uiname} .#{$uiname}-next {
+    right: 0;
+}
+.#{$uiname}-content-content .#{$uiname}-prev {
+    left: 0;
+    top: 0;
+}
+.#{$uiname}-content-content .#{$uiname}-next {
+    right: 0;
+    top: 0;
+}
+.#{$uiname} .#{$uiname}-prev-disabled, .#{$uiname} .#{$uiname}-next-disabled {
+    color: #cccccc;
+    cursor: default;
+}
+.#{$uiname}-title {
+    color: #3775c0;
+    font-weight: 700;
+    text-align: center;
+    span.oni-state-hover {
+        background: #dbebff;
+        padding: 5px 10px;
+    }
+}
+.#{$uiname}-calendar-days {
+    height: 150px;
+    position: relative;
+    z-index: 20;
+}
+.#{$uiname}-calendar-week, .#{$uiname}-calendar-days {
+    border-collapse: collapse;
+    margin-bottom: 5px;
+    table-layout: fixed;
+    width: 100%;
+    border-spacing: 0;
+}
+.#{$uiname}-calendar-week th {
+    border-bottom: 1px solid #efefef;
+    border-top: 1px solid #efefef;
+    padding: 3px 0;
+    text-align: center;
+    line-height: 18px;
+    font-weight: 400;
+    font-size: 12px;
+}
+.#{$uiname}-week-end , .#{$uiname}-calendar-days .#{$uiname}-week-end{
+    color: #ff5555;
+}
+.#{$uiname}-calendar-days td {
+    color: #333333;
+    cursor: pointer;
+    text-align: center;  
+    line-height: 18px;
+    padding: 3px 0;
+    background: transparent;
+}
+.#{$uiname}-default {
+    background: #fff;
+}
+.#{$uiname}-calendar-days .#{$uiname}-day-hover  {
+    background: #dbebff;
+}
+.#{$uiname}-today {
+  font-family: pmingliu, arial, sans-serif;
+  font-size: 11px;
+}
+@media screen and (-webkit-transform-2d: 1) {
+    .#{$uiname}-today {
+        /* font-size: 12px; */
+        -webkit-transform: scale(0.91666667);
+    }
+}
+.#{$uiname}-day-none {
+    cursor: auto;
+}
+.#{$uiname}-calendar-days .#{$uiname}-selected {
+    background: #3775c0;
+    color: #fff;
+}
+.#{$uiname}-calendar-days .oni-state-disabled {
+    color: #cccccc;
+    cursor: default;
+    background: transparent;
+}
+.#{$uiname}-multiple {
+    .#{$uiname}-content {
+        border-right: 0;
+    }
+    .#{$uiname}-content-content {
+        border-right: 1px solid #e5e5e5;
+    }
+}
+.#{$uiname}-dropdown {
+    .oni-dropdown-item {
+        color: #333333;
+        font-size: 12px;
+        padding: 0;
+        text-indent: 0;
+        text-align: center;
+    }
+    .oni-dropdown-item-hover {
+        background: #f5f5f5;
+    }
+    .oni-dropdown-item-selected {
+        background: #3775c0;
+    }
+    .oni-dropdown:hover .oni-dropdown-source {
+        border-color: #3775c0;
+        border-bottom-color: #cccccc;
+    }
+}
+
+.#{$uiname}-input-wrapper {
+    background: #ffffff;
+    border: 1px solid #cccccc;
+    cursor: pointer;
+    color: #333;
+    font-size: 12px;
+    position: relative;
+    display: inline-block;
+    *display: inline;
+    zoom: 1;
+    z-index: 1;
+    input {
+        border: 0 none;
+        cursor: pointer;
+        outline: none;
+        padding: 3px 90px 3px 6px;
+        width: 90px;
+        height: 18px;
+        margin: 0;
+        font-size: 12px;
+    }
+}
+.#{$uiname}-tip {
+    position: absolute;
+    top: 3px;
+    right: 10px;
+    line-height: 18px;
+    height: 18px;
+    color: #b5b5b5;
+}
+.#{$uiname}-active {
+    border-color: #3775c0;
+}

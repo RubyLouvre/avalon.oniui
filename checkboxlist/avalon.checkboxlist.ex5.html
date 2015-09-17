@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>checkboxlist demo 5(onSelect配置)</title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>checkboxlist demo 5</h1>
+        <p class="example">通过配置onSelect，可以在选中或者取消选中选框的情况下做一些后续处理，传给回调的参数分别是：选项值组成的数组（[{value:"",text:""},{value: "", text:""}]的格式）、选中(true)还是取消选中(false)的选框状态、当前点击的checkbox元素的引用（<span class="statement">data-checkboxlist-on-select="onselect"</span>）</p>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;checkboxlist demo5（配置onSelect回调）&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;div class="demo-show" ms-controller="demo5"&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;data-checkboxlist-on-select="onselect"&lt;/legend&gt;
+                            &lt;ul ms-widget="checkboxlist" data-checkboxlist-on-select="onselect" data-checkboxlist-duplex="val" data-checkboxlist-alltext="全部"&gt;
+                                &lt;li&gt;&lt;input type="checkbox" value="1"&gt;选项一&lt;/li&gt;
+                                &lt;li&gt;&lt;input type="checkbox" value="2"&gt;选项二&lt;/li&gt;
+                                &lt;li&gt;&lt;input type="checkbox" value="3"&gt;选项三&lt;/li&gt;
+                                &lt;li&gt;&lt;input type="checkbox" value="4"&gt;选项四&lt;/li&gt;
+                                &lt;li&gt;&lt;input type="checkbox" value="5"&gt;选项五&lt;/li&gt;
+                            &lt;/ul&gt;
+                        &lt;/fieldset&gt;
+
+                        {{ val }}
+                    &lt;/div&gt;
+                    &lt;script&gt;
+                        require(["./checkboxlist/avalon.checkboxlist"], function(avalon) {
+                            var sss = avalon.define('demo5',function(vm){
+                                vm.val = ["1", "2"];
+                                vm.onselect = function() {
+                                    avalon.log("selectCallback argumnets is: ");
+                                    avalon.log(arguments);
+                                    alert("选中了："+arguments[2].value);
+                                    for (var i=0; i&lt;arguments[0].length; i++) {
+                                        var obj = arguments[0][i];
+                                        if (obj.value == arguments[2].value) {
+                                            alert(obj.text);
+                                        }
+                                    }
+                                }
+                            });
+                            avalon.scan();
+                        });
+                    &lt;/script&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+        <div class="demo-show" ms-controller="demo5">
+            <fieldset>
+                <legend>data-checkboxlist-on-select="onselect"</legend>
+                <ul ms-widget="checkboxlist" data-checkboxlist-on-select="onselect" data-checkboxlist-duplex="val" data-checkboxlist-alltext="全部">
+                    <li><input type="checkbox" value="1">选项一</li>
+                    <li><input type="checkbox" value="2">选项二</li>
+                    <li><input type="checkbox" value="3">选项三</li>
+                    <li><input type="checkbox" value="4">选项四</li>
+                    <li><input type="checkbox" value="5">选项五</li>
+                </ul>
+            </fieldset>
+
+            {{ val }}
+        </div>
+        <script>
+            require(["./checkboxlist/avalon.checkboxlist"], function(avalon) {
+                var sss = avalon.define('demo5',function(vm){
+                    vm.val = ["1", "2"];
+                    vm.onselect = function() {
+                        avalon.log("selectCallback argumnets is: ");
+                        avalon.log(arguments);
+                        if (arguments[1]) {
+                            alert("选中了："+arguments[2].value);  
+                        } else {
+                            alert("取消对"+arguments[2].value+"的选中");
+                        }
+                        
+                        for (var i=0; i<arguments[0].length; i++) {
+                            var obj = arguments[0][i];
+                            if (obj.value == arguments[2].value) {
+                                alert("当前项的值是：" +obj.text);
+                            }
+                        }
+                    }
+                });
+                avalon.scan();
+            });
+        </script>
+    </div>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>datepicker demo </title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>datepicker demo(带有时间选择)</h1>
+        <div class="demo-show" ms-controller="demo">
+            <fieldset>
+                <legend>带有时间选择功能datepicker</legend>
+                <input ms-widget="datepicker" data-datepicker-timer="true" ms-duplex="time"/>
+                <p>说明：datepicker默认不显示时间选择功能，如有需要，可以配置timer为true</p>
+                <p>time is : {{time}}</p>
+            </fieldset>
+            <script> 
+                require(["datepicker/avalon.datepicker", "slider/avalon.slider"], function(avalon) {
+                    var model = avalon.define("demo", function(vm) {
+                        vm.time = "2015-04-28 16:24"
+                        vm.datepicker = {
+                            onSelectTime: function(vmodel) {
+                                var currentTime = new Date(vmodel.year, vmodel.month, vmodel.day, vmodel.hour, vmodel.minute)
+                                avalon.log("currentTime is : "+currentTime)
+                            }
+                        }
+                    })
+                    avalon.scan();
+                })
+            </script>
+        </div>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;datepicker demo&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;div class="demo-show" ms-controller="demo"&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;带有时间选择功能datepicker&lt;/legend&gt;
+                            &lt;input ms-widget="datepicker" data-datepicker-timer="true" ms-duplex="time"/&gt;
+                            &lt;p&gt;说明：datepicker默认不显示时间选择功能，如有需要，可以配置timer为true&lt;/p&gt;
+                            &lt;p&gt;time is : {{time}}&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;script&gt; 
+                            require(["datepicker/avalon.datepicker", "slider/avalon.slider"], function(avalon) {
+                                var model = avalon.define("demo", function(vm) {
+                                    vm.time = ""
+                                    vm.datepicker = {
+                                        onSelectTime: function(vmodel) {
+                                            var currentTime = new Date(vmodel.year, vmodel.month, vmodel.day, vmodel.hour, vmodel.minute)
+                                            avalon.log("currentTime is : "+currentTime)
+                                        }
+                                    }
+                                })
+                                avalon.scan();
+                            })
+                        &lt;/script&gt;
+                    &lt;/div&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+    </div>
+</body>
+</html>
+

@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>notice demo </title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>notice demo</h1>
+        <p class="example">当组件绑定元素设置了isPlace占位为true且isAffix吸顶为true时，当页面滚动距离超过notice的offsetTop时就会吸顶显示，isPlace为false或者isAffix为false时都不会有吸顶效果</p>
+        <div class="demo-show" ms-controller="noticeDemo" style="padding-bottom:300px">
+            <fieldset>
+                <legend>container test</legend>
+                <div id="test">将notice a的container设为此#test元素id,并设置notice的isAffix吸顶为true，来演示notice的吸顶效果</div>
+            </fieldset>
+
+            <div id="notice" ms-widget="notice,a" data-notice-is-affix=true data-notice-container="#test">因为notice组件默认占位也就是isPlace为true，所以此notice会有吸顶效果，默认无吸顶效果，可以切换到demo1看看默认的情况<a href="avalon.notice.ex1.html" >notice demo ex1</a>动动手试试看呢</div>
+
+            <fieldset>
+                <legend>container test1</legend>
+                <div id="test1">将notice b的container设为此#test1元素id,并设置notice的isAffix吸顶为true，占位isPlace为false来演示notice在非占位情况下不吸顶</div>
+            </fieldset>
+
+            <div ms-widget="notice,b" data-notice-is-affix=true data-notice-container="#test1" data-notice-is-place=false data-notice-type="success">因为notice组件非占位(isPlace为false)，所以此notice就算设置isAffix为true也不会有吸顶效果</div>
+            <button ms-click="toggleNotice('a')">toggle notice a</button>
+            <button ms-click="toggleNotice('b')">toggle notice b</button>
+            <script>
+                require(["notice/avalon.notice","ready!"], function(avalon) {
+                    var model = avalon.define("noticeDemo", function(vm) {
+                        vm.toggleNotice = function(id) {
+                            var noticeVm = avalon.vmodels[id]
+                            noticeVm.toggle = !noticeVm.toggle
+                        }
+                    })
+                    avalon.scan();
+                })
+            </script>
+        </div>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;notice demo 1&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;div class="demo-show" ms-controller="noticeDemo" style="padding-bottom:300px"&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;container test&lt;/legend&gt;
+                            &lt;div id="test"&gt;将notice a的container设为此#test元素id,并设置notice的isAffix吸顶为true，来演示notice的吸顶效果&lt;/div&gt;
+                        &lt;/fieldset&gt;
+
+                        &lt;div id="notice" ms-widget="notice,a" data-notice-is-affix=true data-notice-container="#test"&gt;因为notice组件默认占位也就是isPlace为true，所以此notice会有吸顶效果，默认无吸顶效果，可以切换到demo1看看默认的情况&lt;a href="avalon.notice.ex1.html" &gt;notice demo ex1&lt;/a&gt;动动手试试看呢&lt;/div&gt;
+
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;container test1&lt;/legend&gt;
+                            &lt;div id="test1"&gt;将notice b的container设为此#test1元素id,并设置notice的isAffix吸顶为true，占位isPlace为false来演示notice在非占位情况下不吸顶&lt;/div&gt;
+                        &lt;/fieldset&gt;
+
+                        &lt;div ms-widget="notice,b" data-notice-is-affix=true data-notice-container="#test1" data-notice-is-place=false data-notice-type="success"&gt;因为notice组件非占位(isPlace为false)，所以此notice就算设置isAffix为true也不会有吸顶效果&lt;/div&gt;
+                        &lt;button ms-click="toggleNotice('a')"&gt;toggle notice a&lt;/button&gt;
+                        &lt;button ms-click="toggleNotice('b')"&gt;toggle notice b&lt;/button&gt;
+                        &lt;script&gt;
+                            require(["notice/avalon.notice","ready!"], function(avalon) {
+                                var model = avalon.define("noticeDemo", function(vm) {
+                                    vm.toggleNotice = function(id) {
+                                        var noticeVm = avalon.vmodels[id]
+                                        noticeVm.toggle = !noticeVm.toggle
+                                    }
+                                })
+                                avalon.scan();
+                            })
+                        &lt;/script&gt;
+                    &lt;/div&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,6 @@
+<h3>{{contact.name}}</h3>
+<ul 
+    ms-attr-pname="c()">
+    <li ms-repeat-item="contact.items"><a ms-href="#!/contacts/{{id}}/item/{{item.id}}">{{item.type}}</a></li>
+</ul>{{count}}
+<form ms-view data-view-cache="true">contacts.detail 默认子view内容</form>

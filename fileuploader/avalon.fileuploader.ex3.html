@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>uploader demo 文件尺寸设置，分块上传文件</title>
+	<script src="../avalon.js"></script>
+	<link rel="stylesheet" href="../style/avalon.doc.css"/>
+	<link rel="stylesheet" href="avalon.fileuploader.ex.css"/>
+</head>
+<body ms-controller="demo">
+	<h1><a name="size-limit">尺寸限定</a></h1>
+	<p class="end">可以使用maxFileSize来限制单个文件的大小，使用filePoolSize选项配置待上传文件池的大小。maxFileSize默认值是5M，filePoolSize默认值是200M。本例中maxFileSize的值是1024*500(500KB)，单个文件超出此尺寸时会触发onFileOverSize回调。filePoolSize为1024*1024(1MB)，未上传文件总大小超出此尺寸时会触发onFilePoolOverSize回调。</p>
+	<p class="end">注意：filePoolSize的值不要过大，因为在采用Flash方案的低版本浏览器（IE9及以下）内，Flash只能一次将文件读入内存，过大的filePoolSize可能导致浏览器占用内存过高。</p>
+    <div ms-widget="fileuploader,demoUploader1,$uploaderOptions1"></div>
+
+	<h1>开启分块上传</h1>
+	<p class="end">可以使用chunked:true来开启文件分块上传，默认为关闭；chunkSize可以配置每个分块文件的大小，默认是1024*1024（1MB）。本例中chunkSize被设为500KB，文件尺寸限定为20MB。可以在Chrome的F12工具中看到请求数量。</p>
+    <div ms-widget="fileuploader,demoUploader2,$uploaderOptions2"></div>
+
+	<h1>并发请求数限制</h1>
+	<p class="end">可以使用serverConfig.concurrentRequest来并行的请求数量，默认的并发数为3。注意，并非concurrentRequest越大越快，浏览器本身存在并发请求数量限制，而且过多的挂起的请求会拖慢浏览器的速度。</p>
+    <div ms-widget="fileuploader,demoUploader3,$uploaderOptions3"></div>
+
+
+	<script>
+		require(["./fileuploader/avalon.fileuploader","domReady!"], function($$){
+			var model = $$.define("demo", function(vm){
+				var basicOptions = {
+		            addButtonText: "添加文件",
+		            uploadButtonText: "开始上传",
+		            serverConfig: {
+		                url: "../../Handler1.ashx",
+		                userName: undefined,
+		                password: undefined
+		            },
+					onFileOverSize: function (fileObj) {
+						alert(fileObj.name+"超出了文件尺寸限制")
+					},
+					onFilePoolOverSize: function (fileObj, poolSize) {
+						alert("文件缓存池达已满，不能继续添加文件。")
+					},
+					onSameFileAdded: function () {
+						alert("不能添加相同的文件");
+					}
+				};
+
+
+				vm.$uploaderOptions1 = $$.mix({
+					maxFileSize: 1024 * 500,
+					filePoolSize: 1024 * 1024
+				}, basicOptions);
+
+				vm.$uploaderOptions2 = $$.mix({
+					chunked: true,
+					maxFileSize: 1024 * 1024 * 20,
+					filePoolSize: 1024 * 1024 * 200,
+					chunkSize: 1024 * 500
+				}, basicOptions);
+
+				vm.$uploaderOptions3 = $$.mix({
+					maxFileSize: 1024 * 1024 * 10,
+					filePoolSize: 1024 * 1024 * 100,
+					chunked: true,
+					chunkSize: 1024 * 500,
+		            serverConfig: {
+		                url: "../../Handler1.ashx",
+		                concurrentRequest: 5,
+		                userName: undefined,
+		                password: undefined
+		            }
+				}, basicOptions);
+
+
+			});
+			$$.scan();
+		});
+	</script>
+</body>
+</html>
+

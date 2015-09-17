@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>mmRequest组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <script>
+
+            require(["mmRequest/mmRequest"], function() {
+                avalon.define("test", function(vm) {
+                    vm.loadJSON = function() {
+                        avalon.get("ajax.php", {
+                            page: 1,
+                            name: 2
+                        }, function(res) {
+                            vm.time = +new Date()
+                            vm.jsonData = res
+                        }, "json")
+                    }
+                    vm.loadAJAX = function() {
+                        avalon.ajax({
+                            url: "ajax.php",
+                            dataType: "json",
+                            type: "get",
+                            data: {
+                                page: 1,
+                                name: 1
+                            },
+                            success: function(res) {
+                                vm.time = +new Date()
+                                vm.jsonData = res
+                            }
+                        })
+                    }
+                    vm.time = ""
+                    vm.jsonData = []
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body ms-controller="test">
+        <h1>mmRequest-get</h1>
+        <div>
+            <button 
+                    ms-click="loadJSON">点我加载点数据-avalon.get</button>
+            <button 
+                    ms-click="loadAJAX">点我加载点数据-avalon.ajax</button>
+            <p>---------</p>
+            <div>
+                <p 
+                   ms-if="!jsonData.length">还没有加载数据</p>
+                <p 
+                   ms-repeat-item="jsonData">
+                    {{item.name}} - {{time}}
+                </p>
+            </div>
+        </div>
+        <pre ms-skip class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;mmRequest组件&lt;/title&gt;
+        &lt;meta charset=&quot;UTF-8&quot;&gt;
+        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;
+        &lt;script src=&quot;../avalon.js&quot;&gt;&lt;/script&gt;
+        
+        &lt;script&gt;
+
+            require([&quot;mmRequest/mmRequest&quot;], function() {
+                avalon.define(&quot;test&quot;, function(vm) {
+                    vm.loadJSON = function() {
+                        avalon.get(&quot;ajax.php&quot;, {
+                            page: 1,
+                            name: 2
+                        }, function(res) {
+                            vm.time = +new Date()
+                            vm.jsonData = res
+                        }, &quot;json&quot;)
+                    }
+                    vm.loadAJAX = function() {
+                        avalon.ajax({
+                            url: &quot;ajax.php&quot;,
+                            dataType: &quot;json&quot;,
+                            type: &quot;get&quot;,
+                            data: {
+                                page: 1,
+                                name: 1
+                            },
+                            success: function(res) {
+                                vm.time = +new Date()
+                                vm.jsonData = res
+                            }
+                        })
+                    }
+                    vm.time = &quot;&quot;
+                    vm.jsonData = []
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body ms-controller=&quot;test&quot;&gt;
+        &lt;h1&gt;mmRequest-get&lt;/h1&gt;
+        &lt;div&gt;
+            &lt;button 
+                    ms-click=&quot;loadJSON&quot;&gt;点我加载点数据-avalon.get&lt;/button&gt;
+            &lt;button 
+                    ms-click=&quot;loadAJAX&quot;&gt;点我加载点数据-avalon.ajax&lt;/button&gt;
+            &lt;p&gt;---------&lt;/p&gt;
+            &lt;div&gt;
+                &lt;p 
+                   ms-if=&quot;!jsonData.length&quot;&gt;还没有加载数据&lt;/p&gt;
+                &lt;p 
+                   ms-repeat-item=&quot;jsonData&quot;&gt;
+                    {{item.name}} - {{time}}
+                &lt;/p&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+    </body>
+</html>

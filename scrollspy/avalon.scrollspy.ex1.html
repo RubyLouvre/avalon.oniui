@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>scrollspy组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <style>
+            .oni-tab-panel-container{
+                border: 1px #aaa solid;
+            }
+        </style>
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <script>
+            require(["scrollspy/avalon.scrollspy", "scrollbar/avalon.scrollbar", "tab/avalon.tab", "ready!"], function() {
+                var v = avalon.define("test", function(vm) {
+                    vm.cb = []
+                    vm.scrollspy = {
+                        onChange: function(index, tabElement, element) {
+                            if(v.tabVmodel1) {
+                                index = index < 0 ? 0 : index
+                                if(element.id.match(/2/)) {
+                                    v.tabVmodel2.active = index
+                                } else if(element.id.match(/1/)) {
+                                    v.tabVmodel1.active = index
+                                } else {
+                                    v.tabVmodel0.active = index
+                                }
+                            }
+                        }
+                    }
+                    vm.scrollbar = {
+                        onInit: function(vmodel) {
+                            v.bar = vmodel
+                            setTimeout(function() {
+                                vmodel.update()
+                            }, 1000)
+                        }
+                    }
+                    vm.tab = {
+                        shallPanelAlwaysShow: true,
+                        onClickActive: function(e, vmodel) {
+                            avalon.log(vmodel)
+                        },
+                        onInit: function(vmodel) {
+                            this.getElementsByTagName("ul")[0].id = "nav" + this.getAttribute("rank")
+                            var rank = document.getElementById("rank" + this.getAttribute("rank")) || this.children[1],
+                                s = "$,$cc" + this.getAttribute("rank")
+                            rank != 2 && v.cb.push(function() {
+                                rank.setAttribute("ms-scrollspy", s)
+                                avalon.scan(rank, [v])
+                            })
+                            if(this.getAttribute("rank") == "2") {
+                                v.tabVmodel2 = vmodel
+                            } else if(this.getAttribute("rank") == "1") {
+                                v.tabVmodel1 = vmodel
+                            }  else {
+                                v.tabVmodel0 = vmodel
+                                rank.setAttribute("data-scrollspy-spytarget", "nav0")
+                                setTimeout(function() {
+                                    v.cb[0]()
+                                }, 1)
+                            }
+                        },
+                        onActivate: function(e, tabModel) {
+                            var ele = tabModel.widgetElement
+                            if(ele.getAttribute("rank") == "2") {
+                                v.opt2.scrollTo("item2" + tabModel.active, tabModel.active)
+                            } else if(ele.getAttribute("rank") == "1") {
+                                v.opt1.scrollTo("item" + tabModel.active, tabModel.active)
+                            }  else {
+                                v.opt0.scrollTo(void 0, tabModel.active)
+                            }
+                        }
+                    }
+                    vm.$cc0 = {
+                        onChange: vm.scrollspy.onChange,
+                        panelListGetter: function(spytarget, option) {
+                            var par = v.tabVmodel0.widgetElement.children[1]
+                            return par.getElementsByTagName("div")
+                        },
+                        targetListGetter: function() {
+                            return [1, 2, 3, 4]
+                        },
+                        onInit: function(vmodel, option) {
+                            v.opt0 = option
+                        }
+                    }
+                    vm.$cc1 = {
+                        onChange: vm.scrollspy.onChange,
+                        onInit: function(vmodel, option) {
+                            v.opt1 = option
+                        }
+                    }
+                    vm.$cc2 = {
+                        onChange: vm.scrollspy.onChange,
+                        onInit: function(vmodel, option) {
+                            v.opt2 = option
+                        }
+                    }
+                    vm.bar = ""
+                    vm.tabVmodel0 = ""
+                    vm.tabVmodel1 = ""
+                    vm.tabVmodel2 = ""
+                    vm.opt1 = ""
+                    vm.opt2 = ""
+                    vm.opt0 = ""
+                    vm.list = avalon.range(0, 4)
+                    vm.up = function() {
+                        //avalon.vmodels.$hehe.update()
+                        if(!v.bar) return setTimeout(v.up, 16)
+                        var arg = this.id == "rank1" ? 1 : 2
+                        v.bar.update()
+                        if(arg in {"1": 1}) {
+                            v.cb[arg] && v.cb[arg]()
+                        }
+                    }
+                    vm.$skipArray = ["scrollspy"]
+                })
+                avalon.scan()
+            })
+        </script>
+        <style type="text/css">
+            li{
+            }
+            li.oni-state-active{
+                color: #fff;
+                background: 
+            }
+            .oni-tab-panel-container{
+                height:300px;
+                overflow-y:scroll;
+            }
+        </style>
+    </head>
+    <body>
+<div ms-controller="test">
+        <h1>scrollspy-与tab联动[结合tab、scrollbar组件]</h1>
+        <h2>数字索引：div[0] - li[0]联动+原生滚动</h2>
+        <div ms-widget="tab" rank="0">
+            <ul class="oni-helper-reset oni-helper-clearfix">
+                <li>item 0</li>
+                <li>item 1</li>
+                <li>item 2</li>
+                <li>item 3</li>
+            </ul>
+            <div>
+                <div>
+                    this is div 0
+                    <h5 style="height:500px;" id="item00"></h5>
+                </div>
+                <div>
+                    this is div 1
+                    <h5 style="height:500px;" id="item01"></h5>
+                </div>
+                <div>
+                    this is div 2
+                    <h5 style="height:500px;" id="item02"></h5>
+                </div>
+                <div>
+                    this is div 3
+                    <h5 style="height:500px;" id="item03"></h5>
+                </div>
+            </div>
+        </div>
+        <h2>ID索引：li[0] - #item0联动+原生滚动</h2>
+        <div ms-widget="tab" rank="1">
+            <ul class="oni-helper-reset oni-helper-clearfix">
+                <li href="#item0">item 0</li>
+                <li href="#item1">item 1</li>
+                <li href="#item2">item 2</li>
+                <li href="#item3">item 3</li>
+            </ul>
+        </div>
+        <div class="oni-tab-panel-container" id="rank1" data-scrollspy-spytarget="nav1" style="height:300px;overflow-y:scroll;">
+            <div ms-repeat="list" data-repeat-rendered="up" ms-attr-id="item{{$index}}">
+                this is div {{$index}}
+                <h5 style="height:500px;"></h5>
+            </div>
+        </div>
+        <h2>ID索引：li[0] - #item0联动+scrollbar组件实现的滚动</h2>
+        <div ms-widget="tab" rank="2">
+            <ul class="oni-helper-reset oni-helper-clearfix">
+                <li href="#item20">item 0</li>
+                <li href="#item21">item 1</li>
+                <li href="#item22">item 2</li>
+                <li href="#item23">item 3</li>
+            </ul>
+        </div>
+        <div class="oni-tab-panel-container" id="rank2" data-scrollspy-spytarget="nav2" ms-widget="scrollbar" style="height:300px;overflow-y:scroll;" ms-scrollspy="$,$cc2">
+            <div class="oni-scrollbar-scroller">
+                <div ms-repeat="list" data-repeat-rendered="up" ms-attr-id="item2{{$index}}">
+                    this is div {{$index}}
+                    <h5 style="height:500px;"></h5>
+                </div>
+            </div>
+        </div>
+        <pre ms-skip class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;scrollspy组件&lt;/title&gt;
+        &lt;meta charset=&quot;UTF-8&quot;&gt;
+        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;
+        &lt;script src=&quot;../avalon.js&quot;&gt;&lt;/script&gt;
+        
+        &lt;script&gt;
+            require([&quot;scrollspy/avalon.scrollspy&quot;, &quot;scrollbar/avalon.scrollbar&quot;, &quot;tab/avalon.tab&quot;, &quot;ready!&quot;], function() {
+                var v = avalon.define(&quot;test&quot;, function(vm) {
+                    vm.cb = []
+                    vm.scrollspy = {
+                        onChange: function(index, tabElement, element) {
+                            if(v.tabVmodel1) {
+                                index = index &lt; 0 ? 0 : index
+                                if(element.id.match(/2/)) {
+                                    v.tabVmodel2.active = index
+                                } else if(element.id.match(/1/)) {
+                                    v.tabVmodel1.active = index
+                                } else {
+                                    v.tabVmodel0.active = index
+                                }
+                            }
+                        }
+                    }
+                    vm.scrollbar = {
+                        onInit: function(vmodel) {
+                            v.bar = vmodel
+                            setTimeout(function() {
+                                vmodel.update()
+                            }, 1000)
+                        }
+                    }
+                    vm.tab = {
+                        shallPanelAlwaysShow: true,
+                        onClickActive: function(e, vmodel) {
+                            avalon.log(vmodel)
+                        },
+                        onInit: function(vmodel) {
+                            this.getElementsByTagName(&quot;ul&quot;)[0].id = &quot;nav&quot; + this.getAttribute(&quot;rank&quot;)
+                            var rank = document.getElementById(&quot;rank&quot; + this.getAttribute(&quot;rank&quot;)) || this.children[1],
+                                s = &quot;$,$cc&quot; + this.getAttribute(&quot;rank&quot;)
+                            rank != 2 &amp;&amp; v.cb.push(function() {
+                                rank.setAttribute(&quot;ms-scrollspy&quot;, s)
+                                avalon.scan(rank, [v])
+                            })
+                            if(this.getAttribute(&quot;rank&quot;) == &quot;2&quot;) {
+                                v.tabVmodel2 = vmodel
+                            } else if(this.getAttribute(&quot;rank&quot;) == &quot;1&quot;) {
+                                v.tabVmodel1 = vmodel
+                            }  else {
+                                v.tabVmodel0 = vmodel
+                                rank.setAttribute(&quot;data-scrollspy-spytarget&quot;, &quot;nav0&quot;)
+                                setTimeout(function() {
+                                    v.cb[0]()
+                                }, 1)
+                            }
+                        },
+                        onActivate: function(e, tabModel) {
+                            var ele = tabModel.widgetElement
+                            if(ele.getAttribute(&quot;rank&quot;) == &quot;2&quot;) {
+                                v.opt2.scrollTo(&quot;item2&quot; + tabModel.active, tabModel.active)
+                            } else if(ele.getAttribute(&quot;rank&quot;) == &quot;1&quot;) {
+                                v.opt1.scrollTo(&quot;item&quot; + tabModel.active, tabModel.active)
+                            }  else {
+                                v.opt0.scrollTo(void 0, tabModel.active)
+                            }
+                        }
+                    }
+                    vm.$cc0 = {
+                        onChange: vm.scrollspy.onChange,
+                        panelListGetter: function(spytarget, option) {
+                            var par = v.tabVmodel0.widgetElement.children[1]
+                            return par.getElementsByTagName(&quot;div&quot;)
+                        },
+                        targetListGetter: function() {
+                            return [1, 2, 3, 4]
+                        },
+                        onInit: function(vmodel, option) {
+                            v.opt0 = option
+                        }
+                    }
+                    vm.$cc1 = {
+                        onChange: vm.scrollspy.onChange,
+                        onInit: function(vmodel, option) {
+                            v.opt1 = option
+                        }
+                    }
+                    vm.$cc2 = {
+                        onChange: vm.scrollspy.onChange,
+                        onInit: function(vmodel, option) {
+                            v.opt2 = option
+                        }
+                    }
+                    vm.bar = &quot;&quot;
+                    vm.tabVmodel0 = &quot;&quot;
+                    vm.tabVmodel1 = &quot;&quot;
+                    vm.tabVmodel2 = &quot;&quot;
+                    vm.opt1 = &quot;&quot;
+                    vm.opt2 = &quot;&quot;
+                    vm.opt0 = &quot;&quot;
+                    vm.list = avalon.range(0, 4)
+                    vm.up = function() {
+                        //avalon.vmodels.$hehe.update()
+                        if(!v.bar) return setTimeout(v.up, 16)
+                        var arg = this.id == &quot;rank1&quot; ? 1 : 2
+                        v.bar.update()
+                        if(arg in {&quot;1&quot;: 1}) {
+                            v.cb[arg] &amp;&amp; v.cb[arg]()
+                        }
+                    }
+                    vm.$skipArray = [&quot;scrollspy&quot;]
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+        &lt;style type=&quot;text/css&quot;&gt;
+            li{
+            }
+            li.oni-state-active{
+                color: #fff;
+                background: 
+            }
+            .oni-tab-panel-container{
+                height:300px;
+                overflow-y:scroll;
+            }
+        &lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+&lt;div ms-controller=&quot;test&quot;&gt;
+        &lt;h1&gt;scrollspy-与tab联动[结合tab、scrollbar组件]&lt;/h1&gt;
+        &lt;h2&gt;数字索引：div[0] - li[0]联动+原生滚动&lt;/h2&gt;
+        &lt;div ms-widget=&quot;tab&quot; rank=&quot;0&quot;&gt;
+            &lt;ul class=&quot;oni-helper-reset oni-helper-clearfix&quot;&gt;
+                &lt;li&gt;item 0&lt;/li&gt;
+                &lt;li&gt;item 1&lt;/li&gt;
+                &lt;li&gt;item 2&lt;/li&gt;
+                &lt;li&gt;item 3&lt;/li&gt;
+            &lt;/ul&gt;
+            &lt;div&gt;
+                &lt;div&gt;
+                    this is div 0
+                    &lt;h5 style=&quot;height:500px;&quot; id=&quot;item00&quot;&gt;&lt;/h5&gt;
+                &lt;/div&gt;
+                &lt;div&gt;
+                    this is div 1
+                    &lt;h5 style=&quot;height:500px;&quot; id=&quot;item01&quot;&gt;&lt;/h5&gt;
+                &lt;/div&gt;
+                &lt;div&gt;
+                    this is div 2
+                    &lt;h5 style=&quot;height:500px;&quot; id=&quot;item02&quot;&gt;&lt;/h5&gt;
+                &lt;/div&gt;
+                &lt;div&gt;
+                    this is div 3
+                    &lt;h5 style=&quot;height:500px;&quot; id=&quot;item03&quot;&gt;&lt;/h5&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;hr&gt;
+        &lt;h2&gt;ID索引：li[0] - #item0联动+原生滚动&lt;/h2&gt;
+        &lt;div ms-widget=&quot;tab&quot; rank=&quot;1&quot;&gt;
+            &lt;ul class=&quot;oni-helper-reset oni-helper-clearfix&quot;&gt;
+                &lt;li href=&quot;#item0&quot;&gt;item 0&lt;/li&gt;
+                &lt;li href=&quot;#item1&quot;&gt;item 1&lt;/li&gt;
+                &lt;li href=&quot;#item2&quot;&gt;item 2&lt;/li&gt;
+                &lt;li href=&quot;#item3&quot;&gt;item 3&lt;/li&gt;
+            &lt;/ul&gt;
+        &lt;/div&gt;
+        &lt;div id=&quot;rank1&quot; data-scrollspy-spytarget=&quot;nav1&quot; style=&quot;height:300px;overflow-y:scroll;&quot;&gt;
+            &lt;div ms-repeat=&quot;list&quot; data-repeat-rendered=&quot;up&quot; ms-attr-id=&quot;item{{$index}}&quot;&gt;
+                this is div {{$index}}
+                &lt;h5 style=&quot;height:500px;&quot;&gt;&lt;/h5&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;hr&gt;
+        &lt;h2&gt;ID索引：li[0] - #item0联动+scrollbar组件实现的滚动&lt;/h2&gt;
+        &lt;div ms-widget=&quot;tab&quot; rank=&quot;2&quot;&gt;
+            &lt;ul class=&quot;oni-helper-reset oni-helper-clearfix&quot;&gt;
+                &lt;li href=&quot;#item20&quot;&gt;item 0&lt;/li&gt;
+                &lt;li href=&quot;#item21&quot;&gt;item 1&lt;/li&gt;
+                &lt;li href=&quot;#item22&quot;&gt;item 2&lt;/li&gt;
+                &lt;li href=&quot;#item23&quot;&gt;item 3&lt;/li&gt;
+            &lt;/ul&gt;
+        &lt;/div&gt;
+        &lt;div id=&quot;rank2&quot; data-scrollspy-spytarget=&quot;nav2&quot; ms-widget=&quot;scrollbar&quot; style=&quot;height:300px;overflow-y:scroll;&quot; ms-scrollspy=&quot;$,$cc2&quot;&gt;
+            &lt;div class=&quot;oni-scrollbar-scroller&quot;&gt;
+                &lt;div ms-repeat=&quot;list&quot; data-repeat-rendered=&quot;up&quot; ms-attr-id=&quot;item2{{$index}}&quot;&gt;
+                    this is div {{$index}}
+                    &lt;h5 style=&quot;height:500px;&quot;&gt;&lt;/h5&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+    </div>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>验证框架</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js">
+
+        </script>
+        <script src="../highlight/shCore.js">
+
+        </script>
+        <style >
+            .error{
+                border:1px  solid red;
+
+            }
+            .success{
+                border:1px  solid greenyellow;
+            }
+            .error-tip{
+                color: red;
+                background:pink;
+            }
+        </style>
+        <script>
+            require(["validation/avalon.validation", "ready!"], function() {
+                var validationVM
+
+                function showError(el, data) {
+                    var next = el.nextSibling
+                    if (!(next && next.className === "error-tip")) {
+                        next = document.createElement("div")
+                        next.className = "error-tip"
+                        el.parentNode.appendChild(next)
+                    }
+                    next.innerHTML = data.getMessage()
+                }
+                function removeError(el) {
+                   var next = el.nextSibling
+                    while (next) {
+                        if (next.className === "error-tip") {
+                            el.parentNode.removeChild(next)
+                            break
+                        }
+                         next = next.nextSibling
+                    }
+                }
+                avalon.define({
+                    $id: "test",
+                    $skipArray: ["validation"],
+                    a: "",
+                    b: "a",
+                    c: "d",
+                    d: "",
+                    e: "",
+                    f: "",
+                    g: "",
+                    reset: function() {
+                        validationVM && validationVM.resetAll()
+                    },
+                    validation: {
+                        onInit: function(v) {
+                            validationVM = v
+                        },
+                        onReset: function() {
+                            avalon(this).removeClass("error success")
+                            removeError(this)
+                        },
+                        onError: function(reasons) {
+                            reasons.forEach(function(reason) {
+                                avalon(this).removeClass("success").addClass("error")
+                                showError(this, reason)
+                            }, this)
+                        },
+                        onSuccess: function() {
+                            avalon(this).removeClass("error").addClass("success")
+                            removeError(this)
+                        },
+                        onValidateAll: function(reasons) {
+                            reasons.forEach(function(reason) {
+                                avalon(reason.element).removeClass("success").addClass("error")
+                                showError(reason.element, reason)
+                            })
+                            if (reasons.length === 0) {
+                                avalon.log("全部验证成功！")
+                            }
+                        }
+                    }
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body>
+        <form ms-controller="test" ms-widget="validation">
+            <h3>验证组件</h3>
+            <p>使用data-duplex-event="change"，延迟到失去焦点才验证</p>
+            <p><input ms-duplex-maxlength-minlength="a" maxlength="20" minlength="6" placeholder="限制长度6-20"></p>
+            <p><input ms-duplex-lt="b" min="20"  placeholder="限制数值小于20"></p>
+            <p><input ms-duplex-gt="c" max="444"  placeholder="限制数值大于444"></p>
+            <p><input ms-duplex-eq="d" data-duplex-eq="4567" placeholder="值必须等于4567"></p>
+            <p><input ms-duplex-required-minlength="e" type="password"  id="pw1"  data-duplex-minlength="6" data-duplex-event="change" placeholder="请输入密码"></p>
+            <p><input ms-duplex-required-repeat="f" type="password"  data-duplex-repeat="pw1" data-duplex-event="change" data-duplex-message="密码必须一致" placeholder="请重复输入密码"></p>
+            <button type="submit">submit 
+            </button>
+            <button type="button" ms-click="reset">reset
+            </button>
+        </form>
+    </body>
+</html>

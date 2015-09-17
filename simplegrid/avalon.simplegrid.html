@@ -1,0 +1,75 @@
+<div class="oni-simplegrid">
+    <div class="oni-simplegrid-scroll-wrapper" 
+         ms-css-height="tbodyHeight+theadHeight" 
+         ms-widget="scrollbar,$simplegrid{{MS_OPTION_ID}},$spgScrollbarOpts" 
+         ms-css-padding-bottom="paddingBottom"
+         data-scrollbar-position="right,bottom">
+        <div class="oni-simplegrid-wrapper"  
+             ms-css-nowidth="gridWidth" 
+             >
+            <table class="oni-simplegrid-thead" 
+                   ms-css-margin-left="cssLeft" >
+                <tr>
+                    MS_OPTION_THEAD_BEGIN
+                    <td data-repeat-rendered="_theadRenderedCallback"
+                        ms-repeat="columns"
+                        ms-css-width="el.width" 
+                        ms-css-text-align="el.align" 
+                        ms-class="{{el.className}}" 
+                        ms-attr-title="el.title"
+                        ms-visible="el.toggle" 
+                        ms-data-vm="el"
+                        ms-on-mousemove-10="startResize($event,el)"
+                        ms-on-mousedown-10="resizeColumn($event,el)"
+                        ms-on-mouseleave-10="stopResize"
+                        >{{el.text | html}}
+                        <span  ms-click="sortColumn(el, $index)"
+                               ms-if="el.sortable" 
+                               ms-class="oni-helper-{{ getArrow(el, $index)}}">
+                            <span class="oni-helper-sort-top"></span>
+                            <span class="oni-helper-sort-bottom"></span>
+                        </span>
+                    </td>
+                    MS_OPTION_THEAD_END
+                </tr>
+            </table>
+            <table class="oni-simplegrid-tbody" 
+                   ms-css-margin-left="cssLeft" >
+                <tr data-repeat-rendered="_tbodyRenderedCallback"
+                    ms-repeat-row="_data"
+                    ms-class="{{rowClass}}:$index % 2 && _data.size()>=2"
+                    ms-hover="oni-state-hover"
+                    ms-class-1="oni-state-selected: row.checked"
+                    >
+                    MS_OPTION_TBODY_BEGIN
+                    <td class="oni-simplegrid-td"
+                        data-with-sorted="getColumnsOrder"
+                        ms-repeat="row" 
+                        ms-visible="getCellProperty($key,'toggle')" 
+                        ms-css-width="getCellProperty($key,'width')"
+                        ms-css-text-align="getCellProperty($key,'align')"
+                        >
+                        {{ renderCell($val, $key, row) | html }}
+                    </td>
+                    MS_OPTION_TBODY_END
+                </tr>
+            </table>
+            <div ms-if="!_data.size()" 
+                 ms-css-height="noResultHeight"
+                 ms-css-line-height="{{noResultHeight}}px"
+                 class="oni-simplegrid-empty">
+                {{noResultContent|html}}
+            </div>
+        </div>
+        <div class="oni-scrollbar-scroller">
+            <div class="oni-simplegrid-scroll-marker" ms-css-height="getScrollerHeight()" 
+                 ms-css-nowidth="gridWidth">
+            </div>
+
+        </div>
+    </div>
+    <div class="oni-simplegrid-pager-wrapper"  ms-if="pageable" id="pager-MS_OPTION_ID" >
+
+    </div>
+    <div ms-widget="loading"></div>
+</div>

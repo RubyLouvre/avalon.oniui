@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>textbox demo 6</title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>textbox demo 6</h1>
+        <p class="example">表单域的自动补全功能的on-change配置项的使用（<span class="statement">data-textbox-suggest-on-change</span>）</p>
+        <p><span class="useDescription">说明：</span>设置data-textbox-suggest-on-change为用户自定义的提示切换的callback，可在切换提示信息时做一些后续操作</p>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;自动补全on-change配置项&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                &lt;div class="demo-show" ms-controller="demo6"&gt;
+                        &lt;form&gt;
+                            &lt;input ms-widget="textbox" ms-duplex="inputValue" data-textbox-suggest="test3" data-textbox-suggest-on-change="changedCallback" /&gt;
+                            &lt;input type="text" style="display:none"/&gt;
+                            &lt;p&gt;输入框的值是： {{inputValue}}&lt;/p&gt;
+                        &lt;/form&gt;
+                    &lt;/div&gt;
+
+                    &lt;script&gt;
+                        require(["textbox/avalon.textbox"], function() {
+                            avalon.define("demo6", function(vm) {
+                                vm.inputValue = "";
+                                vm.changedCallback = function() {
+                                    vm.inputValue += "_tht result of callback handler";
+                                }
+                            })
+
+                            avalon.scan();
+
+                            avalon.ui["suggest"].strategies['test3'] = function( value , done ) {
+                                setTimeout(function(){
+                                    done(value ? ["11", "22", "33"] : []);
+                                },100)
+                            }
+                        })
+                    &lt;/script&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+        <div class="demo-show" ms-controller="demo6">
+            <form>
+                <input ms-widget="textbox" ms-duplex="inputValue" data-textbox-suggest="test3" data-textbox-suggest-on-change="changedCallback" />
+                <input type="text" style="display:none"/>
+                <p>输入框的值是： {{inputValue}}</p>
+            </form>
+        </div>
+
+        <script>
+            require(["textbox/avalon.textbox"], function() {
+                avalon.define("demo6", function(vm) {
+                    vm.inputValue = "";
+                    vm.changedCallback = function(val) {
+                        console.log(arguments)
+                        vm.inputValue = val + "_tht result of callback handler";
+                    }
+                })
+
+                avalon.scan();
+
+                avalon.ui["suggest"].strategies['test3'] = function( value , done ) {
+                    setTimeout(function(){
+                        done(value ? ["11", "22", "33"] : []);
+                    },100)
+                }
+            })
+        </script>
+    </div>
+</body>
+</html>

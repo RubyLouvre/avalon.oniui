@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>datepicker demo </title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<style type="text/css">
+    .syntaxhighlighter {
+        width: 100% !important; 
+    }
+    .oni-datepicker-calendar-days tr {
+        border-bottom: 1px solid #ccc;
+    }
+    .oni-datepicker-calendar-days td {
+        padding: 3px 0 0;
+    }
+    .oni-datepicker-calendar-days td.oni-datepicker-selected {
+        background: #fff;
+    }
+    .oni-datepicker-selected .calendarCell{
+        background: #fcbe15;
+        color: #fff;
+    }
+    .calendarCell {
+        padding: 3px;
+    }
+    .calendarCell .activity {
+        background: #aaa;
+        color: #fff;
+        margin-top: 10px;
+    }
+    .oni-datepicker-selected .calendarCell .activity {
+        background: #09b6de;
+    }
+    .calendarCell p {
+        margin: 0;
+    }
+</style>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <div ms-controller="demo">
+            <fieldset style="margin-top: 20px; padding: 20px 10px;">
+                <legend>format datepicker</legend>
+                <input ms-widget="datepicker, d1" data-datepicker-calendar-width='300'/>
+            </fieldset>
+            <script> 
+                require(["datepicker/avalon.datepicker"], function(avalon) {
+                    var model = avalon.define("demo", function(vm) {
+                        vm.datepicker = {
+                             dateCellRender: function(date, vmodel, dateObject) {
+                                return "<div class='calendarCell'><p>"+date+"</p><p class='activity'>活动</p></div>"
+                                return date
+                            }
+
+                        }
+                    })
+                    avalon.scan();
+                })
+            </script>
+        </div>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;datepicker demo&lt;/title&gt;
+                    &lt;style type="text/css"&gt;
+                        .oni-datepicker-calendar-days tr {
+                            border-bottom: 1px solid #ccc;
+                        }
+                        .oni-datepicker-calendar-days td {
+                            padding: 3px 0 0;
+                        }
+                        .oni-datepicker-calendar-days td.oni-datepicker-selected {
+                            background: #fff;
+                        }
+                        .oni-datepicker-selected .calendarCell{
+                            background: #fcbe15;
+                            color: #fff;
+                        }
+                        .calendarCell {
+                            padding: 3px;
+                        }
+                        .calendarCell .activity {
+                            background: #aaa;
+                            color: #fff;
+                            margin-top: 10px;
+                        }
+                        .oni-datepicker-selected .calendarCell .activity {
+                            background: #09b6de;
+                        }
+                        .calendarCell p {
+                            margin: 0;
+                        }
+                    &lt;/style&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;div ms-controller="demo"&gt;
+                        &lt;fieldset style="margin-top: 20px; padding: 20px 10px;"&gt;
+                            &lt;legend&gt;set datepicker calendarWidth&lt;/legend&gt;
+                            &lt;input ms-widget="datepicker, d1" data-datepicker-calendar-width='300'/&gt;
+                        &lt;/fieldset&gt;
+                        &lt;script&gt; 
+                            require(["datepicker/avalon.datepicker"], function(avalon) {
+                                var model = avalon.define("demo", function(vm) {
+                                    vm.datepicker = {
+                                         dateCellRender: function(date, vmodel, dateObject) {
+                                            return "&lt;div class='calendarCell'&gt;&lt;p&gt;"+date+"&lt;/p&gt;&lt;p class='activity'&gt;活动&lt;/p&gt;&lt;/div&gt;"
+                                            return date
+                                        }
+
+                                    }
+                                })
+                                avalon.scan();
+                            })
+                        &lt;/script&gt;
+                    &lt;/div&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+    </div>
+</body>
+</html>
+

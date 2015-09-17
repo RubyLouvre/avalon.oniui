@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>simplegrid</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <script>
+            avalon.config({debug: false})
+            require(["simplegrid/avalon.simplegrid", "dropdown/avalon.dropdown"], function() {
+                var createData = function(n) {
+                    var array = []
+                    for (var i = 0; i < n; i++) {
+                        array.push({
+                            xxx: Math.random().toString(36).substring(4, 10),
+                            yyy: Math.random().toString(36).substring(4, 10),
+                            zzz: i
+                        })
+                    }
+                    return array
+                }
+                avalon.define("test", function(vm) {
+
+                    vm.simplegrid = {
+                        columns: [
+                            {field: "zzz", text: "列三", resizable: true},
+                            {field: "yyy", text: "列二", resizable: true},
+                            {field: "xxx", text: "列一", resizable: true}
+                        ],
+                        showRows: 10,
+                        pageable: true,
+                        pager: {
+                            perPages: 20,
+                            totalItems: 1000,
+                            showPages: 5,
+                            options: [10, 20, 30, 40]
+                        },
+                        columnsOrder: ["xxx", "yyy", "zzz"],
+                        data: createData(1000)
+                    }
+                    vm.$skipArray = ["simplegrid"]
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body>
+
+        <fieldset ms-controller="test">
+            <legend>演示大数据表格</legend>
+            <div ms-widget="simplegrid" style="width:99%">
+
+            </div>
+        </fieldset>
+
+    </body>
+</html>

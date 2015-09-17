@@ -1,0 +1,28 @@
+
+/*
+这是每个都组件都应该引用的部分
+*/
+div.oni-loading {
+  position: absolute; }
+
+.oni-loading {
+  position: absolute;
+  left: 50%;
+  top: 50%; }
+  .oni-loading-modal {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background: #fff; }
+    .oni-loading-modal iframe {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+      z-index: -1;
+      zoom: 1;
+      background: transparent;
+      border: none; }

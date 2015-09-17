@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>checkboxlist test</title>
+        <link type="text/css" rel="stylesheet" charset="utf-8" href="../mocha/mocha.css" />
+        <script src="../avalon.js"></script>
+        <script src="../mocha/mocha.js"></script>
+        <script src="../mocha/expect.js"></script>
+        <style>
+            #testWrapper {
+                margin: -40px 50px 100px 80px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="mocha"></div>
+        <div id="testWrapper" ms-controller="test"></div>
+        <script>
+            (function() {
+                mocha.ui('bdd')
+                mocha.setup({timeout: 100000})
+                require(["ready!", "checkboxlist/avalon.checkboxlist"], function() {
+                    function getElementNode(elem) {
+                        while(elem) {
+                            if (elem.nodeType === 1) {
+                                break;
+                            } else {
+                                elem = elem.nextSibling;
+                            }
+                        }
+                        return elem;
+                    }
+
+                    var testWrapper = document.getElementById("testWrapper");
+                  
+                    describe("测试checkboxlist组件基本功能", function() {
+                        var ul, ulElement, liElements;
+                        beforeEach(function() {
+                            ul = '<ul ms-widget="checkboxlist">'+
+                                '<li><input type="checkbox" value="1">选项一</li>'+
+                                '<li><input type="checkbox" value="2">选项二</li>'+
+                                '<li><input type="checkbox" value="3">选项三</li></ul>';
+                            testWrapper.innerHTML = ul;
+                            ulElement = testWrapper.getElementsByTagName("ul")[0];
+                            liElements = ulElement.getElementsByTagName("li");
+                        })
+                        afterEach(function() {
+                            testWrapper.innerHTML = "";
+                        })
+                                
+                        it("默认会显示“全部”选项", function(done) {
+                            
+                            var model = avalon.define("test", function(vm) {
+
+                            });
+                            avalon.scan(ulElement, model);
+                            setTimeout(function() {
+                                var allText = liElements[0].innerText || liElements[0].textContent;
+                                allText = allText.replace(/^\s+/mg,"").replace(/\s+$/mg,"");
+                                expect(liElements.length).to.be(4);
+                                expect(allText).to.be("全部");
+                                done();
+                            }, 400)
+                        }) 
+
+                        it("配置alltext为空将不会显示“全部”选项", function(done) {
+                            ulElement.setAttribute("data-checkboxlist-alltext", "");
+                            var model = avalon.define("test", function(vm) {
+
+                            });
+                            avalon.scan(ulElement, model);
+                            setTimeout(function() {
+                                var ulText = ulElement.innerText || ulElement.textContent;
+                                ulText = ulText.replace(/^\s+/mg,"").replace(/\s+$/mg,"");
+                                expect(liElements.length).to.be(3);
+                                expect(ulText.indexOf("全部")).to.be(-1);
+                                done(); 
+                            },400)
+                        })
+
+                        it("设置data-checkboxlist-duplex='val'通过val值改变各选项框的选中状态", function(done) {
+                            ulElement.setAttribute("data-checkboxlist-duplex", "val");
+                            var model = avalon.define("test", function(vm) {
+                                vm.val = ["1", "2"];
+                            })
+                            
+                            model.$watch("val", function() {
+                                setTimeout(function() {
+                                    var checkboxs = ulElement.getElementsByTagName("input");
+                                    expect(checkboxs[0].checked).to.be(true);
+                                    expect(checkboxs[1].checked).to.be(true);
+                                    expect(checkboxs[2].checked).to.be(true);
+                                    expect(checkboxs[3].checked).to.be(true);
+                                    done();
+                                },400)
+                            });
+
+                            avalon.scan(ulElement, model);
+                            setTimeout(function() {
+                                var checkboxs = ulElement.getElementsByTagName("input");
+                                expect(checkboxs[0].checked).to.be(false);
+                                expect(checkboxs[1].checked).to.be(true);
+                                expect(checkboxs[2].checked).to.be(true);
+                                expect(checkboxs[3].checked).to.be(false);
+                                expect(checkboxs[1].value).to.be("1");
+                                model.val = ["1", "2", "3"];
+                            }, 400)
+                        })
+                        
+                        it("配置select进行选框状态切换的回调操作", function(done) {
+                            ulElement.setAttribute("data-checkboxlist-duplex", "val");
+                            ulElement.setAttribute("data-checkboxlist-select", "onselect");
+                            var model = avalon.define("test", function(vm) {
+                                vm.val = ["1","2","3"];
+                                vm.selectElement = "";
+                                vm.checkedFlag = "";
+                                vm.onselect = function(data, checked, element) {
+                                    model.selectElement = element;
+                                    model.checkedFlag = checked;
+                                }
+                            })
+                            model.val.$watch("length", function(newLength) {
+                                setTimeout(function() {
+                                    var inputs = ulElement.getElementsByTagName("input");
+                                    if (!!model.selectElement) {
+                                        if (model.checkedFlag) {
+                                            expect(model.val.indexOf(model.selectElement.value)).to.not.equal(-1);
+                                        } else {
+                                            expect(model.val.indexOf(model.selectElement.value)).to.equal(-1);
+                                        }
+                                        expect(inputs[0].checked).to.be(false);
+                                        done();
+                                    }
+                                },400)
+                            })
+                            avalon.scan(ulElement, model);
+                            setTimeout(function() {
+                                var inputs = ulElement.getElementsByTagName("input");
+                                inputs[1].click();
+                            },400)
+                        })
+
+                    });
+
+                    describe("测试checkboxlist的type配置", function() {
+                        var ul , ulElement;
+                        beforeEach(function() {
+                            ul = '<ul ms-widget="checkboxlist" '+
+                                'data-checkboxlist-type="week" '+
+                                'data-checkboxlist-duplex="val"></ul>';
+                            testWrapper.innerHTML = ul;
+                            ulElement = testWrapper.getElementsByTagName("ul")[0];
+                        })
+                        afterEach(function() {
+                            testWrapper.innerHTML = "";
+                        })
+                        it("type配置为week，组件会根据内置data显示周一到周日", function(done) {
+                            var model = avalon.define("test", function(vm) {
+                                vm.val = ['TUESDAY'];
+                            })
+                            avalon.scan(ulElement, model);
+                            setTimeout(function() {
+                                var inputs = ulElement.getElementsByTagName("input");
+                                var inputParentLi = ulElement.getElementsByTagName("li")[7];
+                                var liText = inputParentLi.innerText || inputParentLi.textContent;
+                                liText = liText.replace(/^\s+/mg,"").replace(/\s+$/mg,"");
+                                expect(inputs[2].checked).to.be(true);
+                                expect(inputs[1].value).to.be("MONDAY");
+                                expect(inputs.length).to.be(8);
+                                expect(liText).to.be("周日");
+                                done();
+                            }, 400);
+                        })
+                    })
+                    describe("测试checkboxlist的fetch配置，通过它来取得渲染选项", function() {
+                        var ul, ulElement;
+                        beforeEach(function() {
+                            ul = '<ul ms-widget="checkboxlist" '+
+                                'data-checkboxlist-fetch="get_options" '+
+                                'data-checkboxlist-duplex="val"></ul>';
+                            testWrapper.innerHTML = ul;
+                            ulElement = testWrapper.getElementsByTagName("ul")[0];
+                        })
+                        it("fetch data", function(done) {
+                            var model = avalon.define("test", function(vm) {
+                                vm.val = ["w1", "w2"];
+                                vm.get_options = function( callback ){
+                                    setTimeout(function(){
+                                        callback([
+                                            { text : '文字1' , value : 'w1' } ,
+                                            { text : '文字2' , value : 'w2' } ,
+                                            { text : '文字3' , value : 'w3' } ,
+                                            { text : '文字4' , value : 'w4' }
+                                        ]);
+                                    },1000);
+                                }
+                            })
+                            avalon.scan(ulElement, model);
+                            setTimeout(function() {
+                                var liElements = ulElement.getElementsByTagName("li");
+                                var liElement1 = liElements[1];
+                                var input1 = liElement1.getElementsByTagName("input")[0];
+                                var li1Text = liElement1.innerText || liElement1.textContent;
+                                li1Text = li1Text.replace(/^\s+/mg,"").replace(/\s+$/mg,"");
+                                expect(liElements.length).to.be(5);
+                                expect(input1.value).to.be("w1");
+                                expect(li1Text).to.be("文字1");
+                                testWrapper.innerHTML = "";
+                                done();
+                            },2000);
+                        })
+
+                    })
+                    mocha.run()
+                })
+            })()
+        </script>
+    </body>
+</html>

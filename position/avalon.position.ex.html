@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>position组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <script>
+            require(["position/avalon.position", "spinner/avalon.spinner", "dropdown/avalon.dropdown", "draggable/avalon.draggable"], function() {
+                function g(id) {
+                    return document.getElementById(id)
+                }
+                var within = g("within"),
+                    of = g("of"),
+                    my = g("my")
+                avalon(of).position({
+                    of: within,
+                    at: "center center",
+                    my: "center center+10"
+                })
+
+                var vmodel = avalon.define("test", function(vm) {
+                    vm.myOpt = {
+                        of: of,
+                        my: "center center",
+                        at: "center center"
+                    }
+                    vm.opts = {
+                        data: [
+                            {
+                                label: "center",
+                                value: "center"
+                            },
+                            {
+                                label: "left",
+                                value: "left"
+                            },
+                            {
+                                label: "right",
+                                value: "right"
+                            }
+                        ]
+                    }
+                    vm.opts2 = {
+                        data: [
+                            {
+                                label: "center",
+                                value: "center"
+                            },
+                            {
+                                label: "top",
+                                value: "top"
+                            },
+                            {
+                                label: "bottom",
+                                value: "bottom"
+                            }
+                        ]
+                    }
+                    vm.list = ["My", "Of", "F2", "Within"]
+                    vm.update = function(e) {
+                        vmodel.myOpt = {
+                            of: of,
+                            my: g("My1").value + "+" + g("Myless1").value + " " + g("My2").value + "+" + g("Myless2").value,
+                            at: g("Of1").value + "+" + g("Ofless1").value + " " + g("Of2").value + "+" + g("Ofless2").value,
+                            collision: "flip"
+                        }
+                        avalon(my).position(vmodel.myOpt)
+                        avalon(of).position({
+                            of: within,
+                            at: g("Within1").value + "+" + g("Withinless1").value + " " + g("Within2").value + "+" + g("Withinless2").value,
+                            my: g("F21").value + "+" + g("F2less1").value + " " + g("F22").value + "+" + g("F2less2").value,
+                            collision: "flip"
+                        })
+                    }
+                })
+                avalon.scan()
+                setInterval(function() {
+                    vmodel.update()
+                }, 100)
+            })
+        </script>
+        <style type="text/css">
+            #within{
+                width:300px;
+                margin:20px auto;
+                height:200px;
+                border:1px solid #ccc;
+                position: absolute;
+                top:40px;
+                left: 220px;
+            }
+            #my{
+                width: 40px;
+                height: 80px;
+                background: #006600;  
+                opacity: .6;
+                z-index: 10; 
+            }
+            #of{
+                width: 80px;
+                height: 100px;
+                background: lightgreen;   
+                z-index: 9; 
+            }
+        </style>
+    </head>
+    <body ms-controller="test">
+        <h1>position+spinner+dropdown+draggable</h1>
+        <p ms-repeat-el="list">
+            <label style="display:inline-block;width:100px;">{{el}}</label><br>
+            <select ms-widget="dropdown,$,opts" ms-attr-id="el+1" ms-value="value">
+            </select>
+            <input ms-widget="spinner" ms-attr-id="{{el+'less'+1}}">
+            <select ms-widget="dropdown,$,opts2" ms-attr-id="el+2" ms-value="value">
+            </select>
+            <input ms-widget="spinner" ms-attr-id="{{el+'less'+2}}">
+        </p>
+        <div id="within" class="reset" ms-draggable>
+            within
+            <div id="my">My</div>
+            <div id="of">Of</div>
+        </div>
+        <pre class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;position2组件&lt;/title&gt;
+        &lt;meta charset=&quot;UTF-8&quot;&gt;
+        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;
+        &lt;script src=&quot;../avalon.js&quot;&gt;&lt;/script&gt;
+        
+        &lt;script&gt;
+            require([&quot;position/avalon.position&quot;, &quot;spinner/avalon.spinner&quot;, &quot;dropdown/avalon.dropdown&quot;, &quot;draggable/avalon.draggable&quot;], function() {
+                function g(id) {
+                    return document.getElementById(id)
+                }
+                var within = g(&quot;within&quot;),
+                    of = g(&quot;of&quot;),
+                    my = g(&quot;my&quot;)
+                avalon(of).position({
+                    of: within,
+                    at: &quot;center center&quot;,
+                    my: &quot;center center+10&quot;
+                })
+
+                var vmodel = avalon.define(&quot;test&quot;, function(vm) {
+                    vm.myOpt = {
+                        of: of,
+                        my: &quot;center center&quot;,
+                        at: &quot;center center&quot;
+                    }
+                    vm.opts = {
+                        data: [
+                            {
+                                label: &quot;center&quot;,
+                                value: &quot;center&quot;
+                            },
+                            {
+                                label: &quot;left&quot;,
+                                value: &quot;left&quot;
+                            },
+                            {
+                                label: &quot;right&quot;,
+                                value: &quot;right&quot;
+                            }
+                        ]
+                    }
+                    vm.opts2 = {
+                        data: [
+                            {
+                                label: &quot;center&quot;,
+                                value: &quot;center&quot;
+                            },
+                            {
+                                label: &quot;top&quot;,
+                                value: &quot;top&quot;
+                            },
+                            {
+                                label: &quot;bottom&quot;,
+                                value: &quot;bottom&quot;
+                            }
+                        ]
+                    }
+                    vm.list = [&quot;My&quot;, &quot;Of&quot;, &quot;F2&quot;, &quot;Within&quot;]
+                    vm.update = function(e) {
+                        vmodel.myOpt = {
+                            of: of,
+                            my: g(&quot;My1&quot;).value + &quot;+&quot; + g(&quot;Myless1&quot;).value + &quot; &quot; + g(&quot;My2&quot;).value + &quot;+&quot; + g(&quot;Myless2&quot;).value,
+                            at: g(&quot;Of1&quot;).value + &quot;+&quot; + g(&quot;Ofless1&quot;).value + &quot; &quot; + g(&quot;Of2&quot;).value + &quot;+&quot; + g(&quot;Ofless2&quot;).value,
+                            collision: &quot;flip&quot;
+                        }
+                        avalon(my).position(vmodel.myOpt)
+                        avalon(of).position({
+                            of: within,
+                            at: g(&quot;Within1&quot;).value + &quot;+&quot; + g(&quot;Withinless1&quot;).value + &quot; &quot; + g(&quot;Within2&quot;).value + &quot;+&quot; + g(&quot;Withinless2&quot;).value,
+                            my: g(&quot;F21&quot;).value + &quot;+&quot; + g(&quot;F2less1&quot;).value + &quot; &quot; + g(&quot;F22&quot;).value + &quot;+&quot; + g(&quot;F2less2&quot;).value,
+                            collision: &quot;flip&quot;
+                        })
+                    }
+                })
+                avalon.scan()
+                setInterval(function() {
+                    vmodel.update()
+                }, 100)
+            })
+        &lt;/script&gt;
+        &lt;style type=&quot;text/css&quot;&gt;
+            body{
+                width: 100%;
+                overflow: hidden;
+            }
+            #within{
+                width:600px;
+                margin:20px auto;
+                height:400px;
+                border:1px solid #ccc;
+                position: relative;
+            }
+            #my{
+                width: 40px;
+                height: 80px;
+                background: #006600;  
+                opacity: .6;
+                z-index: 10; 
+            }
+            #of{
+                width: 80px;
+                height: 100px;
+                background: lightgreen;   
+                z-index: 9; 
+            }
+        &lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body ms-controller=&quot;test&quot;&gt;
+        &lt;h1&gt;position+spinner+dropdown+draggable&lt;/h1&gt;
+        &lt;p ms-repeat-el=&quot;list&quot;&gt;
+            &lt;label style=&quot;display:inline-block;width:100px;&quot;&gt;{{el}}&lt;/label&gt;
+            &lt;select ms-widget=&quot;dropdown,$,opts&quot; ms-attr-id=&quot;el+1&quot;&gt;
+            &lt;/select&gt;
+            &lt;input ms-widget=&quot;spinner&quot; ms-attr-id=&quot;{{el+'less'+1}}&quot;&gt;
+            &lt;select ms-widget=&quot;dropdown,$,opts2&quot; ms-attr-id=&quot;el+2&quot;&gt;
+            &lt;/select&gt;
+            &lt;input ms-widget=&quot;spinner&quot; ms-attr-id=&quot;{{el+'less'+2}}&quot;&gt;
+        &lt;/p&gt;
+        &lt;div id=&quot;within&quot; class=&quot;reset&quot; ms-draggable&gt;
+            within
+            &lt;div id=&quot;my&quot;&gt;My&lt;/div&gt;
+            &lt;div id=&quot;of&quot;&gt;Of&lt;/div&gt;
+        &lt;/div&gt;
+        
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+    </body>
+</html>

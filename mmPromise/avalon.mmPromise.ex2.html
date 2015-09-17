@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Promise组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js">
+
+        </script>
+        <script src="../highlight/shCore.js">
+
+        </script>
+        <script>
+            require(["mmPromise/mmPromise", "domReady!"], function() {
+                var _resolve
+                new Promise(function(resolve) {
+                    _resolve = resolve
+                }).then(function(a) {
+                    return new Promise(function(resolve) {
+                        setTimeout(function() {
+                            vmodel.array.push(a)
+                            resolve(a + 10)
+                        }, 1000)
+                    })
+                }).then(function(a) {
+                    return new Promise(function(resolve) {
+                        setTimeout(function() {
+                            vmodel.array.push(a)
+                            resolve(a + 10)
+                        }, 1000)
+                    })
+                }).then(function(a) {
+                    return new Promise(function(resolve) {
+                        setTimeout(function() {
+                            vmodel.array.push(a)
+                            resolve(a + 10)
+                        }, 1000)
+                    })
+                }).then(function(a) {
+                    return new Promise(function(resolve) {
+                        setTimeout(function() {
+                            vmodel.array.push(a)
+                            resolve(a + 10)
+                        }, 1000)
+                    })
+                })
+                var vmodel = avalon.define("test", function(vm) {
+                    vm.click = function() {
+                        _resolve(1000)
+                    }
+                    vm.array = ["准备开始"]
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body ms-controller="test">
+        <ul>
+            <li ms-repeat="array">{{el}}</li>
+        </ul>
+        <p><button ms-click="click" type="button">点我开始</button></p>
+
+    </body>
+</html>

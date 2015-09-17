@@ -1,0 +1,47 @@
+<div class="oni-slider oni-widget oni-corner-all"
+     ms-class-1 = "oni-slider-horizontal: orientation==='horizontal'"
+     ms-class-2 = "oni-slider-vertical: orientation !== 'horizontal'"
+     ms-class-oni-state-disabled="disabled"> 
+    <div class="oni-slider-range oni-widget-header oni-corner-all" 
+         ms-class-1 = "oni-slider-range-min:range==='min'"
+         ms-class-2 = "oni-slider-range-max:range==='max'"
+         ms-css-MS_OPTION_WIDTHORHEIGHT = "{{range === 'max' ? 100-percent : percent}}%"
+         ms-css-MS_OPTION_LEFTORBOTTOM = "{{ $twohandlebars ? percent0 : 'auto'}}%"
+         ms-if = "range"
+         style="width: 100%;">
+    </div>
+    <b  class="oni-slider-handle  oni-corner-all hander___flag"
+        ms-css-MS_OPTION_LEFTORBOTTOM = "{{percent}}%"
+        ms-data-axis = "$axis"
+        ms-draggable
+        data-draggable-start="dragstart" 
+        data-draggable-stop="dragend" 
+        data-draggable-drag="drag" 
+        data-draggable-containment="parent" 
+        ms-hover="oni-state-hover"
+        ms-if = "!$twohandlebars"
+        ></b>
+    <b  class="oni-slider-handle  oni-corner-all"
+        ms-css-MS_OPTION_LEFTORBOTTOM = "{{percent0}}%"
+        ms-data-axis = "$axis"
+        ms-draggable
+        data-draggable-start="dragstart" 
+        data-draggable-stop="dragend" 
+        data-draggable-drag="drag" 
+        data-draggable-containment="parent" 
+        ms-hover="oni-state-hover"
+        ms-if = "$twohandlebars"
+        ></b>
+    <b  class="oni-slider-handle  oni-corner-all"
+        ms-css-MS_OPTION_LEFTORBOTTOM = "{{percent1}}%"
+        ms-data-axis = "$axis"
+        ms-draggable
+        data-draggable-start="dragstart" 
+        data-draggable-stop="dragend" 
+        data-draggable-drag="drag" 
+        data-draggable-containment="parent" 
+        ms-hover="oni-state-hover"
+     
+        ms-if = "$twohandlebars"
+        ></b>
+</div>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>菜单组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <meta name="descriptions" content=" 实现扫描dom元素或者设置传参生成级联菜单的组件，注意扫描dom情形下，会销毁原有的dom，且会忽略所有的ol，ul，li元素上原有的绑定
+
+ ">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    
+    <body>
+        <div class="wrapper">
+            <h2>menu</h2>
+            <fieldset>
+                <legend>菜单组件</legend>
+                <p>实现扫描dom元素或者设置传参生成级联菜单的组件，注意扫描dom情形下，会销毁原有的dom，且会忽略所有的ol，ul，li元素上原有的绑定</p>
+            </fieldset>
+            <h3 class="table-doc-title">使用说明</h3>
+            <table class="table-doc" border="1">
+                <colgroup>
+                    <col width="180">
+                        <col width="95">
+                            <col width="120">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>名字</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="4">配置参数</td>
+                    </tr>
+                    <tr>
+                        <td>active</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>将第几个项目设置为选中，级联情形下，会将设置应用给每一级menu，默认是false，一个都不选中，建议不要通过修改这个值来修改menu的选中状态，而是通过setActiveList接口来做</td>
+                    </tr>
+                    <tr>
+                        <td>disabled</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>选中事件，默认mouseenter</td>
+                    </tr>
+                    <tr>
+                        <td>dir</td>
+                        <td>String</td>
+                        <td>"h"</td>
+                        <td>方向，取值v,h，默认h是水平方向， v是竖直方向</td>
+                    </tr>
+                    <tr>
+                        <td>onInit</td>
+                        <td>Member</td>
+                        <td>avalon.noop</td>
+                        <td>onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method</td>
+                    </tr>
+                    <tr>
+                        <td>menuResetter(vmodel)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>menuResetter(vmodel) 选中某个menu项之后调用的这个restter，默认是把menu重置为不选中</td>
+                    </tr>
+                    <tr>
+                        <td>getTemplate(tmpl,opts,tplName)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>getTemplate(tpl, opts, tplName) 定制修改模板接口</td>
+                    </tr>
+                    <tr>
+                        <td>onSelect</td>
+                        <td>Member</td>
+                        <td>avalon.noop</td>
+                        <td>onSelect(vmodel, realSelect, _hasSubMenu) this指向选中的menu li元素，realSelect是选中menu项目的数组
+                            <pre>[/n[data, active],/n[data2,active2]/n]</pre>，对应每一级的数据，及每一级的active值，_hasSubMenu表示this元素有无包含子menu</td>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="4">接口方法与固有属性</td>
+                    </tr>
+                    <tr>
+                        <td>activate(e,index)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>activate(index)展开菜单索引为index的项目，index置为false,undefined则不会展开任一项目</td>
+                    </tr>
+                    <tr>
+                        <td>getActiveList(arr)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>getActiveList() 获取所有选中的menu list</td>
+                    </tr>
+                    <tr>
+                        <td>setActiveList(arr)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>setActiveList(activeListArray) 设置级联menu的选项，可以一个数组，也可以使一个数字，或者"2,3,4"这样的字符串</td>
+                    </tr>
+                </tbody>
+            </table>
+            <ul class="example-links">
+                <li>
+                    <a href="avalon.menu.ex.html">menu</a>
+                </li>
+                <li>
+                    <a href="avalon.menu.ex2.html"></a>
+                </li>
+            </ul>
+        </div>
+    </body>
+
+</html>

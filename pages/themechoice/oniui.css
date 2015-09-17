@@ -1,0 +1,2924 @@
+
+/*
+chameleon
+by 司徒正美 2014.6.28 拉萨开往西宁的火车上
+这里放置所有组件都共用的类名，它们根据compass构建
+
+oinui的CSS规范
+
+不能出现大写,以连字符风格命名 
+表示状态的应该用ui-state-*命名 
+表示功能的应该用ui-helper-*命名
+表示布局的应用用ui-uiname-* 命名, 它的子元素应该全部包在 .oni-uiname这个根类下
+如 .oni-grid .oni-grid-tbody{ ... }
+如果某一个区域的背景要换肤,能用ui-widget-header或ui-widget-content就尽用
+其他细微之后的换肤,使用ui-state-*-?-color实现,或至少包在if(oniui-theme === xxx){}分支内
+
+
+样式规则的出现顺序
+1 display float position overflow表示布局的样式
+2 width height line-height 表示尺寸的样式
+3 margin border padding 表示盒子模型的样式
+4 cursor font-size vertical-align text-align user-select outline....装饰用的样式
+5 color background 表示换肤的样式(上面的bordrer-color outline-color也可以放到这里)
+
+
+CSSShrink 是一个压缩 CSS 的在线工具。压缩比真高！
+
+http://cssshrink.com/
+*/
+.oni-helper-hidden {
+  display: none; }
+
+.oni-helper-hidden-accessible {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px; }
+
+.oni-helper-reset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  line-height: 1.3;
+  text-decoration: none;
+  font-size: 100%;
+  list-style: none; }
+
+.oni-helper-noselect {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none; }
+  .oni-helper-noselect img, .oni-helper-noselect a {
+    -webkit-user-drag: none;
+    pointer-events: none; }
+
+.oni-helper-clearfix {
+  *zoom: 1; }
+  .oni-helper-clearfix:after {
+    content: "\0020";
+    display: block;
+    height: 0;
+    clear: both;
+    overflow: hidden;
+    visibility: hidden; }
+
+html .oni-helper-max-index, body .oni-helper-max-index {
+  z-index: 1000; }
+
+@font-face {
+  font-family: fontawesome;
+  font-style: normal;
+  font-weight: normal;
+  src: url("http://simg4.qunarzz.com/fonts/fontawesome/4.2.0/fontawesome-webfont.eot?v=4.2.0");
+  src: url("http://simg4.qunarzz.com/fonts/fontawesome/4.2.0/fontawesome-webfont.eot?#iefix&v=4.2.0") format("embedded-opentype"), url("http://simg4.qunarzz.com/fonts/fontawesome/4.2.0/fontawesome-webfont.woff?v=4.2.0") format("woff"), url("http://simg4.qunarzz.com/fonts/fontawesome/4.2.0/fontawesome-webfont.ttf?v=4.2.0") format("truetype"), url("http://simg4.qunarzz.com/fonts/fontawesome/4.2.0/fontawesome-webfont.svg?v=4.2.0#fontawesomeregular") format("svg"); }
+.oni-icon {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  cursor: default;
+  font-family: fontawesome !important;
+  font-size: 14px;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 18px;
+  vertical-align: middle; }
+
+a .oni-icon, .oni-btn .oni-icon {
+  cursor: pointer; }
+
+.oni-state-error {
+  border: 1px solid #ff8888; }
+
+
+/*
+这是每个都组件都应该引用的部分
+*/
+.oni-accordion { display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; vertical-align: middle; width: 100%; font-family: 1.1em; font-size: 1em; }
+.oni-accordion .oni-corner-all { border-radius: 4px; }
+.oni-accordion .oni-corner-top { border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+.oni-accordion .oni-corner-bottom { border-bottom-right-radius: 4px; border-bottom-left-radius: 4px; border-top-left-radius: 0; border-top-right-radius: 0; }
+.oni-accordion.oni-accordion-mode-nav { margin-top: -1px; }
+.oni-accordion.oni-accordion-mode-nav .oni-accordion-inner { border-top: 0 none; }
+.oni-accordion.oni-accordion-mode-nav .oni-accordion-inner .oni-accordion-header { padding: 7px 10px; }
+.oni-accordion.oni-accordion-mode-nav .oni-accordion-inner.oni-accordion-horizontal div { float: left; }
+.oni-accordion.oni-accordion-mode-nav .oni-accordion-inner.oni-accordion-horizontal div.oni-accordion-header { margin: 0; position: relative; }
+.oni-accordion.oni-accordion-mode-nav .oni-accordion-inner.oni-accordion-horizontal div.oni-accordion-header h2 { -webkit-transform-origin: 0 0; -moz-transform-origin: 0 0; -ms-transform-origin: 0 0; -o-transform-origin: 0 0; transform-origin: 0 0; -webkit-transform: rotate(-90deg); -moz-transform: rotate(-90deg); -ms-transform: rotate(-90deg); -o-transform: rotate(-90deg); transform: rotate(-90deg); position: absolute; left: 10px; margin: 0; padding: 0; }
+.oni-accordion.oni-accordion-mode-nav .oni-accordion-inner.oni-accordion-horizontal div.oni-accordion-content { overflow: hidden; }
+.oni-accordion.oni-accordion-mode-caret .oni-accordion-inner { border: 0 none; }
+.oni-accordion .oni-accordion-header { display: block; min-height: 0; position: relative; margin: 2px 0 0 0; padding: 7px 10px; cursor: pointer; font-size: 100%; }
+.oni-accordion .oni-accordion-header.oni-state-default { border: 1px solid #d3d3d3; background-color: #e6e6e6; font-weight: normal; color: #555; }
+.oni-accordion .oni-accordion-header .oni-icon-caret-right { display: inline; }
+.oni-accordion .oni-accordion-header .oni-icon-caret-down { display: none; }
+.oni-accordion .oni-accordion-header.oni-state-hover { border: 1px solid #999999; background: #dadada; font-weight: normal; color: #212121; }
+.oni-accordion .oni-accordion-header.oni-state-active { background: #fff; border: 1px solid #aaa; color: #212121; }
+.oni-accordion .oni-accordion-header.oni-state-active .oni-icon-caret-down { display: inline; }
+.oni-accordion .oni-accordion-header.oni-state-active .oni-icon-caret-right { display: none; }
+.oni-accordion .oni-accordion-icons { padding-left: 2.2em; }
+.oni-accordion .oni-accordion-icons .oni-accordion-icons { padding-left: 2.2em; }
+.oni-accordion .oni-accordion-icon-wrap { display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; width: 14px; vertical-align: middle; text-align: right; cursor: pointer; }
+.oni-accordion .oni-accordion-icon-wrap .oni-icon { cursor: pointer; }
+.oni-accordion .oni-accordion-content { border-top: 0; padding: 7px 10px; overflow: auto; font-size: 12px; }
+.oni-accordion .oni-accordion-content.oni-state-default { border: 1px solid #aaa; background: #fff; color: #000; }
+.oni-accordion .oni-accordion-content.oni-state-active { background: #fff; border: 1px solid #aaa; }
+.oni-accordion .oni-accordion-content.oni-state-hover { border: 1px solid #999999; background: #dadada; font-weight: normal; color: #212121; }
+.oni-accordion .oni-accordion-content .oni-accordion-content { border: 1px solid #aaa; background: #fff; color: #333; }
+
+
+/*
+这是每个都组件都应该引用的部分
+*/
+.oni-checkboxlist { list-style: none; padding: 0; }
+
+.oni-checkboxlist-item.fl { padding-right: 10px; }
+.oni-checkboxlist-item input { vertical-align: middle; margin: 0; }
+
+.oni-checkboxlist-all.fl { padding-right: 20px; }
+
+
+/*
+这是每个都组件都应该引用的部分
+*/
+.oni-datepicker { position: relative; display: block; font-size: 0; white-space: nowrap; color: #333; z-index: 10; width: auto; margin-left: -1px; }
+.oni-datepicker tr, .oni-datepicker td, .oni-datepicker th { border: 0; }
+.oni-datepicker .oni-icon { text-indent: 0; }
+.oni-datepicker .oni-icon-calendar-o { padding: 0 6px; vertical-align: top; text-indent: 0; display: inline; }
+.oni-datepicker .oni-dropdown-source { margin-top: -2px; *margin-top: 0; }
+.oni-datepicker .oni-dropdown-source .oni-dropdown-input { padding: 0 21px 0 6px; line-height: 20px; height: 20px; }
+.oni-datepicker .oni-dropdown-source .oni-dropdown-icon { top: -20px; line-height: 20px; }
+
+.oni-datepicker-wrapper { padding: 9px 0 9px 10px; border: 1px solid #cccccc; box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1); position: absolute; background: #fff; }
+
+.oni-datepicker-content { border: 1px solid #e5e5e5; font-size: 12px; margin-right: 10px; background: #fff; }
+
+.oni-datepicker-label { background-color: #f8f8f8; border-bottom: 1px solid #e5e5e5; font-weight: 700; padding: 7px 0; text-align: center; }
+
+.oni-datepicker-timer { border-top: 1px solid #efefef; padding: 5px 0; }
+.oni-datepicker-timer .oni-btn { height: 26px; overflow: visible; _overflow-y: hidden; padding: 0 10px; -webkit-border-radius: 2px; -moz-border-radius: 2px; -ms-border-radius: 2px; -o-border-radius: 2px; border-radius: 2px; font-size: 12px; color: #333333; background-color: #f8f8f8; border: 1px solid #cccccc; cursor: pointer; }
+.oni-datepicker-timer .oni-btn:hover { box-shadow: 1px 1px 0 0 rgba(0, 0, 0, 0.1); background-color: #f8f8f8; border-color: #bbbbbb; color: #333333; }
+.oni-datepicker-timer .oni-btn-small { height: 22px; padding: 0 5px; font-size: 12px; }
+.oni-datepicker-timer p, .oni-datepicker-timer label { margin: 0; }
+.oni-datepicker-timer p span, .oni-datepicker-timer label span { display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; width: 50px; }
+
+.oni-datepicker-content-content { padding: 0 10px; width: 196px; position: relative; display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; white-space: normal; word-break: break-word; }
+
+.oni-datepicker-watermark { position: absolute; top: 60px; left: 10px; width: 196px; height: 150px; background: transparent; color: #000; _color: #f2f2f2; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=5); opacity: 0.05; font-size: 150px; line-height: 150px; text-align: center; }
+
+.oni-datepicker-month-year span { display: block; width: 23%; height: 42px; line-height: 42px; float: left; margin: 1%; cursor: pointer; text-align: center; _margin-left: -1px; }
+.oni-datepicker-month-year .oni-datepicker-prev, .oni-datepicker-month-year .oni-datepicker-next { height: auto; line-height: auto; position: relative; width: auto; }
+.oni-datepicker-month-year .oni-datepicker-day-hover { background: #dbebff; }
+.oni-datepicker-month-year .oni-datepicker-selected { background: #3775c0; color: #fff; }
+.oni-datepicker-month-year .oni-datepicker-prev-year, .oni-datepicker-month-year .oni-datepicker-next-year { color: #999999; }
+.oni-datepicker-month-year .oni-state-disabled { color: #cccccc; cursor: default; background: transparent; }
+
+.oni-datepicker-header { position: relative; height: 30px; line-height: 30px; }
+
+.oni-datepicker .oni-datepicker-prev, .oni-datepicker .oni-datepicker-next { color: #3775c0; cursor: pointer; height: 30px; line-height: 30px; position: absolute; text-align: center; width: 20px; z-index: 1; }
+
+.oni-datepicker .oni-datepicker-prev { left: 0; }
+
+.oni-datepicker .oni-datepicker-next { right: 0; }
+
+.oni-datepicker-content-content .oni-datepicker-prev { left: 0; top: 0; }
+
+.oni-datepicker-content-content .oni-datepicker-next { right: 0; top: 0; }
+
+.oni-datepicker .oni-datepicker-prev-disabled, .oni-datepicker .oni-datepicker-next-disabled { color: #cccccc; cursor: default; }
+
+.oni-datepicker-title { color: #3775c0; font-weight: 700; text-align: center; }
+.oni-datepicker-title span.oni-state-hover { background: #dbebff; padding: 5px 10px; }
+
+.oni-datepicker-calendar-days { height: 150px; position: relative; z-index: 20; }
+
+.oni-datepicker-calendar-week, .oni-datepicker-calendar-days { border-collapse: collapse; margin-bottom: 5px; table-layout: fixed; width: 100%; border-spacing: 0; }
+
+.oni-datepicker-calendar-week th { border-bottom: 1px solid #efefef; border-top: 1px solid #efefef; padding: 3px 0; text-align: center; line-height: 18px; font-weight: 400; font-size: 12px; }
+
+.oni-datepicker-week-end, .oni-datepicker-calendar-days .oni-datepicker-week-end { color: #ff5555; }
+
+.oni-datepicker-calendar-days td { color: #333333; cursor: pointer; text-align: center; line-height: 18px; padding: 3px 0; background: transparent; }
+
+.oni-datepicker-default { background: #fff; }
+
+.oni-datepicker-calendar-days .oni-datepicker-day-hover { background: #dbebff; }
+
+.oni-datepicker-today { font-family: pmingliu, arial, sans-serif; font-size: 11px; }
+
+@media screen and (-webkit-transform-2d: 1) { .oni-datepicker-today { /* font-size: 12px; */ -webkit-transform: scale(0.91667); } }
+.oni-datepicker-day-none { cursor: auto; }
+
+.oni-datepicker-calendar-days .oni-datepicker-selected { background: #3775c0; color: #fff; }
+
+.oni-datepicker-calendar-days .oni-state-disabled { color: #cccccc; cursor: default; background: transparent; }
+
+.oni-datepicker-multiple .oni-datepicker-content { border-right: 0; }
+.oni-datepicker-multiple .oni-datepicker-content-content { border-right: 1px solid #e5e5e5; }
+
+.oni-datepicker-dropdown .oni-dropdown-item { color: #333333; font-size: 12px; padding: 0; text-indent: 0; text-align: center; }
+.oni-datepicker-dropdown .oni-dropdown-item-hover { background: #f5f5f5; }
+.oni-datepicker-dropdown .oni-dropdown-item-selected { background: #3775c0; }
+.oni-datepicker-dropdown .oni-dropdown:hover .oni-dropdown-source { border-color: #3775c0; border-bottom-color: #cccccc; }
+
+.oni-datepicker-input-wrapper { background: #ffffff; border: 1px solid #cccccc; cursor: pointer; color: #333; font-size: 12px; position: relative; display: inline-block; *display: inline; zoom: 1; z-index: 1; }
+.oni-datepicker-input-wrapper input { border: 0 none; cursor: pointer; outline: none; padding: 3px 90px 3px 6px; width: 90px; height: 18px; margin: 0; font-size: 12px; }
+
+.oni-datepicker-tip { position: absolute; top: 3px; right: 10px; line-height: 18px; height: 18px; color: #b5b5b5; }
+
+.oni-datepicker-active { border-color: #3775c0; }
+
+
+.oni-dropdown {
+    font: normal 12px/1.5 tahoma, arial, 'Hiragino Sans GB', '\5b8b\4f53', sans-serif; }
+
+/*
+这是每个都组件都应该引用的部分
+*/
+.oni-dropdown {
+    display: -moz-inline-stack;
+    display: inline-block;
+    vertical-align: middle;
+    *vertical-align: auto;
+    zoom: 1;
+    *display: inline;
+    outline: none; }
+.oni-dropdown .oni-dropdown-source {
+    border: 1px solid #cccccc;
+    background-color: white;
+    cursor: pointer; }
+.oni-dropdown .oni-dropdown-source .oni-dropdown-input {
+    display: -moz-inline-stack;
+    display: inline-block;
+    vertical-align: middle;
+    *vertical-align: auto;
+    zoom: 1;
+    *display: inline;
+    white-space: nowrap;
+    white-space: nowrap;
+    overflow: hidden;
+    -ms-text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    height: 18px;
+    padding: 3px 21px 3px 6px;
+    word-break: normal;
+    word-wrap: normal; }
+.oni-dropdown .oni-icon {
+    cursor: pointer;
+    font-size: 12px;
+    vertical-align: baseline; }
+.oni-dropdown.oni-state-hover .oni-dropdown-source {
+    border-color: #999999; }
+.oni-dropdown.oni-state-focus .oni-dropdown-source {
+    border-color: #3775c0; }
+.oni-dropdown.oni-state-disabled .oni-dropdown-source {
+    background-color: whitesmoke;
+    border-color: #d9d9d9;
+    color: #cccccc;
+    cursor: default; }
+.oni-dropdown.oni-state-disabled .oni-dropdown-icon {
+    cursor: default; }
+.oni-dropdown.oni-state-small .oni-dropdown-source {
+    border-radius: 2px; }
+.oni-dropdown.oni-state-small .oni-dropdown-input {
+    padding-top: 1px;
+    padding-bottom: 1px; }
+.oni-dropdown.oni-state-small .oni-dropdown-icon {
+    top: -19px; }
+.oni-dropdown.oni-state-error .oni-dropdown-source {
+    border-color: #ff8888; }
+.oni-dropdown.oni-state-error:hover .oni-dropdown-source {
+    border-color: #ff8888; }
+.oni-dropdown .oni-dropdown-icon {
+    display: none;
+    color: #b5b5b5;
+    cursor: pointer;
+    padding: 0 6px;
+    position: absolute;
+    right: 0;
+    text-align: center;
+    top: -21px; }
+.oni-dropdown .oni-dropdown-icon-wrap {
+    display: block;
+    position: relative;
+    height: 0; }
+.oni-dropdown .oni-dropdown-icon-wrap .oni-icon-angle-down {
+    display: block; }
+.oni-dropdown .oni-dropdown-icon-wrap .oni-icon-angle-up {
+    display: block; }
+.oni-dropdown.oni-dropdown-menu {
+    display: none;
+    left: 0;
+    position: absolute;
+    top: -1px;
+    width: 100%;
+    _width: auto !important;
+    z-index: 1001; }
+.oni-dropdown .oni-dropdown-menu-inner {
+    box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1);
+    background-color: white;
+    border: 1px solid #d4d4d4;
+    overflow-y: scroll;
+    padding: 3px 0; }
+.oni-dropdown .oni-dropdown-item {
+    white-space: nowrap;
+    overflow: hidden;
+    -ms-text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    white-space: nowrap;
+    overflow: hidden;
+    *zoom: 1;
+    width: 100%;
+    padding: 3px 0;
+    height: 24px;
+    line-height: 24px;
+    text-indent: 20px;
+    cursor: pointer;
+    word-break: normal;
+    word-wrap: normal; }
+.oni-dropdown .oni-dropdown-item.oni-dropdown-group {
+    font-size: 14px;
+    font-weight: bold;
+    text-indent: 10px; }
+.oni-dropdown .oni-dropdown-item.oni-dropdown-divider {
+    border-top: 1px solid #f2f2f2; }
+.oni-dropdown .oni-dropdown-item.oni-state-disabled {
+    border-color: #d9d9d9;
+    background-color: whitesmoke;
+    color: #999999; }
+.oni-dropdown .oni-dropdown-item.oni-state-hover {
+    border-color: #f8f8f8;
+    background-color: #f8f8f8;
+    color: black; }
+.oni-dropdown .oni-dropdown-item.oni-state-active {
+    border-color: #3775c0;
+    background-color: #3775c0;
+    color: white; }
+.oni-dropdown .oni-dropdown-item.oni-state-active .oni-icon {
+    color: white; }
+
+/*
+这是每个都组件都应该引用的部分
+*/
+.oni-slider { position: relative; text-align: left; display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; width: 100%; background: #e6e6e6; }
+.oni-slider .oni-helper-hidden-accessible { position: absolute; height: 1px; width: 1px; overflow: hidden; border: 0 none; margin: -1px; padding: 0; clip: rect(0px 0px 0px 0px); }
+.oni-slider .oni-corner-all { -webkit-border-radius: 5px; -moz-border-radius: 5px; -ms-border-radius: 5px; -o-border-radius: 5px; border-radius: 5px; }
+.oni-slider .oni-slider-handle { position: absolute; display: block; cursor: default; height: 14px; width: 14px; line-height: 0px; z-index: 2; -webkit-border-radius: 7px; -moz-border-radius: 7px; -ms-border-radius: 7px; -o-border-radius: 7px; border-radius: 7px; font-size: 0px; background: #3775c0; }
+.oni-slider .oni-slider-handle.oni-state-hover { background: #82aadb; }
+.oni-slider .oni-slider-handle.oni-state-active, .oni-slider .oni-slider-handle.oni-state-focus { background: #22dddd; }
+.oni-slider .oni-slider-range { position: absolute; display: block; z-index: 1; line-height: 0px; border: 0 none; font-size: 0px; background: #afd9fc; }
+.oni-slider.oni-slider-vertical { height: 100px; width: 8px; }
+.oni-slider.oni-slider-vertical .oni-slider-handle { left: -3px; margin-bottom: -7px; margin-left: 0; margin-top: -7px; }
+.oni-slider.oni-slider-vertical .oni-slider-range { left: 0; width: 100%; }
+.oni-slider.oni-slider-vertical .oni-slider-range.oni-slider-range-min { bottom: 0; }
+.oni-slider.oni-slider-vertical .oni-slider-range.oni-slider-range-max { top: 0; }
+.oni-slider.oni-slider-horizontal { height: 8px; }
+.oni-slider.oni-slider-horizontal .oni-slider-handle { margin-left: -7px; top: -3px; }
+.oni-slider.oni-slider-horizontal .oni-slider-range { height: 100%; top: 0; }
+.oni-slider.oni-slider-horizontal .oni-slider-range.oni-slider-range-min { left: 0; }
+.oni-slider.oni-slider-horizontal .oni-slider-range.oni-slider-range-max { right: 0; }
+.oni-slider.oni-state-disabled .oni-slider-handle, .oni-slider.oni-state-disabled .oni-slider-range { background: #ccc; }
+
+
+/*
+这是每个都组件都应该引用的部分
+*/
+.oni-coupledatepicker {
+  font-size: 0;
+  position: relative;
+  z-index: 1; }
+  .oni-coupledatepicker .oni-coupledatepicker-item {
+    display: -moz-inline-stack;
+    display: inline-block;
+    vertical-align: middle;
+    *vertical-align: auto;
+    zoom: 1;
+    *display: inline; }
+  .oni-coupledatepicker .label {
+    font-size: 12px;
+    vertical-align: top;
+    line-height: 26px;
+    height: 26px;
+    zoom: 1;
+    background: #fff;
+    color: #333;
+    padding: 0;
+    text-shadow: 0 0 0 rgba(0, 0, 0, 0.1); }
+
+
+/*
+这是每个都组件都应该引用的部分
+*/
+.oni-daterangepicker {
+  width: 260px;
+  font-size: 12px;
+  line-height: 18px; }
+  .oni-daterangepicker .oni-daterangepicker-content {
+    position: relative;
+    z-index: 1000;
+    zoom: 1; }
+    .oni-daterangepicker .oni-daterangepicker-content .oni-daterangepicker-quick-operation {
+      font-size: 12px;
+      border-bottom: 1px solid #f2f2f2;
+      margin: -5px 0 10px -10px;
+      padding-left: 10px; }
+      .oni-daterangepicker .oni-daterangepicker-content .oni-daterangepicker-quick-operation span {
+        color: #3775c0;
+        padding: 6px 10px 6px 0;
+        display: -moz-inline-stack;
+        display: inline-block;
+        vertical-align: middle;
+        *vertical-align: auto;
+        zoom: 1;
+        *display: inline;
+        cursor: pointer; }
+    .oni-daterangepicker .oni-daterangepicker-content .oni-datepicker-groups {
+      position: absolute;
+      z-index: 1000;
+      zoom: 1;
+      padding: 9px 0 0 10px;
+      border: 1px solid #cccccc;
+      box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1);
+      font-size: 0;
+      white-space: nowrap;
+      background: #ffffff; }
+      .oni-daterangepicker .oni-daterangepicker-content .oni-datepicker-groups .oni-datepicker-group {
+        position: relative;
+        display: -moz-inline-stack;
+        display: inline-block;
+        vertical-align: middle;
+        *vertical-align: auto;
+        zoom: 1;
+        *display: inline; }
+        .oni-daterangepicker .oni-daterangepicker-content .oni-datepicker-groups .oni-datepicker-group .oni-datepicker-content {
+          position: static;
+          box-shadow: 0 0 0 0 transparent; }
+      .oni-daterangepicker .oni-daterangepicker-content .oni-datepicker-groups .oni-calendarbox-footer-small {
+        position: relative;
+        margin: 10px 0 0 -10px;
+        height: 22px;
+        line-height: 22px;
+        padding: 4px 0;
+        _width: 466px;
+        *width: 466px;
+        background: #f8f8f8; }
+        .oni-daterangepicker .oni-daterangepicker-content .oni-datepicker-groups .oni-calendarbox-footer-small .oni-calendarbox-btns {
+          position: absolute;
+          right: 10px;
+          top: 4px;
+          display: inline;
+          font-size: 0; }
+          .oni-daterangepicker .oni-daterangepicker-content .oni-datepicker-groups .oni-calendarbox-footer-small .oni-calendarbox-btns .oni-btn {
+            margin: 0 0 0 5px; }
+        .oni-daterangepicker .oni-daterangepicker-content .oni-datepicker-groups .oni-calendarbox-footer-small .oni-calendarbox-msg {
+          padding-left: 10px;
+          font-size: 12px; }
+      .oni-daterangepicker .oni-daterangepicker-content .oni-datepicker-groups .oni-datepicker-wrapper {
+        position: static;
+        padding: 0;
+        border: 0;
+        box-shadow: 0 0 0 0 transparent;
+        font-size: 12px; }
+  .oni-daterangepicker .oni-datepicker-range-input {
+    cursor: pointer;
+    border: 1px solid #cccccc;
+    background-color: #ffffff; }
+    .oni-daterangepicker .oni-datepicker-range-input .oni-datepicker-input {
+      height: 18px;
+      overflow: hidden;
+      padding: 3px 21px 3px 6px;
+      text-overflow: ellipsis;
+      white-space: nowrap; }
+      .oni-daterangepicker .oni-datepicker-range-input .oni-datepicker-input.oni-datepicker-input-disabled {
+        background: #ebebe4;
+        border-color: #cccccc; }
+    .oni-daterangepicker .oni-datepicker-range-input.oni-state-hover {
+      border: 1px solid #999; }
+    .oni-daterangepicker .oni-datepicker-range-input.oni-state-active {
+      border-color: #3775c0;
+      border-bottom-color: #fff; }
+  .oni-daterangepicker .oni-datepicker-icon-wrap {
+    position: relative;
+    display: block;
+    height: 0; }
+    .oni-daterangepicker .oni-datepicker-icon-wrap .oni-datepicker-icon {
+      position: absolute;
+      right: 0;
+      top: -21px;
+      display: none;
+      cursor: pointer;
+      padding: 0 6px;
+      text-align: center;
+      text-indent: 0;
+      color: #b5b5b5; }
+      .oni-daterangepicker .oni-datepicker-icon-wrap .oni-datepicker-icon.oni-icon-angle-down, .oni-daterangepicker .oni-datepicker-icon-wrap .oni-datepicker-icon.oni-icon-angle-up {
+        display: block; }
+
+
+/*
+这是每个都组件都应该引用的部分
+*/
+button.oni-button, input.oni-button { height: 26px; }
+button.oni-button .oni-icon, button.oni-button .oni-button-text, input.oni-button .oni-icon, input.oni-button .oni-button-text { *margin-top: -2px; }
+
+.oni-button { display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; overflow: hidden; _display: inline; padding: 0 10px; margin: 0; font-size: 12px; border: 1px solid transparent; text-align: center; vertical-align: middle; cursor: pointer; color: #333; text-decoration: none; outline: 0; height: 24px; font-family: fontawesome; }
+.oni-button:link { text-decoration: none; }
+.oni-button.oni-state-default { border-color: #ccc; background-color: #f8f8f8; }
+.oni-button:hover { background-color: #f5f5f5; border-color: #d9d9d9; }
+.oni-button.oni-state-active, .oni-button:active { background-color: #e6e6e6; background-color: #d9d9d9 \9; background-image: none; outline: 0; -webkit-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05); -moz-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05); box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05); }
+.oni-button.oni-state-disabled, .oni-button[disabled] { background-color: #f8f8f8; border-color: #d9d9d9; color: #cccccc; }
+.oni-button.oni-button-primary { background-color: #3775c0; border-color: #1d5eac; color: #ffffff; }
+.oni-button.oni-button-primary:hover { background-color: #3d8be9; border-color: #1a5092; }
+.oni-button.oni-button-primary.oni-state-disabled { background-color: #428bca; color: #357ebd; color: #ffffff; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); opacity: 0.6; }
+.oni-button.oni-button-warning { background-color: #f0ad4e; border-color: #eea236; color: #ffffff; }
+.oni-button.oni-button-warning:hover { background-color: #ec971f; border-color: #d58512; }
+.oni-button.oni-button-warning.oni-state-disabled { background-color: #f0ad4e; border-color: #eea236; color: #ffffff; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); opacity: 0.6; }
+.oni-button.oni-button-danger { background-color: #d9534f; border-color: #d43f3a; color: #ffffff; }
+.oni-button.oni-button-danger:hover { background-color: #c9302c; border-color: #ac2925; }
+.oni-button.oni-button-danger.oni-state-disabled { background-color: #d9534f; border-color: #d43f3a; color: #ffffff; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); opacity: 0.6; }
+.oni-button.oni-button-success { background-color: #58b359; border-color: #45a846; color: #ffffff; }
+.oni-button.oni-button-success:hover { background-color: #68c969; border-color: #3e973e; }
+.oni-button.oni-button-success.oni-state-disabled { background-color: #5cb85c; border-color: #4cae4c; color: #ffffff; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); opacity: 0.6; }
+.oni-button.oni-button-info { background-color: #5bc0de; border-color: #46b8da; color: #ffffff; }
+.oni-button.oni-button-info:hover { background-color: #31b0d5; border-color: #269abc; }
+.oni-button.oni-button-info.oni-state-disabled { background-color: #5bc0de; border-color: #46b8da; color: #ffffff; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); opacity: 0.6; }
+.oni-button.oni-button-inverse { background-color: #333; border-color: #222; color: #ffffff; }
+.oni-button.oni-button-inverse:hover { background-color: #222; border-color: #000; }
+.oni-button.oni-button-inverse.oni-state-disabled { background-color: #333; border-color: #222; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); opacity: 0.6; }
+.oni-button.oni-corner-all { -webkit-border-radius: 2px; -moz-border-radius: 2px; -ms-border-radius: 2px; -o-border-radius: 2px; border-radius: 2px; }
+.oni-button.oni-corner-left { -moz-border-radius-topleft: 2px; -webkit-border-top-left-radius: 2px; border-top-left-radius: 2px; -moz-border-radius-bottomleft: 2px; -webkit-border-bottom-left-radius: 2px; border-bottom-left-radius: 2px; }
+.oni-button.oni-corner-right { -moz-border-radius-topright: 2px; -webkit-border-top-right-radius: 2px; border-top-right-radius: 2px; -moz-border-radius-bottomright: 2px; -webkit-border-bottom-right-radius: 2px; border-bottom-right-radius: 2px; }
+.oni-button.oni-corner-top { -moz-border-radius-topleft: 2px; -webkit-border-top-left-radius: 2px; border-top-left-radius: 2px; -moz-border-radius-topright: 2px; -webkit-border-top-right-radius: 2px; border-top-right-radius: 2px; }
+.oni-button.oni-corner-bottom { -moz-border-radius-bottomleft: 2px; -webkit-border-bottom-left-radius: 2px; border-bottom-left-radius: 2px; -moz-border-radius-bottomright: 2px; -webkit-border-bottom-right-radius: 2px; border-bottom-right-radius: 2px; }
+.oni-button .oni-icon { font-size: 12px; overflow: hidden; line-height: 24px; height: 24px; display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; _display: inline; font-style: normal; }
+.oni-button .oni-button-text { font-size: 12px; line-height: 24px; height: 24px; word-break: keep-all; white-space: nowrap; display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; _display: inline; }
+.oni-button .oni-button-text.oni-button-text-left { padding-right: 5px; }
+.oni-button .oni-button-text.oni-button-text-right { padding-left: 5px; }
+.oni-button .oni-button-text.oni-button-text-middle { padding-left: 5px; padding-right: 5px; }
+.oni-button .oni-button-text.oni-button-text-hidden { display: none; padding: 0; }
+
+button.oni-button-small, input.oni-button-small { height: 22px; }
+
+.oni-button-small { padding: 0 5px; height: 20px; }
+.oni-button-small .oni-icon { font-size: 12px; line-height: 20px; height: 20px; }
+.oni-button-small .oni-button-text { font-size: 12px; line-height: 20px; height: 20px; }
+
+button.oni-button-big, input.oni-button-big { height: 32px; }
+
+.oni-button-big { font-size: 14px; padding: 0 15px; height: 30px; }
+.oni-button-big .oni-icon { font-size: 14px; line-height: 30px; height: 30px; }
+.oni-button-big .oni-button-text { font-size: 14px; line-height: 30px; height: 30px; }
+
+button.oni-button-large, input.oni-button-large { height: 40px; }
+
+.oni-button-large { padding: 0 25px; height: 38px; }
+.oni-button-large .oni-icon { font-size: 14px; line-height: 38px; height: 38px; }
+.oni-button-large .oni-button-text { font-size: 14px; line-height: 38px; height: 38px; }
+
+.oni-buttonset { font-size: 0; display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; _display: inline; }
+.oni-buttonset .oni-button { margin: 0; float: left; border-left-width: 0; }
+.oni-buttonset .oni-button-first { border-left-width: 1px; }
+.oni-buttonset .oni-icon { *margin-top: 0; }
+.oni-buttonset .oni-button-text { *margin-top: 0; }
+
+.oni-buttonset-vertical { _width: 100px; }
+.oni-buttonset-vertical .oni-button { display: block; float: none; border-left-width: 1px; border-top-width: 0; }
+.oni-buttonset-vertical .oni-button-first { border-top-width: 1px; }
+
+
+
+/*
+这是每个都组件都应该引用的部分
+*/
+.oni-dialog { position: absolute; text-align: left; }
+.oni-dialog .oni-dialog-inner { box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1); background-color: #ffffff; border: 1px solid #cccccc; }
+.oni-dialog .oni-dialog-inner .oni-dialog-header { background-color: #f3f3f3; }
+.oni-dialog .oni-dialog-inner .oni-dialog-header .oni-dialog-close { display: inline; display: inline; float: right; padding: 1px 10px 1px 9px; margin-top: 5px; cursor: pointer; background-color: #f3f3f3; color: #666666; }
+.oni-dialog .oni-dialog-inner .oni-dialog-header .oni-dialog-close .oni-icon { cursor: pointer; }
+.oni-dialog .oni-dialog-inner .oni-dialog-header .oni-dialog-close:hover { border-right: 0; padding: 0 10px 0 8px; background-color: #ffffff; border: 1px solid #dedede; }
+.oni-dialog .oni-dialog-inner .oni-dialog-header .oni-dialog-title { padding: 7px 10px; font-size: 12px; line-height: 20px; font-weight: 700; }
+.oni-dialog .oni-dialog-inner .oni-dialog-content { font-size: 12px; padding: 17px 20px; }
+.oni-dialog .oni-dialog-inner .oni-dialog-footer { padding: 8px 5px; background-color: #f8f8f8; }
+.oni-dialog .oni-dialog-inner .oni-dialog-footer .oni-dialog-btns { display: inline; display: inline; float: right; font-size: 0; }
+.oni-dialog .oni-dialog-inner .oni-dialog-footer .oni-dialog-btns .oni-button { margin-left: 10px; }
+
+.oni-dialog-layout { display: none; *position: absolute; left: 0; top: 0; bottom: 0; right: 0; filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60); opacity: 0.6; zoom: 1; z-index: 1; background: #000; }
+
+
+/*
+这是每个都组件都应该引用的部分
+*/
+div.oni-doublelist {
+  font-size: 12px; }
+
+.oni-doublelist-menu {
+  width: 180px;
+  height: 190px;
+  border: 1px solid #d4d4d4;
+  background: white;
+  float: left;
+  display: inline; }
+.oni-doublelist ul {
+  width: 100%; }
+.oni-doublelist-option {
+  width: 58px;
+  height: 62px;
+  padding: 10px;
+  vertical-align: middle;
+  float: left;
+  display: inline;
+  margin-top: 40px;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box; }
+.oni-doublelist li {
+  list-style: none;
+  padding: 5px 6px;
+  cursor: pointer;
+  color: black; }
+.oni-doublelist li.oni-state-hover {
+  background-color: #f8f8f8; }
+.oni-doublelist li.oni-state-active {
+  background-color: #3775c0;
+  color: white; }
+.oni-doublelist li.oni-state-disabled {
+  cursor: default;
+  color: #999999;
+  background: white; }
+.oni-doublelist .oni-dbl-button {
+  height: 24px;
+  *height: auto;
+  line-height: 24px;
+  padding: 0;
+  background-color: #f8f8f8;
+  border: 1px solid #d4d4d4;
+  border-radius: 2px;
+  color: black;
+  text-align: center;
+  margin-top: 10px;
+  cursor: pointer; }
+.oni-doublelist-option div.oni-state-disabled {
+  border-color: #dedede;
+  color: #ccc; }
+
+
+/*
+这是每个都组件都应该引用的部分
+*/
+div.oni-scrollbar {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  border: 0; }
+
+.oni-scrollbar {
+  width: 10px;
+  height: 100%;
+  left: auto;
+  right: 0;
+  top: 0;
+  bottom: auto;
+  background: #f8f8f8;
+  z-index: 100;
+  transition: opacity .5s;
+  -webkit-transition: opacity .5s;
+  -moz-transition: opacity .5s;
+  -o-transition: opacity .5s;
+  -ms-transition: opacity .5s; }
+  .oni-scrollbar-arrow {
+    position: absolute;
+    background: #eeeeee;
+    top: 0;
+    left: 0;
+    width: 10px;
+    height: 10px; }
+    .oni-scrollbar-arrow b {
+      width: 0;
+      height: 0;
+      line-height: 0;
+      font-size: 0;
+      border-top: 0 none;
+      border-right: 4px dashed transparent;
+      border-bottom: 4px solid #bcbcbc;
+      border-left: 4px dashed transparent;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-top: -2px;
+      margin-left: -4px;
+      font-size: 0;
+      line-height: 0; }
+    div .oni-scrollbar-arrow-down {
+      top: auto;
+      bottom: 0; }
+      div .oni-scrollbar-arrow-down b {
+        width: 0;
+        height: 0;
+        line-height: 0;
+        font-size: 0;
+        border-top: 4px solid #bcbcbc;
+        border-right: 4px dashed transparent;
+        border-bottom: 0;
+        border-left: 4px dashed transparent; }
+  .oni-scrollbar .oni-state-hover {
+    background: #aaaaaa; }
+  .oni-scrollbar .oni-state-active {
+    background: #999999; }
+  .oni-scrollbar .oni-state-disabled {
+    background: #e9e9e9; }
+  .oni-scrollbar-left .oni-state-active b.oni-scrollbar-trangle-up, .oni-scrollbar-right .oni-state-active b.oni-scrollbar-trangle-up {
+    width: 0;
+    height: 0;
+    line-height: 0;
+    font-size: 0;
+    border-top: 0 none;
+    border-right: 4px dashed transparent;
+    border-bottom: 4px solid white;
+    border-left: 4px dashed transparent; }
+  .oni-scrollbar-left .oni-state-active b.oni-scrollbar-trangle-down, .oni-scrollbar-right .oni-state-active b.oni-scrollbar-trangle-down {
+    width: 0;
+    height: 0;
+    line-height: 0;
+    font-size: 0;
+    border-top: 4px solid white;
+    border-right: 4px dashed transparent;
+    border-bottom: 0;
+    border-left: 4px dashed transparent; }
+  .oni-scrollbar-top .oni-state-active b.oni-scrollbar-trangle-up, .oni-scrollbar-bottom .oni-state-active b.oni-scrollbar-trangle-up {
+    width: 0;
+    height: 0;
+    line-height: 0;
+    font-size: 0;
+    border-top: 4px dashed transparent;
+    border-right: 4px solid white;
+    border-bottom: 4px dashed transparent;
+    border-left: 0; }
+  .oni-scrollbar-top .oni-state-active b.oni-scrollbar-trangle-down, .oni-scrollbar-bottom .oni-state-active b.oni-scrollbar-trangle-down {
+    width: 0;
+    height: 0;
+    line-height: 0;
+    font-size: 0;
+    border-top: 4px dashed transparent;
+    border-right: 0;
+    border-bottom: 4px dashed transparent;
+    border-left: 4px solid white; }
+  .oni-scrollbar-scroller {
+    overflow: hidden; }
+  .oni-scrollbar-left {
+    left: 0;
+    right: auto; }
+  .oni-scrollbar-top {
+    width: 100%;
+    height: 10px;
+    left: 0;
+    top: 0;
+    bottom: auto; }
+  .oni-scrollbar-bottom {
+    width: 100%;
+    height: 10px;
+    left: 0;
+    top: auto;
+    bottom: 0; }
+  .oni-scrollbar-draggerpar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%; }
+    .oni-scrollbar-draggerpar .oni-scrollbar-dragger {
+      position: absolute;
+      width: 100%;
+      left: 0;
+      background: #cccccc; }
+    .oni-scrollbar-draggerpar .oni-state-hover {
+      background: #999999; }
+    .oni-scrollbar-draggerpar .oni-state-active {
+      background: #888888; }
+    .oni-scrollbar-draggerpar .oni-state-disabled {
+      background: #e9e9e9; }
+  .oni-scrollbar-top .oni-scrollbar-ragger, .oni-scrollbar-bottom .oni-scrollbar-ragger {
+    height: 100%;
+    width: auto;
+    top: 0; }
+  .oni-scrollbar-top .oni-scrollbar-arrow b, .oni-scrollbar-bottom .oni-scrollbar-arrow b {
+    width: 0;
+    height: 0;
+    line-height: 0;
+    font-size: 0;
+    border-top: 4px dashed transparent;
+    border-right: 4px solid #bcbcbc;
+    border-bottom: 4px dashed transparent;
+    border-left: 0;
+    margin-top: -4px;
+    margin-left: -2px; }
+  .oni-scrollbar-top .oni-scrollbar-arrow-down, .oni-scrollbar-bottom .oni-scrollbar-arrow-down {
+    right: 0;
+    left: auto; }
+    .oni-scrollbar-top .oni-scrollbar-arrow-down b, .oni-scrollbar-bottom .oni-scrollbar-arrow-down b {
+      width: 0;
+      height: 0;
+      line-height: 0;
+      font-size: 0;
+      border-top: 4px dashed transparent;
+      border-right: 0;
+      border-bottom: 4px dashed transparent;
+      border-left: 4px solid #bcbcbc; }
+
+.oni-scrollbar-large {
+  width: 14px; }
+  .oni-scrollbar-large .oni-scrollbar-arrow {
+    width: 14px;
+    height: 14px; }
+  .oni-scrollbar-large .oni-scrollbar-top, .oni-scrollbar-large .oni-scrollbar-bottom {
+    height: 14px; }
+
+.oni-scrollbar-bottom-large {
+  height: 14px; }
+
+.oni-scrollbar-small {
+  width: 8px; }
+  .oni-scrollbar-small .oni-scrollbar-arrow {
+    width: 8px;
+    height: 8px; }
+
+.oni-scrollbar-bottom-small {
+  height: 8px; }
+
+.ui-scrollbar-scroller {
+  overflow: hidden; }
+
+
+.ui-dropdown {
+  font: normal 12px/1.5 tahoma, arial, 'Hiragino Sans GB', '\5b8b\4f53', sans-serif; }
+
+/*
+这是每个都组件都应该引用的部分
+*/
+.ui-dropdown {
+  display: -moz-inline-stack;
+  display: inline-block;
+  vertical-align: middle;
+  *vertical-align: auto;
+  zoom: 1;
+  *display: inline;
+  outline: none; }
+  .ui-dropdown .ui-dropdown-source {
+    border: 1px solid #cccccc;
+    background-color: white;
+    cursor: pointer; }
+    .ui-dropdown .ui-dropdown-source .ui-dropdown-input {
+      display: -moz-inline-stack;
+      display: inline-block;
+      vertical-align: middle;
+      *vertical-align: auto;
+      zoom: 1;
+      *display: inline;
+      white-space: nowrap;
+      white-space: nowrap;
+      overflow: hidden;
+      -ms-text-overflow: ellipsis;
+      -o-text-overflow: ellipsis;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      height: 18px;
+      padding: 3px 21px 3px 6px;
+      word-break: normal;
+      word-wrap: normal; }
+  .ui-dropdown .ui-icon {
+    cursor: pointer;
+    font-size: 12px;
+    vertical-align: baseline; }
+  .ui-dropdown.ui-state-hover .ui-dropdown-source {
+    border-color: #999999; }
+  .ui-dropdown.ui-state-focus .ui-dropdown-source {
+    border-color: #3775c0; }
+  .ui-dropdown.ui-state-disabled .ui-dropdown-source {
+    background-color: whitesmoke;
+    border-color: #d9d9d9;
+    color: #cccccc;
+    cursor: default; }
+  .ui-dropdown.ui-state-disabled .ui-dropdown-icon {
+    cursor: default; }
+  .ui-dropdown.ui-state-small .ui-dropdown-source {
+    border-radius: 2px; }
+  .ui-dropdown.ui-state-small .ui-dropdown-input {
+    padding-top: 1px;
+    padding-bottom: 1px; }
+  .ui-dropdown.ui-state-small .ui-dropdown-icon {
+    top: -19px; }
+  .ui-dropdown.ui-state-error .ui-dropdown-source {
+    border-color: #ff8888; }
+  .ui-dropdown.ui-state-error:hover .ui-dropdown-source {
+    border-color: #ff8888; }
+  .ui-dropdown .ui-dropdown-icon {
+    display: none;
+    color: #b5b5b5;
+    cursor: pointer;
+    padding: 0 6px;
+    position: absolute;
+    right: 0;
+    text-align: center;
+    top: -21px; }
+  .ui-dropdown .ui-dropdown-icon-wrap {
+    display: block;
+    position: relative;
+    height: 0; }
+    .ui-dropdown .ui-dropdown-icon-wrap .ui-icon-angle-down {
+      display: block; }
+    .ui-dropdown .ui-dropdown-icon-wrap .ui-icon-angle-up {
+      display: block; }
+  .ui-dropdown.ui-dropdown-menu {
+    display: none;
+    left: 0;
+    position: absolute;
+    top: -1px;
+    width: 100%;
+    _width: auto !important;
+    z-index: 1001; }
+  .ui-dropdown .ui-dropdown-menu-inner {
+    box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1);
+    background-color: white;
+    border: 1px solid #d4d4d4;
+    overflow-y: scroll;
+    padding: 3px 0; }
+  .ui-dropdown .ui-dropdown-item {
+    white-space: nowrap;
+    overflow: hidden;
+    -ms-text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    white-space: nowrap;
+    overflow: hidden;
+    *zoom: 1;
+    width: 100%;
+    padding: 3px 0;
+    height: 24px;
+    line-height: 24px;
+    text-indent: 20px;
+    cursor: pointer;
+    word-break: normal;
+    word-wrap: normal; }
+    .ui-dropdown .ui-dropdown-item.ui-dropdown-group {
+      font-size: 14px;
+      font-weight: bold;
+      text-indent: 10px; }
+    .ui-dropdown .ui-dropdown-item.ui-dropdown-divider {
+      border-top: 1px solid #f2f2f2; }
+    .ui-dropdown .ui-dropdown-item.ui-state-disabled {
+      border-color: #d9d9d9;
+      background-color: whitesmoke;
+      color: #999999; }
+    .ui-dropdown .ui-dropdown-item.ui-state-hover {
+      border-color: #f8f8f8;
+      background-color: #f8f8f8;
+      color: black; }
+    .ui-dropdown .ui-dropdown-item.ui-state-active {
+      border-color: #3775c0;
+      background-color: #3775c0;
+      color: white; }
+      .ui-dropdown .ui-dropdown-item.ui-state-active .ui-icon {
+        color: white; }
+
+
+/*
+这是每个都组件都应该引用的部分
+*/
+div.ui-scrollbar {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  border: 0; }
+
+.ui-scrollbar {
+  width: 10px;
+  height: 100%;
+  left: auto;
+  right: 0;
+  top: 0;
+  bottom: auto;
+  background: #f8f8f8;
+  z-index: 100;
+  transition: opacity .5s;
+  -webkit-transition: opacity .5s;
+  -moz-transition: opacity .5s;
+  -o-transition: opacity .5s;
+  -ms-transition: opacity .5s; }
+  .ui-scrollbar-arrow {
+    position: absolute;
+    background: #eeeeee;
+    top: 0;
+    left: 0;
+    width: 10px;
+    height: 10px; }
+    .ui-scrollbar-arrow b {
+      width: 0;
+      height: 0;
+      line-height: 0;
+      font-size: 0;
+      border-top: 0 none;
+      border-right: 4px dashed transparent;
+      border-bottom: 4px solid #bcbcbc;
+      border-left: 4px dashed transparent;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-top: -2px;
+      margin-left: -4px;
+      font-size: 0;
+      line-height: 0; }
+    div .ui-scrollbar-arrow-down {
+      top: auto;
+      bottom: 0; }
+      div .ui-scrollbar-arrow-down b {
+        width: 0;
+        height: 0;
+        line-height: 0;
+        font-size: 0;
+        border-top: 4px solid #bcbcbc;
+        border-right: 4px dashed transparent;
+        border-bottom: 0;
+        border-left: 4px dashed transparent; }
+  .ui-scrollbar .ui-state-hover {
+    background: #aaaaaa; }
+  .ui-scrollbar .ui-state-active {
+    background: #999999; }
+  .ui-scrollbar .ui-state-disabled {
+    background: #e9e9e9; }
+  .ui-scrollbar-left .ui-state-active b.ui-scrollbar-trangle-up, .ui-scrollbar-right .ui-state-active b.ui-scrollbar-trangle-up {
+    width: 0;
+    height: 0;
+    line-height: 0;
+    font-size: 0;
+    border-top: 0 none;
+    border-right: 4px dashed transparent;
+    border-bottom: 4px solid white;
+    border-left: 4px dashed transparent; }
+  .ui-scrollbar-left .ui-state-active b.ui-scrollbar-trangle-down, .ui-scrollbar-right .ui-state-active b.ui-scrollbar-trangle-down {
+    width: 0;
+    height: 0;
+    line-height: 0;
+    font-size: 0;
+    border-top: 4px solid white;
+    border-right: 4px dashed transparent;
+    border-bottom: 0;
+    border-left: 4px dashed transparent; }
+  .ui-scrollbar-top .ui-state-active b.ui-scrollbar-trangle-up, .ui-scrollbar-bottom .ui-state-active b.ui-scrollbar-trangle-up {
+    width: 0;
+    height: 0;
+    line-height: 0;
+    font-size: 0;
+    border-top: 4px dashed transparent;
+    border-right: 4px solid white;
+    border-bottom: 4px dashed transparent;
+    border-left: 0; }
+  .ui-scrollbar-top .ui-state-active b.ui-scrollbar-trangle-down, .ui-scrollbar-bottom .ui-state-active b.ui-scrollbar-trangle-down {
+    width: 0;
+    height: 0;
+    line-height: 0;
+    font-size: 0;
+    border-top: 4px dashed transparent;
+    border-right: 0;
+    border-bottom: 4px dashed transparent;
+    border-left: 4px solid white; }
+  .ui-scrollbar-scroller {
+    overflow: hidden; }
+  .ui-scrollbar-left {
+    left: 0;
+    right: auto; }
+  .ui-scrollbar-top {
+    width: 100%;
+    height: 10px;
+    left: 0;
+    top: 0;
+    bottom: auto; }
+  .ui-scrollbar-bottom {
+    width: 100%;
+    height: 10px;
+    left: 0;
+    top: auto;
+    bottom: 0; }
+  .ui-scrollbar-draggerpar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%; }
+    .ui-scrollbar-draggerpar .ui-scrollbar-dragger {
+      position: absolute;
+      width: 100%;
+      left: 0;
+      background: #cccccc; }
+    .ui-scrollbar-draggerpar .ui-state-hover {
+      background: #999999; }
+    .ui-scrollbar-draggerpar .ui-state-active {
+      background: #888888; }
+    .ui-scrollbar-draggerpar .ui-state-disabled {
+      background: #e9e9e9; }
+  .ui-scrollbar-top .ui-scrollbar-ragger, .ui-scrollbar-bottom .ui-scrollbar-ragger {
+    height: 100%;
+    width: auto;
+    top: 0; }
+  .ui-scrollbar-top .ui-scrollbar-arrow b, .ui-scrollbar-bottom .ui-scrollbar-arrow b {
+    width: 0;
+    height: 0;
+    line-height: 0;
+    font-size: 0;
+    border-top: 4px dashed transparent;
+    border-right: 4px solid #bcbcbc;
+    border-bottom: 4px dashed transparent;
+    border-left: 0;
+    margin-top: -4px;
+    margin-left: -2px; }
+  .ui-scrollbar-top .ui-scrollbar-arrow-down, .ui-scrollbar-bottom .ui-scrollbar-arrow-down {
+    right: 0;
+    left: auto; }
+    .ui-scrollbar-top .ui-scrollbar-arrow-down b, .ui-scrollbar-bottom .ui-scrollbar-arrow-down b {
+      width: 0;
+      height: 0;
+      line-height: 0;
+      font-size: 0;
+      border-top: 4px dashed transparent;
+      border-right: 0;
+      border-bottom: 4px dashed transparent;
+      border-left: 4px solid #bcbcbc; }
+
+.ui-scrollbar-large {
+  width: 14px; }
+  .ui-scrollbar-large .ui-scrollbar-arrow {
+    width: 14px;
+    height: 14px; }
+  .ui-scrollbar-large .ui-scrollbar-top, .ui-scrollbar-large .ui-scrollbar-bottom {
+    height: 14px; }
+
+.ui-scrollbar-bottom-large {
+  height: 14px; }
+
+.ui-scrollbar-small {
+  width: 8px; }
+  .ui-scrollbar-small .ui-scrollbar-arrow {
+    width: 8px;
+    height: 8px; }
+
+.ui-scrollbar-bottom-small {
+  height: 8px; }
+
+
+/*
+这是每个都组件都应该引用的部分
+*/
+.oni-dropdown .oni-dropdown-menu-inner .oni-dropdown-item {
+  text-indent: 6px; }
+
+.g-icon-start {
+  color: #58b359; }
+
+.g-icon-pause {
+  color: #333333; }
+
+
+/*
+这是每个都组件都应该引用的部分
+*/
+.ui-dropdown .ui-dropdown-menu-inner .ui-dropdown-item {
+  text-indent: 6px; }
+
+
+/*
+这是每个都组件都应该引用的部分
+*/
+ul.oni-menu, ol.oni-menu {
+  border: 1px solid #d4d4d4;
+  background: white;
+  overflow: visible;
+  font-size: 12px;
+  padding: 0; }
+
+.oni-menu {
+  width: 156px;
+  position: relative;
+  z-index: 5;
+  zoom: 1; }
+  .oni-menu ul.oni-helper-hidden {
+    visibility: hidden; }
+  .oni-menu .oni-menu-icon {
+    position: absolute;
+    right: 3px;
+    left: auto;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 12px; }
+  .oni-menu .oni-menu-item {
+    position: relative;
+    list-style: none;
+    padding: 3px;
+    cursor: pointer;
+    color: #555555;
+    font-size: 12px;
+    line-height: 18px;
+    margin: 0;
+    width: 150px; }
+    .oni-menu .oni-menu-item a, .oni-menu .oni-menu-item a:hover, .oni-menu .oni-menu-item a:link {
+      text-decoration: none; }
+  .oni-menu li.oni-state-hover {
+    background: #f8f8f8; }
+  .oni-menu li.oni-state-active {
+    background: #3775c0;
+    color: white; }
+  .oni-menu .oni-menu-sub {
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    left: 100%;
+    width: 100%;
+    top: 0; }
+  .oni-menu-vertical .oni-menu-item-1 {
+    border-right: 1px solid #d4d4d4;
+    border-left: 1px solid #d4d4d4;
+    margin-left: -1px; }
+  .oni-menu-vertical .oni-menu-depth-2 {
+    left: -1px;
+    top: 100%; }
+  .oni-menu .oni-state-disabled, .oni-menu .oni-state-disabled a, .oni-menu .oni-state-disabled a:link, .oni-menu .oni-state-disabled a:hover {
+    color: #999999;
+    cursor: default; }
+  .oni-menu-vertical {
+    width: auto; }
+    .oni-menu-vertical .oni-menu-item {
+      float: left;
+      width: 150px;
+      display: inline; }
+
+
+/*
+这是每个都组件都应该引用的部分
+*/
+v\:* {
+  behavior: url(#default#VML); }
+
+div.oni-flipswitch {
+  border: none;
+  background-color: transparent; }
+  div.oni-flipswitch label, div.oni-flipswitch span {
+    cursor: pointer;
+    margin: 0;
+    top: 0;
+    left: 0;
+    position: relative; }
+
+.oni-flipswitch {
+  position: relative;
+  z-index: 10;
+  height: 100%;
+  top: 0;
+  overflow: hidden;
+  text-align: center;
+  border: none;
+  background: none; }
+  .oni-flipswitch-modal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    height: 100%;
+    width: 100%;
+    opacity: 0.4;
+    background: #fff;
+    filter: alpha(opacity=40); }
+  .oni-flipswitch-normal {
+    width: 48px;
+    height: 28px; }
+  .oni-flipswitch-mini {
+    width: 28px;
+    height: 16px; }
+  .oni-flipswitch-small {
+    width: 36px;
+    height: 22px; }
+  .oni-flipswitch-large {
+    width: 76px;
+    height: 42px; }
+  .oni-flipswitch-bar {
+    position: absolute;
+    z-index: 10;
+    width: 150%;
+    left: 0; }
+  .oni-flipswitch-animate {
+    transition: all .5s;
+    -webkit-transition: all .5s;
+    -moz-transition: all .5s;
+    -o-transition: all .5s;
+    -ms-transition: all .5s; }
+  .oni-flipswitch-left, .oni-flipswitch-right {
+    width: 33%;
+    color: white;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
+  .oni-flipswitch-right {
+    color: #9b9b9b; }
+  .oni-flipswitch-dragger {
+    width: 34%; }
+    .oni-flipswitch-dragger-ball {
+      width: 24px;
+      height: 24px;
+      left: 50%;
+      top: 50%;
+      margin-left: -12px;
+      margin-top: -10px;
+      position: absolute; }
+      .oni-flipswitch-dragger-ball-unchecked {
+        margin-left: -12px; }
+  .oni-flipswitch-on {
+    display: none; }
+  .oni-flipswitch-large .oni-flipswitch-dragger-ball {
+    height: 38px;
+    width: 38px;
+    margin-left: -20px;
+    margin-top: -17px; }
+    .oni-flipswitch-large .oni-flipswitch-dragger-ball-unchecked {
+      margin-left: -20px; }
+  .oni-flipswitch-mini .oni-flipswitch-dragger-ball {
+    height: 14px;
+    width: 14px;
+    margin-left: -8px;
+    margin-top: -6px; }
+    .oni-flipswitch-mini .oni-flipswitch-dragger-ball-unchecked {
+      margin-left: -8px; }
+  .oni-flipswitch-small .oni-flipswitch-dragger-ball {
+    height: 18px;
+    width: 18px;
+    margin-left: -10px;
+    margin-top: -7px; }
+    .oni-flipswitch-small .oni-flipswitch-dragger-ball-unchecked {
+      margin-left: -10px; }
+  .oni-flipswitch-left, .oni-flipswitch-right, .oni-flipswitch-dragger {
+    float: left;
+    display: inline;
+    height: 24px;
+    line-height: 24px;
+    font-weight: bolder; }
+  .oni-flipswitch-mini .oni-flipswitch-left, .oni-flipswitch-mini .oni-flipswitch-right, .oni-flipswitch-mini .oni-flipswitch-dragger {
+    height: 14px;
+    line-height: 14px;
+    font-size: 14px; }
+  .oni-flipswitch-small .oni-flipswitch-left, .oni-flipswitch-small .oni-flipswitch-right, .oni-flipswitch-small .oni-flipswitch-dragger {
+    height: 18px;
+    line-height: 18px;
+    font-size: 18px; }
+  .oni-flipswitch-large .oni-flipswitch-left, .oni-flipswitch-large .oni-flipswitch-right, .oni-flipswitch-large .oni-flipswitch-dragger {
+    height: 38px;
+    line-height: 38px;
+    font-size: 38px; }
+  .oni-flipswitch-bg {
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%; }
+  .oni-flipswitch-use-no-img .oni-flipswitch-ico {
+    background-image: none; }
+  .oni-flipswitch-use-no-img .oni-flipswitch-bg {
+    border-radius: 14px;
+    background-color: #68c969; }
+  .oni-flipswitch-use-no-img .oni-flipswitch-dragger-ball {
+    background: white;
+    border-radius: 12px; }
+  .oni-flipswitch-use-no-img.oni-flipswitch-mini .oni-flipswitch-bg {
+    border-radius: 8px; }
+  .oni-flipswitch-use-no-img.oni-flipswitch-mini .oni-flipswitch-dragger-ball {
+    border-radius: 7px; }
+  .oni-flipswitch-use-no-img.oni-flipswitch-small .oni-flipswitch-bg {
+    border-radius: 11px; }
+  .oni-flipswitch-use-no-img.oni-flipswitch-small .oni-flipswitch-dragger-ball {
+    border-radius: 9px; }
+  .oni-flipswitch-use-no-img.oni-flipswitch-large .oni-flipswitch-bg {
+    border-radius: 21px; }
+  .oni-flipswitch-use-no-img.oni-flipswitch-large .oni-flipswitch-dragger-ball {
+    border-radius: 19px; }
+  .oni-flipswitch-use-no-img .oni-flipswitch-uckbg {
+    background-color: #999999; }
+
+.oni-state-disabled .oni-flipswitch-oval-hd, .oni-state-hover .oni-flipswitch-oval-hd {
+  display: block; }
+.oni-state-disabled .oni-flipswitch-oval-n, .oni-state-hover .oni-flipswitch-oval-n {
+  display: none; }
+
+.oni-state-disabled .oni-flipswitch-bar label, .oni-state-disabled .oni-flipswitch-bar span {
+  cursor: default;
+  color: white; }
+.oni-state-disabled .oni-flipswitch-oval-hd {
+  display: block; }
+.oni-state-disabled .oni-flipswitchoval-n {
+  display: none; }
+
+
+/*
+这是每个都组件都应该引用的部分
+*/
+.oni-notice-flow { margin-bottom: 10px; }
+
+.oni-notice-detach { position: relative; width: 100%; z-index: 1000; }
+
+.oni-notice-detach .oni-notice { position: absolute; }
+
+.oni-notice { position: relative; overflow: hidden; transition: height 0.6s; height: 0; width: 100%; *zoom: 1; font-size: 12px; background-color: #ffe44f; color: #a65a00; }
+
+.oni-notice-inner { padding: 7px 10px; }
+
+.oni-notice-header { font-weight: 700; }
+
+.oni-notice-close { cursor: pointer; text-decoration: underline; }
+
+.oni-notice-info { background-color: #58b359; color: #ffffff; }
+
+.oni-notice-danger { background-color: #bb0000; color: #ffffff; }
+
+.oni-notice-content a, oni-notice-content a:hover { color: #a65a00; text-decoration: underline; }
+
+
+.oni-pager {
+  font: normal 12px/1.5 tahoma, arial, 'Hiragino Sans GB', '\5b8b\4f53', sans-serif; }
+
+/*
+这是每个都组件都应该引用的部分
+*/
+.oni-pager {
+  display: -moz-inline-stack;
+  display: inline-block;
+  vertical-align: middle;
+  *vertical-align: auto;
+  zoom: 1;
+  *display: inline;
+  vertical-align: middle;
+  white-space: nowrap;
+  /*!省略掉的页数*/
+  /*!页面跳转部分的样式*/
+  /*!输入域的容器*/
+  /*!输入域*/
+  /*!里面的按钮的样式*/
+  /*!里面的文本全部包在一个容器内，以便实现居中*/ }
+  .oni-pager .oni-pager-items {
+    display: -moz-inline-stack;
+    display: inline-block;
+    vertical-align: middle;
+    *vertical-align: auto;
+    zoom: 1;
+    *display: inline;
+    vertical-align: middle; }
+  .oni-pager .oni-pager-prev, .oni-pager .oni-pager-next, .oni-pager .oni-pager-item {
+    display: -moz-inline-stack;
+    display: inline-block;
+    vertical-align: middle;
+    *vertical-align: auto;
+    zoom: 1;
+    *display: inline;
+    background-color: white;
+    color: #333;
+    height: 24px;
+    line-height: 24px;
+    margin-right: 5px;
+    border: 1px solid #d4d4d4;
+    padding: 0 10px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    -ms-border-radius: 2px;
+    -o-border-radius: 2px;
+    border-radius: 2px;
+    cursor: pointer;
+    font-size: 12px;
+    vertical-align: middle;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    /*!当前页,没有边框*/
+    /*!掠过*/
+    /*!禁用*/ }
+    .oni-pager .oni-pager-prev.oni-state-active, .oni-pager .oni-pager-next.oni-state-active, .oni-pager .oni-pager-item.oni-state-active {
+      color: #ff8888;
+      border: 0 none;
+      padding: 1px 11px;
+      cursor: default;
+      background: transparent; }
+    .oni-pager .oni-pager-prev.oni-state-hover, .oni-pager .oni-pager-next.oni-state-hover, .oni-pager .oni-pager-item.oni-state-hover {
+      border-color: #ff8888; }
+    .oni-pager .oni-pager-prev.oni-state-disabled, .oni-pager .oni-pager-next.oni-state-disabled, .oni-pager .oni-pager-item.oni-state-disabled {
+      border-color: #d9d9d9;
+      background-color: whitesmoke;
+      color: #999999;
+      cursor: default; }
+  .oni-pager .oni-pager-omit {
+    display: -moz-inline-stack;
+    display: inline-block;
+    vertical-align: middle;
+    *vertical-align: auto;
+    zoom: 1;
+    *display: inline;
+    height: 24px;
+    line-height: 24px;
+    margin-right: 5px;
+    padding: 1px 0;
+    vertical-align: middle;
+    font-size: 12px;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    cursor: default; }
+  .oni-pager .oni-pager-jump {
+    display: -moz-inline-stack;
+    display: inline-block;
+    vertical-align: middle;
+    *vertical-align: auto;
+    zoom: 1;
+    *display: inline;
+    vertical-align: middle;
+    padding-left: 5px;
+    padding-right: 5px;
+    vertical-align: middle; }
+  .oni-pager .oni-pager-textbox-wrapper {
+    display: -moz-inline-stack;
+    display: inline-block;
+    vertical-align: middle;
+    *vertical-align: auto;
+    zoom: 1;
+    *display: inline;
+    width: 26px;
+    margin-left: 5px;
+    margin-right: 5px;
+    padding: 3px 5px;
+    vertical-align: middle;
+    font-size: 0;
+    outline: none;
+    background-color: white;
+    border: 1px solid #d4d4d4; }
+  .oni-pager .oni-pager-textbox {
+    display: inline;
+    float: left;
+    position: relative;
+    width: 26px;
+    height: 18px;
+    line-height: 18px;
+    padding: 0;
+    border: 0 none;
+    font-size: 12px;
+    outline: medium none;
+    vertical-align: middle;
+    text-align: center;
+    color: #333333;
+    background: #fff; }
+  .oni-pager .oni-pager-button {
+    display: -moz-inline-stack;
+    display: inline-block;
+    vertical-align: middle;
+    *vertical-align: auto;
+    zoom: 1;
+    *display: inline;
+    overflow: visible;
+    _overflow-y: hidden;
+    height: 26px;
+    margin-left: 5px;
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+    font-size: 12px;
+    vertical-align: middle;
+    padding: 0 10px;
+    text-decoration: none;
+    border: 1px solid #ccc;
+    background-color: #f8f8f8;
+    color: #333; }
+    .oni-pager .oni-pager-button:hover {
+      border-color: #bbb; }
+  .oni-pager .oni-pager-text {
+    display: -moz-inline-stack;
+    display: inline-block;
+    vertical-align: middle;
+    *vertical-align: auto;
+    zoom: 1;
+    *display: inline;
+    font-size: 12px;
+    vertical-align: middle; }
+
+
+.ui-pager { font: normal 12px/1.5 tahoma, arial, 'Hiragino Sans GB', '\5b8b\4f53', sans-serif; }
+
+/*
+这是每个都组件都应该引用的部分
+*/
+.ui-pager { display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; vertical-align: middle; white-space: nowrap; /*!省略掉的页数*/ /*!页面跳转部分的样式*/ /*!输入域的容器*/ /*!输入域*/ /*!里面的按钮的样式*/ /*!里面的文本全部包在一个容器内，以便实现居中*/ }
+.ui-pager .ui-pager-items { display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; vertical-align: middle; }
+.ui-pager .ui-pager-prev, .ui-pager .ui-pager-next, .ui-pager .ui-pager-item { display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; background-color: white; color: #333; height: 24px; line-height: 24px; margin-right: 5px; border: 1px solid #d4d4d4; padding: 0 10px; -webkit-border-radius: 2px; -moz-border-radius: 2px; -ms-border-radius: 2px; -o-border-radius: 2px; border-radius: 2px; cursor: pointer; font-size: 12px; vertical-align: middle; -webkit-touch-callout: none; -webkit-user-select: none; -moz-user-select: none; user-select: none; /*!当前页,没有边框*/ /*!掠过*/ /*!禁用*/ }
+.ui-pager .ui-pager-prev.ui-state-active, .ui-pager .ui-pager-next.ui-state-active, .ui-pager .ui-pager-item.ui-state-active { color: #ff8888; border: 0 none; padding: 1px 11px; cursor: default; background: transparent; }
+.ui-pager .ui-pager-prev.ui-state-hover, .ui-pager .ui-pager-next.ui-state-hover, .ui-pager .ui-pager-item.ui-state-hover { border-color: #ff8888; }
+.ui-pager .ui-pager-prev.ui-state-disabled, .ui-pager .ui-pager-next.ui-state-disabled, .ui-pager .ui-pager-item.ui-state-disabled { border-color: #d9d9d9; background-color: whitesmoke; color: #999999; cursor: default; }
+.ui-pager .ui-pager-omit { display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; height: 24px; line-height: 24px; margin-right: 5px; padding: 1px 0; vertical-align: middle; font-size: 12px; -webkit-touch-callout: none; -webkit-user-select: none; -moz-user-select: none; user-select: none; cursor: default; }
+.ui-pager .ui-pager-jump { display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; vertical-align: middle; padding-left: 5px; padding-right: 5px; vertical-align: middle; }
+.ui-pager .ui-pager-textbox-wrapper { display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; width: 26px; margin-left: 5px; margin-right: 5px; padding: 3px 5px; vertical-align: middle; font-size: 0; outline: none; background-color: white; border: 1px solid #d4d4d4; }
+.ui-pager .ui-pager-textbox { display: inline; float: left; position: relative; width: 26px; height: 18px; line-height: 18px; padding: 0; border: 0 none; font-size: 12px; outline: medium none; vertical-align: middle; text-align: center; color: #333333; background: #fff; }
+.ui-pager .ui-pager-button { display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; overflow: visible; _overflow-y: hidden; height: 26px; margin-left: 5px; border-radius: 2px; outline: none; cursor: pointer; font-size: 12px; vertical-align: middle; padding: 0 10px; text-decoration: none; border: 1px solid #ccc; background-color: #f8f8f8; color: #333; }
+.ui-pager .ui-pager-button:hover { border-color: #bbb; }
+.ui-pager .ui-pager-text { display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; font-size: 12px; vertical-align: middle; }
+
+
+/*
+这是每个都组件都应该引用的部分
+*/
+.oni-spinner { font-size: 0; display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; }
+.oni-spinner .oni-btn { height: 26px; overflow: visible; _overflow-y: hidden; padding: 0 10px; font-size: 0; outline: 0; vertical-align: middle; -webkit-border-radius: 2px; -moz-border-radius: 2px; -ms-border-radius: 2px; -o-border-radius: 2px; border-radius: 2px; color: #333333; background-color: #f8f8f8; border: 1px solid #cccccc; }
+.oni-spinner .oni-btn:active { border-color: #fff; }
+.oni-spinner .oni-btn:hover { box-shadow: 1px 1px 0 0 rgba(0, 0, 0, 0.1); background-color: #f8f8f8; border-color: #bbbbbb; color: #333333; }
+.oni-spinner .oni-btn.oni-state-disabled, .oni-spinner .oni-btn.oni-state-disabled .oni-icon { background-color: whitesmoke; border-color: #d9d9d9; cursor: default; color: #ccc; }
+.oni-spinner .oni-btn .oni-icon { line-height: 15px; text-indent: 0; }
+.oni-spinner .oni-textbox { display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; outline: none; margin: 0 -1px; border: 1px solid #cccccc; padding: 3px 5px; font-size: 0; line-height: 18px; background-color: #ffffff; }
+.oni-spinner .oni-textbox:hover { border-color: #999999; }
+.oni-spinner .oni-textbox.oni-state-disabled { background-color: whitesmoke; border-color: #d9d9d9; cursor: default; }
+.oni-spinner .oni-textbox .oni-textbox-input-wrap { position: relative; display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; vertical-align: middle; }
+.oni-spinner .oni-textbox .oni-textbox-input-wrap .oni-textbox-input { position: relative; display: inline; float: left; top: 1px\9; _top: 0; outline: none; height: 18px; line-height: 18px; vertical-align: middle; font-size: 12px; border: 0 none; padding: 0; color: #333333; background-color: #ffffff; }
+.oni-spinner .oni-textbox .oni-textbox-input-wrap .oni-textbox-input.oni-state-disabled { background-color: whitesmoke; border-color: #d9d9d9; cursor: default; color: #ccc; }
+
+
+/*
+这是每个都组件都应该引用的部分
+*/
+div.oni-tab {
+  border: none; }
+
+.oni-tab {
+  /*dir=v, small size*/
+  /*dir=v, normal size*/ }
+  .oni-tab-slider {
+    position: relative;
+    overflow: hidden; }
+    .oni-tab-slider-enable {
+      width: 10000px; }
+    .oni-tab-slider-button {
+      text-decoration: none;
+      position: absolute;
+      right: 0px;
+      top: 0px;
+      padding: 10px 4px;
+      width: 8px;
+      font-weight: bold;
+      background: #ccc;
+      z-index: 10; }
+      .oni-tab-slider-button-left {
+        left: 0; }
+  .oni-tab .oni-tab-nav {
+    float: left; }
+  .oni-tab .oni-tab-nav .oni-state-default {
+    float: left;
+    display: inline;
+    list-style: none;
+    text-align: center;
+    font-size: 12px;
+    padding: 10px 20px;
+    position: relative;
+    background-color: #f8f8f8;
+    cursor: pointer;
+    border: 1px solid #d4d4d4;
+    border-right-width: 0;
+    color: black; }
+  .oni-tab .oni-tab-nav .oni-state-default a, .oni-tab .oni-tab-nav .oni-state-default:link, .oni-tab .oni-tab-nav .oni-state-default a:hover {
+    color: black;
+    text-decoration: none;
+    font-size: 12px; }
+  .oni-tab .oni-tab-nav .oni-state-hover {
+    color: black;
+    background: white; }
+    .oni-tab .oni-tab-nav .oni-state-hover a {
+      color: black; }
+    .oni-tab .oni-tab-nav .oni-state-hover a:link {
+      color: black; }
+    .oni-tab .oni-tab-nav .oni-state-hover .oni-tab-close {
+      border-color: white; }
+  .oni-tab .oni-tab-nav .oni-state-active {
+    border-bottom-color: white;
+    background: white;
+    color: black; }
+    .oni-tab .oni-tab-nav .oni-state-active a {
+      color: black; }
+    .oni-tab .oni-tab-nav .oni-state-active a:link {
+      color: black; }
+    .oni-tab .oni-tab-nav .oni-state-active .oni-tab-close {
+      border-color: white; }
+  .oni-tab .oni-tab-nav .oni-state-disabled {
+    color: #999999;
+    cursor: default; }
+    .oni-tab .oni-tab-nav .oni-state-disabled a {
+      color: #999999;
+      cursor: default; }
+    .oni-tab .oni-tab-nav .oni-state-disabled a:link {
+      color: #999999;
+      cursor: default; }
+  .oni-tab .oni-tab-nav .oni-tab-last {
+    border-right-width: 1px; }
+  .oni-tab-small .oni-tab-nav .oni-state-default {
+    border-right-width: 1px;
+    margin-right: -1px;
+    z-index: 1;
+    padding: 7px 10px; }
+  .oni-tab-small .oni-tab-nav .oni-state-active {
+    border-color: #3775c0;
+    z-index: 10; }
+  .oni-tab-vertical .oni-tab-nav .oni-state-default {
+    float: none;
+    display: block;
+    text-align: left;
+    border-right-width: 1px;
+    border-bottom-width: 0; }
+  .oni-tab-vertical .oni-tab-nav .oni-state-active {
+    border-right-color: white;
+    border-bottom-color: #d4d4d4; }
+  .oni-tab-vertical .oni-tab-nav .oni-tab-last {
+    border-bottom-width: 1px; }
+  .oni-tab-click .oni-state-default {
+    cursor: pointer; }
+  .oni-tab-removable {
+    padding-right: 30px; }
+  .oni-tab-nav .oni-tab-item .oni-tab-close {
+    position: absolute;
+    right: 0px;
+    top: 7px;
+    padding: 3px;
+    height: 12px;
+    width: 12px;
+    overflow: hidden;
+    border: 1px solid #f8f8f8;
+    border-right-width: 0;
+    color: #666666;
+    text-indent: 0;
+    line-height: 14px;
+    font-family: Helvetica, Arial, sans-serif; }
+  .oni-tab .oni-tab-nav .oni-state-active .oni-tab-close-hover {
+    background: white;
+    border-color: #d4d4d4;
+    cursor: pointer; }
+  .oni-tab .oni-tab-nav .oni-state-hover .oni-tab-close-hover {
+    background: white;
+    border-color: #d4d4d4;
+    cursor: pointer; }
+
+
+/*
+这是每个都组件都应该引用的部分
+*/
+.oni-textbox { display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; outline: medium none; font-size: 0; padding: 3px 5px; line-height: 18px; background-color: #FFFFFF; border: 1px solid #CCCCCC; }
+.oni-textbox .oni-textbox-input-wrap { position: relative; display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; overflow: hidden; line-height: 18px; }
+.oni-textbox .oni-textbox-input-wrap .oni-textbox-input { position: relative; float: left; display: inline; vertical-align: middle; height: 18px; line-height: 18px; outline: medium none; font-size: 12px; margin: 0; padding: 0; box-shadow: inset 0 0 0 rgba(0, 0, 0, 0.75); background-color: #FFFFFF; border: 0 none; color: #333333; }
+.oni-textbox .oni-textbox-input-wrap textarea.oni-textbox-input { height: 60px; resize: none; }
+.oni-textbox .oni-textbox-placeholder { position: absolute; left: 0; top: 0; right: 0; bottom: 0; font-size: 14px; z-index: 1; overflow: hidden; word-wrap: break-word; word-break: break-all; color: #999999; }
+.oni-textbox .oni-textbox-suggest { position: relative; z-index: 1000; }
+.oni-textbox.oni-textbox-disabled { background-color: #F5F5F5; border-color: #D9D9D9; cursor: default; }
+.oni-textbox.oni-textbox-disabled .oni-textbox-placeholder { color: #CCCCCC; }
+.oni-textbox.oni-textbox-disabled .oni-textbox-input { cursor: default; background-color: #F5F5F5; color: #CCCCCC; }
+
+.oni-textbox-hover { border-color: #999999; }
+
+.oni-textbox-focus { border-color: #3775c0; }
+
+.oni-textbox-error { border-color: #ff8888; }
+
+/*
+这是每个都组件都应该引用的部分
+*/
+.oni-textbox-suggest { position: relative; z-index: 1000; }
+
+.oni-suggest { position: absolute; top: 3px; left: -6px; z-index: 1; border: 1px solid #cccccc; padding: 0; margin: 0; background-color: #ffffff; }
+.oni-suggest .oni-suggest-item { overflow: hidden; cursor: pointer; font-size: 12px; padding: 3px 5px; word-break: break-all; }
+.oni-suggest .oni-suggest-item-selected { background-color: #3775c0; color: #fff; }
+.oni-suggest .oni-suggest-item-hover { background-color: #f8f8f8; color: #333333; }
+
+
+/*
+这是每个都组件都应该引用的部分
+*/
+.oni-tooltip-hidden {
+  visibility: hidden; }
+
+div.oni-tooltip {
+  padding: 10px;
+  position: absolute;
+  z-index: 9999;
+  max-width: 300px;
+  overflow: visible;
+  background: #ffe44f;
+  border: 1px solid #ffc805;
+  color: #a65a00;
+  font-size: 12px;
+  border-radius: 0 0 0 0; }
+  div.oni-tooltip a, div.oni-tooltip a:link, div.oni-tooltip a:hover {
+    color: #a65a00;
+    cursor: pointer; }
+  div.oni-tooltip .oni-tooltip-arrow-in, div.oni-tooltip .oni-tooltip-arrow-out {
+    overflow: visible;
+    position: absolute; }
+
+.oni-tooltip-top .oni-tooltip-arrow-in {
+  width: 0;
+  height: 0;
+  line-height: 0;
+  font-size: 0;
+  border-top: 0 none;
+  border-right: 4px dashed transparent;
+  border-bottom: 5px solid #ffe44f;
+  border-left: 4px dashed transparent;
+  left: 29px;
+  top: -5px; }
+.oni-tooltip-top .oni-tooltip-arrow-out {
+  width: 0;
+  height: 0;
+  line-height: 0;
+  font-size: 0;
+  border-top: 0 none;
+  border-right: 5px dashed transparent;
+  border-bottom: 6px solid #ffc805;
+  border-left: 5px dashed transparent;
+  left: 28px;
+  top: -6px; }
+.oni-tooltip-right .oni-tooltip-arrow-in {
+  width: 0;
+  height: 0;
+  line-height: 0;
+  font-size: 0;
+  border-top: 4px dashed transparent;
+  border-right: 0;
+  border-bottom: 4px dashed transparent;
+  border-left: 5px solid #ffe44f;
+  right: -4px;
+  top: 29px; }
+.oni-tooltip-right .oni-tooltip-arrow-out {
+  width: 0;
+  height: 0;
+  line-height: 0;
+  font-size: 0;
+  border-top: 5px dashed transparent;
+  border-right: 0;
+  border-bottom: 5px dashed transparent;
+  border-left: 6px solid #ffc805;
+  left: auto;
+  right: -5px;
+  top: 28px; }
+.oni-tooltip-bottom .oni-tooltip-arrow-in {
+  width: 0;
+  height: 0;
+  line-height: 0;
+  font-size: 0;
+  border-top: 5px solid #ffe44f;
+  border-right: 4px dashed transparent;
+  border-bottom: 0;
+  border-left: 4px dashed transparent;
+  bottom: -5px;
+  left: 29px;
+  top: auto; }
+.oni-tooltip-bottom .oni-tooltip-arrow-out {
+  width: 0;
+  height: 0;
+  line-height: 0;
+  font-size: 0;
+  border-top: 6px solid #ffc805;
+  border-right: 5px dashed transparent;
+  border-bottom: 0;
+  border-left: 5px dashed transparent;
+  bottom: -6px;
+  left: 28px;
+  top: auto; }
+.oni-tooltip-left .oni-tooltip-arrow-in {
+  width: 0;
+  height: 0;
+  line-height: 0;
+  font-size: 0;
+  border-top: 4px dashed transparent;
+  border-right: 5px solid #ffe44f;
+  border-bottom: 4px dashed transparent;
+  border-left: 0;
+  left: -4px;
+  top: 29px; }
+.oni-tooltip-left .oni-tooltip-arrow-out {
+  width: 0;
+  height: 0;
+  line-height: 0;
+  font-size: 0;
+  border-top: 5px dashed transparent;
+  border-right: 6px solid #ffc805;
+  border-bottom: 5px dashed transparent;
+  border-left: 0;
+  left: -5px;
+  top: 28px; }
+
+
+/*
+这是每个都组件都应该引用的部分
+*/
+.oni-smartgrid { border: 1px solid #e5e5e5; font-size: 12px; line-height: 20px; position: relative; /*三种容器的规则*/ /*三种容器下三角形的共同点*/ /*上三角*/ /*下三角*/ }
+.oni-smartgrid table { table-layout: auto; width: 100%; border-spacing: 0; border-collapse: collapse; }
+.oni-smartgrid .oni-smartgrid-hide { display: none; }
+.oni-smartgrid .oni-state-hover { background-color: #e8f5fd; }
+.oni-smartgrid .oni-smartgrid-selected { background-color: #fff7e6; }
+.oni-smartgrid .oni-state-disabled { color: #ccc; background: #fff; }
+.oni-smartgrid .oni-state-disabled .oni-dropdown .oni-dropdown-source { border-color: #ccc; }
+.oni-smartgrid .oni-state-hidden input { visibility: hidden; }
+.oni-smartgrid th { -moz-user-select: none; -ms-user-select: none; -webkit-user-select: none; user-select: none; padding: 7px 5px; }
+.oni-smartgrid th input { margin: 0; }
+.oni-smartgrid td { border-bottom: 1px solid #f3f3f3; padding: 7px 5px; word-break: break-all; word-wrap: break-word; }
+.oni-smartgrid td input { margin: 0; }
+.oni-smartgrid .oni-smartgrid-header { background-color: #f8f8f8; border-bottom: 1px solid #e5e5e5; }
+.oni-smartgrid .oni-smartgrid-header-fixed { background-color: #f8f8f8; border-top: 1px solid #e5e5e5; border-bottom: 1px solid #e5e5e5; border-right: 1px solid #e5e5e5; z-index: 1; }
+.oni-smartgrid .oni-smartgrid-body { background: #fff; text-align: center; }
+.oni-smartgrid .oni-smartgrid-footer { background-color: #f8f8f8; font-size: 0; padding: 0; }
+.oni-smartgrid .oni-smartgrid-footer td { padding: 0; }
+.oni-smartgrid .oni-smartgrid-footer .oni-smartgrid-pager-wrapper { width: 100%; padding: 5px 0px; overflow: hidden; background-color: #f8f8f8; }
+.oni-smartgrid .oni-smartgrid-pager-options { font-size: 12px; float: left; height: 26px; line-height: 26px; padding-left: 5px; }
+.oni-smartgrid .oni-smartgrid-pager-options div.oni-smartgrid-showinfo { display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; }
+.oni-smartgrid .oni-smartgrid-pager-options .oni-dropdown { margin: 0 5px; vertical-align: top; }
+.oni-smartgrid .oni-smartgrid-nodata { padding: 23px 0; text-align: center; line-height: 15px; }
+.oni-smartgrid .oni-helper-asc, .oni-smartgrid .oni-helper-desc, .oni-smartgrid .oni-helper-ndb { width: 12px; height: 12px; line-height: 1; vertical-align: middle; display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; position: relative; cursor: pointer; }
+.oni-smartgrid .oni-helper-asc span, .oni-smartgrid .oni-helper-desc span, .oni-smartgrid .oni-helper-ndb span { position: absolute; top: 0px; left: 4px; }
+.oni-smartgrid .oni-helper-ndb .oni-helper-sort-top, .oni-smartgrid .oni-helper-desc .oni-helper-sort-top { width: 0; height: 0; line-height: 0; font-size: 0; border-top: 0 none; border-right: 6px dashed transparent; border-bottom: 6px solid #cccccc; border-left: 6px dashed transparent; top: 0px; left: 0px; }
+.oni-smartgrid .oni-helper-asc .oni-helper-sort-top { width: 0; height: 0; line-height: 0; font-size: 0; border-top: 0 none; border-right: 6px dashed transparent; border-bottom: 6px solid black; border-left: 6px dashed transparent; top: 0px; left: 0px; }
+.oni-smartgrid .oni-helper-ndb .oni-helper-sort-bottom, .oni-smartgrid .oni-helper-asc .oni-helper-sort-bottom { width: 0; height: 0; line-height: 0; font-size: 0; border-top: 6px solid #cccccc; border-right: 6px dashed transparent; border-bottom: 0; border-left: 6px dashed transparent; top: 8px; left: 0px; }
+.oni-smartgrid .oni-helper-desc .oni-helper-sort-bottom { width: 0; height: 0; line-height: 0; font-size: 0; border-top: 6px solid black; border-right: 6px dashed transparent; border-bottom: 0; border-left: 6px dashed transparent; top: 8px; left: 0px; }
+.oni-smartgrid .oni-pager { display: inline; float: right; }
+
+
+/*
+这是每个都组件都应该引用的部分
+*/
+div.oni-loading {
+  position: absolute; }
+
+.oni-loading {
+  position: absolute;
+  left: 50%;
+  top: 50%; }
+  .oni-loading-modal {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background: #fff; }
+    .oni-loading-modal iframe {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+      z-index: -1;
+      zoom: 1;
+      background: transparent;
+      border: none; }
+
+
+/*
+这是每个都组件都应该引用的部分
+*/
+.ui-smartgrid { border: 1px solid #e5e5e5; font-size: 12px; line-height: 20px; position: relative; /*三种容器的规则*/ /*三种容器下三角形的共同点*/ /*上三角*/ /*下三角*/ }
+.ui-smartgrid table { table-layout: auto; width: 100%; border-spacing: 0; border-collapse: collapse; }
+.ui-smartgrid .ui-smartgrid-hide { display: none; }
+.ui-smartgrid .ui-state-hover { background-color: #e8f5fd; }
+.ui-smartgrid .ui-smartgrid-selected { background-color: #fff7e6; }
+.ui-smartgrid .ui-state-disabled { color: #ccc; background: #fff; }
+.ui-smartgrid .ui-state-disabled .ui-dropdown .ui-dropdown-source { border-color: #ccc; }
+.ui-smartgrid th { -moz-user-select: none; -ms-user-select: none; -webkit-user-select: none; user-select: none; padding: 7px 5px; }
+.ui-smartgrid th input { margin: 0; }
+.ui-smartgrid td { border-bottom: 1px solid #f3f3f3; padding: 7px 5px; word-break: break-all; word-wrap: break-word; }
+.ui-smartgrid td input { margin: 0; }
+.ui-smartgrid .ui-smartgrid-header { background-color: #f8f8f8; border-bottom: 1px solid #e5e5e5; }
+.ui-smartgrid .ui-smartgrid-header-fixed { background-color: #f8f8f8; border-top: 1px solid #e5e5e5; border-bottom: 1px solid #e5e5e5; border-right: 1px solid #e5e5e5; z-index: 1; }
+.ui-smartgrid .ui-smartgrid-body { background: #fff; text-align: center; }
+.ui-smartgrid .ui-smartgrid-footer { background-color: #f8f8f8; font-size: 0; padding: 0; }
+.ui-smartgrid .ui-smartgrid-footer td { padding: 0; }
+.ui-smartgrid .ui-smartgrid-pager-wrapper { width: 100%; padding: 5px 0px; overflow: hidden; background-color: #f8f8f8; }
+.ui-smartgrid .ui-smartgrid-pager-options { font-size: 12px; float: left; height: 26px; line-height: 26px; padding-left: 5px; }
+.ui-smartgrid .ui-smartgrid-pager-options div.ui-smartgrid-showinfo { display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; }
+.ui-smartgrid .ui-smartgrid-pager-options .ui-dropdown { margin: 0 5px; vertical-align: top; }
+.ui-smartgrid .ui-smartgrid-nodata { padding: 23px 0; text-align: center; line-height: 15px; }
+.ui-smartgrid .ui-helper-asc, .ui-smartgrid .ui-helper-desc, .ui-smartgrid .ui-helper-ndb { width: 12px; height: 12px; line-height: 1; vertical-align: middle; display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; position: relative; cursor: pointer; }
+.ui-smartgrid .ui-helper-asc span, .ui-smartgrid .ui-helper-desc span, .ui-smartgrid .ui-helper-ndb span { position: absolute; top: 0px; left: 4px; }
+.ui-smartgrid .ui-helper-ndb .ui-helper-sort-top, .ui-smartgrid .ui-helper-desc .ui-helper-sort-top { width: 0; height: 0; line-height: 0; font-size: 0; border-top: 0 none; border-right: 6px dashed transparent; border-bottom: 6px solid #cccccc; border-left: 6px dashed transparent; top: 0px; left: 0px; }
+.ui-smartgrid .ui-helper-asc .ui-helper-sort-top { width: 0; height: 0; line-height: 0; font-size: 0; border-top: 0 none; border-right: 6px dashed transparent; border-bottom: 6px solid black; border-left: 6px dashed transparent; top: 0px; left: 0px; }
+.ui-smartgrid .ui-helper-ndb .ui-helper-sort-bottom, .ui-smartgrid .ui-helper-asc .ui-helper-sort-bottom { width: 0; height: 0; line-height: 0; font-size: 0; border-top: 6px solid #cccccc; border-right: 6px dashed transparent; border-bottom: 0; border-left: 6px dashed transparent; top: 8px; left: 0px; }
+.ui-smartgrid .ui-helper-desc .ui-helper-sort-bottom { width: 0; height: 0; line-height: 0; font-size: 0; border-top: 6px solid black; border-right: 6px dashed transparent; border-bottom: 0; border-left: 6px dashed transparent; top: 8px; left: 0px; }
+.ui-smartgrid .ui-pager { display: inline; float: right; }
+
+
+/*
+这是每个都组件都应该引用的部分
+*/
+div.ui-loading {
+  position: absolute; }
+
+.ui-loading {
+  position: absolute;
+  left: 50%;
+  top: 50%; }
+  .ui-loading-modal {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background: #fff; }
+    .ui-loading-modal iframe {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+      z-index: -1;
+      zoom: 1;
+      background: transparent;
+      border: none; }
+
+
+/*
+这是每个都组件都应该引用的部分
+*/
+.oni-mmPromise-class {
+  border: 1px solid #aaaaaa; }
+
+.oni-dropdown .oni-textbox {
+  border-bottom-width: 0; }
+.oni-dropdown .oni-textbox-focus {
+  border: 1px solid #ccc;
+  border-bottom-width: 0; }
+  .oni-dropdown .oni-textbox-focus .oni-textbox-icon {
+    color: #3775c0; }
+
+.oni-textbox-icon {
+  position: absolute;
+  right: 6px;
+  top: 3px; }
+
+
+/*
+这是每个都组件都应该引用的部分
+*/
+.oni-dropdownlist { display: inline-block; *display: inline; _display: inline; zoom: 1; position: relative; }
+.oni-dropdownlist .oni-textbox { display: block; position: absolute; left: 0; right: 0; top: -1px; _width: expression(parseInt(this.parentNode.offsetWidth) - 12); zoom: 1; }
+.oni-dropdownlist .oni-textbox-focus { border: 1px solid #ccc; }
+.oni-dropdownlist .oni-textbox-focus .oni-textbox-icon { color: #3775c0; }
+
+.oni-dropdownlist-search { position: relative; display: block; }
+
+.oni-dropdownlist-input { display: block; font-size: 12px; height: 24px; line-height: 24px; padding: 0 6px; width: 200px; border: 1px solid #cccccc; position: relative; }
+
+.oni-dropdownlist-icon-wrap, .oni-textbox-icon { position: absolute; right: 6px; top: 3px; }
+
+.oni-dropdownlist-input-hover { border: 1px solid #999999; }
+
+.oni-dropdownlist-input-focus { border: 1px solid #3775c0; border-bottom-color: #cccccc; }
+
+/*
+这是每个都组件都应该引用的部分
+*/
+div.oni-progressbar-circle {
+  border: none;
+  background-color: transparent; }
+
+.oni-progressbar {
+  width: 100%;
+  position: relative;
+  height: 6px;
+  border: none;
+  background-color: #dedede;
+  font-family: Verdana,Arial,sans-serif; }
+  .oni-progressbar-bar {
+    z-index: 1;
+    position: relative;
+    background-color: #619fe8;
+    height: 100%;
+    width: 0;
+    float: left;
+    display: inline; }
+  .oni-progressbar-bar-right {
+    background: #dddddd; }
+  .oni-progressbar-overlay {
+    width: 100%;
+    position: relative;
+    z-index: 1;
+    height: 100%;
+    overflow: hidden;
+    background: url("images/indeterminate.gif") repeat-x #dddddd; }
+  .oni-progressbar-label {
+    position: absolute;
+    left: 50%;
+    z-index: 10;
+    margin: 0 auto;
+    color: white; }
+  .oni-progressbar-circle .oni-progressbar-label {
+    font-size: 13px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    color: #619fe8; }
+  .oni-progressbar-circle-bar {
+    border: 4px solid #619fe8;
+    position: absolute;
+    color: white;
+    background-color: #619fe8;
+    width: 38px;
+    height: 38px;
+    z-index: -1;
+    visibility: hidden;
+    padding: 0;
+    margin: 0; }
+  .oni-progressbar-normal .oni-progressbar-label {
+    background-color: #6aa5e9;
+    padding: 2px 4px;
+    font-size: 13px;
+    top: -25px;
+    height: 14px;
+    color: #fff;
+    line-height: 14px;
+    left: 0;
+    border-radius: 2px; }
+  .oni-progressbar-right .oni-progressbar-label {
+    left: 50%; }
+  .oni-progressbar-arrow {
+    width: 0;
+    height: 0;
+    line-height: 0;
+    font-size: 0;
+    border-top: 5px solid #6aa5e9;
+    border-right: 5px dashed transparent;
+    border-bottom: 0;
+    border-left: 5px dashed transparent;
+    overflow: hidden;
+    bottom: -5px;
+    left: 50%;
+    position: absolute;
+    margin-left: -5px; }
+
+
+.oni-simplegrid {
+  font: normal 12px/1.5 tahoma, arial, 'Hiragino Sans GB', '\5b8b\4f53', sans-serif; }
+
+/*
+这是每个都组件都应该引用的部分
+*/
+.oni-simplegrid {
+  font: normal 12px/1.5 tahoma,arial,'Hiragino Sans GB','\5b8b\4f53',sans-serif;
+  width: 100%;
+  border: 1px solid #d4d4d4;
+  position: relative;
+  /*三种容器的规则*/
+  /*三种容器下三角形的共同点*/
+  /*上三角*/
+  /*下三角*/ }
+  .oni-simplegrid .oni-simplegrid-scroll-wrapper {
+    width: 100%;
+    overflow: auto;
+    position: relative;
+    z-index: 0; }
+  .oni-simplegrid .oni-simplegrid-wrapper {
+    width: 100%;
+    position: absolute; }
+  .oni-simplegrid .oni-simplegrid-thead {
+    width: 100%;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    border-collapse: collapse; }
+  .oni-simplegrid .oni-simplegrid-thead td, .oni-simplegrid .oni-simplegrid-thead th {
+    border: 0 none;
+    padding: 10px 5px;
+    background-color: #f8f8f8; }
+  .oni-simplegrid .oni-simplegrid-thead td, .oni-simplegrid .oni-simplegrid-thead th, .oni-simplegrid .oni-simplegrid-tbody td, .oni-simplegrid .oni-simplegrid-tbody th {
+    padding-left: 5px; }
+  .oni-simplegrid .oni-simplegrid-tbody {
+    width: 100%;
+    border: 1px solid #d4d4d4;
+    border-left: none;
+    border-right: none;
+    border-collapse: collapse; }
+  .oni-simplegrid .oni-simplegrid-tbody td, .oni-simplegrid .oni-simplegrid-tbody th {
+    border: 0 none;
+    padding: 7px 5px; }
+  .oni-simplegrid .oni-simplegrid-tbody td, .oni-simplegrid .oni-simplegrid-tbody th {
+    border-bottom: 1px solid #f3f3f3; }
+  .oni-simplegrid .oni-simplegrid-tbody .oni-state-hover td, .oni-simplegrid .oni-simplegrid-tbody .oni-state-hover th {
+    background-color: #e8f5fd; }
+  .oni-simplegrid .oni-simplegrid-tbody .oni-state-selected td, .oni-simplegrid .oni-simplegrid-tbody .oni-state-selected th {
+    background-color: #fff7e6; }
+  .oni-simplegrid .oni-simplegrid-scroll-marker {
+    width: 100%;
+    z-index: -1; }
+  .oni-simplegrid .oni-simplegrid-pager-wrapper {
+    width: 100%;
+    padding: 5px 0px;
+    overflow: hidden;
+    background-color: #f8f8f8;
+    border-top: 1px solid #d4d4d4; }
+  .oni-simplegrid .oni-simplegrid-pager-options {
+    float: left;
+    height: 26px;
+    line-height: 26px;
+    padding-left: 5px; }
+    .oni-simplegrid .oni-simplegrid-pager-options .oni-dropdown {
+      margin: 0 5px;
+      vertical-align: top; }
+  .oni-simplegrid .oni-helper-asc, .oni-simplegrid .oni-helper-desc, .oni-simplegrid .oni-helper-ndb {
+    width: 16px;
+    height: 16px;
+    line-height: 1;
+    vertical-align: middle;
+    display: -moz-inline-stack;
+    display: inline-block;
+    vertical-align: middle;
+    *vertical-align: auto;
+    zoom: 1;
+    *display: inline;
+    position: relative;
+    cursor: pointer; }
+  .oni-simplegrid .oni-helper-asc span, .oni-simplegrid .oni-helper-desc span, .oni-simplegrid .oni-helper-ndb span {
+    position: absolute;
+    top: 0px;
+    left: 4px; }
+  .oni-simplegrid .oni-helper-ndb .oni-helper-sort-top, .oni-simplegrid .oni-helper-desc .oni-helper-sort-top {
+    width: 0;
+    height: 0;
+    line-height: 0;
+    font-size: 0;
+    border-top: 0 none;
+    border-right: 6px dashed transparent;
+    border-bottom: 6px solid #cccccc;
+    border-left: 6px dashed transparent;
+    top: 0px; }
+  .oni-simplegrid .oni-helper-asc .oni-helper-sort-top {
+    width: 0;
+    height: 0;
+    line-height: 0;
+    font-size: 0;
+    border-top: 0 none;
+    border-right: 6px dashed transparent;
+    border-bottom: 6px solid black;
+    border-left: 6px dashed transparent;
+    top: 0px; }
+  .oni-simplegrid .oni-helper-ndb .oni-helper-sort-bottom, .oni-simplegrid .oni-helper-asc .oni-helper-sort-bottom {
+    width: 0;
+    height: 0;
+    line-height: 0;
+    font-size: 0;
+    border-top: 6px solid #cccccc;
+    border-right: 6px dashed transparent;
+    border-bottom: 0;
+    border-left: 6px dashed transparent;
+    top: 8px; }
+  .oni-simplegrid .oni-helper-desc .oni-helper-sort-bottom {
+    width: 0;
+    height: 0;
+    line-height: 0;
+    font-size: 0;
+    border-top: 6px solid black;
+    border-right: 6px dashed transparent;
+    border-bottom: 0;
+    border-left: 6px dashed transparent;
+    top: 8px; }
+  .oni-simplegrid .oni-pager {
+    display: inline;
+    float: right; }
+  .oni-simplegrid .oni-simplegrid-empty {
+    text-align: center; }
+
+
+.ui-simplegrid { font: normal 12px/1.5 tahoma, arial, 'Hiragino Sans GB', '\5b8b\4f53', sans-serif; }
+
+/*
+这是每个都组件都应该引用的部分
+*/
+.ui-simplegrid { font: normal 12px/1.5 tahoma,arial,'Hiragino Sans GB','\5b8b\4f53',sans-serif; width: 100%; border: 1px solid #d4d4d4; position: relative; /*三种容器的规则*/ /*三种容器下三角形的共同点*/ /*上三角*/ /*下三角*/ }
+.ui-simplegrid .ui-simplegrid-scroll-wrapper { width: 100%; overflow: auto; position: relative; z-index: 0; }
+.ui-simplegrid .ui-simplegrid-wrapper { width: 100%; position: absolute; }
+.ui-simplegrid .ui-simplegrid-thead { width: 100%; -webkit-touch-callout: none; -webkit-user-select: none; -moz-user-select: none; user-select: none; border-collapse: collapse; }
+.ui-simplegrid .ui-simplegrid-thead td, .ui-simplegrid .ui-simplegrid-thead th { border: 0 none; padding: 10px 5px; background-color: #f8f8f8; }
+.ui-simplegrid .ui-simplegrid-thead td, .ui-simplegrid .ui-simplegrid-thead th, .ui-simplegrid .ui-simplegrid-tbody td, .ui-simplegrid .ui-simplegrid-tbody th { padding-left: 5px; }
+.ui-simplegrid .ui-simplegrid-tbody { width: 100%; border: 1px solid #d4d4d4; border-left: none; border-right: none; border-collapse: collapse; }
+.ui-simplegrid .ui-simplegrid-tbody td, .ui-simplegrid .ui-simplegrid-tbody th { border: 0 none; padding: 7px 5px; }
+.ui-simplegrid .ui-simplegrid-tbody td, .ui-simplegrid .ui-simplegrid-tbody th { border-bottom: 1px solid #f3f3f3; }
+.ui-simplegrid .ui-simplegrid-tbody .ui-state-hover td, .ui-simplegrid .ui-simplegrid-tbody .ui-state-hover th { background-color: #e8f5fd; }
+.ui-simplegrid .ui-simplegrid-tbody .ui-state-selected td, .ui-simplegrid .ui-simplegrid-tbody .ui-state-selected th { background-color: #fff7e6; }
+.ui-simplegrid .ui-simplegrid-scroll-marker { width: 100%; z-index: -1; }
+.ui-simplegrid .ui-simplegrid-pager-wrapper { width: 100%; padding: 5px 0px; overflow: hidden; background-color: #f8f8f8; border-top: 1px solid #d4d4d4; }
+.ui-simplegrid .ui-simplegrid-pager-options { float: left; height: 26px; line-height: 26px; padding-left: 5px; }
+.ui-simplegrid .ui-simplegrid-pager-options .ui-dropdown { margin: 0 5px; vertical-align: top; }
+.ui-simplegrid .ui-helper-asc, .ui-simplegrid .ui-helper-desc, .ui-simplegrid .ui-helper-ndb { width: 16px; height: 16px; line-height: 1; vertical-align: middle; display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; position: relative; cursor: pointer; }
+.ui-simplegrid .ui-helper-asc span, .ui-simplegrid .ui-helper-desc span, .ui-simplegrid .ui-helper-ndb span { position: absolute; top: 0px; left: 4px; }
+.ui-simplegrid .ui-helper-ndb .ui-helper-sort-top, .ui-simplegrid .ui-helper-desc .ui-helper-sort-top { width: 0; height: 0; line-height: 0; font-size: 0; border-top: 0 none; border-right: 6px dashed transparent; border-bottom: 6px solid #cccccc; border-left: 6px dashed transparent; top: 0px; }
+.ui-simplegrid .ui-helper-asc .ui-helper-sort-top { width: 0; height: 0; line-height: 0; font-size: 0; border-top: 0 none; border-right: 6px dashed transparent; border-bottom: 6px solid black; border-left: 6px dashed transparent; top: 0px; }
+.ui-simplegrid .ui-helper-ndb .ui-helper-sort-bottom, .ui-simplegrid .ui-helper-asc .ui-helper-sort-bottom { width: 0; height: 0; line-height: 0; font-size: 0; border-top: 6px solid #cccccc; border-right: 6px dashed transparent; border-bottom: 0; border-left: 6px dashed transparent; top: 8px; }
+.ui-simplegrid .ui-helper-desc .ui-helper-sort-bottom { width: 0; height: 0; line-height: 0; font-size: 0; border-top: 6px solid black; border-right: 6px dashed transparent; border-bottom: 0; border-left: 6px dashed transparent; top: 8px; }
+.ui-simplegrid .ui-pager { display: inline; float: right; }
+.ui-simplegrid .ui-simplegrid-empty { text-align: center; }
+
+
+/*
+这是每个都组件都应该引用的部分
+*/
+.oni-textbox {
+  display: -moz-inline-stack;
+  display: inline-block;
+  vertical-align: middle;
+  *vertical-align: auto;
+  zoom: 1;
+  *display: inline;
+  outline: medium none;
+  font-size: 0;
+  padding: 3px 5px;
+  line-height: 18px;
+  background-color: #FFFFFF;
+  border: 1px solid #CCCCCC; }
+  .oni-textbox .oni-textbox-input-wrap {
+    position: relative;
+    display: -moz-inline-stack;
+    display: inline-block;
+    vertical-align: middle;
+    *vertical-align: auto;
+    zoom: 1;
+    *display: inline;
+    line-height: 18px; }
+    .oni-textbox .oni-textbox-input-wrap span {
+      display: -moz-inline-stack;
+      display: inline-block;
+      vertical-align: middle;
+      *vertical-align: auto;
+      zoom: 1;
+      *display: inline;
+      height: 18px;
+      line-height: 18px;
+      font-size: 12px;
+      margin: 0;
+      padding: 0;
+      cursor: pointer; }
+
+.oni-timer {
+  overflow: hidden;
+  position: relative; }
+  .oni-timer .oni-timer-date, .oni-timer .oni-timer-hour, .oni-timer .oni-timer-minute {
+    position: absolute;
+    top: 0;
+    z-index: 1;
+    zoom: 1; }
+    .oni-timer .oni-timer-date ul, .oni-timer .oni-timer-hour ul, .oni-timer .oni-timer-minute ul {
+      font-size: 0;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      -moz-user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      user-select: none; }
+      .oni-timer .oni-timer-date ul li, .oni-timer .oni-timer-hour ul li, .oni-timer .oni-timer-minute ul li {
+        font-size: 14px;
+        color: #333;
+        height: 30px;
+        line-height: 30px;
+        padding: 0 20px;
+        margin: 0; }
+        .oni-timer .oni-timer-date ul li.oni-state-active, .oni-timer .oni-timer-hour ul li.oni-state-active, .oni-timer .oni-timer-minute ul li.oni-state-active {
+          font-weight: bold; }
+  .oni-timer .oni-timer-mask {
+    position: absolute;
+    z-index: 0;
+    zoom: 1;
+    margin: 0;
+    padding: 0;
+    height: 30px;
+    line-height: 30px;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc; }
+
+
+/*
+这是每个都组件都应该引用的部分
+*/
+.oni-tree {
+  margin: 0;
+  padding: 5px;
+  color: #333; }
+  .oni-tree * {
+    padding: 0;
+    margin: 0;
+    font-size: 12px; }
+  .oni-tree li {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    line-height: 14px;
+    text-align: left;
+    white-space: nowrap;
+    outline: 0; }
+  .oni-tree li ul {
+    margin: 0;
+    padding: 0 0 0 18px; }
+  .oni-tree li ul.line {
+    background: url(./line_conn.gif) 0 0 repeat-y;
+    zoom: 1; }
+  .oni-tree li ul.noline_docu {
+    background: none; }
+  .oni-tree li a {
+    padding: 1px 3px 0 0;
+    margin: 0;
+    cursor: pointer;
+    height: 17px;
+    color: #333;
+    background-color: transparent;
+    text-decoration: none;
+    vertical-align: top;
+    display: inline-block; }
+  .oni-tree li a:hover {
+    text-decoration: underline; }
+  .oni-tree li a.curSelectedNode {
+    padding-top: 0px;
+    background-color: #FFE6B0;
+    color: black;
+    height: 16px;
+    border: 1px #FFB951 solid;
+    opacity: 0.8; }
+  .oni-tree li a.curSelectedNode_Edit {
+    padding-top: 0px;
+    background-color: #FFE6B0;
+    color: black;
+    height: 16px;
+    border: 1px #FFB951 solid;
+    opacity: 0.8; }
+  .oni-tree li a.tmpTargetNode_inner {
+    padding-top: 0px;
+    background-color: #316AC5;
+    color: white;
+    height: 16px;
+    border: 1px #316AC5 solid;
+    opacity: 0.8;
+    filter: alpha(opacity=80); }
+  .oni-tree li a input.rename {
+    height: 14px;
+    width: 80px;
+    padding: 0;
+    margin: 0;
+    font-size: 12px;
+    border: 1px #7EC4CC solid;
+    *border: 0px; }
+  .oni-tree li span {
+    line-height: 16px;
+    margin-right: 2px; }
+  .oni-tree li span.button {
+    line-height: 0;
+    margin: 0;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    vertical-align: middle;
+    border: 0 none;
+    cursor: pointer;
+    outline: none;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-image: url("./treeStandard.png");
+    *background-image: url("./treeStandard.gif"); }
+  .oni-tree li span.chk {
+    width: 13px;
+    height: 13px;
+    margin: 0 3px 0 0;
+    cursor: auto;
+    overflow: hidden; }
+  .oni-tree li span.checkbox_false_full {
+    background-position: 0 0; }
+  .oni-tree li span.checkbox_false_full_focus {
+    background-position: 0 -14px; }
+  .oni-tree li span.checkbox_false_part {
+    background-position: 0 -28px; }
+  .oni-tree li span.checkbox_false_part_focus {
+    background-position: 0 -42px; }
+  .oni-tree li span.checkbox_false_disable {
+    background-position: 0 -56px; }
+  .oni-tree li span.checkbox_true_full {
+    background-position: -14px 0; }
+  .oni-tree li span.checkbox_true_full_focus {
+    background-position: -14px -14px; }
+  .oni-tree li span.checkbox_true_part {
+    background-position: -14px -28px; }
+  .oni-tree li span.checkbox_true_part_focus {
+    background-position: -14px -42px; }
+  .oni-tree li span.checkbox_true_disable {
+    background-position: -14px -56px; }
+  .oni-tree li span.radio_false_full {
+    background-position: -28px 0; }
+  .oni-tree li span.radio_false_full_focus {
+    background-position: -28px -14px; }
+  .oni-tree li span.radio_false_part {
+    background-position: -28px -28px; }
+  .oni-tree li span.radio_false_part_focus {
+    background-position: -28px -42px; }
+  .oni-tree li span.radio_false_disable {
+    background-position: -28px -56px; }
+  .oni-tree li span.radio_true_full {
+    background-position: -42px 0; }
+  .oni-tree li span.radio_true_full_focus {
+    background-position: -42px -14px; }
+  .oni-tree li span.radio_true_part {
+    background-position: -42px -28px; }
+  .oni-tree li span.radio_true_part_focus {
+    background-position: -42px -42px; }
+  .oni-tree li span.radio_true_disable {
+    background-position: -42px -56px; }
+  .oni-tree li span.switch {
+    width: 18px;
+    height: 18px; }
+  .oni-tree li span.center_close {
+    background-position: -74px -18px; }
+  .oni-tree li span.center_open {
+    background-position: -92px -18px; }
+  .oni-tree li span.root_close {
+    background-position: -74px -54px; }
+  .oni-tree li span.root_open {
+    background-position: -92px -54px; }
+  .oni-tree li span.roots_close {
+    background-position: -74px 0; }
+  .oni-tree li span.roots_open {
+    background-position: -92px 0; }
+  .oni-tree li span.bottom_close {
+    background-position: -74px -36px; }
+  .oni-tree li span.bottom_open {
+    background-position: -92px -36px; }
+  .oni-tree li span.noline_close {
+    background-position: -74px -72px; }
+  .oni-tree li span.noline_open {
+    background-position: -92px -72px; }
+  .oni-tree li span.center_docu {
+    background-position: -56px -18px; }
+  .oni-tree li span.root_docu {
+    background: none; }
+  .oni-tree li span.roots_docu {
+    background-position: -56px 0; }
+  .oni-tree li span.bottom_docu {
+    background-position: -56px -36px; }
+  .oni-tree li span.noline_docu {
+    background: none; }
+  .oni-tree li span.ico_close {
+    margin-right: 2px;
+    background-position: -110px 0;
+    vertical-align: top;
+    *vertical-align: middle; }
+  .oni-tree li span.ico_open {
+    margin-right: 2px;
+    background-position: -110px -16px;
+    vertical-align: top;
+    *vertical-align: middle; }
+  .oni-tree li span.ico_docu {
+    margin-right: 2px;
+    background-position: -110px -32px;
+    vertical-align: top;
+    *vertical-align: middle; }
+  .oni-tree li span.edit {
+    margin-right: 2px;
+    background-position: -110px -48px;
+    vertical-align: top;
+    *vertical-align: middle; }
+  .oni-tree li span.remove {
+    margin-right: 2px;
+    background-position: -110px -64px;
+    vertical-align: top;
+    *vertical-align: middle; }
+  .oni-tree li span.add {
+    margin-left: 2px;
+    margin-right: -1px;
+    background-position: -144px 0;
+    vertical-align: top;
+    *vertical-align: middle; }
+  .oni-tree li span.ico_loading {
+    margin-right: 2px;
+    background: url(./loading.gif) no-repeat scroll 0 0 transparent;
+    vertical-align: top;
+    *vertical-align: middle; }
+  .oni-tree ul.tmpTargetTree {
+    background-color: #FFE6B0;
+    opacity: 0.8;
+    filter: alpha(opacity=80); }
+  .oni-tree span.tmpTreeMove_arrow {
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    padding: 0;
+    margin: 2px 0 0 1px;
+    border: 0 none;
+    position: absolute;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-position: -110px -80px;
+    background-image: url("./treeStandard.png");
+    *background-image: url("./treeStandard.gif"); }
+  .oni-tree ul.tree.treeDragUL {
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    width: auto;
+    height: auto;
+    overflow: hidden;
+    background-color: #cfcfcf;
+    border: 1px #00B83F dotted;
+    opacity: 0.8;
+    filter: alpha(opacity=80); }
+  .oni-tree .treeMask {
+    z-index: 10000;
+    background-color: #cfcfcf;
+    opacity: 0.0;
+    filter: alpha(opacity=0);
+    position: absolute; }
+  .oni-tree li a.curSelectedNode span.ebutton, .oni-tree li a.oni-state-hover span.ebutton, .oni-tree li.edit-focus span.ico_close, .oni-tree li.edit-focus span.edit-input {
+    display: inline-block; }
+  .oni-tree li.edit-focus a span.ebutton, .oni-tree li.edit-focus a span, .oni-tree li a span.ebutton, .oni-tree span.edit-input {
+    display: none; }
+  .oni-tree ul.par-edit-focus li span {
+    display: inline-block; }
+  .oni-tree ul.par-edit-focus li a.oni-state-hover span.ebutton {
+    display: inline-block; }
+  .oni-tree ul.par-edit-focus li span.edit-input {
+    display: none; }
+
+.no-select {
+  -moz-user-select: none;
+  /*火狐*/
+  -webkit-user-select: none;
+  /*webkit浏览器*/
+  -ms-user-select: none;
+  /*IE10*/
+  -khtml-user-select: none;
+  /*早期浏览器*/
+  user-select: none; }
+
+.menu-tree {
+  width: 200px;
+  position: relative;
+  box-shadow: 1px 1px 1px 1px #dadada; }
+  .menu-tree .oni-tree {
+    padding: 0;
+    border-top: 1px solid #dadada; }
+  .menu-tree .oni-tree li {
+    position: relative;
+    zoom: 1;
+    float: left;
+    width: 100%;
+    display: inline; }
+  .menu-tree .oni-tree li.level0 {
+    border: 1px solid #dadada;
+    border-top: none; }
+  .menu-tree .oni-tree li span.noline_docu {
+    display: none; }
+  .menu-tree .oni-tree li ul {
+    padding: 0;
+    zoom: 1;
+    overflow: hidden;
+    width: 100%;
+    float: left;
+    display: inline; }
+  .menu-tree .oni-tree li a:hover {
+    background: #f8f8f8;
+    color: #3775C0;
+    text-decoration: none; }
+  .menu-tree .oni-tree li a.level0 {
+    display: block;
+    font-weight: bolder;
+    border: none;
+    height: 32px;
+    line-height: 32px;
+    padding: 0 5px 0 10px; }
+  .menu-tree .oni-tree li a.level0 span {
+    line-height: 32px;
+    display: inline-block; }
+  .menu-tree .oni-tree li.level0 a.curSelectedNode {
+    background: #E0EEF5;
+    color: #3775C0;
+    font-weight: bolder; }
+  .menu-tree .oni-tree li span.button {
+    width: 14px;
+    height: 14px;
+    overflow: hidden; }
+  .menu-tree .oni-tree ul li.level1 a, .menu-tree .oni-tree ul li.level2 a {
+    display: block;
+    line-height: 26px;
+    height: 26px;
+    padding: 0 0 0 27px;
+    margin-top: 4px; }
+  .menu-tree li.level1 a span, .menu-tree li.level2 a span {
+    line-height: 26px; }
+  .menu-tree li.level1 a.curSelectedNode, .menu-tree li.level2 a.curSelectedNode {
+    background: #E0EEF5;
+    border: none;
+    color: #3775C0; }
+  .menu-tree .level1 span.switch {
+    position: absolute;
+    z-index: 10;
+    left: 10px;
+    top: 8px;
+    background: url(menu-tree.gif) no-repeat 7px -104px; }
+  .menu-tree .level1 span.noline_open {
+    background-position: 7px -136px; }
+  .menu-tree .oni-leaf-selected span.noline_close {
+    background-position: 7px -168px; }
+  .menu-tree .oni-leaf-selected span.noline_open {
+    background-position: 7px -200px; }
+  .menu-tree .oni-menu-tree-swicth {
+    position: absolute;
+    width: 16px;
+    height: 15px;
+    top: 2px;
+    right: 2px;
+    z-index: 10;
+    background: url(menu-tree.gif) no-repeat 0 -9px; }
+
+.oni-menu-tree-hidden {
+  width: 18px;
+  overflow: hidden;
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+  background: #f8f8f8; }
+  .oni-menu-tree-hidden .oni-tree {
+    visibility: hidden; }
+  .oni-menu-tree-hidden .oni-menu-tree-swicth {
+    background-position: 4px -73px; }
+
+.oni-state-hover .oni-menu-tree-swicth {
+  background-position: 4px -41px; }
+
+.menu-tree.oni-state-hover {
+  background: #E0EEF5; }
+
+.oni-colorpicker{
+	position: relative;
+	cursor: crosshair;
+	width: 195px;
+	height: 195px;
+}
+	.oni-colorpicker-wheel{
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		background: url(img/wheel.png) no-repeat;
+		_background: none;
+		_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='img/wheel.png');
+	}
+	.oni-colorpicker-hue, .oni-colorpicker-overlay{
+		position: absolute;
+		width: 101px;
+		height: 101px;
+		top: 47px;
+		left: 47px;
+	}
+	.oni-colorpicker-overlay{
+		background: url(img/overlay.png) no-repeat;
+		_background: none;
+		_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='img/overlay.png');
+	}
+		.oni-colorpicker-marker{
+			position: absolute;
+			width: 17px;
+			height: 17px;
+			margin: -8px 0 0 -8px;
+			background: url(img/marker.png) no-repeat top left;
+			_background: none;
+			_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='img/marker.png');
+		}
+		.oni-colorpicker-overlay .oni-colorpicker-marker{
+			left: 70px;
+			top: 50px;
+		}
+
+.oni-colorpicker.oni-colorpicker-auto-hide{
+	position: absolute;
+}
+
+/*
+这是每个都组件都应该引用的部分
+*/
+.oni-carousel {
+  position: relative;
+  margin: 0 auto;
+  overflow: hidden;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none; }
+  .oni-carousel .oni-carousel-panel {
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden; }
+    .oni-carousel .oni-carousel-panel .oni-carousel-item {
+      position: relative;
+      height: 100%;
+      display: -moz-inline-stack;
+      display: inline-block;
+      vertical-align: middle;
+      *vertical-align: auto;
+      zoom: 1;
+      *display: inline;
+      overflow: hidden;
+      text-align: center;
+      background-color: #f2f2f2; }
+      .oni-carousel .oni-carousel-panel .oni-carousel-item .oni-carousel-img {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 100%;
+        height: 100%;
+        -webkit-transform: translate(-50%, -50%);
+        -moz-transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        -o-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+        position: static\0;
+        transform: translate(0, 0) \0;
+        *top: 0;
+        *left: 0; }
+      .oni-carousel .oni-carousel-panel .oni-carousel-item .oni-carousel-content {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;}
+  .oni-carousel .oni-carousel-selection-wrap {
+    position: absolute;
+    bottom: 4%;
+    left: 50%; }
+    .oni-carousel .oni-carousel-selection-wrap a {
+      display: -moz-inline-stack;
+      display: inline-block;
+      vertical-align: middle;
+      *vertical-align: auto;
+      zoom: 1;
+      *display: inline;
+      width: 10px;
+      height: 10px;
+      margin: 0 5px;
+      background-color: white;
+      filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60);
+      opacity: 0.6;
+      border-radius: 50%;
+      cursor: pointer; }
+    .oni-carousel .oni-carousel-selection-wrap .selected {
+      background-color: #00a3c2; }
+  .oni-carousel .arrow {
+    position: absolute;
+    top: 50%;
+    width: 30px;
+    height: 30px;
+    margin: -15px 0 0 -15px;
+    cursor: pointer; }
+  .oni-carousel .prev {
+    left: 7%;
+    background: url(./images/arrows-left-icon.png) no-repeat; }
+  .oni-carousel .prev:hover {
+    background: url(./images/arrows-left-hover-icon.png) no-repeat; }
+  .oni-carousel .after {
+    left: 93%;
+    background: url(./images/arrows-right-icon.png) no-repeat; }
+  .oni-carousel .after:hover {
+    background: url(./images/arrows-right-hover-icon.png) no-repeat; }
+
+
+
+.oni-at {
+  font: normal 12px/1.5 tahoma, arial, 'Hiragino Sans GB', '\5b8b\4f53', sans-serif; }
+
+/*
+这是每个都组件都应该引用的部分
+*/
+.oni-at {
+  min-width: 150px;
+  width: auto !important;
+  width: 150px;
+  background: #fff;
+  border: 2px solid #d4d4d4; }
+  .oni-at .oni-at-popup {
+    list-style: none;
+    margin: 0px;
+    padding: 0px; }
+  .oni-at .oni-at-item {
+    margin: 0px;
+    padding: 0px;
+    height: 24px;
+    line-height: 24px;
+    text-indent: 5px; }
+    .oni-at .oni-at-item.oni-state-hover {
+      background: #f8f8f8;
+      color: black; }

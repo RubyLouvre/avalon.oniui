@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>Name 滑块</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <meta name="descriptions" content="slider组件用来拖动手柄选择数值，可以水平拖动、垂直拖动、设置range使得两边都可以拖动，或者根据设置的步长更新滑块数值
+ ">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    
+    <body>
+        <div class="wrapper">
+            <h2>slider</h2>
+            <fieldset>
+                <legend>Name 滑块</legend>
+                <p>slider组件用来拖动手柄选择数值，可以水平拖动、垂直拖动、设置range使得两边都可以拖动，或者根据设置的步长更新滑块数值</p>
+            </fieldset>
+            <h3 class="table-doc-title">使用说明</h3>
+            <table class="table-doc" border="1">
+                <colgroup>
+                    <col width="180">
+                        <col width="95">
+                            <col width="180">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>名字</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="4">配置参数</td>
+                    </tr>
+                    <tr>
+                        <td>max</td>
+                        <td>Number</td>
+                        <td>100</td>
+                        <td>组件的最大值</td>
+                    </tr>
+                    <tr>
+                        <td>min</td>
+                        <td>Number</td>
+                        <td>0</td>
+                        <td>组件的最小值</td>
+                    </tr>
+                    <tr>
+                        <td>orientation</td>
+                        <td>String</td>
+                        <td>"horizontal"</td>
+                        <td>组件是水平拖动还是垂直拖动，垂直是“vertical”</td>
+                    </tr>
+                    <tr>
+                        <td>range</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>滑块是否显示滑动范围，配置值可以是true、min、max
+                            <p>true: 显示滑动范围</p>
+                            <p>min: 滑块值最小的一端固定</p>
+                            <p>max: 滑块值最大的一端固定</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>step</td>
+                        <td>Number</td>
+                        <td>1</td>
+                        <td>滑块滑动的步值</td>
+                    </tr>
+                    <tr>
+                        <td>value</td>
+                        <td>Number</td>
+                        <td>0</td>
+                        <td>滑块的当前值，当range为true时，value是滑块范围表示的两个值，以“,”分隔</td>
+                    </tr>
+                    <tr>
+                        <td>values</td>
+                        <td>Object</td>
+                        <td>null</td>
+                        <td>当range为true时，values数组需要有两个值，表示滑块范围</td>
+                    </tr>
+                    <tr>
+                        <td>disabled</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>是否禁用滑块, 设为true时滑块禁用</td>
+                    </tr>
+                    <tr>
+                        <td>onDragStart</td>
+                        <td>Function</td>
+                        <td>avalon.noop</td>
+                        <td>滑动开始的回调
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>event</td>
+                                        <td>Object</td>
+                                        <td>事件对象</td>
+                                    </tr>
+                                    <tr>
+                                        <td>data</td>
+                                        <td>Object</td>
+                                        <td>滑动的数据信息</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>onDrag</td>
+                        <td>Function</td>
+                        <td>avalon.noop</td>
+                        <td>滑动时的回调
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>vmodel</td>
+                                        <td>Object</td>
+                                        <td>组件对应的Vmodel</td>
+                                    </tr>
+                                    <tr>
+                                        <td>data</td>
+                                        <td>Object</td>
+                                        <td>滑动的数据信息</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>onDragEnd</td>
+                        <td>Function</td>
+                        <td>avalon.noop</td>
+                        <td>滑动结束时的回调
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>data</td>
+                                        <td>Object</td>
+                                        <td>滑动的数据信息</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <ul class="example-links">
+                <li>
+                    <a href="avalon.slider.ex.html">slider组件使用概览</a>
+                </li>
+                <li>
+                    <a href="avalon.slider.ex1.html">基本的slider组件，配置有dragstart、drag、dragend回调</a>
+                </li>
+                <li>
+                    <a href="avalon.slider.ex2.html">切换禁用slider组件</a>
+                </li>
+                <li>
+                    <a href="avalon.slider.ex3.html">配置slider组件max、min、value值</a>
+                </li>
+                <li>
+                    <a href="avalon.slider.ex4.html">配置slider的range为true、min、max实现不同的slider效果</a>
+                </li>
+                <li>
+                    <a href="avalon.slider.ex5.html">配置slider的步长step</a>
+                </li>
+                <li>
+                    <a href="avalon.slider.ex6.html">配置orientation选项使得slider为垂直拖动块</a>
+                </li>
+                <li>
+                    <a href="avalon.slider.ex7.html">利用slider组件滚动图片</a>
+                </li>
+            </ul>
+        </div>
+    </body>
+
+</html>

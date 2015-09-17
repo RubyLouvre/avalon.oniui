@@ -1,0 +1,24 @@
+
+@import "../chameleon/oniui-theme";
+
+$uiname: "oni-dropdown";
+
+.#{$uiname} {
+  .#{$uiname}-menu-inner {
+      //下拉项的样式
+      .#{$uiname}-item {
+        text-indent: 6px;
+      }
+  }
+}
+
+.g-icon-start {
+  color: $oniui-icon-start-color;
+}
+.g-icon-pause {
+  color: $oniui-icon-pause-color;
+}
+
+
+
+

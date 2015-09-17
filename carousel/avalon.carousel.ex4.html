@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>carousel组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+        <script>
+            require(["carousel/avalon.carousel"], function() {
+                avalon.define("demo", function(vm) {
+                    vm.$opt1 = {
+                        pictures: [{
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/s11.jpeg"
+                        }, {
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/s12.jpeg"
+                        }, {
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/s13.jpeg"
+                        }],
+                        effect: "slide"
+                    }
+                    vm.$opt2 = {
+                        pictures: [{
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/f1.jpeg"
+                        }, {
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/f2.jpeg"
+                        }, {
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/f3.jpeg"
+                        }],
+                        effect: "fade"
+                    }
+                    vm.$opt3 = {
+                        pictures: [{
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/n1.jpeg"
+                        }, {
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/n2.jpeg"
+                        }, {
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/n3.jpeg"
+                        }],
+                        effect: "none"
+                    }
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body>
+        <div class="wrapper" ms-controller="demo">
+        <h1>图片轮播组件-自定义effect</h1>
+        <fieldset>
+            <legend>自定义effect-slide</legend>
+            <div ms-widget="carousel,carousel1,$opt1"></div>
+        </fieldset>
+        <fieldset>
+            <legend>自定义effect-fade</legend>
+            <div ms-widget="carousel,carousel2,$opt2"></div>
+        </fieldset>
+        <fieldset>
+            <legend>自定义effect-none</legend>
+            <div ms-widget="carousel,carousel3,$opt3"></div>
+        </fieldset>
+        <pre ms-skip class="brush:html;gutter:false;toolbar:false">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;carousel组件&lt;/title&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width"&gt;
+        &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+        &lt;script src="../highlight/shCore.js"&gt;&lt;/script&gt;
+        &lt;link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/&gt;
+        &lt;script&gt;
+            require(["carousel/avalon.carousel"], function() {
+                avalon.define("demo", function(vm) {
+                    vm.$opt1 = {
+                        pictures: [{
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/s11.jpeg"
+                        }, {
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/s12.jpeg"
+                        }, {
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/s13.jpeg"
+                        }],
+                        effect: "slide"
+                    }
+                    vm.$opt2 = {
+                        pictures: [{
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/f1.jpeg"
+                        }, {
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/f2.jpeg"
+                        }, {
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/f3.jpeg"
+                        }],
+                        effect: "fade"
+                    }
+                    vm.$opt3 = {
+                        pictures: [{
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/n1.jpeg"
+                        }, {
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/n2.jpeg"
+                        }, {
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/n3.jpeg"
+                        }],
+                        effect: "none"
+                    }
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;div class="wrapper" ms-controller="demo"&gt;
+        &lt;h1&gt;图片轮播组件-自定义effect&lt;/h1&gt;
+        &lt;fieldset&gt;
+            &lt;legend&gt;自定义effect-slide&lt;/legend&gt;
+            &lt;div ms-widget="carousel,carousel1,$opt1"&gt;&lt;/div&gt;
+        &lt;/fieldset&gt;
+        &lt;fieldset&gt;
+            &lt;legend&gt;自定义effect-fade&lt;/legend&gt;
+            &lt;div ms-widget="carousel,carousel2,$opt2"&gt;&lt;/div&gt;
+        &lt;/fieldset&gt;
+        &lt;fieldset&gt;
+            &lt;legend&gt;自定义effect-none&lt;/legend&gt;
+            &lt;div ms-widget="carousel,carousel3,$opt3"&gt;&lt;/div&gt;
+        &lt;/fieldset&gt;
+    &lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+        </pre>
+    </div>
+    </body>
+</html>

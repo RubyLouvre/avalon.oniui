@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>slider test</title>
+        <link type="text/css" rel="stylesheet" charset="utf-8" href="../mocha/mocha.css" />
+        <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/start/jquery-ui.css" />
+        <script src="../avalon.js"></script>
+        <script src="../mocha/mocha.js"></script>
+        <script src="../mocha/expect.js"></script>
+        <style>
+            #testWrapper {
+                margin: -40px 50px 100px 80px;
+            }
+        </style>
+    </head>
+    <body >
+        <div id="mocha"></div>
+        <div id="testWrapper" ms-controller="sliderWidget">
+                
+        </div>
+        <script>
+            (function() {
+                mocha.ui('bdd')
+                mocha.setup({timeout: 100000})
+                require(["ready!", "slider/avalon.slider"], function() {
+                    var testWrapper = document.getElementById("testWrapper");
+                    describe("测试slider组件", function() {
+                        var inputElement = null;
+                        beforeEach(function() {
+                            testWrapper.innerHTML = '<input ms-widget="slider,a, $aOpts">';
+                            inputElement = testWrapper.children[0];
+                        })
+                        afterEach(function() {
+                            testWrapper.innerHTML = testWrapper.textContent = "";
+                        })
+                        it("slider基本组件", function(done) {
+                            var model = avalon.define("sliderWidget", function(vm) {
+                            })
+                            avalon.scan(inputElement, model);
+                            setTimeout(function() {
+                                var sliderWrapper = avalon(testWrapper.children[1]);
+                                if (sliderWrapper[0].tagName === "DIV") {
+                                    expect(avalon(inputElement).hasClass("oni-helper-hidden-accessible")).to.be(true);
+                                    expect(sliderWrapper.hasClass("oni-slider"));
+                                    expect(sliderWrapper[0].getElementsByTagName("b").length).to.be(1);
+                                    expect(sliderWrapper[0].getElementsByTagName("div").length).to.be(0)
+                                }else {
+                                    avalon.log("sliderWrapper获取有误")
+                                }
+                                done();
+                            }, 500)
+                        })
+                        it("配置value初始化slider的值", function(done) {
+                            var model = avalon.define("sliderWidget", function(vm) {
+                                vm.$aOpts = {
+
+                                }
+                            })
+                            inputElement.setAttribute("data-slider-value", "20");
+                            avalon.scan(inputElement, model);
+                            setTimeout(function() {
+                                var sliderWrapper = avalon(testWrapper.children[1]);
+                                var aVModel = avalon.vmodels["a"];
+                                if (sliderWrapper[0].tagName === "DIV") {
+                                    expect(aVModel.value).to.be(20);
+                                    expect(aVModel.percent).to.be(20);
+                                }else {
+                                    avalon.log("sliderWrapper获取有误")
+                                }
+                                done();
+                            }, 500)
+                        })
+                        it("配置max设置slider的最大值", function(done) {
+                            var model = avalon.define("sliderWidget", function(vm) {
+                                vm.$aOpts = {
+                                    max: 50,
+                                    value: 20
+                                }
+                            })
+                            avalon.scan(inputElement, model);
+                            setTimeout(function() {
+                                var sliderWrapper = avalon(testWrapper.children[1]);
+                                var aVModel = avalon.vmodels["a"];
+                                if (sliderWrapper[0].tagName === "DIV") {
+                                    expect(aVModel.value).to.be(20);
+                                    expect(aVModel.percent).to.be(40);
+                                    expect(aVModel.$valueMax).to.be(50);
+                                    expect(aVModel.$valueMin).to.be(0);
+                                }else {
+                                    avalon.log("sliderWrapper获取有误")
+                                }
+                                done();
+                            }, 500)
+                        })
+                        it("配置min设置slider的最小值", function(done) {
+                            var model = avalon.define("sliderWidget", function(vm) {
+                                vm.$aOpts = {
+                                    min: 20,
+                                    value: 20
+                                }
+                            })
+                            avalon.scan(inputElement, model);
+                            setTimeout(function() {
+                                var sliderWrapper = avalon(testWrapper.children[1]);
+                                var aVModel = avalon.vmodels["a"];
+                                if (sliderWrapper[0].tagName === "DIV") {
+                                    expect(aVModel.value).to.be(20);
+                                    expect(aVModel.percent).to.be(0);
+                                    expect(aVModel.$valueMin).to.be(20);
+                                    expect(aVModel.$valueMax).to.be(100);
+                                }else {
+                                    avalon.log("sliderWrapper获取有误")
+                                }
+                                done();
+                            }, 500)
+                        })
+                        it("禁用slider，通过设置vmodel的disabled为false可以启用slider", function(done) {
+                            var model = avalon.define("sliderWidget", function(vm) {
+                            })
+                            inputElement.setAttribute("disabled",true);
+                            avalon.scan(inputElement, model);
+                            setTimeout(function() {
+                                var sliderWrapper = avalon(testWrapper.children[1]);
+                                var handle = sliderWrapper[0].getElementsByTagName("b")[0];
+                                var aVModel = avalon.vmodels["a"];
+                                aVModel.$watch("disabled", function(v) {
+                                    expect(sliderWrapper.hasClass("oni-state-disabled")).to.be(false);
+                                    expect(v).to.be(false);
+                                    done();
+                                })
+                                avalon.bind(handle, "click", function() {
+                                    expect(aVModel.disabled).to.be(true);
+                                    aVModel.disabled = false;
+                                })
+                                if (sliderWrapper[0].tagName === "DIV") {
+                                    expect(sliderWrapper.hasClass("oni-state-disabled")).to.be(true);
+                                    handle.click();
+                                }else {
+                                    avalon.log("sliderWrapper获取有误")
+                                }
+                                
+                            }, 500)
+                        })
+                        it("配置range使得slider的一端固定", function(done) {
+                            var model = avalon.define("sliderWidget", function(vm) {
+                                vm.$aOpts = {
+                                    min: 20,
+                                    value: 30,
+                                    max: 40,
+                                    range: "min"
+                                }
+                            })
+                            avalon.scan(inputElement, model);
+                            setTimeout(function() {
+                                var sliderWrapper = avalon(testWrapper.children[1]);
+                                var sliderBar = avalon(sliderWrapper[0].getElementsByTagName("div")[0]);
+                                var aVModel = avalon.vmodels["a"];
+                                if (sliderWrapper[0].tagName === "DIV") {
+                                    expect(aVModel.percent).to.be(50);
+                                    expect(sliderBar.hasClass("oni-slider-range")).to.be(true);
+                                    expect(sliderBar[0].style.width).to.be("50%");
+                                }else {
+                                    avalon.log("sliderWrapper获取有误")
+                                }
+                                done();
+                            }, 500)
+                        })
+                        it("配置range为true使得slider可以两端滑动", function(done) {
+                            var model = avalon.define("sliderWidget", function(vm) {
+                                vm.$aOpts = {
+                                    min: 20,
+                                    value: 30,
+                                    max: 60,
+                                    range: true,
+                                    values: [30, 50]
+                                }
+                            })
+                            avalon.scan(inputElement, model);
+                            setTimeout(function() {
+                                var sliderWrapper = avalon(testWrapper.children[1]);
+                                var handles = sliderWrapper[0].getElementsByTagName("b");
+                                var sliderBar = sliderWrapper[0].getElementsByTagName("div")[0];
+                                var aVModel = avalon.vmodels["a"];
+                                if (sliderWrapper[0].tagName === "DIV") {
+                                    expect(aVModel.percent).to.be(50);
+                                    expect(aVModel.percent0).to.be(25);
+                                    expect(aVModel.percent1).to.be(75)
+                                    expect(handles.length).to.be(2);
+                                    expect(avalon(sliderBar).hasClass("oni-slider-range")).to.be(true);
+                                    expect(sliderBar.style.width).to.be("50%");
+                                    expect(sliderBar.style.left).to.be("25%");
+                                }else {
+                                    avalon.log("sliderWrapper获取有误")
+                                }
+                                done();
+                            }, 500)
+                        })
+                        it("设置slider的步长为10", function(done) {
+                            var model = avalon.define("sliderWidget", function(vm) {
+                                vm.$aOpts = {
+                                    value: 8,
+                                    step: 10,
+
+                                }
+                            })
+                            avalon.scan(inputElement, model);
+                            setTimeout(function() {
+                                var sliderWrapper = avalon(testWrapper.children[1]);
+                                var sliderBar = avalon(sliderWrapper[0].getElementsByTagName("div")[0]);
+                                var aVModel = avalon.vmodels["a"];
+                                if (sliderWrapper[0].tagName === "DIV") {
+                                    expect(aVModel.value).to.be(10);
+                                    expect(aVModel.percent).to.be(10);
+                                }else {
+                                    avalon.log("sliderWrapper获取有误")
+                                }
+                                done();
+                            }, 500)
+                        })
+                        it("配置orientation选项使得slider为垂直拖动", function(done) {
+                            var model = avalon.define("sliderWidget", function(vm) {
+                                vm.$aOpts = {
+                                    orientation: "vertical",
+                                    range: true,
+                                    min: 20,
+                                    value: 30,
+                                    max: 60,
+                                    values: [30, 50]
+                                }
+                            })
+                            avalon.scan(inputElement, model);
+                            setTimeout(function() {
+                                var sliderWrapper = avalon(testWrapper.children[1]);
+                                var handles = sliderWrapper[0].getElementsByTagName("b");
+                                var sliderBar = sliderWrapper[0].getElementsByTagName("div")[0];
+                                var aVModel = avalon.vmodels["a"];
+                                if (sliderWrapper[0].tagName === "DIV") {
+                                    expect(sliderWrapper.hasClass("oni-slider-vertical")).to.be(true);
+                                    expect(aVModel.percent).to.be(50);
+                                    expect(aVModel.percent0).to.be(25);
+                                    expect(aVModel.percent1).to.be(75)
+                                    expect(handles.length).to.be(2);
+                                    expect(avalon(sliderBar).hasClass("oni-slider-range")).to.be(true);
+                                    expect(sliderBar.style.height).to.be("50%");
+                                    expect(sliderBar.style.bottom).to.be("25%");
+                                    expect(sliderBar.style.width).to.be("100%");
+                                }else {
+                                    avalon.log("sliderWrapper获取有误")
+                                }
+                                done();
+                            }, 500)
+                        })
+                        it("可以配置slider的dragstart、drag、dragend回调", function(done) {
+                            var model = avalon.define("sliderWidget", function(vm) {
+                                vm.flag = false;
+                                vm.$aOpts = {
+                                    ondragstart: function() {
+                                        model.flag = true
+                                    },
+                                    ondragend: function() {
+                                        expect(model.flag).to.be(true);
+                                        done();
+                                    }
+                                }
+                            })
+                            avalon.scan(inputElement, model);
+                            setTimeout(function() {
+                                var sliderWrapper = avalon(testWrapper.children[1]);
+                                var handle = sliderWrapper[0].getElementsByTagName("b")[0];
+                                if (sliderWrapper[0].tagName === "DIV") {
+                                    var p = document.createElement("p").appendChild(document.createTextNode("请拖动滑块完成测试"));
+                                    testWrapper.insertBefore(p, inputElement)
+                                    handle.click();
+                                }else {
+                                    avalon.log("sliderWrapper获取有误")
+                                }
+                            }, 500)
+                        })
+                    })
+                    mocha.run();
+                })
+            })()
+        </script>
+    </body>
+</html>

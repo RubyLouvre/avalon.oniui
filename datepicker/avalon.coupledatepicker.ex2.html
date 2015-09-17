@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>coupledatepicker demo </title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>coupledatepicker demo</h1>
+        <div class="demo-show" ms-controller="demo">
+            <fieldset style="position: relative; z-index: 2">
+                <legend>双日历框，配置日历说明文字</legend>
+                <div ms-widget="coupledatepicker" data-coupledatepicker-from-label="起始日期" data-coupledatepicker-to-label="结束日期">
+                    <div class="oni-coupledatepicker-item"></div>
+                    <span class="label">-</span>
+                    <div class="oni-coupledatepicker-item"></div>
+                </div>
+                <p>通过fromCalendarLabel来配置起始日历的说明label，通过toCalendarLabel来配置结束日历的说明label。</p>
+            </fieldset>
+            <fieldset style="position: relative; z-index: 1">
+                <legend>双日历框，startDay配置每周从周几开始</legend>
+                <div ms-widget="coupledatepicker" data-coupledatepicker-start-day="0"></div>
+                <p>日历默认每周的第一天从周一开始，可以配置为从任一天开始，但是周日用0表示，周一到周六分别用1-6表示</p>
+            </fieldset>
+            <script> 
+                require(["datepicker/avalon.coupledatepicker"], function(avalon) {
+                    var model = avalon.define("demo", function(vm) {
+                        
+                    })
+                    avalon.scan();
+                })
+            </script>
+        </div>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;coupledatepicker demo&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;div class="demo-show" ms-controller="demo"&gt;
+                        &lt;fieldset style="position: relative; z-index: 2"&gt;
+                            &lt;legend&gt;双日历框，配置日历说明文字&lt;/legend&gt;
+                            &lt;div ms-widget="coupledatepicker" data-coupledatepicker-from-label="起始日期" data-coupledatepicker-to-label="结束日期"&gt;
+                                &lt;div class="oni-coupledatepicker-item"&gt;&lt;/div&gt;
+                                &lt;span class="label"&gt;-&lt;/span&gt;
+                                &lt;div class="oni-coupledatepicker-item"&gt;&lt;/div&gt;
+                            &lt;/div&gt;
+                            &lt;p&gt;通过fromCalendarLabel来配置起始日历的说明label，通过toCalendarLabel来配置结束日历的说明label。&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset style="position: relative; z-index: 1"&gt;
+                            &lt;legend&gt;双日历框，startDay配置每周从周几开始&lt;/legend&gt;
+                            &lt;div ms-widget="coupledatepicker" data-coupledatepicker-start-day="0"&gt;&lt;/div&gt;
+                            &lt;p&gt;日历默认每周的第一天从周一开始，可以配置为从任一天开始，但是周日用0表示，周一到周六分别用1-6表示&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;script&gt; 
+                            require(["datepicker/avalon.coupledatepicker"], function(avalon) {
+                                var model = avalon.define("demo", function(vm) {
+                                    
+                                })
+                                avalon.scan();
+                            })
+                        &lt;/script&gt;
+                    &lt;/div&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+    </div>
+</body>
+</html>

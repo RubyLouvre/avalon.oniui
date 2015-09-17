@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>dialog demo 7</title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>dialog demo 7</h1>
+        <p class="example">自定义dialog的width（<span class="statement">width="320"</span>）</p>
+        <p><span class="useDescription">说明：</span>dialog组件默认宽度为480，可以根据情况自定义配置dialog的宽度</p>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;自定义dialog的width&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;div class="demo-show" ms-controller="demo"&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;设置dialog的宽度(默认为480)&lt;/legend&gt;
+                            &lt;button ms-click="show('ff')"&gt;打开对话框&lt;/button&gt;
+                            &lt;div ms-widget="dialog,ff,$ffOpts"&gt;
+                                &lt;p&gt;配置dialog宽度为300,默认480&lt;/p&gt;
+                                &lt;p&gt;配置dialog宽度为300,默认480&lt;/p&gt;
+                                &lt;p&gt;配置dialog宽度为300,默认480&lt;/p&gt;
+                                &lt;p&gt;配置dialog宽度为300,默认480&lt;/p&gt;
+                            &lt;/div&gt;
+                        &lt;/fieldset&gt; 
+                        &lt;script&gt; 
+                            require(["dialog/avalon.dialog"], function(avalon) {
+                                avalon.define("demo", function(vm) {
+                                    vm.$ffOpts = {
+                                        title: "配置dialog宽度",
+                                        width: 300
+                                    }
+                                    vm.show = function( id ){
+                                        avalon.vmodels[id].toggle = true;
+                                    }
+                                })
+                                avalon.scan();
+                            })
+                        &lt;/script&gt;
+                    &lt;/div&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+        <div class="demo-show" ms-controller="demo">
+            <fieldset>
+                <legend>设置dialog的宽度(默认为480)</legend>
+                <button ms-click="show('ff')">打开对话框</button>
+                <div ms-widget="dialog,ff,$ffOpts">
+                    <p>配置dialog宽度为300,默认480</p>
+                    <p>配置dialog宽度为300,默认480</p>
+                    <p>配置dialog宽度为300,默认480</p>
+                    <p>{{a}}</p>
+                    <p>配置dialog宽度为300,默认480</p>
+                </div>
+            </fieldset> 
+            <script> 
+                require(["dialog/avalon.dialog"], function(avalon) {
+                    avalon.define("demo", function(vm) {
+                        vm.$ffOpts = {
+                            title: "配置dialog宽度",
+                            width: 300
+                        }
+                        vm.a = "配置信息"
+                        vm.show = function( id ){
+                            avalon.vmodels[id].toggle = true;
+                        }
+                    })
+                    avalon.scan();
+                })
+            </script>
+        </div>
+    </div>
+</body>
+</html>
+

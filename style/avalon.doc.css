@@ -1,0 +1,110 @@
+/*
+* reset
+*/
+html, body, div, p, ul, ol, li, h1, h2, h3, h4, h5 {
+  margin: 0;
+  padding: 0; }
+
+html, body {
+  height: 100%; }
+
+body {
+  position: relative;
+  color: #212121;
+  font-size: 14px;
+  font-family: "Helvetica Neue", Helvetica, Microsoft Yahei, Hiragino Sans GB, WenQuanYi Micro Hei, sans-serif; }
+
+ul, ol {
+  list-style: none; }
+
+a {
+  cursor: pointer;
+  text-decoration: none;
+  color: #212121; }
+
+h1, h2, h3, h4, h5 {
+  color: #212121;
+  font-size: 16px; }
+
+body {
+  height: auto;
+  position: relative;
+  padding: 40px 60px;
+  background-color: #fff; }
+  body::-webkit-scrollbar {
+    width: 9px; }
+  body::-webkit-scrollbar-track-piece {
+    background-color: #fff;
+    border-left: 1px #e5e9f2 solid;
+    border-right: 1px #e5e9f2 solid; }
+  body::-webkit-scrollbar-thumb {
+    height: 50px;
+    background-color: #a0b0c0;
+    border-radius: 10px; }
+  body:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-width: 12px;
+    border-color: #1489e6 transparent transparent #1489e6;
+    border-style: solid; }
+  body h1 {
+    margin: 0 0 10px; }
+  body h2 {
+    padding: 0 0 0 10px;
+    font-size: 24px;
+    font-weight: normal; }
+  body p {
+    position: relative;
+    max-width: 100%;
+    margin: 10px 0;
+    padding: 30px;
+    background-color: #f9fafe;
+    border: 1px #e5e9f2 solid; }
+  body fieldset {
+    position: relative;
+    max-width: 100%;
+    margin: 80px 0 0;
+    padding: 30px;
+    background-color: #f9fafe;
+    border: 1px #e5e9f2 solid; }
+    body fieldset p {
+      padding: 0;
+      border: 0 none; }
+    body fieldset > legend {
+      position: absolute;
+      top: -50px;
+      left: 0;
+      padding: 0 0 0 10px;
+      font-size: 18px;
+      border-left: 4px #1489e6 solid; }
+  body .table-doc-title {
+    margin: 40px 0 20px;
+    padding: 0 0 0 10px;
+    border-left: 4px #1489e6 solid;
+    font-size: 18px;
+    font-weight: normal; }
+  body .table-doc {
+    width: 100%;
+    margin: 0 0 30px;
+    border: 1px #e5e9f2 solid;
+    border-collapse: collapse;
+    background-color: #fff; }
+    body .table-doc th, body .table-doc td {
+      padding: 20px;
+      border: 1px #e5e9f2 solid;
+      word-break: break-all; }
+    body .table-doc th {
+      font-weight: normal;
+      background-color: #2c2f34;
+      color: #fff; }
+    body .table-doc td {
+      border-width: 1px 0; }
+    body .table-doc table {
+      width: 100%;
+      margin: 10px 0 0;
+      border-collapse: collapse;
+      border: 1px #e5e9f2 solid; }
+  body .example-links {
+    display: none; }

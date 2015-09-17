@@ -1,0 +1,29 @@
+<div class="oni-tab-slider"
+    ms-visible="toggle">
+    <a href="#" class="oni-tab-slider-button oni-tab-slider-button-left oni-icon" 
+       ms-visible="prevEnable" 
+       ms-click="slider($event,'prev')">&#xf047;</a>
+    <div class="oni-tab-slider-ct oni-tab-slider-enable" 
+         ms-css-margin-left="_computedMarginLeft">
+        <ul class="oni-tab-nav oni-helper-clearfix oni-widget-header oni-helper-reset" 
+        ms-attr-id="'tabs' + tabs.$id">
+            <li class="oni-state-default" 
+                data-repeat-rendered="computeSlider" 
+                ms-repeat-tab="tabs" 
+                ms-class="oni-tab-item"  
+                ms-class-1="oni-state-active:!!_canActive(tab, $index)" 
+                ms-class-2="oni-state-disabled:tab.disabled" 
+                ms-class-3="oni-tab-last:$last" 
+                ms-class-4="oni-tab-removable:!!_canRemove(tab)" 
+                ms-hover="oni-state-hover:!tab.disabled" 
+                ms-{{MS_OPTION_EVENT}}="activate($event, $index)" 
+                > 
+                <a ms-href="tab.href?tab.href:'#'" ms-attr-target="tab.target||target||'_self'">{{_tabTitle(tab.title, tab, _cutCounter(), cutEnd) | sanitize | html}}</a>
+                {{MS_OPTION_REMOVABLE}}
+            </li>
+        </ul>
+    </div>
+    <a href="#" class="oni-tab-slider-button oni-icon" 
+       ms-visible="nextEnable"
+       ms-click="slider($event,'next')">&#xf03e;</a>
+</div>

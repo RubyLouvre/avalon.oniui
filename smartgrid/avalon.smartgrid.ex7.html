@@ -1,0 +1,315 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>配置addRow为表格添加新行</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    <body ms-controller="test">
+        <div style="width:960px; margin: 0 auto">
+            <h1>配置addRow为表格添加新行</h1>
+            <div ms-widget="smartgrid, sg1"></div>
+            <button ms-click="noneSelected">让所有的数据都不可选中</button>
+            <button ms-click="partsSelectable">部分数据可选中</button>
+        </div>
+        <script>
+            require(["smartgrid/avalon.smartgrid", "switchdropdown/avalon.switchdropdown"], function() {
+                function getDatas(number, selected) {
+                    var data = []
+                    for (var i = 0; i < number; i++) {
+                        var dataItem = {
+                            description: "北上广经济型计划",
+                            operate: i % 5 ? 0 : 1,
+                            buget: 5800,
+                            display: 13534646,
+                            click : 15932,
+                            clickRate : "50.21%",
+                            consume: 1135800,
+                            averageClickRate: 1.82
+                        }
+                        switch (selected) {
+                            case "none":
+                                dataItem.checkboxShow = false
+                            break;
+                            case "parts":
+                                if (!(i % 3)) {
+                                    dataItem.checkboxShow = false
+                                }
+                            break
+                        }
+                        data.push(dataItem)
+                    }
+                    return data
+                } 
+                
+                avalon.define("test", function(vm) {
+                    vm.$skipArray = ["smartgrid"] //不需要转为监控属性的属性务必放到$skipArray数组中，减少开销提高性能
+                    vm.test = "通过此行进行批量操作"
+                    vm.noneSelected = function() {
+                        var data = getDatas(10, "none")
+                        avalon.vmodels.sg1.render(data)
+                    }
+                    vm.partsSelectable = function() {
+                        var data = getDatas(10, "parts")
+                        avalon.vmodels.sg1.render(data)
+                    }
+                    vm.smartgrid = {
+                        // 不希望组件的配置项被smartgrid监控，将其放到$skipArray数组中，添加其他组件同理
+                        $skipArray: ["switchdropdown", "dropdown", "pager"],
+                        selectable: {
+                            type: "Checkbox" //为表格添加选中行操作框,可以设置为"Checkbox"或者"Radio"
+                        },
+                        allChecked: false,
+                        addRow: function(tmp, columns, vmodel) {
+                            var tr = '<div class="oni-smartgrid-row"><div class="oni-smartgrid-column" style="width:25px;text-align:center">',
+                                checkbox = ""
+                            if (columns[0].key === "selected") {
+                                checkbox = "{{columns[0].name|html}}"
+                            }
+                            tr = tr + checkbox + '</div><div class="oni-smartgrid-column"><span style="padding-left: 10px">全选</span><input type="button" value="上线"/><input type="button" value="下线"/><input type="button" value="删除"/>{{test}}</div></div>'
+                            return tr+tmp
+                        },
+                        htmlHelper: { // 渲染列数据的方法集合
+                            // 包装工资列的数据
+                            $X: function(vmId, field, index, cellValue, rowData) {//所有包装函数都会收到4个参数，分别是smartgrid组件对应vmodel的id，列标志(key)，列索引，列数据值
+                                return "$"+cellValue
+                            },
+                            // operate列包装成switchdropdown组件
+                            switchdropdown: function(vmId, field, index, cellValue, rowData, disable) {
+                                var openOption = cellValue == 0 ? '<option value="0" selected>启用</option>' : '<option value="0">启用</option>',
+                                    pauseOption = cellValue == 1 ? '<option value="1" selected>暂停</option>' : '<option value="1">暂停</option>'
+
+                                return ['<select ms-widget="switchdropdown" rowindex="'+index+'" field="'+field+'"  vmId="'+vmId+'" '+ (disable ? "disabled": "") +'>', openOption, pauseOption, '</select>'].join('')
+                            },
+                            // busy列包装成dropdown组件
+                            dropdown: function(vmId, field, index, cellValue, rowData, disable) {
+                                var option = "<option ms-repeat='dropdownData' ms-attr-value='el.value' ms-attr-label='el.name' ms-selected='el.value == " + cellValue + "'></option>"
+                                return '<select ms-widget="dropdown" rowindex="' +index+'" field="'+field+'" vmId="'+vmId+'" ' + (disable ? "disabled" : "") + '>' + option + '</select>'
+                            }
+                        },
+                        columns: [
+                            {
+                                key : "description",
+                                name : "竞价推广计划",
+                                sortable : false,
+                                isLock : true,
+                                align: "left",
+                                defaultValue: "北上广经济型计划",
+                                customClass: "ddd",
+                                width: 150
+                            }, {
+                                key: "operate",
+                                name: "操作",
+                                title: "操作",
+                                width: 110,
+                                format: "switchdropdown"
+                            }, {
+                                key : "buget",
+                                name : "预算",
+                                sortable : true,
+                                align: "right",
+                                defaultValue: "￥5800",
+                                width: 75,
+                                format: "$X" // 定义渲染数据的方法名
+                            }, {
+                                key : "display",
+                                name : "展现",
+                                sortable : true,
+                                align: "right",
+                                width: 98
+                            }, {
+                                key : "click",
+                                name : "点击",
+                                sortable : true,
+                                align: "right",
+                                width: 90
+                            }, {
+                                key : "clickRate",
+                                name : "点击率",
+                                sortable : true,
+                                align: "right",
+                                width: 90
+                            }, {
+                                key : "consume",
+                                name : "消费",
+                                sortable : true,
+                                align: "right",
+                                width: 85,
+                                format: "$X" // 定义渲染数据的方法名
+                            }, {
+                                key : "averageClickRate",
+                                name : "平均点击价格",
+                                sortable : true,
+                                align: "right",
+                                width: 115,
+                                format: "$X" // 定义渲染数据的方法名
+                            }
+                        ],
+                        data: getDatas(8)
+                    }
+                })
+                avalon.scan()
+            })
+        </script>
+        <div ms-skip style="width:960px; margin: 0 auto">
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;smartgrid demo&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body ms-controller="test"&gt;
+                    &lt;h1&gt;配置addRow为表格添加新行&lt;/h1&gt;
+                    &lt;div ms-widget="smartgrid, sg1" style="width:760px; margin: 0 auto"&gt;&lt;/div&gt;
+                    &lt;button ms-click="noneSelected">让所有的数据都不可选中&lt;/button&gt;
+                    &lt;button ms-click="partsSelectable"&gt;部分数据可选中&lt;/button&gt;
+                    &lt;script&gt;
+                        require(["smartgrid/avalon.smartgrid", "switchdropdown/avalon.switchdropdown"], function() {
+                            function getDatas(number, selected) {
+                                var data = []
+                                for (var i = 0; i &lt; number; i++) {
+                                    var dataItem = {
+                                        description: "北上广经济型计划",
+                                        operate: i % 5 ? 0 : 1,
+                                        buget: 5800,
+                                        display: 13534646,
+                                        click : 15932,
+                                        clickRate : "50.21%",
+                                        consume: 1135800,
+                                        averageClickRate: 1.82
+                                    }
+                                    switch (selected) {
+                                        case "none":
+                                            dataItem.checkboxShow = false
+                                        break;
+                                        case "parts":
+                                            if (!(i % 3)) {
+                                                dataItem.checkboxShow = false
+                                            }
+                                        break
+                                    }
+                                    data.push(dataItem)
+                                }
+                                return data
+                            } 
+                            
+                            avalon.define("test", function(vm) {
+                                vm.$skipArray = ["smartgrid"] //不需要转为监控属性的属性务必放到$skipArray数组中，减少开销提高性能
+                                vm.test = "通过此行进行批量操作"
+                                vm.noneSelected = function() {
+                                    var data = getDatas(10, "none")
+                                    avalon.vmodels.sg1.render(data)
+                                }
+                                vm.partsSelectable = function() {
+                                    var data = getDatas(10, "parts")
+                                    avalon.vmodels.sg1.render(data)
+                                }
+                                vm.smartgrid = {
+                                    // 不希望组件的配置项被smartgrid监控，将其放到$skipArray数组中，添加其他组件同理
+                                    $skipArray: ["switchdropdown", "dropdown", "pager"],
+                                    selectable: {
+                                        type: "Checkbox" //为表格添加选中行操作框,可以设置为"Checkbox"或者"Radio"
+                                    },
+                                    allChecked: false,
+                                    addRow: function(tmp, columns, vmodel) {
+                                        var tr = '&lt;tr style="text-align:left"&gt;&lt;td colspan="' + columns.length + '"&gt;&lt;label&gt;',
+                                            checkbox = ""
+                                        if (columns[0].key === "selected") {
+                                            checkbox = "{{columns[0].name|html}}"
+                                        }
+                                        tr = tr + checkbox + '&lt;span style="padding-left: 10px"&gt;全选&lt;/span&gt;&lt;/label&gt;&lt;input type="button" value="上线"/&gt;&lt;input type="button" value="下线"/&gt;&lt;input type="button" value="删除"/&gt;{{test}}&lt;/td&gt;&lt;/tr&gt;'
+                                        return tr+tmp
+                                    },
+                                    htmlHelper: { // 渲染列数据的方法集合
+                                        // 包装工资列的数据
+                                        $X: function(vmId, field, index, cellValue, rowData) {//所有包装函数都会收到4个参数，分别是smartgrid组件对应vmodel的id，列标志(key)，列索引，列数据值
+                                            return "$"+cellValue
+                                        },
+                                        // operate列包装成switchdropdown组件
+                                        switchdropdown: function(vmId, field, index, cellValue, rowData, disable) {
+                                            var openOption = cellValue == 0 ? '&lt;option value="0" selected&gt;启用&lt;/option&gt;' : '&lt;option value="0"&gt;启用&lt;/option&gt;',
+                                                pauseOption = cellValue == 1 ? '&lt;option value="1" selected&gt;暂停&lt;/option&gt;' : '&lt;option value="1"&gt;暂停&lt;/option&gt;'
+
+                                            return ['&lt;select ms-widget="switchdropdown" rowindex="'+index+'" field="'+field+'"  vmId="'+vmId+'" '+ (disable ? "disabled": "") +'&gt;', openOption, pauseOption, '&lt;/select&gt;'].join('')
+                                        },
+                                        // busy列包装成dropdown组件
+                                        dropdown: function(vmId, field, index, cellValue, rowData, disable) {
+                                            var option = "&lt;option ms-repeat='dropdownData' ms-attr-value='el.value' ms-attr-label='el.name' ms-selected='el.value == " + cellValue + "'&gt;&lt;/option&gt;"
+                                            return '&lt;select ms-widget="dropdown" rowindex="' +index+'" field="'+field+'" vmId="'+vmId+'" ' + (disable ? "disabled" : "") + '&gt;' + option + '&lt;/select&gt;'
+                                        }
+                                    },
+                                    columns: [
+                                        {
+                                            key : "description",
+                                            name : "竞价推广计划",
+                                            sortable : false,
+                                            isLock : true,
+                                            align: "left",
+                                            defaultValue: "北上广经济型计划",
+                                            customClass: "ddd",
+                                            width: 150
+                                        }, {
+                                            key: "operate",
+                                            name: "操作",
+                                            title: "操作",
+                                            width: 110,
+                                            format: "switchdropdown"
+                                        }, {
+                                            key : "buget",
+                                            name : "预算",
+                                            sortable : true,
+                                            align: "right",
+                                            defaultValue: "￥5800",
+                                            width: 75,
+                                            format: "$X" // 定义渲染数据的方法名
+                                        }, {
+                                            key : "display",
+                                            name : "展现",
+                                            sortable : true,
+                                            align: "right",
+                                            width: 98
+                                        }, {
+                                            key : "click",
+                                            name : "点击",
+                                            sortable : true,
+                                            align: "right",
+                                            width: 90
+                                        }, {
+                                            key : "clickRate",
+                                            name : "点击率",
+                                            sortable : true,
+                                            align: "right",
+                                            width: 90
+                                        }, {
+                                            key : "consume",
+                                            name : "消费",
+                                            sortable : true,
+                                            align: "right",
+                                            width: 85,
+                                            format: "$X" // 定义渲染数据的方法名
+                                        }, {
+                                            key : "averageClickRate",
+                                            name : "平均点击价格",
+                                            sortable : true,
+                                            align: "right",
+                                            width: 115,
+                                            format: "$X" // 定义渲染数据的方法名
+                                        }
+                                    ],
+                                    data: getDatas(8)
+                                }
+                            })
+                            avalon.scan()
+                        })
+                    &lt;/script&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+    </body>
+</html>

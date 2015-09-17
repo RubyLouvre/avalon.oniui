@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>tree组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <script>
+        var child = [
+                        { name:"父节点1 - 展开", open:true,
+                            children: [
+                                { name:"父节点11 - 折叠", open: false,
+                                    children: [
+                                        { name:"叶子节点111", icon:"http://www.ztree.me/v3/css/zTreeStyle/img/diy/5.png"},
+                                        { name:"叶子节点112"},
+                                        { name:"叶子节点113"},
+                                        { name:"叶子节点114", url: "http://www.baidu.com"}
+                                    ]},
+                                { name:"父节点12 - 折叠", open: false, halfCheck: true,isHidden: true,
+                                    children: [
+                                        { name:"叶子节点121"},
+                                        { name:"叶子节点122"},
+                                        { name:"叶子节点123"},
+                                        { name:"叶子节点124"}
+                                    ]},
+                                { name:"父节点13 - 没有子节点", isParent:true, open: false}
+                            ]},
+                        { name:"父节点2 - 折叠", open: false, halfCheck: true,
+                            children: [
+                                { name:"父节点21 - 展开", open:true,
+                                    children: [
+                                        { name:"叶子节点211"},
+                                        { name:"叶子节点212"},
+                                        { name:"叶子节点213"},
+                                        { name:"叶子节点214"}
+                                    ]},
+                                { name:"父节点22 - 折叠", open: false,
+                                    children: [
+                                        { name:"叶子节点221"},
+                                        { name:"叶子节点222"},
+                                        { name:"叶子节点223"},
+                                        { name:"叶子节点224"}
+                                    ]},
+                                { name:"父节点23 - 折叠", open: false,
+                                    children: [
+                                        { name:"叶子节点231"},
+                                        { name:"叶子节点232"},
+                                        { name:"叶子节点233"},
+                                        { name:"叶子节点234"}
+                                    ]}
+                            ]},
+                        { name:"父节点3 - 没有子节点", isParent:true, open: false, nocheck:true}
+                        ];
+            // for(var i = 0; i < 5000; i++) {
+            //     child.push(child[1])
+            // }
+            require(["tree/avalon.tree.check", "tree/avalon.tree.edit"], function() {
+                avalon.define("test", function(vm) {
+                    vm.tree = {
+                        children: child,
+                        edit: {
+                            showRemoveBtn: function(leaf) {
+                                return leaf.level > 0
+                            }
+                        },
+                        check: {
+                            enable: true
+                        },
+                        data: {
+                            keep: {
+                                leaf: false,
+                                parent: true
+                            }
+                        },
+                        view: {
+                            editNameSelectAll: true,
+                            showLine: function(leaf) {
+                                return true
+                                return leaf.level > 1 || 1
+                            }
+                        },
+                        callback: {
+                            beforeExpand: function(arg) {
+                                avalon.log("before expand")
+                            },
+                            beforeCollapse: function(arg) {
+                                avalon.log("before collapse")
+                            },
+                            onExpand: function(arg) {
+                                avalon.log("expand")
+                            },
+                            onCollapse: function(arg) {
+                                avalon.log("collapse")
+                            },
+                            beforeRemove: function(obj) {
+                                avalon.log("确认删除?")
+                            },
+                            beforeAdd: function(obj) {
+                                avalon.log("确认添加?")
+                            },
+                            beforeMousedown: function(obj) {
+                                avalon.log("before down")
+                            },
+                            beforeRightClick: function(obj) {
+                                avalon.log("before right click")
+                            },
+                            beforeClick: function(obj) {
+                                avalon.log("before select")
+                            },
+                            onClick: function(obj) {
+                                avalon.log("select")
+                            },
+                            beforeCheck: function(arg) {
+                                var leaf =arg.leaf
+                                if(leaf.level > 1) arg.preventDefault()
+                                avalon.log("level > 1, can not checked")
+                            },
+                            onCheck: function(arg) {
+                                avalon.log("check")
+                            },
+                            beforeNodeCreated: function(arg) {
+                                arg.newLeaf = {
+                                    name: "管理员"
+                                }
+                            },
+                            onNodeCreated: function(arg) {
+                                console.log("add")
+                            }
+                        }
+                    }
+                    vm.$treeOpt = {
+                        children: [child[0]],
+                        check: {
+                            chkStyle: "radio",
+                            enable: true
+                        },
+                        callback: {
+                            onCheck: function(arg) {
+                                avalon.log("radio checked")
+                            }
+                        }
+                    }
+                    vm.$skipArray = ["tree"]
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body ms-controller="test">
+        <h1>tree - Check模块</h1>
+        <div ms-widget="tree"></div>
+        <div ms-widget="tree,tree2,$treeOpt"></div>
+        <pre ms-skip class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;tree组件&lt;/title&gt;
+        &lt;meta charset=&quot;UTF-8&quot;&gt;
+        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;
+        &lt;script src=&quot;../avalon.js&quot;&gt;&lt;/script&gt;
+        
+        &lt;script&gt;
+        var child = [
+                        { name:&quot;父节点1 - 展开&quot;, open:true,
+                            children: [
+                                { name:&quot;父节点11 - 折叠&quot;, open: false,
+                                    children: [
+                                        { name:&quot;叶子节点111&quot;, icon:&quot;http://www.ztree.me/v3/css/zTreeStyle/img/diy/5.png&quot;},
+                                        { name:&quot;叶子节点112&quot;},
+                                        { name:&quot;叶子节点113&quot;},
+                                        { name:&quot;叶子节点114&quot;, url: &quot;http://www.baidu.com&quot;}
+                                    ]},
+                                { name:&quot;父节点12 - 折叠&quot;, open: false, halfCheck: true,isHidden: true,
+                                    children: [
+                                        { name:&quot;叶子节点121&quot;},
+                                        { name:&quot;叶子节点122&quot;},
+                                        { name:&quot;叶子节点123&quot;},
+                                        { name:&quot;叶子节点124&quot;}
+                                    ]},
+                                { name:&quot;父节点13 - 没有子节点&quot;, isParent:true, open: false}
+                            ]},
+                        { name:&quot;父节点2 - 折叠&quot;, open: false, halfCheck: true,
+                            children: [
+                                { name:&quot;父节点21 - 展开&quot;, open:true,
+                                    children: [
+                                        { name:&quot;叶子节点211&quot;},
+                                        { name:&quot;叶子节点212&quot;},
+                                        { name:&quot;叶子节点213&quot;},
+                                        { name:&quot;叶子节点214&quot;}
+                                    ]},
+                                { name:&quot;父节点22 - 折叠&quot;, open: false,
+                                    children: [
+                                        { name:&quot;叶子节点221&quot;},
+                                        { name:&quot;叶子节点222&quot;},
+                                        { name:&quot;叶子节点223&quot;},
+                                        { name:&quot;叶子节点224&quot;}
+                                    ]},
+                                { name:&quot;父节点23 - 折叠&quot;, open: false,
+                                    children: [
+                                        { name:&quot;叶子节点231&quot;},
+                                        { name:&quot;叶子节点232&quot;},
+                                        { name:&quot;叶子节点233&quot;},
+                                        { name:&quot;叶子节点234&quot;}
+                                    ]}
+                            ]},
+                        { name:&quot;父节点3 - 没有子节点&quot;, isParent:true, open: false, nocheck:true}
+                        ];
+            // for(var i = 0; i &lt; 5000; i++) {
+            //     child.push(child[1])
+            // }
+            require([&quot;tree/avalon.tree.check&quot;, &quot;tree/avalon.tree.edit&quot;], function() {
+                avalon.define(&quot;test&quot;, function(vm) {
+                    vm.tree = {
+                        children: child,
+                        edit: {
+                            showRemoveBtn: function(leaf) {
+                                return leaf.level &gt; 0
+                            }
+                        },
+                        check: {
+                            enable: true
+                        },
+                        data: {
+                            keep: {
+                                leaf: false,
+                                parent: true
+                            }
+                        },
+                        view: {
+                            editNameSelectAll: true,
+                            showLine: function(leaf) {
+                                return true
+                                return leaf.level &gt; 1 || 1
+                            }
+                        },
+                        callback: {
+                            beforeExpand: function(arg) {
+                                avalon.log(&quot;before expand&quot;)
+                            },
+                            beforeCollapse: function(arg) {
+                                avalon.log(&quot;before collapse&quot;)
+                            },
+                            onExpand: function(arg) {
+                                avalon.log(&quot;expand&quot;)
+                            },
+                            onCollapse: function(arg) {
+                                avalon.log(&quot;collapse&quot;)
+                            },
+                            beforeRemove: function(obj) {
+                                avalon.log(&quot;确认删除?&quot;)
+                            },
+                            beforeAdd: function(obj) {
+                                avalon.log(&quot;确认添加?&quot;)
+                            },
+                            beforeMousedown: function(obj) {
+                                avalon.log(&quot;before down&quot;)
+                            },
+                            beforeRightClick: function(obj) {
+                                avalon.log(&quot;before right click&quot;)
+                            },
+                            beforeClick: function(obj) {
+                                avalon.log(&quot;before select&quot;)
+                            },
+                            onClick: function(obj) {
+                                avalon.log(&quot;select&quot;)
+                            },
+                            beforeCheck: function(arg) {
+                                var leaf =arg.leaf
+                                if(leaf.level &gt; 1) arg.preventDefault()
+                                avalon.log(&quot;level &gt; 1, can not checked&quot;)
+                            },
+                            onCheck: function(arg) {
+                                avalon.log(&quot;check&quot;)
+                            },
+                            beforeNodeCreated: function(arg) {
+                                arg.newLeaf = {
+                                    name: &quot;管理员&quot;
+                                }
+                            },
+                            onNodeCreated: function(arg) {
+                                console.log(&quot;add&quot;)
+                            }
+                        }
+                    }
+                    vm.$treeOpt = {
+                        children: [child[0]],
+                        check: {
+                            chkStyle: &quot;radio&quot;,
+                            enable: true
+                        },
+                        callback: {
+                            onCheck: function(arg) {
+                                avalon.log(&quot;radio checked&quot;)
+                            }
+                        }
+                    }
+                    vm.$skipArray = [&quot;tree&quot;]
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body ms-controller=&quot;test&quot;&gt;
+        &lt;h1&gt;tree - Check模块&lt;/h1&gt;
+        &lt;div ms-widget=&quot;tree&quot;&gt;&lt;/div&gt;
+        &lt;div ms-widget=&quot;tree,tree2,$treeOpt&quot;&gt;&lt;/div&gt;
+        
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+    </body>
+</html>

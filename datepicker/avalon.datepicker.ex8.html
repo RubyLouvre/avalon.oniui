@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>datepicker demo </title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>datepicker demo</h1>
+        <div class="demo-show" ms-controller="demo">
+            <fieldset style="position: relative; z-index: 2">
+                <legend>配置parseDate、formatDate解析规则和格式化规则</legend>
+                <input ms-widget="datepicker, a, $aOpts" value="2014年06月23日"/>
+                <p>说明：结合parseDate和formatDate的配置自定义日期显示规则和相应的解析规则，需要注意的是如果需要手动输入日期，那么请确保显示规则中只存在数字、/、-三种符号，向年、月、日这种汉语或者字母字符是不可输入的</p>
+            </fieldset>
+            <fieldset style="position: relative; z-index: 1">
+                <legend>配置formatDate格式化规则</legend>
+                <input ms-widget="datepicker, b, $bOpts" data-datepicker-separator="/"/>
+                <p>说明：配置separator为"/",设置日期显示格式为"yyyy/mm/dd"，鉴于上一个demo中对于手动输入日期规则的限制，同时试试这两个demo的手动输入效果体会一下两者的不同</p>
+            </fieldset>
+            <script> 
+                require(["datepicker/avalon.datepicker"], function(avalon) {
+                    var model = avalon.define("demo", function(vm) {
+                        vm.$aOpts = {
+                            parseDate : function(str){
+                                var reg = "^(\\d{4})" + "年"+ "(\\d{1,2})"+ "月" +"(\\d{1,2})"+ "日$";
+                                reg = new RegExp(reg);
+                                var x = str.match(reg);
+                                return x ? new Date(x[1],x[2] * 1 -1 , x[3]) : null;
+                            },
+                            formatDate : function(date){
+                                var separator = this.separator,
+                                    year = date.getFullYear(),
+                                    month = date.getMonth(),
+                                    day = date.getDate();
+                                return year + "年" + this.formatNum(month + 1 , 2) + "月" + this.formatNum(day , 2) + "日";
+                            }
+                        }
+                    })
+                    avalon.scan();
+                })
+            </script>
+        </div>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;datepicker demo&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;div class="demo-show" ms-controller="demo"&gt;
+                        &lt;fieldset style="position: relative; z-index: 2"&gt;
+                            &lt;legend&gt;配置parseDate、formatDate解析规则和格式化规则&lt;/legend&gt;
+                            &lt;input ms-widget="datepicker, a, $aOpts" value="2014年06月23日"/&gt;
+                            &lt;p&gt;说明：结合parseDate和formatDate的配置自定义日期显示规则和相应的解析规则，需要注意的是如果需要手动输入日期，那么请确保显示规则中只存在数字、/、-三种符号，向年、月、日这种汉语或者字母字符是不可输入的&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset style="position: relative; z-index: 1"&gt;
+                            &lt;legend&gt;配置formatDate格式化规则&lt;/legend&gt;
+                            &lt;input ms-widget="datepicker, b, $bOpts" data-datepicker-separator="/"/&gt;
+                            &lt;p&gt;说明：配置separator为"/",设置日期显示格式为"yyyy/mm/dd"，鉴于上一个demo中对于手动输入日期规则的限制，同时试试这两个demo的手动输入效果体会一下两者的不同&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;script&gt; 
+                            require(["datepicker/avalon.datepicker"], function(avalon) {
+                                var model = avalon.define("demo", function(vm) {
+                                    vm.$aOpts = {
+                                        parseDate : function(str){
+                                            var reg = "^(\\d{4})" + "年"+ "(\\d{1,2})"+ "月" +"(\\d{1,2})"+ "日$";
+                                            reg = new RegExp(reg);
+                                            var x = str.match(reg);
+                                            return x ? new Date(x[1],x[2] * 1 -1 , x[3]) : null;
+                                        },
+                                        formatDate : function(date){
+                                            var separator = this.separator,
+                                                year = date.getFullYear(),
+                                                month = date.getMonth(),
+                                                day = date.getDate();
+                                            return year + "年" + this.formatNum(month + 1 , 2) + "月" + this.formatNum(day , 2) + "日";
+                                        }
+                                    }
+                                })
+                                avalon.scan();
+                            })
+                        &lt;/script&gt;
+                    &lt;/div&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+    </div>
+</body>
+</html>
+

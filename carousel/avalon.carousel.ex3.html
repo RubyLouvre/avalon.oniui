@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>carousel组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"
+        />
+        <script>
+            require(["carousel/avalon.carousel"], function() {
+                avalon.define("demo", function(vm) {
+                    vm.$opt1 = {
+                        pictures: [{
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/s11.jpeg"
+                        }, {
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/s12.jpeg"
+                        }, {
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/s13.jpeg"
+                        }],
+                        alwaysShowArrow: false, //@param alwaysShowArrow 显示左右切换箭头
+                        alwaysShowSelection: false //@param alwaysShowSelection 显示底部圆形切换部件
+                    }
+                    vm.$opt2 = {
+                        pictures: [{
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/s11.jpeg"
+                        }, {
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/s12.jpeg"
+                        }, {
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/s13.jpeg"
+                        }],
+                        arrowLeftNormalSrc: "http://7xkm02.com1.z0.glb.clouddn.com/al.png",
+                        arrowLeftHoverSrc:"http://7xkm02.com1.z0.glb.clouddn.com/alh.png",
+                        arrowRightNormalSrc: "http://7xkm02.com1.z0.glb.clouddn.com/ar.png",
+                        arrowRightHoverSrc:"http://7xkm02.com1.z0.glb.clouddn.com/arh.png"
+                    }
+                    vm.$opt3 = {
+                        pictures: [{
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/s11.jpeg"
+                        }, {
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/s12.jpeg"
+                        }, {
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/s13.jpeg"
+                        }],
+                        hoverStop: false //@param autoSlide 鼠标经过不停止播放
+                    }
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    
+    <body>
+        <div class="wrapper" ms-controller="demo">
+            <h1>图片轮播组件-配置小部件</h1>
+            <fieldset>
+                <legend>不显示左右切换箭头和底部圆形选择部件</legend>
+                <div ms-widget="carousel,carousel1,$opt1"></div>
+            </fieldset>
+            <fieldset>
+                <legend>自定义箭头样式</legend>
+                <div ms-widget="carousel,carousel2,$opt2"></div>
+            </fieldset>
+            <fieldset>
+                <legend>鼠标经过不停止播放</legend>
+                <div ms-widget="carousel,carousel3,$opt3"></div>
+            </fieldset>
+            <pre ms-skip class="brush:html;gutter:false;toolbar:false">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    
+    &lt;head&gt;
+        &lt;title&gt;carousel组件&lt;/title&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width"&gt;
+        &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+        &lt;script src="../highlight/shCore.js"&gt;&lt;/script&gt;
+        &lt;link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"
+        /&gt;
+        &lt;script&gt;
+            require(["carousel/avalon.carousel"], function() {
+                avalon.define("demo", function(vm) {
+                    vm.$opt1 = {
+                        pictures: [{
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/s11.jpeg"
+                        }, {
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/s12.jpeg"
+                        }, {
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/s13.jpeg"
+                        }],
+                        alwaysShowArrow: false, //@param alwaysShowArrow 显示左右切换箭头
+                        alwaysShowSelection: false //@param alwaysShowSelection 显示底部圆形切换部件
+                    }
+                    vm.$opt2 = {
+                        pictures: [{
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/s11.jpeg"
+                        }, {
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/s12.jpeg"
+                        }, {
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/s13.jpeg"
+                        }],
+                        arrowLeftNormalSrc: "http://7xkm02.com1.z0.glb.clouddn.com/al.png",
+                        arrowLeftHoverSrc:"http://7xkm02.com1.z0.glb.clouddn.com/alh.png",
+                        arrowRightNormalSrc: "http://7xkm02.com1.z0.glb.clouddn.com/ar.png",
+                        arrowRightHoverSrc:"http://7xkm02.com1.z0.glb.clouddn.com/arh.png"
+                    }
+                    vm.$opt3 = {
+                        pictures: [{
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/s11.jpeg"
+                        }, {
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/s12.jpeg"
+                        }, {
+                            src: "http://7xkm02.com1.z0.glb.clouddn.com/s13.jpeg"
+                        }],
+                        hoverStop: false //@param autoSlide 鼠标经过不停止播放
+                    }
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+    &lt;/head&gt;
+    
+    &lt;body&gt;
+        &lt;div class="wrapper" ms-controller="demo"&gt;
+            &lt;h1&gt;图片轮播组件-配置小部件&lt;/h1&gt;
+            &lt;fieldset&gt;
+                &lt;legend&gt;不显示左右切换箭头和底部圆形选择部件&lt;/legend&gt;
+                &lt;div ms-widget="carousel,carousel1,$opt1"&gt;&lt;/div&gt;
+            &lt;/fieldset&gt;
+            &lt;fieldset&gt;
+                &lt;legend&gt;自定义箭头样式&lt;/legend&gt;
+                &lt;div ms-widget="carousel,carousel2,$opt2"&gt;&lt;/div&gt;
+            &lt;/fieldset&gt;
+            &lt;fieldset&gt;
+                &lt;legend&gt;鼠标经过不停止播放&lt;/legend&gt;
+                &lt;div ms-widget="carousel,carousel3,$opt3"&gt;&lt;/div&gt;
+            &lt;/fieldset&gt;
+        &lt;/div&gt;
+    &lt;/body&gt;
+
+&lt;/html&gt;
+</pre>
+        </div>
+    </body>
+
+</html>

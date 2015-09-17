@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>tooltip组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <style type="text/css">
+            div.ct{
+                text-align: center;
+            }
+            a{
+                font-size: 13px;
+                margin-left: 20px;
+                display: inline-block;
+            }
+        </style>
+        <script>
+            var str = '请输入';
+            require(["tooltip/avalon.tooltip"], function() {
+                vmodel = avalon.define("test", function(vm) {
+                    vm.$qqOpt = {
+                        "contentGetter": function(elem) {
+                            // return 
+                            if(elem && elem.tagName && (elem.tagName.toLowerCase() == 'input' || elem.getAttribute("tp"))) return str + str + str + str + str + str + str + str + str + str + str
+                        },
+                        onInit: function() {
+                            // 异步加载样式的时候，可能样式没有加载，悲剧啊
+                            setTimeout(function() {
+                                avalon.vmodels.ppo.showBy(null, "绿色的是container容器，tooltip的父容器，现在是参考的白色元素定位，tr = top right")
+                            }, 10)
+                        },
+                        container: document.getElementById("container"),
+                        collision: "fit", 
+                        autohide: !true
+                    }
+                    vm.showTip = function() {
+                        avalon.vmodels.ppo.showBy({target:document.getElementsByTagName('input')[0]}, "现在是根据input定位")
+                    }
+                    vm.$skipArray = ["tooltip"]
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body>
+<div ms-controller="test">
+        <h1 tp="1">input元素不绑定事件，人工触发</h1>
+        <font color="red">蓝色的是container，白色的绑定widget</font>    
+        <div id="container" style="background:#0d9;width:500px;height:400px;padding-top:200px;">
+            <div class="oni-helper-reset ct" ms-widget="tooltip,ppo, $qqOpt" data-tooltip-event="" data-tooltip-delegate="true" data-tooltip-position="tr"><div style="display:inline-block;position:relative;width:400px;height:21px;background:#fff;padding:20px;width:100%;">
+                <input type="text" value="test"/>
+                <input type="button" ms-click="showTip" value="click me to show tip"/></div>
+            </div>
+        </div>
+        <pre ms-skip class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;tooltip组件&lt;/title&gt;
+        &lt;meta charset=&quot;UTF-8&quot;&gt;
+        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;
+        &lt;script src=&quot;../avalon.js&quot;&gt;&lt;/script&gt;
+        
+        &lt;style type=&quot;text/css&quot;&gt;
+            body{
+                padding-bottom: 400px;
+            }
+            div.ct{
+                text-align: center;
+            }
+            a{
+                font-size: 13px;
+                margin-left: 20px;
+                display: inline-block;
+            }
+        &lt;/style&gt;
+        &lt;script&gt;
+            var str = '请输入';
+            require([&quot;tooltip/avalon.tooltip&quot;], function() {
+                vmodel = avalon.define(&quot;test&quot;, function(vm) {
+                    vm.$qqOpt = {
+                        &quot;contentGetter&quot;: function(elem) {
+                            // return 
+                            if(elem &amp;&amp; elem.tagName &amp;&amp; (elem.tagName.toLowerCase() == 'input' || elem.getAttribute(&quot;tp&quot;))) return str + str + str + str + str + str + str + str + str + str + str
+                        },
+                        onInit: function() {
+                            // 异步加载样式的时候，可能样式没有加载，悲剧啊
+                            setTimeout(function() {
+                                avalon.vmodels.ppo.showBy(null, &quot;绿色的是container容器，tooltip的父容器，现在是参考的白色元素定位，tr = top right&quot;)
+                            }, 10)
+                        },
+                        container: document.getElementById(&quot;container&quot;),
+                        collision: &quot;fit&quot;, 
+                        autohide: !true
+                    }
+                    vm.showTip = function() {
+                        avalon.vmodels.ppo.showBy({target:document.getElementsByTagName('input')[0]}, &quot;现在是根据input定位&quot;)
+                    }
+                    vm.$skipArray = [&quot;tooltip&quot;]
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body class=&quot;oni-helper-reset&quot;&gt;
+&lt;div ms-controller=&quot;test&quot;&gt;
+        &lt;h1 tp=&quot;1&quot;&gt;input元素不绑定事件，人工触发&lt;/h1&gt;
+        &lt;font color=&quot;red&quot;&gt;蓝色的是container，白色的绑定widget&lt;/font&gt;    
+        &lt;div id=&quot;container&quot; style=&quot;background:#0d9;width:500px;height:400px;padding-top:200px;&quot;&gt;
+            &lt;div class=&quot;oni-helper-reset ct&quot; ms-widget=&quot;tooltip,ppo, $qqOpt&quot; data-tooltip-event=&quot;&quot; data-tooltip-delegate=&quot;true&quot; data-tooltip-position=&quot;tr&quot;&gt;&lt;div style=&quot;display:inline-block;position:relative;width:400px;height:21px;background:#fff;padding:20px;width:100%;&quot;&gt;
+                &lt;input type=&quot;text&quot; value=&quot;test&quot;/&gt;
+                &lt;input type=&quot;button&quot; ms-click=&quot;showTip&quot; value=&quot;click me to show tip&quot;/&gt;&lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+    </div>
+</body>
+</html>

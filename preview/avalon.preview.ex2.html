@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>图片预览组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js">
+
+        </script>
+        <script src="../highlight/shCore.js">
+
+        </script>
+        <script>
+            require(["preview/avalon.preview","ready!"], function() {
+
+                avalon.define("test", function(vm) {
+                    vm.preview = {
+                        fileInput: document.getElementById("file"),
+                        onInit: function(vmodel, options, vmodels) {
+                           avalon.bind(options.fileInput, "change", function() {
+                                try{
+                                    parent && parent.setHeight && parent.setHeight()
+                                }catch(e) {}
+                            })
+                        }
+                    }
+                    vm.$skipArray = ["preview"]
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body ms-controller="test">
+        <form>
+            <p><input type="file" id="file" multiple=""/>可预览多个</p>
+            <div ms-widget="preview"></div>
+        </form>
+
+
+    </body>
+</html>

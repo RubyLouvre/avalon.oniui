@@ -1,0 +1,99 @@
+## 如何使用
+
+#### √ mmRouter + mmHistory + mmState
+
+
+##### 代码目录结构
+![工程化](./ppt/img/gch.jpg)
+
+##### layout.html
+
+    <html>
+        <head>
+            <title>mmRouter-基于状态机的路由器</title>
+            <script>
+                require(["mmRouter/ppt/app"], function() {
+                    avalon.scan()
+                })
+            </script>
+        </head>
+        <body 
+               ms-controller="ppt">
+                <!-- 父容器埋点 -->
+                <div class="slider-view oni-helper-reset">
+                    <!-- 带oni-mmRouter-slide的会使用cloneNode，用以实现一些动画效果 -->
+                    <div class="oni-mmRouter-slide oni-helper-reset slider-item" ms-view="viewname">
+                    </div>
+                </div>
+        </body>
+    </html>
+
+##### ppt/views/tpl.html
+
+    <div class="slider-page">
+        {\{content|html}}
+    </div>
+
+##### app.js
+
+    define(["mmRouter/mmState"], function () {
+        avalon.state("ppt", {//定义一个状态
+            url: "/:pageNumber",
+            controller: "ppt",
+            views: {// 视图
+                "viewname": {
+                    templateUrl: "ppt/views/tpl.html"
+                },
+                controller: ["mmRouter/ppt/model/ppt"]
+            },
+            onEnter: function(pageNumber, resolve, reject) {
+                // 异步
+                setTimeout(resolve, 2000)
+                return false
+            }
+        })
+        // 全局配置
+        avalon.state.config({
+            // 动画效果，需要在绑定了ms-view的元素上加oni-mmRouter-slide className
+            onViewEnter: function(newNode, oldNode) {
+                // ...
+            },
+            // 退出当前状态前
+            beforeUnload: function() {
+            },
+            // 退出当前状态
+            unload: function() {
+            },
+            // 开始切换
+            begin: function() {
+                // 比如，显示loading效果
+            },
+            // 切换完成
+            onload: function() {
+                // 比如，隐藏loading
+            }
+        })
+        avalon.router.errorback = function() {
+            avalon.router.redirect("/1")
+        }
+        avalon.history.start({
+            hashPrefix: "",
+            fireAnchor: false
+        })
+    })
+
+##### ppt.js
+
+    define([], function() {
+        var ppt = avalon.define("ppt", function(vm) {
+            // xxx
+        })
+        return avalon.controller(function($ctrl) {
+            $ctrl.$vmodels = [ppt]
+            $ctrl.$onRendered = function() {}
+            $ctrl.$onEnter = function() {}
+            $ctrl.$onBeforeUnload = function() {}
+        })
+    })
+
+[more](http://ued.qunar.com/oniui/mmRouter/avalon.mmRouter.doc.html)

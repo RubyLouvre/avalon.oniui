@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Promise组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js">
+
+        </script>
+        <script src="../highlight/shCore.js">
+
+        </script>
+        <script>
+            require(["mmPromise/mmPromise", "domReady!"], function() {
+                var _reject
+                var vmodel = avalon.define("test", function(vm) {
+                    vm.click = function() {
+                        _reject("error")
+                    }
+                    vm.array = ["准备开始"]
+                })
+                avalon.scan()
+                var promise = new Promise(function(resolve, reject) {
+                    _reject = reject
+                });
+                promise.then(function(message) {
+                    vmodel.array.push("这里不触发")
+                })
+                promise["catch"](function(error) {
+                    vmodel.array.push(error)
+                })
+
+                var p4 = new Promise(function(resolve, reject) {
+                    reject('error')
+                })
+                p4.then(alert).then(alert).then(alert)["catch"](function(a) {
+                    alert(a + 1)
+                })
+
+                var p5 = new Promise(function(resolve, reject) {
+                    reject('error')
+                })
+
+                p5.then(function(message) {
+                    alert(message)
+                }, function(error) {
+                    alert(error + 2)
+                })
+
+       
+            })
+        </script>
+    </head>
+    <body ms-controller="test">
+        <ul>
+            <li ms-repeat="array">{{el}}</li>
+        </ul>
+        <p><button ms-click="click" type="button">点我开始</button></p>
+    </body>
+</html>

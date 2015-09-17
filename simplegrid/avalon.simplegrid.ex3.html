@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>simplegrid</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <style>
+            .col1{
+                background: orange!important;
+            }
+            .col2{
+                background: orangered!important;
+            }
+            .col3{
+                background:violet!important;
+            }
+        </style>
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js">
+
+        </script>
+        <script>
+
+            require(["simplegrid/avalon.simplegrid"], function() {
+                function getData(n) {
+                    var ret = []
+                    for (var i = 0; i < n; i++) {
+                        var random = Math.random()
+                        var factor = random > 0.5 ? 1 : -1
+                        ret.push({
+                            symbol: random.toString(32).slice(4, 10),
+                            price: range(100, 200),
+                            change: random.toFixed(2) * factor
+                        })
+                    }
+                    return ret
+                }
+                function range(s, b) {
+                    return s + Math.floor((b - s) * Math.random())
+                }
+
+                avalon.define("test", function(vm) {
+                    vm.simplegrid = {
+                        columns: [
+                            {field: "change", text: "变化", className: "col3", align: "right"},
+                            {field: "price", text: "格价", className: "col2", align: "center"},
+                            {field: "symbol", text: "符号", className: "col1", localSort: function(a, b, f) {
+                                    return a[f].localeCompare(b[f]);
+                                }}
+                        ],
+                        columnsOrder: ["symbol", "price", "change"],
+                        renderCell: function(val, key) {
+                            switch (key) {
+                                case "symbol":
+                                    return  "<b>" + val + "</b>"
+                                case "change":
+                                    return  "<span style='color:" + (val > 0 ? 'green' : 'red') + "'>" + val + "</span>"
+                                default:
+                                    return val
+                            }
+                        },
+                        tbodyRenderedCallback: function() {
+                            console.log("render tbody")
+                        },
+                        data: getData(10)
+                    }
+                    vm.$skipArray = ["simplegrid"]
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body >
+
+        <fieldset ms-controller="test">
+            <legend>表头的处理</legend>
+            <p>我们可以通过columnsOrder用于控制每列的出现顺序，不指定此数组则默认根据columns中的每个对象的field出现顺序推算出来的</p>
+            <p>在columns对象中, 我们还可以设置className，align等属性，其中className是对表头有效的，align是对整列有效的 </p>
+            <p>最后,为了方便排序,我们将getData返回的对象处理一下，确保是数字的地方还是数字，将装饰用的HTML移动renderCell方法中处理，
+                那么我们点击表头的三角形时，它们就能排序了</p>
+            <div ms-widget="simplegrid" style="width:99%">
+
+            </div>
+            <div ms-skip>
+                <pre class="brush:html;gutter:false;toolbar:false;">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;simplegrid&lt;/title&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width"&gt;
+        &lt;style&gt;
+            .col1{
+                background: orange!important;
+            }
+            .col2{
+                background: orangered!important;
+            }
+            .col3{
+                background:violet!important;
+            }
+        &lt;/style&gt;
+        &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+ 
+        &lt;script&gt;
+
+            require(["simplegrid/avalon.simplegrid"], function() {
+                function getData(n) {
+                    var ret = []
+                    for (var i = 0; i &lt; n; i++) {
+                        var random = Math.random()
+                        var factor = random &gt; 0.5 ? 1 : -1
+                        ret.push({
+                            symbol: random.toString(32).slice(4, 10),
+                            price: range(100, 200),
+                            change: random.toFixed(2) * factor
+                        })
+                    }
+                    return ret
+                }
+                function range(s, b) {
+                    return s + Math.floor((b - s) * Math.random())
+                }
+
+                avalon.define("test", function(vm) {
+                    vm.simplegrid = {
+                        columns: [
+                            {field: "change", text: "变化", className: "col3", align: "right"},
+                            {field: "price", text: "格价", className: "col2", align: "center"},
+                            {field: "symbol", text: "符号", className: "col1", localSort: function(a, b, f) {
+                                    return a[f].localeCompare(b[f]);
+                                }}
+                        ],
+                        columnsOrder: ["symbol", "price", "change"],
+                        renderCell: function(val, key) {
+                            switch (key) {
+                                case "symbol":
+                                    return  "&lt;b&gt;" + val + "&lt;/b&gt;"
+                                case "change":
+                                    return  "&lt;span style='color:" + (val &gt; 0 ? 'green' : 'red') + "'&gt;" + val + "&lt;/span&gt;"
+                                default:
+                                    return val
+                            }
+                        },
+                        data: getData(10)
+                    }
+                    vm.$skipArray = ["simplegrid"]
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body ms-controller="test" &gt;
+            &lt;div ms-widget="simplegrid" style="width:99%"&gt; &lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+                </pre>
+            </div>
+        </fieldset>
+    </body>
+</html>

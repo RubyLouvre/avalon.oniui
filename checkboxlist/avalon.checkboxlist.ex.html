@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>checkboxlist demo</title>
+<!-- <link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<script src="../highlight/shCore.js"></script> -->
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+<script src="../avalon.js"></script>
+</head>
+<body class="ms-controller" ms-controller="demo">
+
+    <fieldset>
+        <legend>普通绑定</legend>
+        <ul ms-widget="checkboxlist" data-checkboxlist-on-select="selectCallback" data-checkboxlist-duplex="val" data-checkboxlist-alltext="全部">
+            <li><input type="checkbox" value="1">选项一</li>
+            <li><input type="checkbox" value="2">选项二</li>
+            <li><input type="checkbox" value="3">选项三</li>
+        </ul>
+    </fieldset>
+
+    {{ val }}
+
+    <fieldset>
+        <legend>内置类型：周</legend>
+        <ul ms-widget="checkboxlist" data-checkboxlist-duplex="val2" data-checkboxlist-type="week" data-checkboxlist-alltext="全部"></ul>
+    </fieldset>
+
+    {{ val2 }}
+
+    <fieldset>
+        <legend>异步加载选项</legend>
+        <ul ms-widget="checkboxlist" data-checkboxlist-fetch="get_options" data-checkboxlist-duplex="val3" data-checkboxlist-alltext="全部内容">
+            <li><input type="checkbox" /></li>
+        </ul>
+    </fieldset>
+
+    {{ val3 }}
+
+
+    <script>
+        require(["./checkboxlist/avalon.checkboxlist"], function(avalon) {
+            var sss = avalon.define('demo',function(vm){
+                vm.val = ["1", "2"];
+                vm.val2 = ['TUESDAY'];
+                vm.val3 = ['w1', 'w3'];
+
+                vm.get_options = function( callback ){
+                    setTimeout(function(){
+                        sss.val3 = ["w1","w2","w3","w4"];
+                        callback([
+                            { text : '文字1' , value : 'w1' } ,
+                            { text : '文字2' , value : 'w2' } ,
+                            { text : '文字3' , value : 'w3' } ,
+                            { text : '文字4' , value : 'w4' }
+                        ]);
+                    },1000);
+                }
+                vm.selectCallback = function() {
+                    avalon.log("selectCallback argumnets is: ");
+                    avalon.log(arguments);
+                }
+            });
+            setTimeout(function (){
+                sss.val3 = ["w1","w2"];
+
+            },5000);
+            avalon.scan();
+        });
+    </script>
+</body>
+</html>

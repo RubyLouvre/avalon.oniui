@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>button demo 3</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+        <script src="../highlight/shCore.js"></script>
+        <script type="text/javascript" src="../avalon.js"></script>
+        <style>
+            body {
+                padding-bottom: 200px;
+            }
+            fieldset > div {
+                margin-bottom: 20px;
+            }
+            .inline {
+                display: inline-block;
+            }
+        </style>
+    </head>
+    <body ms-controller="demo">
+        <fieldset>
+            <legend>button group by ms-widget="button, $, buttonConfig"</legend>
+            <div>
+                <div ms-widget="button, $, group1" style="margin-right:30px;vertical-align:bottom"></div>
+                <div ms-widget="button, $, group2" style="margin-right:30px;vertical-align:bottom"></div>
+                <div ms-widget="button, $, group3" style="margin-right:30px;vertical-align:bottom"></div>
+                <div ms-widget="button, $, group4" style="margin-right:30px;vertical-align:bottom"></div>
+            </div>
+            <div>
+                <div ms-widget="button, $, group5" style="margin-right:30px;vertical-align:bottom"></div>
+                <div ms-widget="button, $, group6" style="margin-right:30px;vertical-align:bottom"></div>
+                <div ms-widget="button, $, group7" style="margin-right:30px;vertical-align:bottom"></div>
+                <div ms-widget="button, $, group8" style="margin-right:30px;vertical-align:bottom"></div>
+            </div>
+            <div>
+                <div ms-widget="button, $, group9" style="margin-right:30px;vertical-align:bottom"></div>
+                <div ms-widget="button, $, group10" style="margin-right:30px;vertical-align:bottom"></div>
+                <div ms-widget="button, $, group11" style="margin-right:30px;vertical-align:bottom"></div>
+                <div ms-widget="button, $, group12" style="margin-right:30px;vertical-align:bottom"></div>
+            </div>
+        </fieldset>
+        <script>
+            require(["./button/avalon.button"], function() {
+                avalon.define("demo", function(vm) {
+                    vm.$skipArray = ["group1", "group2", "group3", "group4","group5", "group6","group7", "group8","group9", "group10","group11", "group12",]
+                    vm.group1 = {
+                        groups: true,
+                        data: [{
+                            text: "button 1"
+                        }, {
+                            text: "button2"
+                        }, {
+                            text: "button 3"
+                        }]
+                    }
+                    vm.group2 = {
+                        groups: true,
+                        data: [{
+                            type: "icon",
+                            iconPosition: "left",
+                            icon: "\&\#xf086;"
+                        }, {
+                            type: "icon",
+                            iconPosition: "left",
+                            icon: "\&\#xf084;"
+                        }, {
+                            type: "icon",
+                            iconPosition: "left",
+                            icon: "\&\#xf085;"
+                        }]
+                    }
+                    vm.group3 = {
+                        groups: true,
+                        data: [{
+                            type: "labeledIcon",
+                            iconPosition: "left",
+                            icon: "\&\#xf086;",
+                            text: "暂停"
+                        }, {
+                            type: "labeledIcon",
+                            iconPosition: "left",
+                            icon: "\&\#xf084;",
+                            text: "播放"
+                        }, {
+                            type: "labeledIcon",
+                            iconPosition: "left",
+                            icon: "\&\#xf085;",
+                            text: "拖曳"
+                        }]
+                    }
+                    vm.group4 = {
+                        groups: true,
+                        data: [{
+                            type: "labeledIcon",
+                            iconPosition: "right",
+                            icon: "\&\#xf086;",
+                            text: "暂停"
+                        }, {
+                            type: "labeledIcon",
+                            iconPosition: "right",
+                            icon: "\&\#xf084;",
+                            text: "播放"
+                        }, {
+                            type: "labeledIcon",
+                            iconPosition: "right",
+                            icon: "\&\#xf085;",
+                            text: "拖曳"
+                        }]
+                    }
+                    vm.group5 = {
+                        groups: true,
+                        data: [{
+                            color: "info",
+                            size: "small",
+                            text: "button 1"
+                        }, {
+                            color: "info",
+                            size: "small",
+                            text: "button2"
+                        }, {
+                            color: "info",
+                            size: "small",
+                            text: "button 3"
+                        }]
+                    }
+                    vm.group6 = {
+                        groups: true,
+                        width: 50,
+                        data: [{
+                            type: "icon",
+                            iconPosition: "left",
+                            icon: "\&\#xf086;",
+                            color: "danger",
+                            text: "button 1"
+                        }, {
+                            type: "icon",
+                            iconPosition: "left",
+                            icon: "\&\#xf084;",
+                            color: "danger",
+                            text: "button 2"
+                        }, {
+                            type: "icon",
+                            iconPosition: "left",
+                            icon: "\&\#xf085;",
+                            color: "danger",
+                            text: "button 3"
+                        }]
+                    }
+                    vm.group7 = {
+                        groups: true,
+                        data: [{
+                            type: "labeledIcon",
+                            iconPosition: "left",
+                            icon: "\&\#xf086;",
+                            size: "big",
+                            color: "success",
+                            text: "暂停"
+                        }, {
+                            type: "labeledIcon",
+                            iconPosition: "left",
+                            icon: "\&\#xf084;",
+                            size: "big",
+                            color: "success",
+                            text: "播放"
+                        }, {
+                            type: "labeledIcon",
+                            iconPosition: "left",
+                            icon: "\&\#xf085;",
+                            size: "big",
+                            color: "success",
+                            text: "拖曳"
+                        }]
+                    }
+                    vm.group8 = {
+                        groups: true,
+                        data: [{
+                            type: "labeledIcon",
+                            iconPosition: "right",
+                            icon: "\&\#xf086;",
+                            size: "large",
+                            color: "warning",
+                            text: "暂停"
+                        }, {
+                            type: "labeledIcon",
+                            iconPosition: "right",
+                            icon: "\&\#xf084;",
+                            size: "large",
+                            color: "warning",
+                            text: "播放"
+                        }, {
+                            type: "labeledIcon",
+                            iconPosition: "right",
+                            icon: "\&\#xf085;",
+                            size: "large",
+                            color: "warning",
+                            text: "拖曳"
+                        }]
+                    }
+
+                    vm.group9 = {
+                        groups: true,
+                        direction: "vertical",
+                        data: [{
+                            text: "button 1"
+                        }, {
+                            text: "button 2"
+                        }, {
+                            text: "button 3"
+                        }]
+                    }
+                    vm.group10 = {
+                        groups: true,
+                        direction: "vertical",
+                        width: 50,
+                        data: [{
+                            type: "icon",
+                            iconPosition: "left",
+                            icon: "\&\#xf086;",
+                            color: "info"
+                        }, {
+                            type: "icon",
+                            iconPosition: "left",
+                            icon: "\&\#xf084;",
+                            color: "info"
+                        }, {
+                            type: "icon",
+                            iconPosition: "left",
+                            icon: "\&\#xf085;",
+                            color: "info"
+                        }]
+                    }
+                    vm.group11 = {
+                        groups: true,
+                        direction: "vertical",
+                        data: [{
+                            type: "labeledIcon",
+                            iconPosition: "left",
+                            icon: "\&\#xf086;",
+                            text: "暂停",
+                            color: "warning"
+                        }, {
+                            type: "labeledIcon",
+                            iconPosition: "left",
+                            icon: "\&\#xf084;",
+                            text: "播放",
+                            color: "warning"
+                        }, {
+                            type: "labeledIcon",
+                            iconPosition: "left",
+                            icon: "\&\#xf085;",
+                            text: "拖曳",
+                            color: "warning"
+                        }]
+                    }
+                    vm.group12 = {
+                        groups: true,
+                        direction: "vertical",
+                        corner: false,
+                        data: [{
+                            type: "labeledIcon",
+                            iconPosition: "right",
+                            icon: "\&\#xf086;",
+                            size: "large",
+                            color: "success",
+                            text: "暂停"
+                        }, {
+                            type: "labeledIcon",
+                            iconPosition: "right",
+                            icon: "\&\#xf084;",
+                            size: "large",
+                            color: "success",
+                            text: "播放"
+                        }, {
+                            type: "labeledIcon",
+                            iconPosition: "right",
+                            icon: "\&\#xf085;",
+                            size: "large",
+                            color: "success",
+                            text: "拖曳"
+                        }]
+                    }
+                })
+                avalon.scan()
+            })
+        </script>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;button demo 3&lt;/title&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width"&gt;
+        &lt;link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/&gt;
+        &lt;link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/&gt;
+        &lt;script src="../highlight/shCore.js"&gt;&lt;/script&gt;
+        &lt;script type="text/javascript" src="../avalon.js"&gt;&lt;/script&gt;
+        &lt;style&gt;
+            body {
+                padding-bottom: 200px;
+            }
+            fieldset &gt; div {
+                margin-bottom: 20px;
+            }
+            .inline {
+                display: inline-block;
+            }
+        &lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body ms-controller="demo"&gt;
+        &lt;fieldset&gt;
+            &lt;legend&gt;button group by ms-widget="button, $, buttonConfig"&lt;/legend&gt;
+            &lt;div&gt;
+                &lt;div ms-widget="button, $, group1" style="margin-right:30px;vertical-align:bottom"&gt;&lt;/div&gt;
+                &lt;div ms-widget="button, $, group2" style="margin-right:30px;vertical-align:bottom"&gt;&lt;/div&gt;
+                &lt;div ms-widget="button, $, group3" style="margin-right:30px;vertical-align:bottom"&gt;&lt;/div&gt;
+                &lt;div ms-widget="button, $, group4" style="margin-right:30px;vertical-align:bottom"&gt;&lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div&gt;
+                &lt;div ms-widget="button, $, group5" style="margin-right:30px;vertical-align:bottom"&gt;&lt;/div&gt;
+                &lt;div ms-widget="button, $, group6" style="margin-right:30px;vertical-align:bottom"&gt;&lt;/div&gt;
+                &lt;div ms-widget="button, $, group7" style="margin-right:30px;vertical-align:bottom"&gt;&lt;/div&gt;
+                &lt;div ms-widget="button, $, group8" style="margin-right:30px;vertical-align:bottom"&gt;&lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div&gt;
+                &lt;div ms-widget="button, $, group9" style="margin-right:30px;vertical-align:bottom"&gt;&lt;/div&gt;
+                &lt;div ms-widget="button, $, group10" style="margin-right:30px;vertical-align:bottom"&gt;&lt;/div&gt;
+                &lt;div ms-widget="button, $, group11" style="margin-right:30px;vertical-align:bottom"&gt;&lt;/div&gt;
+                &lt;div ms-widget="button, $, group12" style="margin-right:30px;vertical-align:bottom"&gt;&lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/fieldset&gt;
+        &lt;script&gt;
+            require(["./button/avalon.button"], function() {
+                avalon.define("demo", function(vm) {
+                    vm.$skipArray = ["group1", "group2", "group3", "group4","group5", "group6","group7", "group8","group9", "group10","group11", "group12",]
+                    vm.group1 = {
+                        groups: true,
+                        data: [{
+                            text: "button 1"
+                        }, {
+                            text: "button2"
+                        }, {
+                            text: "button 3"
+                        }]
+                    }
+                    vm.group2 = {
+                        groups: true,
+                        data: [{
+                            type: "icon",
+                            iconPosition: "left",
+                            icon: "\&\#xf086;"
+                        }, {
+                            type: "icon",
+                            iconPosition: "left",
+                            icon: "\&\#xf084;"
+                        }, {
+                            type: "icon",
+                            iconPosition: "left",
+                            icon: "\&\#xf085;"
+                        }]
+                    }
+                    vm.group3 = {
+                        groups: true,
+                        data: [{
+                            type: "labeledIcon",
+                            iconPosition: "left",
+                            icon: "\&\#xf086;",
+                            text: "暂停"
+                        }, {
+                            type: "labeledIcon",
+                            iconPosition: "left",
+                            icon: "\&\#xf084;",
+                            text: "播放"
+                        }, {
+                            type: "labeledIcon",
+                            iconPosition: "left",
+                            icon: "\&\#xf085;",
+                            text: "拖曳"
+                        }]
+                    }
+                    vm.group4 = {
+                        groups: true,
+                        data: [{
+                            type: "labeledIcon",
+                            iconPosition: "right",
+                            icon: "\&\#xf086;",
+                            text: "暂停"
+                        }, {
+                            type: "labeledIcon",
+                            iconPosition: "right",
+                            icon: "\&\#xf084;",
+                            text: "播放"
+                        }, {
+                            type: "labeledIcon",
+                            iconPosition: "right",
+                            icon: "\&\#xf085;",
+                            text: "拖曳"
+                        }]
+                    }
+                    vm.group5 = {
+                        groups: true,
+                        data: [{
+                            color: "info",
+                            size: "small",
+                            text: "button 1"
+                        }, {
+                            color: "info",
+                            size: "small",
+                            text: "button2"
+                        }, {
+                            color: "info",
+                            size: "small",
+                            text: "button 3"
+                        }]
+                    }
+                    vm.group6 = {
+                        groups: true,
+                        width: 50,
+                        data: [{
+                            type: "icon",
+                            iconPosition: "left",
+                            icon: "\&\#xf086;",
+                            color: "danger",
+                            text: "button 1"
+                        }, {
+                            type: "icon",
+                            iconPosition: "left",
+                            icon: "\&\#xf084;",
+                            color: "danger",
+                            text: "button 2"
+                        }, {
+                            type: "icon",
+                            iconPosition: "left",
+                            icon: "\&\#xf085;",
+                            color: "danger",
+                            text: "button 3"
+                        }]
+                    }
+                    vm.group7 = {
+                        groups: true,
+                        data: [{
+                            type: "labeledIcon",
+                            iconPosition: "left",
+                            icon: "\&\#xf086;",
+                            size: "big",
+                            color: "success",
+                            text: "暂停"
+                        }, {
+                            type: "labeledIcon",
+                            iconPosition: "left",
+                            icon: "\&\#xf084;",
+                            size: "big",
+                            color: "success",
+                            text: "播放"
+                        }, {
+                            type: "labeledIcon",
+                            iconPosition: "left",
+                            icon: "\&\#xf085;",
+                            size: "big",
+                            color: "success",
+                            text: "拖曳"
+                        }]
+                    }
+                    vm.group8 = {
+                        groups: true,
+                        data: [{
+                            type: "labeledIcon",
+                            iconPosition: "right",
+                            icon: "\&\#xf086;",
+                            size: "large",
+                            color: "warning",
+                            text: "暂停"
+                        }, {
+                            type: "labeledIcon",
+                            iconPosition: "right",
+                            icon: "\&\#xf084;",
+                            size: "large",
+                            color: "warning",
+                            text: "播放"
+                        }, {
+                            type: "labeledIcon",
+                            iconPosition: "right",
+                            icon: "\&\#xf085;",
+                            size: "large",
+                            color: "warning",
+                            text: "拖曳"
+                        }]
+                    }
+
+                    vm.group9 = {
+                        groups: true,
+                        direction: "vertical",
+                        data: [{
+                            text: "button 1"
+                        }, {
+                            text: "button 2"
+                        }, {
+                            text: "button 3"
+                        }]
+                    }
+                    vm.group10 = {
+                        groups: true,
+                        direction: "vertical",
+                        width: 50,
+                        data: [{
+                            type: "icon",
+                            iconPosition: "left",
+                            icon: "\&\#xf086;",
+                            color: "info"
+                        }, {
+                            type: "icon",
+                            iconPosition: "left",
+                            icon: "\&\#xf084;",
+                            color: "info"
+                        }, {
+                            type: "icon",
+                            iconPosition: "left",
+                            icon: "\&\#xf085;",
+                            color: "info"
+                        }]
+                    }
+                    vm.group11 = {
+                        groups: true,
+                        direction: "vertical",
+                        data: [{
+                            type: "labeledIcon",
+                            iconPosition: "left",
+                            icon: "\&\#xf086;",
+                            text: "暂停",
+                            color: "warning"
+                        }, {
+                            type: "labeledIcon",
+                            iconPosition: "left",
+                            icon: "\&\#xf084;",
+                            text: "播放",
+                            color: "warning"
+                        }, {
+                            type: "labeledIcon",
+                            iconPosition: "left",
+                            icon: "\&\#xf085;",
+                            text: "拖曳",
+                            color: "warning"
+                        }]
+                    }
+                    vm.group12 = {
+                        groups: true,
+                        direction: "vertical",
+                        corner: false,
+                        data: [{
+                            type: "labeledIcon",
+                            iconPosition: "right",
+                            icon: "\&\#xf086;",
+                            size: "large",
+                            color: "success",
+                            text: "暂停"
+                        }, {
+                            type: "labeledIcon",
+                            iconPosition: "right",
+                            icon: "\&\#xf084;",
+                            size: "large",
+                            color: "success",
+                            text: "播放"
+                        }, {
+                            type: "labeledIcon",
+                            iconPosition: "right",
+                            icon: "\&\#xf085;",
+                            size: "large",
+                            color: "success",
+                            text: "拖曳"
+                        }]
+                    }
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;      
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>  
+    </body>
+</html>

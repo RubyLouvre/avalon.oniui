@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>tooltip组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <style type="text/css">
+            div.ct{
+                text-align: center;
+            }
+            a{
+                color: #000;
+                text-decoration: none;
+            }
+        </style>
+        <script>
+            var str = '请输入';
+            require(["tooltip/avalon.tooltip"], function() {
+                vmodel = avalon.define("test", function(vm) {
+                    vm.$ppOpt = {
+                        "contentGetter": function(elem) {
+                            if(elem.tagName.toLowerCase() == 'input' || elem.getAttribute("tp")) return str + (elem.getAttribute("tp") == "2" ? " - <a ms-click=\"hide($event)\" href=\"#\">&times;</a>" : "")
+                        }
+                        , autohide: true
+                        , event: 'focus'
+                    }
+                    vm.$skipArray = ["tooltip"]
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body>
+<div ms-controller="test">
+        <h1>不使用代理，各个方向绑定，改变位置，点击展示</h1>
+        <div class="oni-helper-reset oni-helper-clearfix">
+            <div class="oni-helper-reset ct" style="float:left;display:inline;margin:20px;width:200px;border:1px solid #ccc;line-height:300px;" ms-widget="tooltip,ff1, $ppOpt" data-tooltip-delegate="false" data-tooltip-event="click" data-tooltip-autohide="false" data-tooltip-position-my="left bottom-10" data-tooltip-position-at="left top" tp="2">元素A本身绑定，不自动隐藏</div>
+            <div class="oni-helper-reset ct" style="float:left;display:inline;margin:20px;width:200px;border:1px solid #ccc;line-height:300px;" ms-widget="tooltip,ff2, $ppOpt" data-tooltip-delegate="false" data-tooltip-event="click" data-tooltip-autohide="true" data-tooltip-position-my="left top" data-tooltip-position-at="left bottom+10" tp="1">元素B本身绑定</div>
+            <div class="oni-helper-reset ct" style="float:left;display:inline;margin:20px;width:200px;border:1px solid #ccc;line-height:300px;" ms-widget="tooltip,ff3, $ppOpt" data-tooltip-delegate="false" data-tooltip-event="click" data-tooltip-autohide="true" data-tooltip-position-my="right-10 top" data-tooltip-position-at="left top" tp="1">元素C本身绑定</div>
+            <div class="oni-helper-reset ct" style="float:left;display:inline;margin:20px;margin-right:0;width:200px;border:1px solid #ccc;line-height:300px;" ms-widget="tooltip,ff4, $ppOpt" data-tooltip-delegate="false" data-tooltip-event="click" data-tooltip-autohide="true" data-tooltip-position-my="left+10 bottom" data-tooltip-position-at="right bottom" tp="1">元素D本身绑定</div>
+            <p style="float:left;width:100%;text-align: left;">
+                <input onclick="avalon.vmodels.ff1.positionMy='right top+10';avalon.vmodels.ff1.positionAt='right bottom'" type="button" style="margin-left:20px;" value="点击修改元素A tip位置">
+            </p>
+        </div>
+        <pre ms-skip class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;tooltip组件&lt;/title&gt;
+        &lt;meta charset=&quot;UTF-8&quot;&gt;
+        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;
+        &lt;script src=&quot;../avalon.js&quot;&gt;&lt;/script&gt;
+        
+        &lt;style type=&quot;text/css&quot;&gt;
+            body{
+                padding-bottom: 400px;
+            }
+            div.ct{
+                text-align: center;
+            }
+            a{
+                color: #000;
+                text-decoration: none;
+            }
+        &lt;/style&gt;
+        &lt;script&gt;
+            var str = '请输入';
+            require([&quot;tooltip/avalon.tooltip&quot;], function() {
+                vmodel = avalon.define(&quot;test&quot;, function(vm) {
+                    vm.$ppOpt = {
+                        &quot;contentGetter&quot;: function(elem) {
+                            if(elem.tagName.toLowerCase() == 'input' || elem.getAttribute(&quot;tp&quot;)) return str + (elem.getAttribute(&quot;tp&quot;) == &quot;2&quot; ? &quot; - &lt;a ms-click=\&quot;hide($event)\&quot; href=\&quot;#\&quot;&gt;&amp;times;&lt;/a&gt;&quot; : &quot;&quot;)
+                        }
+                        , autohide: true
+                        , event: 'focus'
+                    }
+                    vm.$skipArray = [&quot;tooltip&quot;]
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body class=&quot;oni-helper-reset&quot;&gt;
+&lt;div ms-controller=&quot;test&quot;&gt;
+        &lt;h1&gt;不使用代理，各个方向绑定，改变位置，点击展示&lt;/h1&gt;
+        &lt;div class=&quot;oni-helper-reset oni-helper-clearfix&quot;&gt;
+            &lt;div class=&quot;oni-helper-reset ct&quot; style=&quot;float:left;display:inline;margin:20px;width:200px;border:1px solid #ccc;line-height:300px;&quot; ms-widget=&quot;tooltip,ff1, $ppOpt&quot; data-tooltip-delegate=&quot;false&quot; data-tooltip-event=&quot;click&quot; data-tooltip-autohide=&quot;false&quot; data-tooltip-position-my=&quot;left bottom-10&quot; data-tooltip-position-at=&quot;left top&quot; tp=&quot;2&quot;&gt;元素A本身绑定，不自动隐藏&lt;/div&gt;
+            &lt;div class=&quot;oni-helper-reset ct&quot; style=&quot;float:left;display:inline;margin:20px;width:200px;border:1px solid #ccc;line-height:300px;&quot; ms-widget=&quot;tooltip,ff2, $ppOpt&quot; data-tooltip-delegate=&quot;false&quot; data-tooltip-event=&quot;click&quot; data-tooltip-autohide=&quot;true&quot; data-tooltip-position-my=&quot;left top&quot; data-tooltip-position-at=&quot;left bottom+10&quot; tp=&quot;1&quot;&gt;元素B本身绑定&lt;/div&gt;
+            &lt;div class=&quot;oni-helper-reset ct&quot; style=&quot;float:left;display:inline;margin:20px;width:200px;border:1px solid #ccc;line-height:300px;&quot; ms-widget=&quot;tooltip,ff3, $ppOpt&quot; data-tooltip-delegate=&quot;false&quot; data-tooltip-event=&quot;click&quot; data-tooltip-autohide=&quot;true&quot; data-tooltip-position-my=&quot;right-10 top&quot; data-tooltip-position-at=&quot;left top&quot; tp=&quot;1&quot;&gt;元素C本身绑定&lt;/div&gt;
+            &lt;div class=&quot;oni-helper-reset ct&quot; style=&quot;float:left;display:inline;margin:20px;margin-right:0;width:200px;border:1px solid #ccc;line-height:300px;&quot; ms-widget=&quot;tooltip,ff4, $ppOpt&quot; data-tooltip-delegate=&quot;false&quot; data-tooltip-event=&quot;click&quot; data-tooltip-autohide=&quot;true&quot; data-tooltip-position-my=&quot;left+10 bottom&quot; data-tooltip-position-at=&quot;right bottom&quot; tp=&quot;1&quot;&gt;元素D本身绑定&lt;/div&gt;
+            &lt;p style=&quot;float:left;width:100%;text-align: left;&quot;&gt;
+                &lt;input onclick=&quot;avalon.vmodels.ff1.positionMy='right top+10';avalon.vmodels.ff1.positionAt='right bottom'&quot; type=&quot;button&quot; style=&quot;margin-left:20px;&quot; value=&quot;点击修改元素A tip位置&quot;&gt;
+            &lt;/p&gt;
+        &lt;/div&gt;
+        
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+    </div>
+</body>
+</html>

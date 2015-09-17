@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+    <script src="../avalon.js"></script>
+    <script src="../highlight/shCore.js"></script>
+    <script type="text/javascript">
+        require(['dropdown/avalon.dropdown.js',"ready!"], function() {
+        
+                avalon.define('mulSelect', function(vm) {
+                });
+                avalon.scan();
+          
+        });
+    </script>
+</head>
+<body>
+    <div class="wrapper">
+        <div ms-controller="mulSelect">
+            <h1>multiple select（多选下拉框）</h1>
+            <p>用select结构直接生成dropdown multiple组件</p>
+            <select ms-widget="dropdown"
+                    multiple>
+                <optgroup label="group1">
+                    <option value="value1">Value 1</option>
+                    <option>textValue</option>
+                    <option label="label" value="labelValue">with label</option>
+                    <option value="value2" selected>Value 2</option>
+                    <option value="value3">Value 3</option>
+                </optgroup>
+                <optgroup label="group2">
+                    <option value="value4" selected>Value 4</option>
+                    <option value="value5" disabled selected>Value 5</option>
+                    <option value="value6">Value 6</option>
+                </optgroup>
+            </select>
+        </div>
+        <pre class="brush:html;gutter:false;toolbar:false;" ms-skip>
+        &lt;!DOCTYPE html&gt;
+        &lt;html&gt;
+        &lt;head&gt;
+            &lt;title&gt;&lt;/title&gt;
+            &lt;meta charset="UTF-8"&gt;
+            &lt;meta name="viewport" content="width=device-width"&gt;
+            &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+            &lt;script type="text/javascript"&gt;
+                require('dropdown/avalon.dropdown.js', function() &#123;
+                    avalon.ready(function() &#123;
+                        //multiple select vmodel
+                        avalon.define('mulSelect', function(vm) &#123;&#125;);
+                        avalon.scan();
+                    &#125;);
+                &#125;);
+            &lt;/script&gt;
+        &lt;/head&gt;
+        &lt;body&gt;
+            &lt;div class="wrapper"&gt;
+                &lt;div ms-controller="mulSelect"&gt;
+                    &lt;h1&gt;multiple select（多选下拉框）&lt;/h1&gt;
+                    &lt;p&gt;用select结构直接生成dropdown multiple组件&lt;/p&gt;
+                    &lt;select ms-widget="dropdown"
+                            multiple&gt;
+                        &lt;optgroup label="group1"&gt;
+                            &lt;option value="value1"&gt;Value 1&lt;/option&gt;
+                            &lt;option&gt;textValue&lt;/option&gt;
+                            &lt;option label="label" value="labelValue"&gt;with label&lt;/option&gt;
+                            &lt;option value="value2" selected&gt;Value 2&lt;/option&gt;
+                            &lt;option value="value3"&gt;Value 3&lt;/option&gt;
+                        &lt;/optgroup&gt;
+                        &lt;optgroup label="group2"&gt;
+                            &lt;option value="value4" selected&gt;Value 4&lt;/option&gt;
+                            &lt;option value="value5" disabled selected&gt;Value 5&lt;/option&gt;
+                            &lt;option value="value6"&gt;Value 6&lt;/option&gt;
+                        &lt;/optgroup&gt;
+                    &lt;/select&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/body&gt;
+        &lt;/html&gt;
+        </pre>
+    </div>
+</body>
+</html>

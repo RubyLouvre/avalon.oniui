@@ -1,0 +1,25 @@
+
+@import "../chameleon/oniui-theme";
+$uiname: "oni-at";
+.#{$uiname} {
+    @extend %oniui-font-setting;
+    @include min-width(150px);
+    background:#fff;
+    border: 2px solid $ui-state-default-border-color;
+    .#{$uiname}-popup {
+        list-style: none;
+        margin: 0px;
+        padding: 0px;
+    }
+    .#{$uiname}-item{
+        margin: 0px;
+        padding: 0px;
+        height: 24px;
+        line-height: 24px;
+        text-indent: 5px;
+        &.oni-state-hover{
+            background:$ui-state-hover-background-color;
+            color: $ui-state-hover-color;
+        }
+    }
+}

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+        <script src="../highlight/shCore.js"></script>
+        <script src="../avalon.js"></script>
+    </head>
+    <body>
+        <div class="wrapper">
+            <h1>slider demo</h1>
+            <p class="example">禁用slider组件只需设置input元素的disabled属性即可，取消禁用可以通过获得组件自身对应VModel的引用并设置其disabled定义为false的方式来达到效果</p>
+            <div ms-skip>
+                <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                    &lt;!DOCTYPE HTML&gt;
+                    &lt;html&gt;
+                    &lt;head&gt;
+                        &lt;meta charset='utf-8'/&gt;
+                        &lt;title&gt;slider demo 2&lt;/title&gt;
+                        &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                    &lt;/head&gt;
+                    &lt;body&gt;
+                        &lt;div class="demo-show" ms-controller = "sliderWidget"&gt;
+                            &lt;div style="width:70%"&gt;
+                                &lt;p&gt;想禁止拖动，可以为原input元素设置disabled属性&lt;/p&gt;
+                                &lt;input ms-widget="slider, tt" disabled&gt;
+                                &lt;p ms-controller = "tt"&gt;如果可以拖动的话,值为{{value}}, 百分比为{{percent}}%,min为{{$valueMin}},max为{{$valueMax}}&lt;/p&gt;
+                                &lt;input type="button" value="切换组件禁用" ms-click="toggleSliderDisabled"&gt;
+                            &lt;/div&gt;
+                            &lt;script&gt;
+                                require(["slider/avalon.slider"], function() {
+                                    var ttModel = null;
+                                    var model = avalon.define("sliderWidget", function(vm) {
+                                        vm.toggleSliderDisabled = function() {
+                                            if (ttModel === null) {
+                                                ttModel = avalon.vmodels["tt"];
+                                            }
+                                            ttModel.disabled = !ttModel.disabled;
+                                        }
+                                    })
+                                    avalon.scan()
+                                })
+                            &lt;/script&gt;
+                        &lt;/div&gt;
+                    &lt;/body&gt;
+                    &lt;/html&gt;
+                </pre>
+            </div>
+            <div class="demo-show" ms-controller = "sliderWidget">
+                <div style="width:70%">
+                    <p>想禁止拖动，可以为原input元素设置disabled属性</p>
+                    <input ms-widget="slider, tt" disabled>
+                    <p ms-controller = "tt">如果可以拖动的话,值为{{value}}, 百分比为{{percent}}%,min为{{$valueMin}},max为{{$valueMax}}</p>
+                    <input type="button" value="切换组件禁用" ms-click="toggleSliderDisabled">
+                </div>
+                <script>
+                    require(["slider/avalon.slider"], function() {
+                        var ttModel = null;
+                        var model = avalon.define("sliderWidget", function(vm) {
+                            vm.toggleSliderDisabled = function() {
+                                if (ttModel === null) {
+                                    ttModel = avalon.vmodels["tt"];
+                                }
+                                ttModel.disabled = !ttModel.disabled;
+                            }
+                        })
+                        avalon.scan()
+                    })
+                </script>
+            </div>
+        </div>
+    </body>
+</html>

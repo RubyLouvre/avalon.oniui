@@ -1,0 +1,12 @@
+
+/*
+这是每个都组件都应该引用的部分
+*/
+.oni-dropdown .oni-dropdown-menu-inner .oni-dropdown-item {
+  text-indent: 6px; }
+
+.g-icon-start {
+  color: #58b359; }
+
+.g-icon-pause {
+  color: #333333; }

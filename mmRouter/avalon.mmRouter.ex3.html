@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>mmRouter组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <style>
+            .header{
+                background-color: #ccc;
+                height:40px;
+            }
+            body {
+                overflow-x: hidden; 
+            }
+            .header a{
+                width:140px;
+                display: inline-block;
+                text-decoration: none;
+                text-align: center;
+                font-weight: bolder;
+                font-size: 16px;
+                height:40px;
+                line-height: 40px;
+                position: relative;
+            }
+            .header .hint{
+                position: absolute;
+                top: 8px;
+                right: 40px;
+            }
+            .codelist li{
+                list-style-type: none;
+                float: left;
+                display: inline;
+                margin-right: 10px;
+            }
+            .slider{
+                width: 200%;
+                overflow: hidden;
+            }
+            .oni-mmRouter-leave {
+                position: relative;
+                margin-left: 0;
+                /*z-index: -1;                */
+            }
+            .oni-mmRouter-slide {
+                width: 50%;
+                float: left;
+                display: inline;
+                background: #fff;
+            }
+        </style>
+        <script >
+            avalon.config({debug: false})
+            var cs = [], arr = "contacts.detail.item.edit".split(".")
+            for(var i = 0; i < arr.length; i++) {
+                cs.push({
+                    state: i ? arr.slice(0, i+1).join(".") : "contacts.list",
+                    // arg: "{contactId: 1, itemID: 'b'}"
+                    arg: "{contactId: 1, itemID: 'b', query:{t: '" + i + "',c:'c"+i+"'}}"
+                })
+            }
+            require(["ready!", "mmRouter/mmState", "loading/avalon.loading", "mmRequest/mmRequest", "animation/avalon.animation"], function() {
+
+                //一个顶层VM
+                avalon.define({
+                    $id: "test",
+                    codes: cs,
+                    c: function() {
+                        avalon.vmodels.test.count += 2
+                        return avalon.vmodels.test.count
+                    },
+                    count: 1,
+                    run: function(id) {
+                        var code  = document.getElementById(id)
+                        if(!code) return
+                        code = code.value
+                        eval(code)
+                    },
+                    $skipArray: ["count"]
+                })
+                avalon.define({
+                    $id: "usVmodelAsController",
+                    name: "skipper",
+                    $onRendered: function() {
+                    }
+                })
+                avalon.state.config({
+                    onLoad: function() {
+                        avalon.log("onload")
+                        avalon.log(this.params)
+                        avalon.log(this.path)
+                    },
+                    onUnload: function() {
+                        avalon.log("unload")
+                        avalon.log(this.params)
+                    }
+                })
+                // avalon.router.get("/*path", function() {
+                //     console.log(arguments)
+                // })
+                //接着下来通过mmState这个基于状态机的高级路由器，定义各种状态
+                //（每个状态包含各个要处理的模板容器，获取模板的手段，中途会发生的各种回调）
+                //////////////
+                // hone   //
+                /////////////
+                avalon.state("home", {
+                    url: "/",
+                    views: {
+                        "": {
+                            template: '<p class="lead">Welcome to the UI-Router Demo</p>' +
+                                    '<p>Use the menu above to navigate. ' +
+                                    'Pay attention to the <code>$state</code> and <code>$stateParams</code> values below.</p>' +
+                                    '<p>Click these links—<a href="#!/contacts/1">Alice</a> or ' +
+                                    '<a href="#!/contacts/2">Bob</a>—to see a url redirect in action.</p>'
+                        },
+                        'hint@': {
+                            template: "当前状态是home"
+                        }
+                    }
+
+                }).state("about", {
+                    url: "/about",
+                    views: {
+                        "": {
+                            templateProvider: new Promise(function(fn) {
+                                fn('<p class="lead">UI-Router Resources</p><ul>' +
+                                        '<li>薩瓦迪卡</li>' +
+                                        '</ul>')
+                            })
+                        },
+                        "hint@": {
+                            template: "当前状态是about"
+                        }
+                    }
+                }).state("contacts", {
+                    abstract: true,
+                    url: "/contacts",
+                    templateUrl: "contacts.html",
+                    // 通过promise配置一个控制器
+                    // controllerProvider: function(params) {
+                    //     var prom = new Promise(function(rs, rj) {
+                    //         require(["mmRouter/js/contacts.js"], function($ctrl) {
+                    //             rs($ctrl)
+                    //         })
+                    //     })
+                    //     return prom
+                    // },
+                    controllerUrl: ["mmRouter/js/contacts.js"],
+                    onEnter: function() {
+                    }
+                }).state("contacts.list", {
+                    url: "",
+                    views: {
+                        "": {
+                            templateUrl: "contacts.list.html"
+                        },
+                        "hint@": {
+                            template: "当前状态是contacts.list",
+                            controllerProvider: function() {
+                                // return {}
+                                var _rs,
+                                    pro = new Promise(function(rs, rj) {
+                                        _rs = rs
+                                        setTimeout(function() {
+                                            rs({
+                                                $onRendered: avalon.noop
+                                            })
+                                            // rj("faild")
+                                        }, 1)
+                                    })
+                                return pro
+                            }
+                        },
+                        "complex@": {
+                            template: "<font color='red'>默认内容内不能包含ms-view-这是由于现在的设计造成的，可以后续考虑重写ms-view的逻辑</font>"
+                        }
+                    }
+                }).state("contacts.detail", {
+                    url: "/{contactId}",
+                    // state级别的数据准备
+                    onEnter: function(a) {
+                        avalon.vmodels.contacts.id = a
+                    },
+                    views: [
+                        {
+                            templateUrl: "contacts.detail.html",
+                            // 只要是query或者params变化，屏蔽掉通过innerHTML重写视图
+                            ignoreChange: function(changeType) {
+                                // if(changeType) return true
+                            },
+                            controller: function($ctrl) {
+                                // 视图元素scan完成后回调
+                                $ctrl.$onRendered = function() {
+                                }
+                            }
+                        },
+                        {
+                            name: "tip",
+                            templateProvider: function(params) {
+                                return "当前ID是" + params.contactId + "<div ms-view=\"complex\"></div>"
+                            }
+                        },
+                        {
+                            name: "hint@",
+                            template: "当前状态是 {{id}} contacts.detail",
+                            controller: "contacts"
+                        },
+                        {
+                            name: "complex@contacts.detail",
+                            template: "<font color='red'>我只有呵呵了 -- {{name}}</font>",
+                            // 把一个符合controller规范的vmodel用来生成$ctrl
+                            controller: "usVmodelAsController"
+                        }
+
+                    ]
+                }).state("contacts.detail.item", {
+                    url: "/item/{itemID}",
+                    onEnter: function() {
+                        var itemID = this.params.itemID
+                        var vmodel = avalon.vmodels.contacts
+                        var el = vmodel.contact
+                        if (el && el.items) {
+                            for (var i = 0, elem; elem = el.items[i++]; ) {
+                                if (elem.id == itemID) {
+                                    vmodel.item = elem;
+                                    break
+                                }
+                            }
+                        }
+                    },
+                    views: {
+                        "": {
+                            templateUrl: "contacts.detail.item.html"
+                            //, viewCache: false
+                        },
+                        'hint@': {
+                            template: "当前状态是contacts.detail.item"
+                        }
+                    }
+
+                }).state("contacts.detail.item.edit", {
+                    views: {
+                        "@contacts.detail": {
+                            templateUrl: "contacts.detail.item.edit.html",
+                            controller: function($ctrl) {
+                                // 视图被关闭时候回调
+                                $ctrl.$onBeforeUnload = function() {
+                                    return confirm("还没有保存呢，确认退出?")
+                                }
+                            }
+                        },
+                        "hint@": {
+                            template: "当前状态是contacts.detail.item.edit"
+                        }
+                    }
+                })
+                var confirmed
+                avalon.state.config({
+                    // 全局的onBeforeUnload
+                    onBeforeUnload: function(from, to) {
+                        if(confirmed) return
+                        if(to && to.stateName.indexOf("contacts") == 0) {
+                            confirmed = confirm("读取contacts需要授权，确认授权？")
+                            return confirmed
+                        }
+                    },
+                    onAbort: function(from, to) {
+                    },
+                    onBegin: function(from, to) {
+                        var loading = avalon.vmodels.loading
+                        if(loading) loading.toggle = true
+                    },
+                    onLoad: function(from, to) {
+                        var loading = avalon.vmodels.loading
+                        if(loading) loading.toggle = false
+                    },
+                    onError: function(keyname, state) {
+                        console.log(arguments)
+                        // avalon.router.navigate("/", {replace: true})
+                    },
+                    onViewEnter: function(newNode, oldNode) {
+                        avalon(oldNode).animate({
+                            marginLeft: "-100%"
+                        }, 500, function() {
+                            oldNode.parentNode && oldNode.parentNode.removeChild(oldNode)
+                        })
+                        
+                    }
+                })
+                //启动路由
+                avalon.history.start({
+                    // basepath: "/mmRouter",
+                    fireAnchor: false,
+                    routeElementJudger: function(ele, href) {
+                        ele = avalon(ele)
+                        if(ele.hasClass("route-ele")) return true // return href
+                    }
+                })
+                //go!!!!!!!!! 
+                avalon.scan()
+            })
+ 
+        </script>
+    </head>
+    <body ms-controller="test"
+          mss-widget="loading,loading" data-loading-type="img" data-loading-modal-background="#ccc" data-loading-modal-opacity="0.5">
+        <h1>mmRouter试验田: 最新版mmRouter试验田</h1>
+        <div style="overflow:hidden;">
+            <ul class="codelist">
+                <li 
+                     ms-repeat-code="codes">
+                    <textarea 
+                              ms-attr-id="'c'+$index" cols="30" rows="10" 
+                              ms-attr-value="'avalon.router.go(\''+code.state+'\','+code.arg+')'">
+                              </textarea>
+                    <p>
+                        <button 
+                                ms-click="run('c'+$index)">点击到状态：{{code.state}}</button>
+                    </p>
+                    <li style="clear:both;display:block;float:none;"></li>
+                </li>
+            </ul>
+            <div class="header">
+                <a href="#!//">mmState</a>  <a href="#!/contacts">contacts</a>  <a href="#!/about">about</a> <a href="/about" class="route-ele">about</a>
+                <p class="hint" ms-view="hint" 
+                   ms-class="b2"></p>
+            </div>
+            <div class="oni-helper-clearfix slider oni-helper-reset">
+                <div ms-view class="oni-mmRouter-slide"></div>
+            </div>
+        </div>
+        <pre ms-skip class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;mmRouter组件&lt;/title&gt;
+        &lt;meta charset=&quot;UTF-8&quot;&gt;
+        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;
+        &lt;script src=&quot;../avalon.modern.js&quot;&gt;&lt;/script&gt;
+        
+        &lt;style&gt;
+            .header{
+                background-color: #ccc;
+                height:40px;
+            }
+            body {
+                overflow-x: hidden; 
+            }
+            .header a{
+                width:140px;
+                display: inline-block;
+                text-decoration: none;
+                text-align: center;
+                font-weight: bolder;
+                font-size: 16px;
+                height:40px;
+                line-height: 40px;
+                position: relative;
+            }
+            .header .hint{
+                position: absolute;
+                top: 8px;
+                right: 40px;
+            }
+            .codelist li{
+                list-style-type: none;
+                float: left;
+                display: inline;
+                margin-right: 10px;
+            }
+            .slider{
+                width: 200%;
+                overflow: hidden;
+            }
+            .oni-mmRouter-leave {
+                position: relative;
+                margin-left: 0;
+                /*z-index: -1;                */
+            }
+            .oni-mmRouter-slide {
+                width: 50%;
+                float: left;
+                display: inline;
+                background: #fff;
+            }
+        &lt;/style&gt;
+        &lt;script &gt;
+            avalon.config({debug: false})
+            var cs = [], arr = &quot;contacts.detail.item.edit&quot;.split(&quot;.&quot;)
+            for(var i = 0; i &lt; arr.length; i++) {
+                cs.push({
+                    state: i ? arr.slice(0, i+1).join(&quot;.&quot;) : &quot;contacts.list&quot;,
+                    // arg: &quot;{contactId: 1, itemID: 'b'}&quot;
+                    arg: &quot;{contactId: 1, itemID: 'b', query:{t: '&quot; + i + &quot;',c:'c&quot;+i+&quot;'}}&quot;
+                })
+            }
+            require([&quot;ready!&quot;, &quot;mmRouter/mmState&quot;, &quot;loading/avalon.loading&quot;, &quot;mmRequest/mmRequest&quot;, &quot;animation/avalon.animation&quot;], function() {
+
+                //一个顶层VM
+                avalon.define({
+                    $id: &quot;test&quot;,
+                    codes: cs,
+                    c: function() {
+                        avalon.vmodels.test.count += 2
+                        return avalon.vmodels.test.count
+                    },
+                    count: 1,
+                    run: function(id) {
+                        var code  = document.getElementById(id)
+                        if(!code) return
+                        code = code.value
+                        eval(code)
+                    },
+                    $skipArray: [&quot;count&quot;]
+                })
+                avalon.define({
+                    $id: &quot;usVmodelAsController&quot;,
+                    name: &quot;skipper&quot;,
+                    $onRendered: function() {
+                    }
+                })
+                avalon.state.config({
+                    onLoad: function() {
+                        avalon.log(&quot;onload&quot;)
+                        avalon.log(this.params)
+                        avalon.log(this.path)
+                    },
+                    onUnload: function() {
+                        avalon.log(&quot;unload&quot;)
+                        avalon.log(this.params)
+                    }
+                })
+                // avalon.router.get(&quot;/*path&quot;, function() {
+                //     console.log(arguments)
+                // })
+                //接着下来通过mmState这个基于状态机的高级路由器，定义各种状态
+                //（每个状态包含各个要处理的模板容器，获取模板的手段，中途会发生的各种回调）
+                //////////////
+                // hone   //
+                /////////////
+                avalon.state(&quot;home&quot;, {
+                    url: &quot;/&quot;,
+                    views: {
+                        &quot;&quot;: {
+                            template: '&lt;p class=&quot;lead&quot;&gt;Welcome to the UI-Router Demo&lt;/p&gt;' +
+                                    '&lt;p&gt;Use the menu above to navigate. ' +
+                                    'Pay attention to the &lt;code&gt;$state&lt;/code&gt; and &lt;code&gt;$stateParams&lt;/code&gt; values below.&lt;/p&gt;' +
+                                    '&lt;p&gt;Click these links—&lt;a href=&quot;#!/contacts/1&quot;&gt;Alice&lt;/a&gt; or ' +
+                                    '&lt;a href=&quot;#!/contacts/2&quot;&gt;Bob&lt;/a&gt;—to see a url redirect in action.&lt;/p&gt;'
+                        },
+                        'hint@': {
+                            template: &quot;当前状态是home&quot;
+                        }
+                    }
+
+                }).state(&quot;about&quot;, {
+                    url: &quot;/about&quot;,
+                    views: {
+                        &quot;&quot;: {
+                            templateProvider: new Promise(function(fn) {
+                                fn('&lt;p class=&quot;lead&quot;&gt;UI-Router Resources&lt;/p&gt;&lt;ul&gt;' +
+                                        '&lt;li&gt;薩瓦迪卡&lt;/li&gt;' +
+                                        '&lt;/ul&gt;')
+                            })
+                        },
+                        &quot;hint@&quot;: {
+                            template: &quot;当前状态是about&quot;
+                        }
+                    }
+                }).state(&quot;contacts&quot;, {
+                    abstract: true,
+                    url: &quot;/contacts&quot;,
+                    templateUrl: &quot;contacts.html&quot;,
+                    // 通过promise配置一个控制器
+                    // controllerProvider: function(params) {
+                    //     var prom = new Promise(function(rs, rj) {
+                    //         require([&quot;mmRouter/js/contacts.js&quot;], function($ctrl) {
+                    //             rs($ctrl)
+                    //         })
+                    //     })
+                    //     return prom
+                    // },
+                    controllerUrl: [&quot;mmRouter/js/contacts.js&quot;],
+                    onEnter: function() {
+                    }
+                }).state(&quot;contacts.list&quot;, {
+                    url: &quot;&quot;,
+                    views: {
+                        &quot;&quot;: {
+                            templateUrl: &quot;contacts.list.html&quot;
+                        },
+                        &quot;hint@&quot;: {
+                            template: &quot;当前状态是contacts.list&quot;,
+                            controllerProvider: function() {
+                                // return {}
+                                var _rs,
+                                    pro = new Promise(function(rs, rj) {
+                                        _rs = rs
+                                        setTimeout(function() {
+                                            rs({
+                                                $onRendered: avalon.noop
+                                            })
+                                            // rj(&quot;faild&quot;)
+                                        }, 1)
+                                    })
+                                return pro
+                            }
+                        },
+                        &quot;complex@&quot;: {
+                            template: &quot;&lt;font color='red'&gt;默认内容内不能包含ms-view-这是由于现在的设计造成的，可以后续考虑重写ms-view的逻辑&lt;/font&gt;&quot;
+                        }
+                    }
+                }).state(&quot;contacts.detail&quot;, {
+                    url: &quot;/{contactId}&quot;,
+                    // state级别的数据准备
+                    onEnter: function(a) {
+                        avalon.vmodels.contacts.id = a
+                    },
+                    views: [
+                        {
+                            templateUrl: &quot;contacts.detail.html&quot;,
+                            // 只要是query或者params变化，屏蔽掉通过innerHTML重写视图
+                            ignoreChange: function(changeType) {
+                                // if(changeType) return true
+                            },
+                            controller: function($ctrl) {
+                                // 视图元素scan完成后回调
+                                $ctrl.$onRendered = function() {
+                                }
+                            }
+                        },
+                        {
+                            name: &quot;tip&quot;,
+                            templateProvider: function(params) {
+                                return &quot;当前ID是&quot; + params.contactId + &quot;&lt;div ms-view=\&quot;complex\&quot;&gt;&lt;/div&gt;&quot;
+                            }
+                        },
+                        {
+                            name: &quot;hint@&quot;,
+                            template: &quot;当前状态是 {{id}} contacts.detail&quot;,
+                            controller: &quot;contacts&quot;
+                        },
+                        {
+                            name: &quot;complex@contacts.detail&quot;,
+                            template: &quot;&lt;font color='red'&gt;我只有呵呵了 -- {{name}}&lt;/font&gt;&quot;,
+                            // 把一个符合controller规范的vmodel用来生成$ctrl
+                            controller: &quot;usVmodelAsController&quot;
+                        }
+
+                    ]
+                }).state(&quot;contacts.detail.item&quot;, {
+                    url: &quot;/item/{itemID}&quot;,
+                    onEnter: function() {
+                        var itemID = this.params.itemID
+                        var vmodel = avalon.vmodels.contacts
+                        var el = vmodel.contact
+                        if (el &amp;&amp; el.items) {
+                            for (var i = 0, elem; elem = el.items[i++]; ) {
+                                if (elem.id == itemID) {
+                                    vmodel.item = elem;
+                                    break
+                                }
+                            }
+                        }
+                    },
+                    views: {
+                        &quot;&quot;: {
+                            templateUrl: &quot;contacts.detail.item.html&quot;
+                            //, viewCache: false
+                        },
+                        'hint@': {
+                            template: &quot;当前状态是contacts.detail.item&quot;
+                        }
+                    }
+
+                }).state(&quot;contacts.detail.item.edit&quot;, {
+                    views: {
+                        &quot;@contacts.detail&quot;: {
+                            templateUrl: &quot;contacts.detail.item.edit.html&quot;,
+                            controller: function($ctrl) {
+                                // 视图被关闭时候回调
+                                $ctrl.$onBeforeUnload = function() {
+                                    return confirm(&quot;还没有保存呢，确认退出?&quot;)
+                                }
+                            }
+                        },
+                        &quot;hint@&quot;: {
+                            template: &quot;当前状态是contacts.detail.item.edit&quot;
+                        }
+                    }
+                })
+                var confirmed
+                avalon.state.config({
+                    // 全局的onBeforeUnload
+                    onBeforeUnload: function(from, to) {
+                        if(confirmed) return
+                        if(to &amp;&amp; to.stateName.indexOf(&quot;contacts&quot;) == 0) {
+                            confirmed = confirm(&quot;读取contacts需要授权，确认授权？&quot;)
+                            return confirmed
+                        }
+                    },
+                    onAbort: function(from, to) {
+                    },
+                    onBegin: function(from, to) {
+                        var loading = avalon.vmodels.loading
+                        if(loading) loading.toggle = true
+                    },
+                    onLoad: function(from, to) {
+                        var loading = avalon.vmodels.loading
+                        if(loading) loading.toggle = false
+                    },
+                    onError: function(keyname, state) {
+                        console.log(arguments)
+                        // avalon.router.navigate(&quot;/&quot;, {replace: true})
+                    },
+                    onViewEnter: function(newNode, oldNode) {
+                        avalon(oldNode).animate({
+                            marginLeft: &quot;-100%&quot;
+                        }, 500, function() {
+                            oldNode.parentNode &amp;&amp; oldNode.parentNode.removeChild(oldNode)
+                        })
+                        
+                    }
+                })
+                //启动路由
+                avalon.history.start({
+                    // basepath: &quot;/mmRouter&quot;,
+                    fireAnchor: false,
+                    routeElementJudger: function(ele, href) {
+                        ele = avalon(ele)
+                        if(ele.hasClass(&quot;route-ele&quot;)) return true // return href
+                    }
+                })
+                //go!!!!!!!!! 
+                avalon.scan()
+            })
+ 
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body ms-controller=&quot;test&quot;
+          mss-widget=&quot;loading,loading&quot; data-loading-type=&quot;img&quot; data-loading-modal-background=&quot;#ccc&quot; data-loading-modal-opacity=&quot;0.5&quot;&gt;
+        &lt;h1&gt;mmRouter试验田: 最新版mmRouter试验田&lt;/h1&gt;
+        &lt;div style=&quot;overflow:hidden;&quot;&gt;
+            &lt;ul class=&quot;codelist&quot;&gt;
+                &lt;li 
+                     ms-repeat-code=&quot;codes&quot;&gt;
+                    &lt;textarea 
+                              ms-attr-id=&quot;'c'+$index&quot; cols=&quot;30&quot; rows=&quot;10&quot; 
+                              ms-attr-value=&quot;'avalon.router.go(\''+code.state+'\','+code.arg+')'&quot;&gt;
+                              &lt;/textarea&gt;
+                    &lt;p&gt;
+                        &lt;button 
+                                ms-click=&quot;run('c'+$index)&quot;&gt;点击到状态：{{code.state}}&lt;/button&gt;
+                    &lt;/p&gt;
+                    &lt;li style=&quot;clear:both;display:block;float:none;&quot;&gt;&lt;/li&gt;
+                &lt;/li&gt;
+            &lt;/ul&gt;
+            &lt;div class=&quot;header&quot;&gt;
+                &lt;a href=&quot;#!//&quot;&gt;mmState&lt;/a&gt;  &lt;a href=&quot;#!/contacts&quot;&gt;contacts&lt;/a&gt;  &lt;a href=&quot;#!/about&quot;&gt;about&lt;/a&gt; &lt;a href=&quot;/about&quot; class=&quot;route-ele&quot;&gt;about&lt;/a&gt;
+                &lt;p class=&quot;hint&quot; ms-view=&quot;hint&quot; 
+                   ms-class=&quot;b2&quot;&gt;&lt;/p&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;oni-helper-clearfix slider oni-helper-reset&quot;&gt;
+                &lt;div ms-view class=&quot;oni-mmRouter-slide&quot;&gt;&lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+    </body>
+</html>

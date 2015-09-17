@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>spinner demo </title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>spinner demo</h1>
+        <p class="example">spinner默认步长为1，无范围限制，可以配置min设置spinner的最小值，配置max设置spinner的最大值，配置step设置spinner的步长；手动输入数值时，如输入了非数字字符，组件会将其置为change之前的数值，如设置了min或者max，组件会将输入值与mix、max对比，小于min则置为min，大于max则置为max</p>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;spinner demo 1&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;div class="demo-show" ms-controller="pager"&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;基本的spinner&lt;/legend&gt;
+                            &lt;input ms-duplex="p" ms-widget="spinner" id="test"/&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;有范围限制的spinner,最小0,最大5&lt;/legend&gt;
+                                &lt;input ms-duplex="p1" ms-widget="spinner, $spinner, $spinnerOpts" /&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;步长为0.5的spinner&lt;/legend&gt;
+                                &lt;input ms-duplex="p2" ms-widget="spinner, $step, $stepOpts"/&gt;
+                        &lt;/fieldset&gt;
+                        &lt;script&gt;
+                            require(["spinner/avalon.spinner"], function(avalon) {
+                                var pager = avalon.define('pager', function(vm) {
+                                    vm.p = "8"; 
+                                    vm.p1 = 2;
+                                    vm.p2 = 1.0;
+                                    vm.$spinnerOpts = {
+                                        min: 0,
+                                        max: 5
+                                    }
+                                    vm.$stepOpts = {
+                                        step: 0.5
+                                    }
+                                });
+                                avalon.scan();
+                            })
+                        &lt;/script&gt;
+                    &lt;/div&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+        <div class="demo-show" ms-controller="pager">
+            <fieldset>
+                <legend>基本的spinner</legend>
+                <input ms-duplex="p" ms-widget="spinner" id="test"/>
+            </fieldset>
+            <fieldset>
+                <legend>有范围限制的spinner,最小0,最大5</legend>
+                    <input ms-duplex="p1" ms-widget="spinner, $spinner, $spinnerOpts" />
+            </fieldset>
+            <fieldset>
+                <legend>步长为0.5的spinner</legend>
+                    <input ms-duplex="p2" ms-widget="spinner, $step, $stepOpts"/>
+            </fieldset>
+            <script>
+                require(["spinner/avalon.spinner"], function(avalon) {
+                    var pager = avalon.define('pager', function(vm) {
+                        vm.p = "8"; 
+                        vm.p1 = 2;
+                        vm.p2 = 1.0;
+                        vm.$spinnerOpts = {
+                            min: 0,
+                            max: 5
+                        }
+                        vm.$stepOpts = {
+                            step: 0.5
+                        }
+                    });
+                    avalon.scan();
+                })
+            </script>
+        </div>
+    </div>
+</body>
+</html>

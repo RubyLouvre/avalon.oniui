@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>规范</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="./highlight/shCore.js"></script>
+    </head>
+    <body>
+        <p><a href="http://www.cnblogs.com/rubylouvre/p/3573061.html"> avalonjs 组件编写指南</a></p>
+        <ul>
+            <li>
+                组件基于avalon1.2.5构建，每个必须有$init, $remove，onInit方法， 以便让框架自行管理创建与销毁。$remove注意对存在子节点的元素进行内部清空，elem.innerHTML = elem.textContent = ""，注意移除组件内部绑定的事件回调。
+                <blockquote>
+                    需要值得注意的是,$remove操作会在元素移出DOM树时触发,但普通的移动节点操作也会让元素离开DOM树,这时就会引发$remove操作,
+                    导致元素上面的组件被销毁.为防止误杀,我们在移动节点时,可以在元素定义msRetain属性,elem.msRetain = true,待到移动后再置为false
+                </blockquote>
+            </li>
+            <li>
+                组件的$init方法里面, 在扫描后最好再调用一个onInit回调,传入当前组件的 vmodel, options, vmodels, this指向当前元素 
+            </li>
+            <li>
+                组件在引入avalon的依赖时,直接define(["avalon"], fn)就行了,不需define(["../avalon"],fn)或define(["./ddd/avalon"],fn),因为avalon是一个核心模块，框架内部对它做了处理
+            </li>
+
+            <li>所有与类名相关的属性与方法 ,都改成Class, 不要用Cls, 你们看一下avalon都用hasClass, addClass, removeClass,要保持统一感
+                不打算暴露出来的方法与属性就不要放到VM上,以减轻以后升级的成本.我们可以在mix之前，将它们delete掉</li>
+            <li>私有方法应该尽量放在JS文件的下面，可以参看nodejs的库</li>
+            <li>字符串除非里面存在双引号才用单引号括起来，一般都是用双引号</li>
+            <li>能不写分号就不要写分号，了解JS自动添加分号的规则，当然你们改了要跑一遍，
+                参看这里<a href="http://www.zhihu.com/question/20298345"> http://www.zhihu.com/question/20298345/</a></li>
+            <li>
+                组件要最大程度兼容之前的，不行就两个，一个是兼容的，一个无牵制的
+            </li>
+            <li>
+                组件的显示隐藏必须通过toggle属性, 对应onOpen,onClose回调
+            </li>
+            <li>
+                组件是插在哪一个元素里面是由container属性决定,可以是ID或元素节点(这主要是那些弹出组件)
+            </li>
+            <li>把数组形式的数据源对应的配置项命名为data</li>
+            <li>
+                组件必须有widgetElement属性，引用元素本身
+            </li>
+            <li>
+                有模板的组件的默认匹配项里必须getTemplate方法 ,用于修改template, template在vm中不可监控的
+            </li>
+            <li>尽量减举行监控元素，善用$skipArray。</li>
+            <li>为元素绑定事件时，注意不要覆盖用户预置的ms-click, ms-keyup等事件</li>
+            <li>
+                组件必须有改写模板的配置项,参看@组件的popup
+            </li>
+            <li>
+                组件的模板请使用MS_OPTION_*做占位符
+            </li>
+            <li>
+                组件的回调名应该以onXxx开头
+            </li>
+            <li>
+                组件的模板编写,请遵循<a href="http://www.cnblogs.com/rubylouvre/p/3642024.html">《avalon 的HTML规范》</a>
+            </li>
+            <li>
+                每个组件的文件夹里增加一个avalon.[uiName].log.html 文件,里面是一个UI列表, 每次升级或修BUG,都把日期与改动都记录下来
+                <pre class="brush:html;gutter:false;toolbar:false">
+&lt;h1&gt;日志&lt;h1&gt;
+&lt;ul&gt;
+   &lt;li&gt;2014.10.15, 修改了什么什么功能&lt;/li&gt; 
+   &lt;li&gt;2014.10.16, 修改了什么什么功能&lt;/li&gt;
+&lt;ul&gt;
+                </pre>
+            </li>
+        </ul>
+        <p>请遵循HTML的套嵌规则，参见<a href="http://wenku.baidu.com/view/78731104ba1aa8114431d9ab.html">这里</a>与
+            <a href="http://www.junchenwu.com/2007/01/allowed_nesting_of_elements_in_html_4_strict_and_xhtml_10_strict.html">这里</a></p>
+        <p>下面是一个组件模板，注意我们是使用<b>avalon-doc</b>命令，将里面的注释转换文档，注释必须要规范！</p>
+        <pre class="brush:javascript;gutter:false;toolbar:false">
+
+//avalon 1.3.7 2014.11.17
+/**
+ * 
+ * @cnName 中文名字
+ * @enName 英文名字
+ * @introduce
+ *    &lt;p&gt;这是介绍,可以写多段落,也可以通过```javascript ```对代码进行语法高亮.&lt;/p&gt;
+ * @updatetime 2011-11-17
+ */
+define(["avalon", "text!./avalon.at.html", "css!../chameleon/oniui-common.css", "css!./avalon.at.css"], function(avalon, template) {
+
+    var widget = avalon.ui.at = function(element, data, vmodels) {
+        var options = data.atOptions,
+        var id = data.atid
+        options.template = options.getTemplate(template, options)
+        var vmodel = avalon.define(id, function(vm) {
+
+            avalon.mix(vm, options)
+
+            vm.$skipArray = [ "widgetElement","template"]
+            vm.widgetElement = element
+            vm.$init = function(continueScan) {
+               //其他内容
+                if(continueScan){
+                    continueScan()
+                }else{
+                    avalon.log("请尽快升到avalon1.3.7+")
+                    avalon.scan(element, _vmodels)
+                    if (typeof options.onInit === "function") {
+                        options.onInit.call(element, vmodel, options, vmodels)
+                    }
+                }
+            }
+            /**
+             * @interface 当组件移出DOM树时,系统自动调用的销毁函数
+             */
+            vm.$remove = function() {
+               //解绑事件, 清空节点
+            }
+            /*
+             * @interface 这是内置方法,不可以改变
+             */
+            vm.onSelect = function(){
+
+            }
+           
+        })
+        return vmodel
+
+    }
+    widget.defaults = {
+        at: "@", // @config 这是某一配置项
+        datalist: [], //@config 这是某一配置项
+        _datalist: [], //@interface 这是内置属性,不可以改变
+        maxLength: 20, //@config @后的查询字符串的最大长度，注意中间不能有空格
+        minLength: 1, //@config @后的查询字符串只有出现了多少个字符后才显示弹出层
+        /**
+         * @config 够长的注解可以写到前面来
+         * 远程更新函数,与后台进行AJAX连接，更新datalist，此方法有一个回调函数，里面将执行$filter、$highlight操作
+         */
+        delay: 500,
+        /**
+         * @config {Function} 如果是函数则这样写
+         * @param vm {Object} vmodel 注明每个参数的类型与用法
+         * @param callback {Function} 注明每个参数的类型与用法
+         */
+        updateData: function(vm, callback) {
+
+        }, 
+        /**
+         * @config 模板函数,方便用户自定义模板
+         * @param str {String} 默认模板
+         * @param opts {Object} vmodel
+         * @returns {String} 新模板
+         */
+        getTemplate: function(str, opts) {
+            return str
+        },
+        /*
+         * @config 用于对_datalist中的字符串进行高亮处理，将得到的新数组赋给_datalist，实现弹出层的更新
+         * @param items {String} datalist中的每一项
+         * @returns {String} 查询字符串
+         */
+        highlightData: function(item, str) {
+           //...................
+        }
+    }
+   
+
+    return avalon
+})
+/**
+ * @other
+ * 这是其他需要说明的东西,可以用多个段落,也可以像下面那用通过```javascript ```进行语法高亮
+ * ```javascript
+ function updateData(vmodel, callback) {
+    var model = vmodel.$model
+    jQuery.post("url", {limit: model.limit, query: model.query}, function(data) {
+        vmodel.datalist = data.datalist
+        callback()
+     })
+ }
+ ```
+*/
+
+/**
+ @links
+ [例子1](avalon.at.ex1.html)
+ [例子2](avalon.at.ex2.html)
+ */   
+        </pre>
+
+    </body>
+</html>

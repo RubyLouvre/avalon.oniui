@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>uploader demo 基础配置项</title>
+	<script src="../avalon.js"></script>
+	<link rel="stylesheet" href="../style/avalon.doc.css"/>
+	<link rel="stylesheet" href="avalon.fileuploader.ex.css"/>
+</head>
+<body ms-controller="demo">
+	<h1>uploader基础配置项</h1>
+    <div ms-widget="fileuploader,demoUploader,$uploaderOptions"></div>
+
+	<script>
+		require(["./fileuploader/avalon.fileuploader","domReady!"], function($$){
+			var model = $$.define("demo", function(vm){
+				vm.$uploaderOptions = {
+		            addButtonText: "添加文件",
+		            uploadButtonText: "开始上传",
+					acceptFileTypes: "image.*,*.txt,*.js",
+		            serverConfig: {
+		                url: "../../Handler1.ashx",
+		                userName: undefined,
+		                password: undefined,
+		                keyGenUrl: "../../getFileKey.ashx"
+		            },
+					onFileOverSize: function (fileObj) {
+						alert(fileObj.name+"超出了文件尺寸限制")
+					},
+					onFilePoolOverSize: function (fileObj, poolSize) {
+						alert("文件缓存池达已满，不能继续添加文件。")
+					},
+					onSameFileAdded: function () {
+						alert("不能添加相同的文件");
+					},
+
+                    enableDragDrop: true,
+		            enableRemoteKeyGen: false,
+		            chunked: true,
+		            chunkSize: 1024*1024
+				};
+			});
+			$$.scan();
+		});
+	</script>
+</body>
+</html>
+

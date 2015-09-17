@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>loading组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <script>
+            require(["loading/avalon.loading"], function() {
+                avalon.define("test", function(vm) {
+                    vm.loading = {
+                    }
+                    vm.$skipArray = ["loading"]
+                })
+                avalon.scan()
+            })
+        </script>
+        <style type="text/css">
+            div{
+            }
+        </style>
+    </head>
+    <body ms-controller="test">
+        <h1>loading:spinning-spin</h1>
+        <div ms-widget="loading" data-loading-type="spinning-spin" style="width:150px;height:150px;position:relative;zoom:1;"></div>
+        <pre ms-skip class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;loading组件&lt;/title&gt;
+        &lt;meta charset=&quot;UTF-8&quot;&gt;
+        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;
+        &lt;script src=&quot;../avalon.js&quot;&gt;&lt;/script&gt;
+        
+        &lt;script&gt;
+            require([&quot;loading/avalon.loading&quot;], function() {
+                avalon.define(&quot;test&quot;, function(vm) {
+                    vm.loading = {
+                    }
+                    vm.$skipArray = [&quot;loading&quot;]
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+        &lt;style type=&quot;text/css&quot;&gt;
+            div{
+            }
+        &lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body ms-controller=&quot;test&quot;&gt;
+        &lt;h1&gt;loading:spinning-spin&lt;/h1&gt;
+        &lt;div ms-widget=&quot;loading&quot; data-loading-type=&quot;spinning-spin&quot; style=&quot;width:150px;height:150px;position:relative;zoom:1;&quot;&gt;&lt;/div&gt;
+        
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+    </body>
+</html>

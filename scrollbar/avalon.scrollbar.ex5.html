@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>scrollbar组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <script>
+            require(["scrollbar/avalon.scrollbar"], function() {
+                avalon.define("test", function(vm) {
+                    vm.scrollbar = {
+                    }
+                    vm.data = avalon.range(1,400)
+                    vm.$index = 2
+                    vm.$skipArray = ["scrollbar"]
+                    vm.up = function() {
+                        avalon.vmodels.$cc.update()
+                    }
+                })
+                avalon.scan()
+            })
+        </script>
+        <style type="text/css">
+            .nobarbg .oni-scrollbar{
+                background: transparent;
+            }
+        </style>
+    </head>
+    <body>
+<div ms-controller="test">
+        <h1>scrollbar-滚动条不可见</h1>
+        <div ms-widget="scrollbar,$cc" class="oni-helper-reset nobarbg" style="height:400px;border:1px solid #ccc;width:400px;overflow:hidden;" data-scrollbar-position="right,bottom" data-scrollbar-show="never" data-scrollbar-show-bar-header="false">
+                <div class="oni-scrollbar-scroller oni-helper-reset" style="padding:0 18px 18px 0;">
+                    <p style="width:800px" ms-repeat="data" class="oni-helper-reset">left {{$index}} <span style="float:right;">right {{$index}} </span></p>
+                </div>
+            </div>
+        <pre ms-skip class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;scrollbar组件&lt;/title&gt;
+        &lt;meta charset=&quot;UTF-8&quot;&gt;
+        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;
+        &lt;script src=&quot;../avalon.js&quot;&gt;&lt;/script&gt;
+        
+        &lt;script&gt;
+            require([&quot;scrollbar/avalon.scrollbar&quot;], function() {
+                avalon.define(&quot;test&quot;, function(vm) {
+                    vm.scrollbar = {
+                    }
+                    vm.data = avalon.range(1,400)
+                    vm.$index = 2
+                    vm.$skipArray = [&quot;scrollbar&quot;]
+                    vm.up = function() {
+                        avalon.vmodels.$cc.update()
+                    }
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+        &lt;style type=&quot;text/css&quot;&gt;
+            .nobarbg .oni-scrollbar{
+                background: transparent;
+            }
+        &lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+&lt;div ms-controller=&quot;test&quot;&gt;
+        &lt;h1&gt;scrollbar-滚动条不可见&lt;/h1&gt;
+        &lt;div ms-widget=&quot;scrollbar,$cc&quot; class=&quot;oni-helper-reset nobarbg&quot; style=&quot;height:400px;border:1px solid #ccc;width:400px;overflow:hidden;&quot; data-scrollbar-position=&quot;right,bottom&quot; data-scrollbar-show=&quot;never&quot; data-scrollbar-show-bar-header=&quot;false&quot;&gt;
+                &lt;div class=&quot;oni-scrollbar-scroller oni-helper-reset&quot; style=&quot;padding:0 18px 18px 0;&quot;&gt;
+                    &lt;p style=&quot;width:800px&quot; ms-repeat=&quot;data&quot; class=&quot;oni-helper-reset&quot;&gt;left {{$index}} &lt;span style=&quot;float:right;&quot;&gt;right {{$index}} &lt;/span&gt;&lt;/p&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+    </div>
+</body>
+</html>

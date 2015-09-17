@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>scrollspy组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <script>
+            require(["scrollspy/avalon.scrollspy"], function() {
+                var ress
+                avalon.define("test", function(vm) {
+                    vm.index = NaN
+                    vm.indexs = []
+                    vm.scrollspy = {
+                        onChangeNew: function(indexs) {
+                            avalon.log(indexs)
+                            vm.indexs = indexs
+                        },
+                        panelListGetter: function() {
+                            if(ress) return ress
+                            var divs = document.getElementsByTagName("div"), res = []
+                            for(var i = 0, len = divs.length; i < len; i++) {
+                                if(divs[i].className.indexOf("dv") != -1) res.push(divs[i])
+                            }
+                            if(res.length) ress = res
+                            return ress
+                        }
+                    }
+                    vm.inView = function(index) {
+                        return vm.indexs.join(",").indexOf(index) != -1 ? " --- I'm in viewport" : ""
+                        return vm.index === index ? " --- I'm in viewport" : ""
+                    }
+                    vm.$skipArray = ["scrollspy"]
+                })
+                avalon.scan()
+            })
+        </script>
+        <style type="text/css">
+            * {
+                margin: 0;
+                padding: 0;
+            }
+            .dv {
+                border: 2px solid #ccc;
+                padding: 100px 0;
+                width: 300px;
+                margin: 100px auto 0;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body ms-controller="test" ms-scrollspy="$,scrollspy">
+        <h1>scrollspy：侦听内容元素是否在viewport</h1>
+        <div class="dv">
+            0{{inView(0)}}
+        </div>
+        <div class="dv">
+            1{{inView(1)}}
+        </div>
+        <div class="dv">
+            2{{inView(2)}}
+        </div>
+        <div class="dv">
+            3{{inView(3)}}
+        </div>
+        <div class="dv">
+            4{{inView(4)}}
+        </div>
+        <div class="dv">
+            5{{inView(5)}}
+        </div>
+        <div class="dv">
+            6{{inView(6)}}
+        </div>
+        <pre ms-skip class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;scrollspy组件&lt;/title&gt;
+        &lt;meta charset=&quot;UTF-8&quot;&gt;
+        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;
+        &lt;script src=&quot;../avalon.js&quot;&gt;&lt;/script&gt;
+        
+        &lt;script&gt;
+            require([&quot;scrollspy/avalon.scrollspy&quot;], function() {
+                var ress
+                avalon.define(&quot;test&quot;, function(vm) {
+                    vm.index = NaN
+                    vm.indexs = []
+                    vm.scrollspy = {
+                        onChangeNew: function(indexs) {
+                            avalon.log(indexs)
+                            vm.indexs = indexs
+                        },
+                        panelListGetter: function() {
+                            if(ress) return ress
+                            var divs = document.getElementsByTagName(&quot;div&quot;), res = []
+                            for(var i = 0, len = divs.length; i &lt; len; i++) {
+                                if(divs[i].className.indexOf(&quot;dv&quot;) != -1) res.push(divs[i])
+                            }
+                            if(res.length) ress = res
+                            return ress
+                        }
+                    }
+                    vm.inView = function(index) {
+                        return vm.indexs.join(&quot;,&quot;).indexOf(index) != -1 ? &quot; --- I'm in viewport&quot; : &quot;&quot;
+                        return vm.index === index ? &quot; --- I'm in viewport&quot; : &quot;&quot;
+                    }
+                    vm.$skipArray = [&quot;scrollspy&quot;]
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+        &lt;style type=&quot;text/css&quot;&gt;
+            * {
+                margin: 0;
+                padding: 0;
+            }
+            .dv {
+                border: 2px solid #ccc;
+                padding: 100px 0;
+                width: 300px;
+                margin: 100px auto 0;
+                text-align: center;
+            }
+        &lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body ms-controller=&quot;test&quot; ms-scrollspy=&quot;$,scrollspy&quot;&gt;
+        &lt;h1&gt;scrollspy：侦听内容元素是否在viewport&lt;/h1&gt;
+        &lt;div class=&quot;dv&quot;&gt;
+            0{{inView(0)}}
+        &lt;/div&gt;
+        &lt;div class=&quot;dv&quot;&gt;
+            1{{inView(1)}}
+        &lt;/div&gt;
+        &lt;div class=&quot;dv&quot;&gt;
+            2{{inView(2)}}
+        &lt;/div&gt;
+        &lt;div class=&quot;dv&quot;&gt;
+            3{{inView(3)}}
+        &lt;/div&gt;
+        &lt;div class=&quot;dv&quot;&gt;
+            4{{inView(4)}}
+        &lt;/div&gt;
+        &lt;div class=&quot;dv&quot;&gt;
+            5{{inView(5)}}
+        &lt;/div&gt;
+        &lt;div class=&quot;dv&quot;&gt;
+            6{{inView(6)}}
+        &lt;/div&gt;
+        
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+    </body>
+</html>

@@ -1,0 +1,128 @@
+{{MS_WIDGET_BALL}}
+<v:oval ms-repeat-item="data" style="position:absolute;" 
+  ms-attr-strokecolor="color" 
+  ms-attr-fillcolor="color" 
+  ms-css-left="item.x + 'px'" 
+  ms-css-top="item.y + 'px'" 
+  ms-css-width="item.r * 2 + 'px'" 
+  ms-css-height="item.r * 2 + 'px'">
+</v:oval>
+{{MS_WIDGET_DIVIDER}}
+<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+  <circle  
+          ms-attr-r="data[$index].r" 
+          ms-attr-cx="data[$index].x+data[$index].r" 
+          ms-attr-cy="data[$index].y+data[$index].r" 
+          ms-repeat="data" 
+          ms-attr-fill="color">
+      <animate attributeName="opacity" from="1" to=".1" repeatCount="indefinite" 
+               ms-if="type=='ball'" 
+               ms-attr-dur="svgDur" 
+               ms-attr-begin="data[$index].begin"/>
+      <animate attributeName="r" repeatCount="indefinite" keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8" calcMode="spline" 
+               ms-attr-values="'0;'+data[$index].r+';0;0'"
+               ms-attr-dur="svgDur" 
+               ms-if="type=='spinning-bubbles'" 
+               ms-attr-begin="data[$index].begin"/>
+      <animate attributeName="r" repeatCount="indefinite" keytimes="0;0.2;0.7;1" keySplines="0.2 0.2 0.4 0.8;0.2 0.6 0.4 0.8;0.2 0.6 0.4 0.8" calcMode="spline" 
+        ms-if="type=='bubbles'"
+        ms-attr-begin="data[$index].begin"  
+        ms-attr-dur="svgDur" 
+        ms-attr-values="'0;'+data[$index].r+';0;0'" />
+  </circle>
+</svg>
+{{MS_WIDGET_TYPE}}
+{{MS_WIDGET_SPIN}}
+<v:oval stroked="true" filled="F" 
+        ms-attr-strokecolor="color" 
+        ms-css-height="width+'px'" 
+        ms-css-width="width+'px'" 
+        ms-css-opacity="opacity" 
+        ms-attr-strokeweight="width / 2 - widthInner / 2+'px'" 
+        ms-repeat="data" 
+  style="position:absolute;z-index:2;left:0;top:0;"></v:oval>
+<v:arc stroked="true" filled="F" 
+    ms-attr-strokecolor="color" 
+    ms-attr-strokeweight="width / 2 - widthInner / 2+'px'" 
+    style="position:absolute;z-index:3;text-indent:-1000px;overflow:hidden;left:0;top:0;" 
+    ms-attr-startangle="startangle" 
+    ms-attr-endangle="endangle" 
+    ms-css-height="width+'px'" 
+    ms-css-width="width+'px'" 
+    ms-repeat="data">
+  </v:arc>
+{{MS_WIDGET_DIVIDER}}
+<svg width="100%" height="100%" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path 
+    ms-attr-d="arc" 
+    ms-attr-stroke="color" 
+    ms-attr-stroke-width="radius" 
+    ms-attr-transform="'rotate(0 ' + spinPoint +')'"
+    stroke-linejoin="round" fill="none">
+      <animateTransform attributeName="transform" repeatCount="indefinite" attributeType="XML" type="rotate" begin="0s" 
+        ms-attr-from="0 + ' ' + spinPoint" 
+        ms-attr-to="360 + ' ' + spinPoint" 
+        ms-attr-dur="svgDur" />
+    </path>
+  <path stroke-linejoin="round" 
+    ms-attr-d="circle" 
+    ms-attr-stroke-width="radius" 
+    ms-attr-stroke="color" 
+    ms-css-opacity="opacity" 
+    fill="none"></path>
+  </svg>
+{{MS_WIDGET_TYPE}}
+{{MS_WIDGET_SPINNING_SPIN}}
+<v:arc stroked="true" filled="F" 
+    ms-attr-strokecolor="color" 
+    ms-attr-strokeweight="radius+'px'" 
+    style="position:absolute;z-index:3;text-indent:-1000px;overflow:hidden;left:0;top:0;" 
+    ms-attr-startangle="item.startangle" 
+    ms-attr-endangle="item.endangle" 
+    ms-css-opacity="opacities[$index]" 
+    ms-css-height="width+'px'" 
+    ms-css-width="width+'px'" 
+    ms-repeat-item="data">
+  </v:arc>
+{{MS_WIDGET_DIVIDER}}
+<svg width="100%" height="100%" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path 
+    ms-attr-d="arc" 
+    ms-attr-stroke="color" 
+    ms-attr-stroke-width="radius" 
+    ms-attr-transform="item.rotate" 
+    ms-repeat-item="data" 
+    ms-css-opacity="opacities[$index]" 
+    stroke-linejoin="round" fill="none">
+      <animate ms-if="0" attributeName="opacity" from="1" to=".2" repeatCount="indefinite" 
+               ms-attr-dur="svgDur" 
+               ms-attr-begin="item.begin"/>
+    </path>
+  </svg>
+{{MS_WIDGET_TYPE}}
+{{MS_WIDGET_SPOKES}}
+<v:rect style="position:absolute;"  
+        ms-attr-fillcolor="color" 
+        ms-attr-strokecolor="color"  
+        ms-css-left="item.spokesLeft+'px'" 
+        ms-css-top="item.spokesTop+'px'"
+        ms-css-width="spokesWidth+'px'" 
+        ms-css-height="spokesHeight+'px'" 
+        ms-css-rotation="item.spokesRotation" 
+        ms-repeat-item="data">
+        <v:fill 
+                ms-attr-color="color"></v:fill>
+  </v:rect>
+{{MS_WIDGET_DIVIDER}}
+<svg width="100%" height="100%" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path opacity=".1" ms-attr-d="svgPath" 
+      ms-attr-transform="data[$index].rotate" 
+        ms-repeat="data" 
+    ms-attr-fill="color">
+    <animate attributeName="opacity" from="1" to=".1" repeatCount="indefinite" 
+             ms-attr-dur="svgDur" 
+             ms-attr-begin="data[$index].begin"/></path>
+  </svg>
+{{MS_WIDGET_TYPE}}
+{{MS_WIDGET_IMG}}
+<img width="100%" height="100%" ms-attr-src="src">

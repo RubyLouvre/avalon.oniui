@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>datepicker demo </title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>datepicker demo</h1>
+        <div class="demo-show" ms-controller="demo">
+            <fieldset style="position: relative; z-index: 3">
+                <legend>onSelect回调</legend>
+                <input ms-widget="datepicker, c, $cOpts"/>
+                <p>说明：onSelect回调是在选中日期之后的回调操作。onSelect回调参数分别是：选中的日期，组件对应的VM，通过data-*设置的配置项组成的对象</p>
+            </fieldset>
+            <fieldset style="position: relative; z-index: 2">
+                <legend>onClose回调</legend>
+                <input ms-widget="datepicker, a, $aOpts" />
+                <p>说明：配置onClose回调，使得日历关闭之后可以调用它做一些自定义操作</p>
+                <p>onClose回调的参数分别是：最近一次选中date，datepicker生成的VM引用</p>
+            </fieldset>
+            <fieldset style="position: relative; z-index: 1">
+                <legend>onChangeMonthYear回调</legend>
+                <input ms-widget="datepicker, b, $bOpts" data-datepicker-change-month-and-year="true" />
+                <p>说明：配置changeMonthAndYear为true使得用户可以通过下拉选项切换月份和年份的显示，配置onChangeMonthYear回调，使得用户在切换了月份或者年份之后可以做一些需要的操作。onChangeMonthYear回调的参数分别是当前选中year，当前选中month，datepicker绑定生成的VM应用</p>
+            </fieldset>
+            <script> 
+                require(["datepicker/avalon.datepicker"], function(avalon) {
+                    var model = avalon.define("demo", function(vm) {
+                        vm.$aOpts = {
+                            onClose: function(date, vmodel) {
+                                avalon.log("关闭隐藏日历后的用户回调")
+                                avalon.log(arguments);
+                                avalon.log(date);
+                                avalon.log(vmodel);
+                            }
+                        }
+                        vm.$bOpts = {
+                            onChangeMonthYear: function(year, month, vmodel) {
+                                avalon.log("通过下拉框切换日历月份、年份的回调")
+                                avalon.log("year is : "+year);
+                                avalon.log("month is : "+month);
+                                avalon.log("vmodel is :");
+                                avalon.log(vmodel);
+                            }
+                        }
+                        vm.$cOpts = {
+                            onSelect: function(date, vmodel, data) {
+                                avalon.log("选中日期后的用户回调")
+                                avalon.log(arguments);
+                            }
+                        }
+                    })
+                    avalon.scan();
+                })
+            </script>
+        </div>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;datepicker demo&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;div class="demo-show" ms-controller="demo"&gt;
+                        &lt;fieldset style="position: relative; z-index: 3"&gt;
+                            &lt;legend&gt;onSelect回调&lt;/legend&gt;
+                            &lt;input ms-widget="datepicker, c, $cOpts"/&gt;
+                            &lt;p&gt;说明：onSelect回调是在选中日期之后的回调操作。onSelect回调参数分别是：选中的日期，组件对应的VM，通过data-*设置的配置项组成的对象&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset style="position: relative; z-index: 2"&gt;
+                            &lt;legend&gt;onClose回调&lt;/legend&gt;
+                            &lt;input ms-widget="datepicker, a, $aOpts" /&gt;
+                            &lt;p&gt;说明：配置onClose回调，使得日历关闭之后可以调用它做一些自定义操作&lt;/p&gt;
+                            &lt;p&gt;onClose回调的参数分别是：最近一次选中date，datepicker生成的VM引用&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset style="position: relative; z-index: 1"&gt;
+                            &lt;legend&gt;onChangeMonthYear回调&lt;/legend&gt;
+                            &lt;input ms-widget="datepicker, b, $bOpts" data-datepicker-change-month-and-year="true" /&gt;
+                            &lt;p&gt;说明：配置changeMonthAndYear为true使得用户可以通过下拉选项切换月份和年份的显示，配置onChangeMonthYear回调，使得用户在切换了月份或者年份之后可以做一些需要的操作。onChangeMonthYear回调的参数分别是当前选中year，当前选中month，datepicker绑定生成的VM应用&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;script&gt; 
+                            require(["datepicker/avalon.datepicker"], function(avalon) {
+                                var model = avalon.define("demo", function(vm) {
+                                    vm.$aOpts = {
+                                        onClose: function(date, vmodel) {
+                                            avalon.log("关闭隐藏日历后的用户回调")
+                                            avalon.log(arguments);
+                                            avalon.log(date);
+                                            avalon.log(vmodel);
+                                        }
+                                    }
+                                    vm.$bOpts = {
+                                        onChangeMonthYear: function(year, month, vmodel) {
+                                            avalon.log("通过下拉框切换日历月份、年份的回调")
+                                            avalon.log("year is : "+year);
+                                            avalon.log("month is : "+month);
+                                            avalon.log("vmodel is :");
+                                            avalon.log(vmodel);
+                                        }
+                                    }
+                                    vm.$cOpts = {
+                                        onSelect: function(date, vmodel, data) {
+                                            avalon.log("选中日期后的用户回调")
+                                            avalon.log(arguments);
+                                        }
+                                    }
+                                })
+                                avalon.scan();
+                            })
+                        &lt;/script&gt;
+                    &lt;/div&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+    </div>
+</body>
+</html>
+

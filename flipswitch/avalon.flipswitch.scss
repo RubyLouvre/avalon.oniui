@@ -1,0 +1,242 @@
+
+@import "../chameleon/oniui-theme";
+$uiname : ".oni-flipswitch";
+v\:* { behavior: url(#default#VML);} 
+@if($oinui-theme == smoothness) {
+	$switch: (
+		bg:#68c969,
+		offBg:#999,
+		disableBg: #dedede,
+		disableColor: #fff,
+		bgImg: url("http://source.qunarzz.com/general/oniui/flipswitch/bg.gif"),
+		onColor: #fff,
+		offColor: #9B9B9B,
+		ballColor:#fff
+	) !global
+}
+div#{$uiname}{
+	border: none;
+	background-color: transparent;
+    & label, & span{
+		cursor: pointer;
+		margin: 0;
+		top:0;
+		left:0;
+		position: relative;
+	}
+}
+#{$uiname} {
+	position: relative;
+	z-index: 10;
+	height: 100%;
+	top:0;
+	overflow: hidden;
+	text-align: center;
+	border: none;
+	background: none;
+	&-modal{
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 10;
+		height: 100%;
+		width: 100%;
+		opacity: 0.4;
+		background: #fff;
+		filter:alpha(opacity=40); 
+	}
+	&-normal{
+	    width: 48px;
+	    height: 28px;
+	}
+	&-mini{
+	    width: 28px;
+	    height: 16px;
+	}
+	&-small{
+	    width:36px;
+	    height: 22px;
+	}
+	&-large{
+	    width: 76px;
+	    height: 42px;
+	}
+	&-bar{
+		position: absolute;
+		z-index: 10;
+		width: 150%;
+		left:0;
+		top:50%;
+	}
+	&-animate{
+		transition:all .5s;
+		-webkit-transition:all .5s;
+		-moz-transition:all .5s;
+		-o-transition:all .5s;
+		-ms-transition:all .5s;
+	}
+	&-left, &-right{
+		width: 33%;
+		color:map-get($switch, onColor);
+		font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	}
+	&-right{
+		color: map-get($switch, offColor);
+	}
+	&-dragger{
+		width: 34%;
+		&-ball{
+			width: 24px;
+			height: 24px;
+			left: 50%;
+			// top:50%;
+			margin-left: -12px;
+			// margin-top: -10px;
+			&-unchecked{
+				margin-left: -12px;
+			}
+			position: absolute;
+		}
+	}
+	&-on {
+		display: none;
+	}
+	&-large{
+		#{$uiname}{
+			&-dragger-ball{
+				height: 38px;
+				width: 38px;
+				margin-left: -20px;
+				// margin-top: -17px;
+				&-unchecked{
+					margin-left: -20px;
+				}
+			}
+		}
+	}
+	&-mini{
+		#{$uiname}{
+			&-dragger-ball{
+				height: 12px;
+				width: 12px;
+				margin-left: -8px;
+				// margin-top: -6px;
+				&-unchecked{
+					margin-left: -8px;
+				}
+			}
+		}
+	}
+	&-small{
+		#{$uiname}{
+			&-dragger-ball{
+				height: 18px;
+				width: 18px;
+				margin-left: -10px;
+				// margin-top: -7px;
+				&-unchecked{
+					margin-left: -10px;
+				}
+			}
+		}
+	}
+	&-left, &-right, &-dragger{
+		float: left;
+		display: inline;
+		height: 24px;
+		line-height: 24px;
+		font-weight: bolder;
+	}
+	&-mini &-left, &-mini &-right, &-mini &-dragger{
+		height:14px;
+		line-height: 14px;
+		font-size: 14px;
+	}
+	&-small &-left, &-small &-right, &-small &-dragger{
+		height:18px;
+		line-height: 18px;
+		font-size: 18px;
+	}
+	&-large &-left, &-large &-right, &-large &-dragger{
+		height:38px;
+		line-height: 38px;
+		font-size: 38px;
+	}
+	&-bg{
+		position: absolute;
+		z-index: 1;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+	}
+	// do not use background-image
+	&-use-no-img{
+		#{$uiname}-ico{
+			background-image: none;
+		}
+		#{$uiname}-bg{
+			border-radius: 14px;
+			background-color: map-get($switch, bg);
+		}
+		#{$uiname}-dragger-ball{
+			background: map-get($switch, ballColor);
+			border-radius: 12px;
+		}
+		&#{$uiname}-mini{
+			#{$uiname}-bg{
+				border-radius: 8px;
+			}
+			#{$uiname}-dragger-ball{
+				border-radius: 6px;
+			}
+		}
+		&#{$uiname}-small{
+			#{$uiname}-bg{
+				border-radius: 11px;
+			}
+			#{$uiname}-dragger-ball{
+				border-radius: 9px;
+			}
+		}
+		&#{$uiname}-large{
+			#{$uiname}-bg{
+				border-radius: 21px;
+			}
+			#{$uiname}-dragger-ball{
+				border-radius: 19px;
+			}
+		}
+		#{$uiname}-uckbg{
+			background-color: map-get($switch, offBg);
+		}
+	}
+
+	&-drawing {
+		#{$uiname}-dragger-ball, #{$uiname}-bg{
+			background: none;
+		}
+	}
+}
+
+
+.oni-state-disabled, .oni-state-hover{
+	#{$uiname}-oval-hd{
+		display: block;
+	}
+	#{$uiname}-oval-n{
+		display: none;
+	}
+}
+.oni-state-disabled{
+	& #{$uiname}-bar label, & #{$uiname}-bar span{
+		cursor: default;
+		color: map-get($switch, disableColor);
+	}
+	#{$uiname}-oval-hd{
+		display: block;
+	}
+	#{$uiname}oval-n {
+		display: none;
+	}
+}

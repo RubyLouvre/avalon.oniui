@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>avalon类似新浪微博的@提示插件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../avalon.js">
+
+        </script>
+        <script src="../highlight/shCore.js">
+
+        </script>
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+        <script>
+            require(["at/avalon.at"], function() {
+                avalon.define("test", function(vm) {
+                    vm.at = {
+                        datalist: ["aaa", "aab", "aaaa", "aac", "ccc", "cc1", "ccaaccaa"],
+                        minLength: 1
+                    }
+                    vm.$skipArray = ["at"]
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body>
+        <div ms-controller="test">
+            <textarea ms-widget="at" placeholder="@后面填上a,或aa, c试试" style="width:300px;height:40px;"></textarea>
+            <pre class="brush:html;gutter:false;">
+&lt;!DOCTYPE html&gt;;
+&lt;html&gt;
+    &lt;head&gt;
+   
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width"&gt;
+        &lt;script src="avalon.js"&gt;
+            
+        &lt;/script&gt;
+        &lt;script&gt;
+            require(["avalon.at"], function(){
+                avalon.define("test",function(vm){
+                    vm.at = {
+                        datalist : ["aaa", "aab", "aaaa", "aac", "ccc","cc1","ccaaccaa"],
+                        minLength: 0
+                    }
+                    vm.$skipArray = ["at"]
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body ms-controller="test"&gt;
+        &lt;p&gt;&lt;a href="avalon.at.doc.html"&gt;文档&lt;/a&gt;&lt;/p&gt;
+        &lt;textarea ms-widget="at" placeholder="@后面填上a,或aa, c试试" &gt;&lt;/textarea&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+            </pre>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,253 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>简单的表格组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    <body ms-controller="test">
+        <div style="width:960px; margin: 0 auto">
+            <h1>通过data的disable属性禁用部分数据</h1>
+            <button ms-click="renderGrid" ms-visible="toggle" style='margin-bottom: 30px;'>render data</button>
+            <div ms-widget="smartgrid, sg1, opts" ></div>
+        </div>
+        <script>
+            require(["smartgrid/avalon.smartgrid", "switchdropdown/avalon.switchdropdown"], function() {
+                function getDatas(number) {
+                    var data = []
+                    for (var i = 0; i < number; i++) {
+                        data.push({
+                            description: "北上广经济型计划",
+                            operate: i % 5 ? 0 : 1,
+                            buget: 5800,
+                            display: 13534646,
+                            click : 15932,
+                            clickRate : "50.21%",
+                            consume: 1135800,
+                            averageClickRate: 1.82,
+                            disable: i == 3 ? true : false,
+                            selected: true
+                        })
+                    }
+                    return data
+                } 
+                
+                avalon.define("test", function(vm) {
+                    vm.toggle = "false"
+                    vm.$skipArray = ["opts"] //不需要转为监控属性的属性务必放到$skipArray数组中，减少开销提高性能
+                    vm.opts = {
+                        // 不希望组件的配置项被smartgrid监控，将其放到$skipArray数组中，添加其他组件同理
+                        $skipArray: ["switchdropdown", "dropdown", "pager"],
+                        selectable: {
+                            type: "Checkbox" //为表格添加选中行操作框,可以设置为"Checkbox"或者"Radio"
+                        },
+                        dropdownData: [{ // dropdown的数据信息
+                            name: "忙",
+                            value: "1"
+                        },{
+                            name: "不忙",
+                            value: "0"
+                        }],
+                        dropdown : {
+                            width: 100,
+                            listWidth: 100
+                        },
+                        columns: [
+                            {
+                                key : "description",
+                                name : "竞价推广计划",
+                                sortable : false,
+                                isLock : true,
+                                align: "left",
+                                defaultValue: "北上广经济型计划",
+                                customClass: "ddd",
+                                width: 150
+                            }, {
+                                key: "operate",
+                                name: "操作",
+                                title: "操作",
+                                width: 110,
+                                format: "switchdropdown"
+                            }, {
+                                key : "buget",
+                                name : "预算",
+                                sortable : true,
+                                align: "right",
+                                defaultValue: "￥5800",
+                                width: 75,
+                                format: "$X" // 定义渲染数据的方法名
+                            }, {
+                                key : "display",
+                                name : "展现",
+                                sortable : true,
+                                align: "right",
+                                width: 98
+                            }, {
+                                key : "click",
+                                name : "点击",
+                                sortable : true,
+                                align: "right",
+                                width: 90
+                            }, {
+                                key : "clickRate",
+                                name : "点击率",
+                                sortable : true,
+                                align: "right",
+                                width: 90
+                            }, {
+                                key : "consume",
+                                name : "消费",
+                                sortable : true,
+                                align: "right",
+                                width: 85,
+                                format: "$X" // 定义渲染数据的方法名
+                            }, {
+                                key : "averageClickRate",
+                                name : "平均点击价格",
+                                sortable : true,
+                                align: "right",
+                                width: 115,
+                                format: "$X" // 定义渲染数据的方法名
+                            }
+                        ],
+
+                        data: []
+                    }
+                    vm.renderGrid = function() {
+                        avalon.vmodels.sg1.render(getDatas(10))
+                    }
+                })
+                avalon.scan()
+            })
+        </script>
+        <div ms-skip style="width:960px; margin: 0 auto">
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;smartgrid demo&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body ms-controller="test"&gt;
+                    &lt;h1&gt;通过data的disable属性禁用部分数据&lt;/h1&gt;
+                    &lt;button ms-click="renderGrid" ms-visible="toggle" style='margin-bottom: 30px;'&gt;render data&lt;/button&gt;
+                    &lt;div ms-widget="smartgrid, sg1, opts" &gt;&lt;/div&gt;
+                    &lt;script&gt;
+                        require(["smartgrid/avalon.smartgrid", "switchdropdown/avalon.switchdropdown"], function() {
+                            function getDatas(number) {
+                                var data = []
+                                for (var i = 0; i &lt; number; i++) {
+                                    data.push({
+                                        description: "北上广经济型计划",
+                                        operate: i % 5 ? 0 : 1,
+                                        buget: 5800,
+                                        display: 13534646,
+                                        click : 15932,
+                                        clickRate : "50.21%",
+                                        consume: 1135800,
+                                        averageClickRate: 1.82,
+                                        disable: i == 3 ? true : false,
+                                        selected: true
+                                    })
+                                }
+                                return data
+                            } 
+                            
+                            avalon.define("test", function(vm) {
+                                vm.toggle = "false"
+                                vm.$skipArray = ["opts"] //不需要转为监控属性的属性务必放到$skipArray数组中，减少开销提高性能
+                                vm.opts = {
+                                    // 不希望组件的配置项被smartgrid监控，将其放到$skipArray数组中，添加其他组件同理
+                                    $skipArray: ["switchdropdown", "dropdown", "pager"],
+                                    selectable: {
+                                        type: "Checkbox" //为表格添加选中行操作框,可以设置为"Checkbox"或者"Radio"
+                                    },
+                                    dropdownData: [{ // dropdown的数据信息
+                                        name: "忙",
+                                        value: "1"
+                                    },{
+                                        name: "不忙",
+                                        value: "0"
+                                    }],
+                                    dropdown : {
+                                        width: 100,
+                                        listWidth: 100
+                                    },
+                                    columns: [
+                                        {
+                                            key : "description",
+                                            name : "竞价推广计划",
+                                            sortable : false,
+                                            isLock : true,
+                                            align: "left",
+                                            defaultValue: "北上广经济型计划",
+                                            customClass: "ddd",
+                                            width: 150
+                                        }, {
+                                            key: "operate",
+                                            name: "操作",
+                                            title: "操作",
+                                            width: 110,
+                                            format: "switchdropdown"
+                                        }, {
+                                            key : "buget",
+                                            name : "预算",
+                                            sortable : true,
+                                            align: "right",
+                                            defaultValue: "￥5800",
+                                            width: 75,
+                                            format: "$X" // 定义渲染数据的方法名
+                                        }, {
+                                            key : "display",
+                                            name : "展现",
+                                            sortable : true,
+                                            align: "right",
+                                            width: 98
+                                        }, {
+                                            key : "click",
+                                            name : "点击",
+                                            sortable : true,
+                                            align: "right",
+                                            width: 90
+                                        }, {
+                                            key : "clickRate",
+                                            name : "点击率",
+                                            sortable : true,
+                                            align: "right",
+                                            width: 90
+                                        }, {
+                                            key : "consume",
+                                            name : "消费",
+                                            sortable : true,
+                                            align: "right",
+                                            width: 85,
+                                            format: "$X" // 定义渲染数据的方法名
+                                        }, {
+                                            key : "averageClickRate",
+                                            name : "平均点击价格",
+                                            sortable : true,
+                                            align: "right",
+                                            width: 115,
+                                            format: "$X" // 定义渲染数据的方法名
+                                        }
+                                    ],
+
+                                    data: []
+                                }
+                                vm.renderGrid = function() {
+                                    avalon.vmodels.sg1.render(getDatas(10))
+                                }
+                            })
+                            avalon.scan()
+                        })
+                    &lt;/script&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+    </body>
+</html>

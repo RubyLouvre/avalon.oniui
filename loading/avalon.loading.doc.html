@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>加载效果组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <meta name="descriptions" content=" 实现各种加载动画效果
+
+ ">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    
+    <body>
+        <div class="wrapper">
+            <h2>loading</h2>
+            <fieldset>
+                <legend>加载效果组件</legend>
+                <p>实现各种加载动画效果</p>
+            </fieldset>
+            <h3 class="table-doc-title">使用说明</h3>
+            <table class="table-doc" border="1">
+                <colgroup>
+                    <col width="180">
+                        <col width="95">
+                            <col width="120">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>名字</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="4">配置参数</td>
+                    </tr>
+                    <tr>
+                        <td>count</td>
+                        <td>Number</td>
+                        <td>10</td>
+                        <td>type=ball，loading效果组成的小图形个数</td>
+                    </tr>
+                    <tr>
+                        <td>interval</td>
+                        <td>Number</td>
+                        <td>120</td>
+                        <td>type=ball，毫秒数，动画效果帧间隔</td>
+                    </tr>
+                    <tr>
+                        <td>circleMargin</td>
+                        <td>Number</td>
+                        <td>1</td>
+                        <td>type=ticks，小球之间的间距，单位是一倍小球半径</td>
+                    </tr>
+                    <tr>
+                        <td>count</td>
+                        <td>Number</td>
+                        <td>3</td>
+                        <td>type=ticks，小球个数</td>
+                    </tr>
+                    <tr>
+                        <td>height</td>
+                        <td>Number</td>
+                        <td>20</td>
+                        <td>type=ticks，高度</td>
+                    </tr>
+                    <tr>
+                        <td>interval</td>
+                        <td>Number</td>
+                        <td>360</td>
+                        <td>type=ticks，毫秒数，动画效果帧间隔</td>
+                    </tr>
+                    <tr>
+                        <td>angel</td>
+                        <td>Number</td>
+                        <td>90</td>
+                        <td>type=spin，转动的弧形的角度，单位是1度</td>
+                    </tr>
+                    <tr>
+                        <td>opacity</td>
+                        <td>Number</td>
+                        <td>0.2</td>
+                        <td>type=spin，背景圆弧的透明度</td>
+                    </tr>
+                    <tr>
+                        <td>startangle</td>
+                        <td>Number</td>
+                        <td>0</td>
+                        <td>type=spin，圆弧开始的角度，单位1度</td>
+                    </tr>
+                    <tr>
+                        <td>interval</td>
+                        <td>Number</td>
+                        <td>36</td>
+                        <td>type=spin，毫秒数，动画效果帧间隔</td>
+                    </tr>
+                    <tr>
+                        <td>count</td>
+                        <td>Number</td>
+                        <td>8</td>
+                        <td>type=spokes，长方形个数</td>
+                    </tr>
+                    <tr>
+                        <td>width</td>
+                        <td>Number</td>
+                        <td>32</td>
+                        <td>type=spokes，效果宽度,</td>
+                    </tr>
+                    <tr>
+                        <td>spokesWidth</td>
+                        <td>Number</td>
+                        <td>4</td>
+                        <td>type=spokes，小长方形宽度</td>
+                    </tr>
+                    <tr>
+                        <td>spokesHeight</td>
+                        <td>Number</td>
+                        <td>8</td>
+                        <td>type=spokes，小长方形高度</td>
+                    </tr>
+                    <tr>
+                        <td>interval</td>
+                        <td>Number</td>
+                        <td>125</td>
+                        <td>type=spokes，效果动画间隔毫秒数</td>
+                    </tr>
+                    <tr>
+                        <td>width</td>
+                        <td>Number</td>
+                        <td>64</td>
+                        <td>type=spinning-bubbles 宽度，小球的个数继承自type=ball</td>
+                    </tr>
+                    <tr>
+                        <td>widthInner</td>
+                        <td>Number</td>
+                        <td>54</td>
+                        <td>type=spinning-bubbles 内宽</td>
+                    </tr>
+                    <tr>
+                        <td>height</td>
+                        <td>Number</td>
+                        <td>30</td>
+                        <td>type=bubbles 高度，宽度继承type=spinning-bubbles</td>
+                    </tr>
+                    <tr>
+                        <td>widthInner</td>
+                        <td>Number</td>
+                        <td>50</td>
+                        <td>type=bubbles 内宽</td>
+                    </tr>
+                    <tr>
+                        <td>count</td>
+                        <td>Number</td>
+                        <td>3</td>
+                        <td>type=bubbles 球的个数</td>
+                    </tr>
+                    <tr>
+                        <td>interval</td>
+                        <td>Number</td>
+                        <td>360</td>
+                        <td>type=bubbles 动画ms数</td>
+                    </tr>
+                    <tr>
+                        <td>interval</td>
+                        <td>Member</td>
+                        <td>_config["ball"].interval</td>
+                        <td>type=spinning-spin 帧间隔，继承ball</td>
+                    </tr>
+                    <tr>
+                        <td>count</td>
+                        <td>Number</td>
+                        <td>8</td>
+                        <td>type=spinning-spin 小圆弧个数，一般请保证 360 / 8 % padding = 0</td>
+                    </tr>
+                    <tr>
+                        <td>width</td>
+                        <td>Number</td>
+                        <td>46</td>
+                        <td>type=spinning-spin 圆外直径</td>
+                    </tr>
+                    <tr>
+                        <td>widthInner</td>
+                        <td>Number</td>
+                        <td>38</td>
+                        <td>type=spinning-spin 圆内直径</td>
+                    </tr>
+                    <tr>
+                        <td>src</td>
+                        <td>String</td>
+                        <td>"https://source.qunarzz.com/piao/images/loading_camel.gif"</td>
+                        <td>type=img，loading效果的gif图片</td>
+                    </tr>
+                    <tr>
+                        <td>width</td>
+                        <td>Number</td>
+                        <td>52</td>
+                        <td>type=img，loading效果宽度</td>
+                    </tr>
+                    <tr>
+                        <td>height</td>
+                        <td>Number</td>
+                        <td>39</td>
+                        <td>type=img，loading效果高度</td>
+                    </tr>
+                    <tr>
+                        <td>onInit</td>
+                        <td>Member</td>
+                        <td>avalon.noop</td>
+                        <td>onInit(vmodel, options, vmodels) 完成初始化之后的回调,call as element's method</td>
+                    </tr>
+                    <tr>
+                        <td>color</td>
+                        <td>String</td>
+                        <td>"#619FE8"</td>
+                        <td>效果的颜色</td>
+                    </tr>
+                    <tr>
+                        <td>type</td>
+                        <td>String</td>
+                        <td>"ball"</td>
+                        <td>类型，默认是ball，球，可取spin,ticks</td>
+                    </tr>
+                    <tr>
+                        <td>toggle</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>是否显示</td>
+                    </tr>
+                    <tr>
+                        <td>modal</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>是否显示遮罩</td>
+                    </tr>
+                    <tr>
+                        <td>modalOpacity</td>
+                        <td>Number</td>
+                        <td>0.1</td>
+                        <td>遮罩透明度</td>
+                    </tr>
+                    <tr>
+                        <td>modalBackground</td>
+                        <td>String</td>
+                        <td>"#fff"</td>
+                        <td>遮罩背景色</td>
+                    </tr>
+                    <tr>
+                        <td>container</td>
+                        <td>Unary</td>
+                        <td>void 0</td>
+                        <td>loading效果显示的容器，默认是绑定widget的元素</td>
+                    </tr>
+                    <tr>
+                        <td>getTemplate(tmpl,opts,tplName)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>getTemplate(tpl, opts, tplName) 定制修改模板接口</td>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="4">接口方法与固有属性</td>
+                    </tr>
+                    <tr>
+                        <td>showLoading()</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>showLoading() 显示loading效果</td>
+                    </tr>
+                    <tr>
+                        <td>hideLoading()</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>hideLoading() 隐藏loading</td>
+                    </tr>
+                    <tr>
+                        <td>destroyLoading()</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>destroyLoading() 销毁loading</td>
+                    </tr>
+                    <tr>
+                        <td>appendTo(container)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>将loading效果插入到指定的容器里
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>container</td>
+                                        <td></td>
+                                        <td>目标容器元素，默认是绑定widget的元素</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <ul class="example-links">
+                <li>
+                    <a href="avalon.loading.ex.html">loading:ball</a>
+                </li>
+                <li>
+                    <a href="avalon.loading.ex1.html">loading:spin</a>
+                </li>
+                <li>
+                    <a href="avalon.loading.ex2.html">loading:ticks</a>
+                </li>
+                <li>
+                    <a href="avalon.loading.ex3.html">loading:spokes</a>
+                </li>
+                <li>
+                    <a href="avalon.loading.ex4.html">loading:spinning-bubbles</a>
+                </li>
+                <li>
+                    <a href="avalon.loading.ex5.html">loading:bubbles-这个只有在高级非IE浏览器上才能work good</a>
+                </li>
+                <li>
+                    <a href="avalon.loading.ex6.html">loading:spinning-spin</a>
+                </li>
+                <li>
+                    <a href="avalon.loading.ex7.html">loading:img</a>
+                </li>
+            </ul>
+        </div>
+    </body>
+
+</html>

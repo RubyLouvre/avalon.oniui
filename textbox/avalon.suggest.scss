@@ -1,0 +1,35 @@
+
+@import "../chameleon/oniui-theme";
+$uiname: "oni-suggest";
+.oni-textbox-suggest {
+    position: relative;
+    z-index: 1000;
+}
+.#{$uiname} {
+    position: absolute;
+    top: 3px;
+    left: -6px;
+    z-index: 1;
+    border: 1px solid #cccccc;
+    padding: 0;
+    margin: 0;
+    @if($oinui-theme == smoothness) {
+        background-color: #ffffff;
+    }
+    .#{$uiname}-item {
+        overflow: hidden;
+        cursor: pointer;
+        font-size: 12px;
+        padding: 3px 5px;
+        word-break: break-all;
+    }
+    .#{$uiname}-item-selected {
+        background-color: $ui-state-active-background-color;
+        color: $ui-state-active-color;
+    }
+    .#{$uiname}-item-hover {
+        background-color: #f8f8f8;
+        color: #333333;
+    }
+}
+

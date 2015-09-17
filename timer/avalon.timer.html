@@ -1,0 +1,28 @@
+<div class="oni-textbox" ms-click="_toggleDialog">
+    <div class="oni-textbox-input-wrap">
+        <span ms-css-width="width" ms-css-color="_timeTextColor">{{getTimeText(timeDate, placeHolder)}}</span>
+    </div>
+</div>
+MS_OPTION_TEXTBOX
+<div>
+    <div class="oni-timer" ms-css-height="_timerHeight">
+        <div class="oni-timer-date">
+            <ul>
+                <li ms-repeat-item="dates" ms-class="oni-state-active:$index == _currentDateIndex" ms-css-color="item.color">{{item.date}}</li>
+            </ul>
+        </div>
+        <div class="oni-timer-hour" ms-css-left="_hourLeft">
+            <ul>
+                <li ms-repeat-item="hours" ms-class="oni-state-active:$index == _currentHourIndex" ms-css-color="item.color">{{item.hour}}</li>
+            </ul>
+        </div>
+        <div class="oni-timer-minute" ms-css-left="_minuteLeft">
+            <ul>
+                <li ms-repeat-item="minutes" ms-class="oni-state-active:$index == _currentMinuteIndex" ms-css-color="item.color">{{item.minute}}</li>
+            </ul>
+        </div>
+        <p class="oni-timer-mask" 
+           ms-css-top="Math.floor(showItems/2) * 30"
+           ms-css-width="_timerWidth"></p>
+    </div>  
+</div>

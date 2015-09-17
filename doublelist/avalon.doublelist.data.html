@@ -1,0 +1,11 @@
+<li class="oni-doublelist-item" ms-class="oni-state-disabled:_itemSelected(item,'{{MS_OPTION_TYPE}}')" 
+ms-data-value="item.value" 
+ms-data-name="item.name" 
+ms-hover="oni-state-hover" 
+ms-class-1="oni-state-active:_activeClass(item,'{{MS_OPTION_TYPE}}')" 
+ms-class-2="oni-helper-hidden:_itemShow(item,'{{MS_OPTION_TYPE}}')" 
+ms-click="_select($event, item,'{{MS_OPTION_TYPE}}')" 
+ms-dblclick="_select($event, item,'{{MS_OPTION_TYPE}}', 'dbclick')"  
+ms-attr-id="'{{MS_OPTION_TYPE}}'+item.value+$uid">
+	{{ item.name | html }}
+</li>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+        <meta http-equiv="x-ua-compatible" content="ie=edge" />
+        <title>notice demo </title>
+        <link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+        <script src="../highlight/shCore.js"></script>
+        <script src="../avalon.js"></script>
+    </head>
+    <body>
+        <div class="wrapper">
+            <h1>notice demo</h1>
+            <p class="example">下面的demo演示基本的notice组件，notice a使用默认配置项，默认情况下notice显示在组件绑定元素中，notice b同样使用默认配置项，不同的是可以动态改变notice b的header、content、type</p>
+            <div class="demo-show" ms-controller="noticeDemo">
+                <div ms-widget="notice,a">基本的提示信息组件，全部使用默认配置项</div>
+                <div ms-widget="notice,b, $bOpts">配置了header和content的提示信息，可以动态修改提示信息的content和header，以及提示信息类型，点击对应按钮看看效果哦</div>
+                <button ms-click="toggleNotice('a')">toggle notice a</button>
+                <button ms-click="toggleNotice('b')">toggle notice b</button>
+                <button ms-click="changeHeader('b')">修改notice b的title</button>
+                <button ms-click="changeContent('b')">修改notice b的content</button>
+                <button ms-click="toggleType('b')">修改notice b的type</button>
+                <script>
+                    require(["notice/avalon.notice"], function(avalon) {
+                        var model = avalon.define("noticeDemo", function(vm) {
+                            vm.$bOpts = {
+                                header: "提示信息title",
+                                content: "提示信息content"
+                            }
+                            vm.changeHeader = function(id) {
+                                var vmodel = avalon.vmodels[id];
+                                vmodel.header = "new notice title"
+                            }
+                            vm.changeContent = function(id) {
+                                var vmodel = avalon.vmodels[id];
+                                vmodel.content = "new notice content, yeap !"
+                            }
+                            vm.toggleType = function(id) {
+                                var typeArr = ["info", "success", "error"];
+                                var noticeVM = avalon.vmodels[id];
+                                var index = Math.floor(Math.random() * 3)
+                                noticeVM.type = typeArr[index];
+                            }
+                            vm.toggleNotice = function(id) {
+                                var noticeVm = avalon.vmodels[id]
+                                noticeVm.toggle = !noticeVm.toggle
+                            }
+
+                        })
+                        avalon.scan();
+                    })
+                </script>
+            </div>
+            <div ms-skip>
+                <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;notice demo 1&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;div class="demo-show" ms-controller="noticeDemo"&gt;
+                        &lt;div ms-widget="notice,a"&gt;基本的提示信息组件，全部使用默认配置项&lt;/div&gt;
+                        &lt;div ms-widget="notice,b, $bOpts"&gt;配置了header和content的提示信息，可以动态修改提示信息的content和header，以及提示信息类型，点击对应按钮看看效果哦&lt;/div&gt;
+                        &lt;button ms-click="toggleNotice('a')"&gt;toggle notice a&lt;/button&gt;
+                        &lt;button ms-click="toggleNotice('b')"&gt;toggle notice b&lt;/button&gt;
+                        &lt;button ms-click="changeHeader('b')"&gt;修改notice b的title&lt;/button&gt;
+                        &lt;button ms-click="changeContent('b')"&gt;修改notice b的content&lt;/button&gt;
+                        &lt;button ms-click="toggleType('b')"&gt;修改notice b的type&lt;/button&gt;
+                        &lt;script&gt;
+                            require(["notice/avalon.notice"], function(avalon) {
+                                var model = avalon.define("noticeDemo", function(vm) {
+                                    vm.$bOpts = {
+                                        header: "提示信息title",
+                                        content: "提示信息content"
+                                    }
+                                    vm.changeHeader = function(id) {
+                                        var vmodel = avalon.vmodels[id];
+                                        vmodel.header = "new notice title"
+                                    }
+                                    vm.changeContent = function(id) {
+                                        var vmodel = avalon.vmodels[id];
+                                        vmodel.content = "new notice content, yeap !"
+                                    }
+                                    vm.toggleType = function(id) {
+                                        var typeArr = ["info", "success", "error"];
+                                        var noticeVM = avalon.vmodels[id];
+                                        var index = Math.floor(Math.random()*3)
+                                        noticeVM.type = typeArr[index];
+                                    }
+                                    vm.toggleNotice = function(id) {
+                                        var noticeVm = avalon.vmodels[id]
+                                        noticeVm.toggle = !noticeVm.toggle
+                                    }
+
+                                })
+                                avalon.scan();
+                            })
+                        &lt;/script&gt;
+                    &lt;/div&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+                </pre>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>draggable</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../highlight/shCore.js">
+
+        </script>
+        <script src="../avalon.js">
+
+        </script>
+        <script>
+            require(["draggable/avalon.draggable"], function() {
+                avalon.define("test", function(vm) {
+                })
+                avalon.define("test2", function(vm) {
+                    vm.draggable = {
+                        dragFn: function(e, data) {
+                            this.innerHTML = data.pageX + " " + data.pageY
+                        }
+                    }
+                })
+                avalon.define("test3", function(vm) {
+                    vm.draggable = {
+                        drag: function(e, data) {
+                            this.innerHTML = data.pageX + " " + data.pageY + " drag3"
+                        }
+                    }
+                })
+                avalon.scan()
+            })
+
+        </script>
+        <style>
+            #aaa{
+                width:200px;
+                height: 200px;
+                position: absolute;
+                background: red;
+                z-index: 10;
+            }
+            #bbb{
+                width:200px;
+                height: 200px;
+                position: absolute;
+                left: 250px;
+                background: blue;
+                z-index: 20;
+            }
+            #ccc{
+                width:200px;
+                height: 200px;
+                position: absolute;
+                left: 500px;
+                background: yellow;
+                z-index: 20;
+            }
+        </style>
+    </head>
+    <body>
+        <div ms-controller="test" ms-draggable=""id="aaa">
+
+        </div>
+        <div ms-controller="test2" ms-draggable=" test2" data-draggable-drag="dragFn" id="bbb">
+
+        </div>
+        <div ms-controller="test3" ms-draggable=" test3"  id="ccc">
+
+        </div>
+        <h1>最简单例子</h1>
+        <pre class="brush:html;gutter:false;toolbar:false;">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;draggable&lt;/title&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width"&gt;
+
+        &lt;script src="../avalon.js"&gt;
+
+        &lt;/script&gt;
+        &lt;script&gt;
+            require(["draggable/avalon.draggable"], function() {
+                avalon.define("test", function(vm) {
+                })
+                avalon.scan()
+            })
+
+        &lt;/script&gt;
+        &lt;style&gt;
+            #aaa{
+                width:200px;
+                height: 200px;
+                position: absolute;
+                background: red;
+            }
+        &lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;div ms-controller="test" ms-draggable=""id="aaa"&gt;
+
+        &lt;/div&gt;
+        &lt;h1&gt;最简单例子&lt;/h1&gt;
+       
+    &lt;/body&gt;
+&lt;/html&gt;
+       
+        </pre>
+    </body>
+</html>

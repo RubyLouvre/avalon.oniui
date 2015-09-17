@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>draggable</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../highlight/shCore.js">
+
+        </script>
+        <script src="../avalon.js">
+
+        </script>
+        <script>
+            require(["resizable/avalon.resizable"], function() {
+                avalon.define("test", function(vm) {
+                    vm.resizable = {
+                        start: function() {
+                            avalon.log("start resize")
+                        },
+                        drag: function(e, data) {
+                            this.style.left = data.startLeft + e.pageX - data.startPageX  + "px"
+                            this.style.top = data.startTop + e.pageY - data.startPageY  + "px"
+                        }
+                    }
+                })
+                avalon.scan()
+            })
+
+        </script>
+        <style>
+            .outer {
+                position: absolute;
+                background: #BCE;
+                height: 220px;
+                width: 220px;
+                top: 120px;
+            }     
+        </style>
+    </head>
+    <body>
+        <h1>既能调整大小又能拖</h1>
+        <div ms-controller="test">
+            <div class="outer" ms-resizable  ></div>
+        </div>
+
+
+    </body>
+</html>

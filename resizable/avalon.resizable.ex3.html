@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>draggable</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../highlight/shCore.js">
+
+        </script>
+        <script src="../avalon.js">
+
+        </script>
+        <script>
+            require(["resizable/avalon.resizable"], function() {
+                avalon.define("test", function(vm) {
+                    vm.resizable = {
+                        aspectRatio: 4 / 3
+                    }
+                    vm.$skipArray = ["resizable"]
+                })
+                avalon.scan()
+            })
+
+        </script>
+        <style>
+            #aaa {
+                border: 1px solid #89B;
+                background: #BCE;
+                height: 100px;
+                width: 100px;
+                cursor: move;
+                position: absolute;
+                top: 120px;
+                left: 120px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>等比例缩放,使用aspectRatio参数,为长与高之比</h1>
+        <div id="aaa" ms-controller="test" ms-resizable >
+
+        </div>
+
+
+    </body>
+</html>

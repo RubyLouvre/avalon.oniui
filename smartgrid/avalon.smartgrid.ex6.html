@@ -1,0 +1,275 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>供用户调用API</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    <body ms-controller="test">
+        <div style="width:960px; margin: 0 auto">
+            <h1>供用户调用API</h1>
+            <div ms-widget="smartgrid, sg1"></div>
+            <button ms-click="setColumns">设置列的显示隐藏</button>
+            <button ms-click="showNoResult">清空数据</button>
+            <button ms-click="getRawData">获取表格数据</button>
+            <button ms-click="getSelected">获取选中行的表格数据</button>
+            <button ms-click="isSelectAll">判断是否全选</button>
+            <button ms-click="showLoading">显示缓冲提示</button>
+            <button ms-click="hideLoading">隐藏缓冲提示</button>
+            <button ms-click="selectAll">全选或者全不选表格数据</button>
+        </div>
+        <script>
+            require(["smartgrid/avalon.smartgrid", "switchdropdown/avalon.switchdropdown", "dropdown/avalon.dropdown"], function() {
+                function getDatas(number) {
+                    var data = []
+                    for (var i = 0; i < number; i++) {
+                        data.push({
+                            name: "shirly"+i,
+                            age: parseInt(10 + Math.random() * 20),
+                            selected: i%3 ? false: true,
+                            salary: parseInt(Math.random() * 100),
+                            operate : i % 5 ? 0 : 1,
+                            busy : !i%3 && !i%5 ? 0 : 1
+                        })
+                    }
+                    return data
+                } 
+                var smartgrid = null
+                var sg = avalon.define("test", function(vm) {
+                    vm.$skipArray = ["smartgrid", "toggle"]
+                    vm.toggle = true
+                    vm.setColumns = function() {
+                        sg.toggle = !sg.toggle
+                        smartgrid.setColumns(["age", "busy"], sg.toggle)
+                    }
+                    vm.showNoResult = function() {
+                        smartgrid.showNoResult("数据为空了呢")
+                    }
+                    vm.getRawData = function() {
+                        avalon.log(smartgrid.getRawData())
+                    }
+                    vm.selectAll = function() {
+                        sg.toggle = !sg.toggle
+                        smartgrid.selectAll(sg.toggle)
+                    }
+                    vm.isSelectAll = function() {
+                        alert("全选状态是： "+smartgrid.isSelectAll())
+                    }
+                    vm.showLoading = function() {
+                        smartgrid.showLoading()
+                    }
+                    vm.hideLoading = function() {
+                        smartgrid.hideLoading()
+                    }
+                    vm.getSelected = function() {
+                        avalon.log(smartgrid.getSelected())
+                    }
+                    vm.smartgrid = {
+                        $skipArray: ["switchdropdown", "dropdown", "pager"],
+                        selectable : {
+                            type : "Checkbox"
+                        },
+                        dropdownData: [{ // dropdown的数据信息
+                            name: "忙",
+                            value: "1"
+                        },{
+                            name: "不忙",
+                            value: "0"
+                        }],
+                        dropdown : {
+                            width: 100,
+                            listWidth: 100
+                        },
+                        htmlHelper: { // 渲染列数据的方法集合
+                            // 包装工资列的数据
+                            $X: function(vmId, field, index, cellValue, rowData) {//所有包装函数都会收到4个参数，分别是smartgrid组件对应vmodel的id，列标志(key)，列索引，列数据值
+                                return "$"+cellValue
+                            },
+                            // busy列包装成dropdown组件
+                            dropdown: function(vmId, field, index, cellValue, rowData) {
+                                var option = "<option ms-repeat='dropdownData' ms-attr-value='el.value' ms-attr-label='el.name' ms-selected='el.value == " + cellValue + "'></option>"
+                                return '<select ms-widget="dropdown" rowindex="' +index+'" field="'+field+'" vmId="'+vmId+'">' + option + '</select>'
+                            }
+                        },
+                        columns: [
+                            {
+                                key : "name",
+                                name : "姓名",
+                                sortable : true,
+                                isLock : true,
+                                align: "left",
+                                defaultValue: "shirly",
+                                toggle: false,
+                                width: 400
+                            }, {
+                                key: "age",
+                                name: "年龄",
+                                sortable: false,
+                                width: 100
+                            }, {
+                                key : "salary",
+                                name : "薪水",
+                                type : "Number",
+                                sortable : false,
+                                format : "$X",
+                                align: "right",
+                                width: 100
+                            }, {
+                                key : "busy",
+                                name : "忙吗",
+                                title : "忙吗",
+                                width : 200,
+                                format: "dropdown"
+                            }
+                        ],
+                        isAffix: true,
+                        data: getDatas(30),
+                        onInit: function(vmodel) {
+                            smartgrid = vmodel
+                        }
+                    }
+                })
+                avalon.scan()
+            })
+        </script>
+        <div ms-skip style="width:960px; margin: 0 auto">
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;smartgrid demo&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body ms-controller="test"&gt;
+                    &lt;h1&gt;供用户调用API&lt;/h1&gt;
+                    &lt;div ms-widget="smartgrid, sg1"&gt;&lt;/div&gt;
+                    &lt;button ms-click="setColumns"&gt;设置列的显示隐藏&lt;/button&gt;
+                    &lt;button ms-click="showNoResult"&gt;清空数据&lt;/button&gt;
+                    &lt;button ms-click="getRawData"&gt;获取表格数据&lt;/button&gt;
+                    &lt;button ms-click="getSelected"&gt;获取选中行的表格数据&lt;/button&gt;
+                    &lt;button ms-click="isSelectAll"&gt;判断是否全选&lt;/button&gt;
+                    &lt;button ms-click="showLoading"&gt;显示缓冲提示&lt;/button&gt;
+                    &lt;button ms-click="hideLoading"&gt;隐藏缓冲提示&lt;/button&gt;
+                    &lt;button ms-click="selectAll"&gt;全选或者全不选表格数据&lt;/button&gt;
+                    &lt;script&gt;
+                        require(["smartgrid/avalon.smartgrid", "switchdropdown/avalon.switchdropdown", "dropdown/avalon.dropdown"], function() {
+                            function getDatas(number) {
+                                var data = []
+                                for (var i = 0; i &lt; number; i++) {
+                                    data.push({
+                                        name: "shirly"+i,
+                                        age: parseInt(10 + Math.random() * 20),
+                                        selected: i%3 ? false: true,
+                                        salary: parseInt(Math.random() * 100),
+                                        operate : i % 5 ? 0 : 1,
+                                        busy : !i%3 && !i%5 ? 0 : 1
+                                    })
+                                }
+                                return data
+                            } 
+                            var smartgrid = null
+                            var sg = avalon.define("test", function(vm) {
+                                vm.$skipArray = ["smartgrid", "toggle"]
+                                vm.toggle = true
+                                vm.setColumns = function() {
+                                    sg.toggle = !sg.toggle
+                                    smartgrid.setColumns(["age", "busy"], sg.toggle)
+                                }
+                                vm.showNoResult = function() {
+                                    smartgrid.showNoResult("数据为空了呢")
+                                }
+                                vm.getRawData = function() {
+                                    avalon.log(smartgrid.getRawData())
+                                }
+                                vm.selectAll = function() {
+                                    smartgrid.selectAll()
+                                }
+                                vm.isSelectAll = function() {
+                                    alert("全选状态是： "+smartgrid.isSelectAll())
+                                }
+                                vm.showLoading = function() {
+                                    smartgrid.showLoading()
+                                }
+                                vm.hideLoading = function() {
+                                    smartgrid.hideLoading()
+                                }
+                                vm.getSelected = function() {
+                                    avalon.log(smartgrid.getSelected())
+                                }
+                                vm.smartgrid = {
+                                    $skipArray: ["switchdropdown", "dropdown", "pager"],
+                                    selectable : {
+                                        type : "Checkbox"
+                                    },
+                                    dropdownData: [{ // dropdown的数据信息
+                                        name: "忙",
+                                        value: "1"
+                                    },{
+                                        name: "不忙",
+                                        value: "0"
+                                    }],
+                                    dropdown : {
+                                        width: 100,
+                                        listWidth: 100
+                                    },
+                                    htmlHelper: { // 渲染列数据的方法集合
+                                        // 包装工资列的数据
+                                        $X: function(vmId, field, index, cellValue, rowData) {//所有包装函数都会收到4个参数，分别是smartgrid组件对应vmodel的id，列标志(key)，列索引，列数据值
+                                            return "$"+cellValue
+                                        },
+                                        // busy列包装成dropdown组件
+                                        dropdown: function(vmId, field, index, cellValue, rowData) {
+                                            var option = "&lt;option ms-repeat='dropdownData' ms-attr-value='el.value' ms-attr-label='el.name' ms-selected='el.value == " + cellValue + "'&gt;&lt;/option&gt;"
+                                            return '&lt;select ms-widget="dropdown" rowindex="' +index+'" field="'+field+'" vmId="'+vmId+'"&gt;' + option + '&lt;/select&gt;'
+                                        }
+                                    },
+                                    columns: [
+                                        {
+                                            key : "name",
+                                            name : "姓名",
+                                            sortable : true,
+                                            isLock : true,
+                                            align: "left",
+                                            defaultValue: "shirly",
+                                            toggle: false,
+                                            width: 400,
+                                        }, {
+                                            key: "age",
+                                            name: "年龄",
+                                            sortable: false,
+                                            width: 100
+                                        }, {
+                                            key : "salary",
+                                            name : "薪水",
+                                            type : "Number",
+                                            sortable : false,
+                                            format : "$X",
+                                            align: "right",
+                                            width: 100
+                                        }, {
+                                            key : "busy",
+                                            name : "忙吗",
+                                            title : "忙吗",
+                                            width : 200,
+                                            format: "dropdown"
+                                        }
+                                    ],
+                                    data: getDatas(10),
+                                    onInit: function(vmodel) {
+                                        smartgrid = vmodel
+                                    }
+                                }
+                            })
+                            avalon.scan()
+                        })
+                    &lt;/script&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>dialog test</title>
+        <link type="text/css" rel="stylesheet" charset="utf-8" href="../mocha/mocha.css" />
+        <script src="../avalon.js"></script>
+        <script src="../mocha/mocha.js"></script>
+        <script src="../mocha/expect.js"></script>
+        <style>
+            #testWrapper {
+                margin: -40px 50px 100px 80px;
+            }
+        </style>
+    </head>
+    <body >
+        <div id="mocha"></div>
+        <div id="testWrapper" ms-controller="demo">
+            
+        </div>
+        <script>
+            (function() {
+                mocha.ui('bdd')
+                mocha.setup({timeout: 100000})
+                require(["ready!", "accordion/avalon.accordion"], function() {
+                    
+                    var testWrapper = document.getElementById("testWrapper");
+                    describe("测试accordion组件", function() {
+                        var accordionElement = "";
+                        beforeEach(function() {
+                            testWrapper.innerHTML = '<div ms-widget="accordion,aa,$aaOpts"></div>';
+                            accordionElement = testWrapper.children[0];
+                        })
+                        afterEach(function() {
+                            testWrapper.innerHTML = testWrapper.textContent = "";
+                        })
+                        it("accordion简单配置", function(done) {
+                            var model = avalon.define("demo", function(vm) {
+                                vm.beforeSwitchCalled = false;
+                                vm.onSwitchCalled = false;
+                                vm.$aaOpts = {
+                                    data: [{
+                                        'title': '标题1',
+                                        'content': '正文1<p>fasdfsdaf</p>'
+                                    }, {
+                                        'title': '标题2',
+                                        'content': '正文2'
+                                    }],
+                                    controlCls: "oni-accordion-customClass",
+                                    currentTriggerClass: "oni-accordion-active-cus",
+                                    initIndex: 1,
+                                    width: "500",
+                                    beforeSwitch: function() {
+                                        vm.beforeSwitchCalled = true;
+                                        avalon.log(this);
+                                        avalon.log(arguments);
+                                        avalon.log("beforeSwitch callback");
+                                    },
+                                    onSwitch: function(index, header, panel) {
+                                        vm.onSwitchCalled = true;
+                                        avalon.log("onSwitch callback");
+                                        var aaVmodel = avalon.vmodels["aa"];
+                                        var headerOpen = aaVmodel.getHeader(aaVmodel.currentIndex);
+                                        var panelOpen = aaVmodel.getPanel(aaVmodel.currentIndex);
+                                        var triggerOpen = aaVmodel.$triggers[index];
+
+                                        expect(model.beforeSwitchCalled).to.be(true);
+                                        expect(model.onSwitchCalled).to.be(true);
+                                        expect(index).to.be(aaVmodel.currentIndex);
+                                        expect(header).to.equal(headerOpen);
+                                        expect(panel).to.equal(panelOpen);
+                                        expect(this).to.equal(triggerOpen);
+                                        expect(aaVmodel.getStatus(0)).to.be(1);
+                                        expect(aaVmodel.getStatus(1)).to.be(1);
+                                        done();
+                                    },
+                                    multiple: true
+                                }
+                            })
+                            avalon.scan(accordionElement, model);
+                            setTimeout(function() {
+                                var aaVmodel = avalon.vmodels["aa"];
+                                expect(avalon(accordionElement).hasClass("oni-accordion-customClass")).to.be(true);
+                                expect(aaVmodel.currentIndex).to.be(1);
+                                expect(avalon(aaVmodel.getHeader(1)).hasClass("oni-accordion-active-cus")).to.be(true);
+                                expect(avalon(aaVmodel.getHeader(1)).hasClass("oni-accordion-active")).to.be(false);
+                                expect(avalon(aaVmodel.getPanel(1)).css("display")).to.be("block");
+                                expect(avalon(accordionElement).css("width")).to.be("500px");
+                                expect(aaVmodel.mode).to.be("caret");
+                                expect(model.beforeSwitchCalled).to.be(false);
+                                expect(model.onSwitchCalled).to.be(false);
+                                setTimeout(function() {
+                                    aaVmodel.switchTo(0);
+                                },200)
+                            }, 400)
+                        }) 
+                    });
+
+                    describe("accordion可嵌套", function() {
+                        var accordionElement = "";
+                        beforeEach(function() {
+                            testWrapper.innerHTML = '<div ms-widget="accordion,aa,$aaOpts"></div>';
+                            accordionElement = testWrapper.children[0];
+                        })
+                        afterEach(function() {
+                            testWrapper.innerHTML = testWrapper.textContent = "";
+                        })
+                        it("accordion简单配置", function(done) {
+                            var model = avalon.define("demo", function(vm) {
+                                vm.$aaOpts = {
+                                    data: [{
+                                        'title': '标题1',
+                                        'content': '正文1<p>fasdfsdaf</p>'
+                                    }, {
+                                        'title': '标题2',
+                                        'content': '正文2<div ms-widget="accordion,bb,$bbOpts" id="accordion2"></div>'
+                                    }],
+                                    width: "600"
+                                }
+                                vm.$bbOpts = {
+                                    data:  [
+                                        {
+                                            title: "雪儿",
+                                            content: 'heelfifsfsd<div ms-widget="accordion,cc,$ccOpts" id="accordion3"></div>'
+                                        },
+                                        {
+                                            title: "静儿",
+                                            content: '很好，我喜欢，继续额'
+                                        }
+                                    ],
+                                    multiple: true
+                                }
+                                vm.$ccOpts = {
+                                    data: [
+                                        {
+                                            title: "三层嵌套标题一",
+                                            content: "三层嵌套内容一"
+                                        },
+                                        {
+                                            title: "三层嵌套标题二",
+                                            content: "三层嵌套内容二"
+                                        },
+                                        {
+                                            title: "三层嵌套标题三",
+                                            content: "三层嵌套内容三"
+                                        }
+                                    ],
+                                    mode: "nav"
+                                }
+                            })
+                            avalon.scan(accordionElement, model);
+                            setTimeout(function() {
+                                var aaVmodel = avalon.vmodels["aa"];
+                                var bbVmodel = avalon.vmodels["bb"];
+                                var ccVmodel = avalon.vmodels["cc"];
+                                var accordion2 = document.getElementById("accordion2");
+                                var accordion3 = document.getElementById("accordion3");
+                                expect(aaVmodel.getLength()).to.be(2);
+                                expect(bbVmodel.getLength()).to.be(2);
+                                expect(ccVmodel.getLength()).to.be(3);
+                                expect(avalon(accordionElement).hasClass("js-accordion2")).to.be(true);
+                                expect(avalon(accordion2).hasClass("js-accordion3")).to.be(true);
+                                expect(avalon(accordion3).hasClass("js-accordion4")).to.be(true);
+                                expect(ccVmodel.getHeader(0).children.length).to.be(0);
+                                done();
+                            }, 400)
+                        }) 
+                    });
+                    describe("multiple为false时不可同时打开多个面板", function() {
+                        var accordionElement = "";
+                        beforeEach(function() {
+                            testWrapper.innerHTML = '<div ms-widget="accordion,aa,$aaOpts"></div>';
+                            accordionElement = testWrapper.children[0];
+                        })
+                        afterEach(function() {
+                            testWrapper.innerHTML = testWrapper.textContent = "";
+                        })
+                        it("accordion简单配置", function(done) {
+                            var model = avalon.define("demo", function(vm) {
+                                vm.$aaOpts = {
+                                    data: [{
+                                        'title': '标题1',
+                                        'content': '正文1<p>fasdfsdaf</p>'
+                                    }, {
+                                        'title': '标题2',
+                                        'content': '正文2'
+                                    }],
+                                    initIndex: 1,
+                                    beforeSwitch: function() {
+                                        avalon.log(this);
+                                        avalon.log(arguments);
+                                        avalon.log("beforeSwitch callback");
+                                    },
+                                    onSwitch: function(index, header, panel) {
+                                        avalon.log("onSwitch callback");
+                                        var aaVmodel = avalon.vmodels["aa"];
+                                        expect(aaVmodel.getStatus(1)).to.be(0);
+                                        expect(aaVmodel.getStatus(0)).to.be(1);
+                                        done();
+                                    }
+                                }
+                            })
+                            avalon.scan(accordionElement, model);
+                            setTimeout(function() {
+                                var aaVmodel = avalon.vmodels["aa"];
+                                expect(aaVmodel.getStatus(1)).to.be(1);
+                                expect(aaVmodel.getStatus(0)).to.be(0);
+                                done();
+                                setTimeout(function() {
+                                    aaVmodel.switchTo(0);
+                                },200)
+                            }, 400)
+                        }) 
+                    });
+                    mocha.run()
+                })
+            })()
+        </script>
+    </body>
+</html>

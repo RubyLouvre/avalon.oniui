@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>手风琴组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <meta name="descriptions" content="手风琴组件可以将多个内容组织到多个小面板中，通过点击面板的小三角(默认)或标题(需要配置)可以展开或者收缩其内容，使用效果很像Tab。作为备选，还可以通过将鼠标放置到标题上来展开或者收缩。
+
+                此组件能方便我们在有限的区域中放置众多信息。
+
+ ">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    
+    <body>
+        <div class="wrapper">
+            <h2>accordion</h2>
+            <fieldset>
+                <legend>手风琴组件</legend>
+                <p>手风琴组件可以将多个内容组织到多个小面板中，通过点击面板的
+                    <code>小三角</code>(默认)或
+                    <code>标题</code>(需要配置)可以展开或者收缩其内容，使用效果很像
+                    <code>Tab</code>。作为备选，还可以通过将鼠标放置到标题上来展开或者收缩。 此组件能方便我们在有限的区域中放置众多信息。</p>
+            </fieldset>
+            <h3 class="table-doc-title">使用说明</h3>
+            <table class="table-doc" border="1">
+                <colgroup>
+                    <col width="180">
+                        <col width="95">
+                            <col width="120">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>名字</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="4">配置参数</td>
+                    </tr>
+                    <tr>
+                        <td>width</td>
+                        <td>String</td>
+                        <td>'100%'</td>
+                        <td>配置组件宽度(type: Number || Percent)</td>
+                    </tr>
+                    <tr>
+                        <td>headerWidth</td>
+                        <td>Number</td>
+                        <td>30</td>
+                        <td>组件水平展开时，头部的宽</td>
+                    </tr>
+                    <tr>
+                        <td>contentWidth</td>
+                        <td>Number</td>
+                        <td>400</td>
+                        <td>组件水平展开时内容的宽</td>
+                    </tr>
+                    <tr>
+                        <td>headerAndContentHeight</td>
+                        <td>Number</td>
+                        <td>200</td>
+                        <td>组件水平展开时的高度</td>
+                    </tr>
+                    <tr>
+                        <td>autoRun</td>
+                        <td>Boolean</td>
+                        <td>true</td>
+                        <td>告知组件是否自动渲染，设为false时需要手动调用refresh方法进行组件的解析渲染</td>
+                    </tr>
+                    <tr>
+                        <td>template</td>
+                        <td>String</td>
+                        <td>""</td>
+                        <td>用户自定义template</td>
+                    </tr>
+                    <tr>
+                        <td>accordionClass</td>
+                        <td>String</td>
+                        <td>""</td>
+                        <td>为accordion容器自定义的class</td>
+                    </tr>
+                    <tr>
+                        <td>currentTriggerClass</td>
+                        <td>String</td>
+                        <td>"oni-state-active"</td>
+                        <td>展开accordion面板时，header添加的class</td>
+                    </tr>
+                    <tr>
+                        <td>initIndex</td>
+                        <td>Object</td>
+                        <td>null</td>
+                        <td>初始展开第几个面板</td>
+                    </tr>
+                    <tr>
+                        <td>mode</td>
+                        <td>String</td>
+                        <td>"caret"</td>
+                        <td>组件展开模式，取值说明："nav"=面板header无小三角图标，"caret"=展开面板有小三角图标，可以定义是点击图标展开面板还是点击header即展开，默认是点击header即展开，当然也可以通过getTemplate自定义模板</td>
+                    </tr>
+                    <tr>
+                        <td>multiple</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>是否可以同时打开多个面板</td>
+                    </tr>
+                    <tr>
+                        <td>trigger</td>
+                        <td>String</td>
+                        <td>"oni-accordion-header"</td>
+                        <td>触发展开面板的dom节点对应class，比如mode为caret时想要只通过小图标展开隐藏panel时可以设置为"oni-accordion-trigger"</td>
+                    </tr>
+                    <tr>
+                        <td>triggerType</td>
+                        <td>String</td>
+                        <td>'click'</td>
+                        <td>触发展开面板的事件类型，可以是：click|mouseenter</td>
+                    </tr>
+                    <tr>
+                        <td>direction</td>
+                        <td>String</td>
+                        <td>"vertical"</td>
+                        <td>组件的展开方向，默认为垂直展开，也可以水平展开("horizontal")</td>
+                    </tr>
+                    <tr>
+                        <td>onBeforeSwitch</td>
+                        <td>Function</td>
+                        <td>avalon.noop</td>
+                        <td>组件面板展开前回调函数
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>index</td>
+                                        <td>Number</td>
+                                        <td>面板序号</td>
+                                    </tr>
+                                    <tr>
+                                        <td>header</td>
+                                        <td>Object</td>
+                                        <td>标题区域节点对象</td>
+                                    </tr>
+                                    <tr>
+                                        <td>panel</td>
+                                        <td>Object</td>
+                                        <td>面板区域节点对象</td>
+                                    </tr>
+                                    <tr>
+                                        <td>返回</td>
+                                        <td></td>
+                                        <td>{Boolean| Undefined} 若返回false则不展开面板</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>onSwitch</td>
+                        <td>Function</td>
+                        <td>avalon.noop</td>
+                        <td>组件面板展开后的回调函数
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>index</td>
+                                        <td>Number</td>
+                                        <td>面板序号</td>
+                                    </tr>
+                                    <tr>
+                                        <td>header</td>
+                                        <td>Object</td>
+                                        <td>标题区域节点对象</td>
+                                    </tr>
+                                    <tr>
+                                        <td>panel</td>
+                                        <td>Object</td>
+                                        <td>面板区域节点对象</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>onInit</td>
+                        <td>Function</td>
+                        <td>avalon.noop</td>
+                        <td>远程更改数据
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>vmodel</td>
+                                        <td>Object</td>
+                                        <td>组件自身vmodel</td>
+                                    </tr>
+                                    <tr>
+                                        <td>options</td>
+                                        <td>Object</td>
+                                        <td>组件的配置对象</td>
+                                    </tr>
+                                    <tr>
+                                        <td>vmodels</td>
+                                        <td>Array</td>
+                                        <td>组件的祖先vmodel组成的数组链</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>getTemplate(str,options)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>方便用户自定义模板
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>str</td>
+                                        <td>String</td>
+                                        <td>默认模板</td>
+                                    </tr>
+                                    <tr>
+                                        <td>opts</td>
+                                        <td>Object</td>
+                                        <td>vmodel</td>
+                                    </tr>
+                                    <tr>
+                                        <td>返回</td>
+                                        <td>String</td>
+                                        <td>新模板</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="4">接口方法与固有属性</td>
+                    </tr>
+                    <tr>
+                        <td>rendered</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>组件是否完成渲染,false未完成，true完成</td>
+                    </tr>
+                    <tr>
+                        <td>$remove()</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>当组件移出DOM树时,系统自动调用的销毁函数</td>
+                    </tr>
+                    <tr>
+                        <td>setData(data)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>重定义组件配置数据对象
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>data</td>
+                                        <td>Array</td>
+                                        <td>结构如下：
+                                            <pre class="brush:javascript;gutter:false;toolbar:false">
+
+                [{
+
+                title: "标题1",
+
+                content: "正文1"
+
+                },
+
+                {
+
+                title: "标题2",
+
+                content: "正文2"
+
+                }] 
+
+                </pre>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>refresh(data)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>手工刷新组件视图,也可以传递参数data，重渲染组件视图
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>data</td>
+                                        <td>Array</td>
+                                        <td>结构如下：
+                                            <pre class="brush:javascript;gutter:false;toolbar:false">
+
+                [{
+
+                title: "标题1",
+
+                content: "正文1"
+
+                },
+
+                {
+
+                title: "标题2",
+
+                content: "正文2"
+
+                }] 
+
+                </pre>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>getCurrentHeader()</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>获得当前展开的accordion标题对象，仅在config.multiple == false时有效
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>返回</td>
+                                        <td>ElementObj</td>
+                                        <td>标题dom对象的引用</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>getCurrentPanel()</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>获得当前展开的accordion面板对象，仅在config.multiple == false时有效
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>返回</td>
+                                        <td>ElementObj</td>
+                                        <td>面板dom对象的引用</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>getHeader(index)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>获得指定序号的accordion面板对应的标题节点对象
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>index</td>
+                                        <td>Number</td>
+                                        <td>面板序号</td>
+                                    </tr>
+                                    <tr>
+                                        <td>返回</td>
+                                        <td>ElementObj</td>
+                                        <td>指定序号的标题dom对象的引用</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>getPanel(index)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>获得指定序号的accordion面板对应的面板节点对象
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>index</td>
+                                        <td>Number</td>
+                                        <td>面板序号</td>
+                                    </tr>
+                                    <tr>
+                                        <td>返回</td>
+                                        <td>ElementObj</td>
+                                        <td>指定序号的面板dom对象的引用</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>getLength()</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>获得组件的面板数量
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>返回</td>
+                                        <td>Number</td>
+                                        <td>手风琴面板个数</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>getStatus(index)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>获得指定序号的accordion面板展开(1)/收起(0)状态
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>index</td>
+                                        <td>Number</td>
+                                        <td>指定面板序号(从0开始)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>返回</td>
+                                        <td>Number</td>
+                                        <td>1表示index对应面板展开，0表示收起</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>switchTo(index)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>切换accordion面板的展开
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>index</td>
+                                        <td>Number</td>
+                                        <td>指定面板序号(从0开始)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>data</td>
+                        <td>Array</td>
+                        <td>[]</td>
+                        <td>配置accordion组件要展示的数据对象，格式为
+                            <pre class="brush:javascript;gutter:false;toolbar:false">
+
+            [
+
+            {title: String, content: String},
+
+            {title: String, content: String},
+
+            {title: String, content: String}
+
+             ]
+
+            </pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>widgetElement</td>
+                        <td>String</td>
+                        <td>""</td>
+                        <td>保存绑定组件元素的引用</td>
+                    </tr>
+                    <tr>
+                        <td>currentIndex</td>
+                        <td>Unary</td>
+                        <td>-1</td>
+                        <td>组件最新展开的面板序号，不可配置</td>
+                    </tr>
+                </tbody>
+            </table>
+            <ul class="example-links">
+                <li>
+                    <a href="avalon.accordion.ex1.html">简单例子</a>
+                </li>
+                <li>
+                    <a href="avalon.accordion.ex2.html">使用setData或者refresh(data)重新渲染accordion</a>
+                </li>
+                <li>
+                    <a href="avalon.accordion.ex3.html">accordion提供的各种API</a>
+                </li>
+                <li>
+                    <a href="avalon.accordion.ex4.html">嵌套的accordion</a>
+                </li>
+                <li>
+                    <a href="avalon.accordion.ex5.html">文字内容水平展开的accordion</a>
+                </li>
+            </ul>
+        </div>
+    </body>
+
+</html>

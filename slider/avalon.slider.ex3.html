@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+        <script src="../highlight/shCore.js"></script>
+        <script src="../avalon.js"></script>
+    </head>
+    <body>
+        <div class="wrapper">
+            <h1>slider demo</h1>
+            <p class="example">可以配置slider的max、min、value值，当rang为默认配置时，配置values无效</p>
+            <div ms-skip>
+                <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                    &lt;!DOCTYPE HTML&gt;
+                    &lt;html&gt;
+                    &lt;head&gt;
+                        &lt;meta charset='utf-8'/&gt;
+                        &lt;title&gt;slider demo 3&lt;/title&gt;
+                        &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                    &lt;/head&gt;
+                    &lt;body&gt;
+                        &lt;div class="demo-show" ms-controller = "theme"&gt;
+                            &lt;div style="width:70%"&gt;
+                                &lt;input ms-widget="slider, a" data-slider-max="80" data-slider-value="36" data-slider-range="max"&gt;
+                                &lt;p ms-controller = "a"&gt;值为{{value}}, 百分比为{{percent}}%,min为{{$valueMin}},max为{{$valueMax}}&lt;/p&gt;
+                                &lt;input ms-widget="slider, b" data-slider-min="20" data-slider-value="36" data-slider-range="min"&gt;
+                                &lt;p ms-controller = "b"&gt;值为{{value}}, 百分比为{{percent}}%,min为{{$valueMin}},max为{{$valueMax}}&lt;/p&gt;
+                                &lt;input ms-widget="slider, c" data-slider-value="36" data-slider-values = "[40, 60]" data-slider-range="true"&gt;
+                                &lt;p ms-controller = "c"&gt;值为{{value}}, 百分比为{{percent}}%,min为{{$valueMin}},max为{{$valueMax}}&lt;/p&gt;
+                            &lt;/div&gt;
+                            &lt;script&gt;
+                                require(["slider/avalon.slider"], function() {
+                                    var model = avalon.define("theme", function(vm) {
+                                        
+                                    })
+                                    avalon.scan()
+                                })
+                            &lt;/script&gt;
+                        &lt;/div&gt;
+                    &lt;/body&gt;
+                    &lt;/html&gt;
+                </pre>
+            </div>
+            <div class="demo-show" ms-controller = "theme">
+                <div style="width:70%">
+                    <input ms-widget="slider, a" data-slider-max="80" data-slider-value="36" data-slider-range="max">
+                    <p ms-controller = "a">值为{{value}}, 百分比为{{percent}}%,min为{{$valueMin}},max为{{$valueMax}}</p>
+                    <input ms-widget="slider, b" data-slider-min="20" data-slider-value="36" data-slider-range="min">
+                    <p ms-controller = "b">值为{{value}}, 百分比为{{percent}}%,min为{{$valueMin}},max为{{$valueMax}}</p>
+                    <input ms-widget="slider, c" data-slider-value="36" data-slider-values = "[40, 60]" data-slider-range="true">
+                    <p ms-controller = "c">值为{{value}}, 百分比为{{percent}}%,min为{{$valueMin}},max为{{$valueMax}}</p>
+                </div>
+                
+                <script>
+                    require(["slider/avalon.slider"], function() {
+                        var model = avalon.define("theme", function(vm) {
+                            
+                        })
+                        avalon.scan()
+                    })
+                </script>
+            </div>
+        </div>
+    </body>
+</html>

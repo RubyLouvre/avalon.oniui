@@ -1,0 +1,183 @@
+
+@import "../chameleon/oniui-theme";
+
+$uiname: "oni-dropdown";
+
+//source(输入框)结构相应的样式
+$ui-source: (
+defaultBg: #fff,
+defaultBorderColor: #ccc,
+hoverBoderColor: #999,
+disabledColor: #ccc
+);
+//menu相应样式
+$ui-menu-state-default-background-color: #fff;
+//divider样式
+$ui-divider-state-default-color: #f2f2f2;
+
+.#{$uiname} {
+    @extend %oniui-font-setting;
+    @include inline-block();
+    outline: none;
+    //上方的显示区
+
+    .#{$uiname}-source {
+        border: 1px solid map-get($ui-source, defaultBorderColor);
+        background-color: map-get($ui-source, defaultBg);
+        cursor: pointer;
+        .#{$uiname}-input {
+            @include inline-block();
+            @include nowrap();
+            @include ellipsis();
+            overflow: hidden;
+            height: 18px;
+            padding: 3px 21px 3px 6px;
+            word-break: normal;
+            word-wrap: normal;
+        }
+
+    }
+    .oni-icon{
+        cursor: pointer;
+        font-size: 12px;
+        vertical-align: baseline;
+    }
+    //各种状态
+    &.oni-state-hover {
+        .#{$uiname}-source {
+            border-color: map-get($ui-source, hoverBoderColor);
+        }
+    }
+    &.oni-state-focus {
+        .#{$uiname}-source {
+            border-color: #3775c0
+        }
+    }
+    &.oni-state-disabled {
+        .#{$uiname}-source {
+            background-color: $ui-state-disabled-background-color;
+            border-color: $ui-state-disabled-border-color;
+            color: map-get($ui-source, disabledColor);
+            cursor: default;
+        }
+        .#{$uiname}-icon {
+            cursor: default;
+        }
+    }
+    &.oni-state-small {
+        .#{$uiname}-source {
+            border-radius: 2px;
+        }
+        .#{$uiname}-input {
+            padding-top: 1px;
+            padding-bottom: 1px;
+        }
+        .#{$uiname}-icon {
+            top: -19px;
+        }
+    }
+    &.oni-state-error {
+        .#{$uiname}-source {
+            border-color: $ui-state-error-border-color;
+        }
+    }
+    &.oni-state-error:hover {
+        .#{$uiname}-source {
+            border-color: $ui-state-error-border-color;
+        }
+    }
+
+    .#{$uiname}-icon {
+        display: none;
+        color: #b5b5b5;
+        cursor: pointer;
+        padding: 0 6px;
+        position: absolute;
+        right: 0;
+        text-align: center;
+        top: -21px;
+    }
+    .#{$uiname}-icon-wrap {
+        display: block;
+        position: relative;
+        height: 0;
+        .oni-icon-angle-down {
+            display: block;
+        }
+        .oni-icon-angle-up {
+            display: block;
+        }
+    }
+
+    &.#{$uiname}-menu {
+        display: none;
+        left: 0;
+        position: absolute;
+        top: -1px;
+        width: 100%;
+        _width: auto !important;
+        z-index: 1001;
+    }
+
+    .#{$uiname}-menu-inner {
+        box-shadow: $oniui-shadow-box;
+        background-color: $ui-menu-state-default-background-color;
+        border: 1px solid $ui-state-default-border-color;
+        overflow-y: scroll;
+        padding: 3px 0;
+    }
+    //下拉项的样式
+    .#{$uiname}-item {
+        @include ellipsis();
+        @include user-select();
+        @include nowrap();
+        overflow: hidden;
+        *zoom: 1;
+        width: 100%;
+        padding: 3px 0;
+        height: 24px;
+        line-height: 24px;
+        text-indent: 20px;
+        cursor: pointer;
+        word-break: normal;
+        word-wrap: normal;
+        //分组头
+        &.#{$uiname}-group {
+            font-size: 14px;
+            font-weight: bold;
+            text-indent: 10px;
+        }
+        //分组头带的特殊样式,用于分隔成一块一块
+        &.#{$uiname}-divider {
+            border-top: 1px solid $ui-divider-state-default-color;
+        }
+
+        //禁用
+        &.oni-state-disabled {
+            border-color: $ui-state-disabled-border-color;
+            background-color: $ui-state-disabled-background-color;
+            color: $ui-state-disabled-color;
+        }
+        //掠过
+        &.oni-state-hover {
+          @if($oinui-theme == smoothness){
+            border-color:  $ui-state-hover-border-color;
+            background-color: $ui-state-hover-border-color;
+            color: $ui-state-hover-color;
+          }
+        }
+        //选中
+        &.oni-state-active {
+            border-color: $ui-state-active-border-color;
+            background-color: $ui-state-active-background-color;
+            color: $ui-state-active-color;
+            .oni-icon {
+                color: $oniui-icon-state-hover-color;
+            }
+        }
+    }
+}
+
+
+
+

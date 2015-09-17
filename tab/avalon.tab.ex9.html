@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>tab组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <style>
+            .oni-tab-slider {
+                padding: 0 16px;
+            }
+            .oni-state-default{
+                width: 80px;
+            }
+        </style>
+        <script>
+            require(["tab/avalon.tab"], function() {
+                tabs = []
+                tabpanels = []
+                i = 0
+                while(i < 15) {
+                    tabs.push({
+                        title: "tab " + i
+                        , name: "tool" + i
+                    })
+                    tabpanels.push({
+                        content: "content " + i
+                    })
+                    i++
+                }
+                avalon.define("test", function(vm) {
+                    vm.tab = {
+                        onActivate : function(e) {
+                            avalon.log("user define cc activate callback")
+                        }
+                        , active: 1
+                        , event: "click"
+                        , activeDelay: 250
+                        , forceCut: true
+                        , cutEnd: ""
+                        , tabs : tabs
+                        , tabpanels : tabpanels
+                        , sliderStep: "121px"
+                    }
+
+                    vm.peaple = {
+                        title: "人类"
+                        , content: "我是来搞笑的"
+                    }
+
+                    vm.peaple2 = {
+                        title: "人类"
+                        , removable: false
+                        , content: "我是来搞笑的"
+                    }
+                    vm.$skipArray = ["tab"]
+                })
+                avalon.scan()
+            })
+        </script>
+        <style type="text/css">
+        .oni-tab-vertical .oni-tab-nav{
+            width: 157px;
+        }
+        </style>
+    </head>
+    <body>
+<div ms-controller="test">
+        <h1>tab很多以slider形式展示</h1>
+        <div ms-widget="tab" style="width:900px;" data-tab-removable="true"></div>
+        <pre ms-skip class="brush:html;gutter:false;toolbar:false">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;tab组件&lt;/title&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width"&gt;
+    &lt;link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"&gt;
+    &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+    &lt;script src="../highlight/shCore.js"&gt;&lt;/script&gt;
+    &lt;style&gt;
+        .oni-tab-slider {
+            padding: 0 16px;
+        }
+        .oni-state-default{
+            width: 80px;
+        }
+    &lt;/style&gt;
+    &lt;script&gt;
+        require(["tab/avalon.tab"], function() {
+            tabs = []
+            tabpanels = []
+            i = 0
+            while(i &lt; 15) {
+                tabs.push({
+                    title: "tab " + i
+                    , name: "tool" + i
+                })
+                tabpanels.push({
+                    content: "content " + i
+                })
+                i++
+            }
+            avalon.define("test", function(vm) {
+                vm.tab = {
+                    onActivate : function(e) {
+                        avalon.log("user define cc activate callback")
+                    }
+                    , active: 1
+                    , event: "click"
+                    , activeDelay: 250
+                    , forceCut: true
+                    , cutEnd: ""
+                    , tabs : tabs
+                    , tabpanels : tabpanels
+                    , sliderStep: "121px"
+                }
+
+                vm.peaple = {
+                    title: "人类"
+                    , content: "我是来搞笑的"
+                }
+
+                vm.peaple2 = {
+                    title: "人类"
+                    , removable: false
+                    , content: "我是来搞笑的"
+                }
+                vm.$skipArray = ["tab"]
+            })
+            avalon.scan()
+        })
+    &lt;/script&gt;
+    &lt;style type="text/css"&gt;
+        .oni-tab-vertical .oni-tab-nav{
+            width: 157px;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div ms-controller="test"&gt;
+    &lt;h1&gt;tab很多以slider形式展示&lt;/h1&gt;
+    &lt;div ms-widget="tab" style="width:900px;" data-tab-removable="true"&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;            
+</pre>
+    </div>
+</body>
+</html>

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>Name 日期范围选择日历</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <meta name="descriptions" content="daterangepicker是日期范围选择组件，可以通过设置起始日期与结束日期的最小间隔天数和最大间隔天数将截止日期限制在一定的选择范围中，同时通过点击确定按钮确定日期范围，在选择的时候日期范围框的下方会实时的说明当前选择情况
+ ">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    
+    <body>
+        <div class="wrapper">
+            <h2>daterangepicker</h2>
+            <fieldset>
+                <legend>Name 日期范围选择日历</legend>
+                <p>daterangepicker是日期范围选择组件，可以通过设置起始日期与结束日期的最小间隔天数和最大间隔天数将截止日期限制在一定的选择范围中，同时通过点击确定按钮确定日期范围，在选择的时候日期范围框的下方会实时的说明当前选择情况</p>
+            </fieldset>
+            <h3 class="table-doc-title">使用说明</h3>
+            <table class="table-doc" border="1">
+                <colgroup>
+                    <col width="180">
+                        <col width="95">
+                            <col width="180">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>名字</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="4">配置参数</td>
+                    </tr>
+                    <tr>
+                        <td>fromLabel</td>
+                        <td>String</td>
+                        <td>'选择起始日期'</td>
+                        <td>设置起始日期日历框的说明文字</td>
+                    </tr>
+                    <tr>
+                        <td>toLabel</td>
+                        <td>String</td>
+                        <td>'选择结束日期'</td>
+                        <td>设置结束日期日历框的说明文字</td>
+                    </tr>
+                    <tr>
+                        <td>rules</td>
+                        <td>String</td>
+                        <td>""</td>
+                        <td>设置双日历框的工作规则
+                            <pre class="brush:javascript;gutter:false;toolbar:false">            {
+                rules: 'null, 0D, 8D',
+                fromMinDate: '2014-05-02',
+                fromMaxDate: '2014-06-28',
+                toMinDate: '2014-06-01',
+                toMaxDate: '2014-07-12'
+            }
+            </pre>可以是绑定组件时定义的配置对象中的一个rules对象，也可以是一个字符串，指向一个上述对象。 其中对象中的rules属性定义结束初始日期异常时默认显示的日期、初始日期和结束日子之间最小相隔天数、最大相隔天数，格式是[+-]\d[DMY]，分别代表几天、几个月或者几年，也可以附加+或者-号，+号表示正数几天，-号表示负数几天
+                            fromMinDate代表起始日期可以设置的最小日期 fromMaxDate代表起始日期可以设置的最大日期 toMinDate代表结束日期可以设置的最小日期
+                            toMaxDate代表结束日期可以设置的最大日期</td>
+                    </tr>
+                    <tr>
+                        <td>label</td>
+                        <td>String</td>
+                        <td>""</td>
+                        <td>模拟输入域的初始说明文字</td>
+                    </tr>
+                    <tr>
+                        <td>defaultLabel</td>
+                        <td>String</td>
+                        <td>"日期范围"</td>
+                        <td>选中日期之后，模拟输入域开始的说明文字</td>
+                    </tr>
+                    <tr>
+                        <td>disabled</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>设置是否禁用组件</td>
+                    </tr>
+                    <tr>
+                        <td>separator</td>
+                        <td>String</td>
+                        <td>"-"</td>
+                        <td>日期格式的分隔符，可以是"/"或者你希望的符号，但如果是除了"-"和"/"之外的字符则需要和parseDate和formatDate配合使用，以便组件能正常运作</td>
+                    </tr>
+                    <tr>
+                        <td>startDay</td>
+                        <td>Number</td>
+                        <td>1</td>
+                        <td>设置每一周的第一天是哪天，0代表Sunday，1代表Monday，依次类推, 默认从周一开始</td>
+                    </tr>
+                    <tr>
+                        <td>dateRangeWidth</td>
+                        <td>Number</td>
+                        <td>260</td>
+                        <td>配置日期范围框的宽度</td>
+                    </tr>
+                    <tr>
+                        <td>shortcut</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>是否在组件中显示日期选择快捷按钮</td>
+                    </tr>
+                    <tr>
+                        <td>onOpen</td>
+                        <td>Function</td>
+                        <td>avalon.noop</td>
+                        <td>打开daterangepicker的回调
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>vmodel</td>
+                                        <td>Object</td>
+                                        <td>组件对应的Vmodel</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>onClose</td>
+                        <td>Function</td>
+                        <td>avalon.noop</td>
+                        <td>关闭daterangepicker的回调
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>vmodel</td>
+                                        <td>Object</td>
+                                        <td>组件对应的Vmodel</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>onSelect</td>
+                        <td>Function</td>
+                        <td>avalon.noop</td>
+                        <td>点击日期范围框下方的确定按钮之后的回调
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>inputFromDate</td>
+                                        <td>String</td>
+                                        <td>选择的起始日期</td>
+                                    </tr>
+                                    <tr>
+                                        <td>inputToDate</td>
+                                        <td>String</td>
+                                        <td>选择的结束日期</td>
+                                    </tr>
+                                    <tr>
+                                        <td>oldValue</td>
+                                        <td>Array</td>
+                                        <td>最近一次选中的起始和结束日期组成的数组</td>
+                                    </tr>
+                                    <tr>
+                                        <td>vmodel</td>
+                                        <td>Object</td>
+                                        <td>组件对应的Vmodel</td>
+                                    </tr>
+                                    <tr>
+                                        <td>data</td>
+                                        <td>Object</td>
+                                        <td>绑定组件元素上的data属性集合</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>parseDate(str)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>将符合日期格式要求的字符串解析为date对象并返回，不符合格式的字符串返回null,用户可以根据自己需要自行配置解析过程
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>str</td>
+                                        <td>String</td>
+                                        <td>需要解析的日期字符串</td>
+                                    </tr>
+                                    <tr>
+                                        <td>返回</td>
+                                        <td>Date</td>
+                                        <td>解析后的日期对象</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>formatDate(date)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>将日期对象转换为符合要求的日期字符串
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>date</td>
+                                        <td>Date</td>
+                                        <td>需要格式化的日期对象</td>
+                                    </tr>
+                                    <tr>
+                                        <td>返回</td>
+                                        <td>String</td>
+                                        <td>格式化后的日期字符串</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>datesDisplayFormat(label,fromDate,toDate)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>配置日期范围框的显示格式
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>label</td>
+                                        <td>String</td>
+                                        <td>日期范围提示文字</td>
+                                    </tr>
+                                    <tr>
+                                        <td>fromDate</td>
+                                        <td>String</td>
+                                        <td>起始日期</td>
+                                    </tr>
+                                    <tr>
+                                        <td>toDate</td>
+                                        <td>String</td>
+                                        <td>结束日期</td>
+                                    </tr>
+                                    <tr>
+                                        <td>返回</td>
+                                        <td>String</td>
+                                        <td>日期范围框要显示的内容</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <ul class="example-links">
+                <li>
+                    <a href="avalon.daterangepicker.ex1.html">基本配置的日期范围框，设置其初始说明文字、起始日历说明文字、结束日历说明文字</a>
+                </li>
+                <li>
+                    <a href="avalon.daterangepicker.ex2.html">配置日期范围框每一周第一天从周日开始、选择框下方说明文字显示内容</a>
+                </li>
+                <li>
+                    <a href="avalon.daterangepicker.ex3.html">初始化起始日期结束日期、各种方式切换禁用日历组件</a>
+                </li>
+                <li>
+                    <a href="avalon.daterangepicker.ex4.html">初始日期和截止日期之间的最小相隔天数和最大相隔天数、最小日期可选日期、最大可选日期</a>
+                </li>
+                <li>
+                    <a href="avalon.daterangepicker.ex5.html">自定义日期范围框解析和显示规则</a>
+                </li>
+                <li>
+                    <a href="avalon.daterangepicker.ex6.html">日期的onSelect回调、初始值为null的处理、setDates修正日期、setLabel修正提示文字</a>
+                </li>
+            </ul>
+        </div>
+    </body>
+
+</html>

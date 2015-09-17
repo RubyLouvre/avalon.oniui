@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Callback, Add and Remove layout</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+        <script src="../highlight/shCore.js"></script>
+        <script type="text/javascript" src="../avalon.js"></script>
+    </head>
+    <body ms-controller="demo" style="padding: 50px 100px;">
+        <select ms-widget="dropdown, dropdownVM, $regionDropDownOptions" ms-duplex="value">
+            <option value="north" selected>North</option>
+            <option value="south">South</option>
+            <option value="west">West</option>
+            <option value="east">East</option>
+        </select>
+
+        <input ms-widget="button" value="移除" type="button" ms-click="removeLayout" ms-disabled="canAddRegion"/>
+        <input ms-widget="button" value="添加" type="button" ms-click="addLayout" ms-enabled="canAddRegion"/>
+        <div style="width:700px; height: 500px; padding-top:10px;">
+            <div ms-widget="layout,layoutVM,$layoutVMOptions" class="container"></div>
+        </div>
+        <script>
+            require(["./layout/avalon.layout","./button/avalon.button","./dropdown/avalon.dropdown"], function() {
+                avalon.define("demo", function(vm) {
+                    // Layout
+                    vm.$layoutVMOptions = {
+                        northRegion: {
+                            size: 100,
+                            resizable: true,
+                            regionClass: "north"
+                        },
+                        southRegion: {
+                            size: 110,
+                            afterRemove: function (region) {
+                                vm.canAddRegion = true;
+                                avalon.log("Region Callback called. Remove done. Region: ", region);
+                            }
+                        },
+                        eastRegion: {
+                            size: 120
+                        },
+                        afterResize: function (region, beforeSize, afterSize) {
+                            avalon.log("General Callback called. Resize done. Region: ", region, ". BeforeSize: ", beforeSize, ". AfterSize: ", afterSize);
+                        },
+                        afterRemove: function (region) {
+                            vm.canAddRegion = true;
+                            avalon.log("General Callback called. Remove done. Region: ", region);
+                        },
+                        afterAdd: function (region, regionDom, regionConfig) {
+                            vm.canAddRegion = false;
+                            avalon.log("General Callback called. Add done. Region: ", region);
+                        },
+                        stretchMax: true,
+                        resizerSize: 5
+                    };
+
+                    // 下拉菜单
+                    vm.$regionDropDownOptions = {
+                        onChange: function () {
+                            vm.canAddRegion = !avalon.vmodels.layoutVM.hasRegion(avalon.vmodels.layoutVM, avalon.vmodels.dropdownVM.value);
+                        }
+                    };
+
+                    // 按钮
+                    vm.canAddRegion = false;
+                    vm.removeLayout = function() {
+                        avalon.vmodels.layoutVM.removeRegion(avalon.vmodels.layoutVM, avalon.vmodels.dropdownVM.value);
+                    };
+                    vm.addLayout = function() {
+                        avalon.vmodels.layoutVM.addRegion(avalon.vmodels.layoutVM, avalon.vmodels.dropdownVM.value, {
+                            size: "30%",
+                            regionClass: "additional-css-class"
+                        });
+                    };
+                });
+                avalon.scan()
+            })
+        </script>
+        <pre class="brush:html;gutter:false;">
+            &lt;!DOCTYPE html&gt;
+            &lt;html&gt;
+                &lt;head&gt;
+                    &lt;title&gt;Callback, Add and Remove layout&lt;/title&gt;
+                    &lt;meta charset="UTF-8"&gt;
+                    &lt;meta name="viewport" content="width=device-width"&gt;
+                    &lt;link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/&gt;
+                    &lt;link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/&gt;
+                    &lt;script src="../highlight/shCore.js"&gt;&lt;/script&gt;
+                    &lt;script type="text/javascript" src="../avalon.js"&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body ms-controller="demo" style="padding: 50px 100px;"&gt;
+                    &lt;select ms-widget="dropdown, dropdownVM, $regionDropDownOptions" ms-duplex="value"&gt;
+                        &lt;option value="north" selected&gt;North&lt;/option&gt;
+                        &lt;option value="south"&gt;South&lt;/option&gt;
+                        &lt;option value="west"&gt;West&lt;/option&gt;
+                        &lt;option value="east"&gt;East&lt;/option&gt;
+                    &lt;/select&gt;
+
+                    &lt;input ms-widget="button" value="移除" type="button" ms-click="removeLayout" ms-disabled="canAddRegion"/&gt;
+                    &lt;input ms-widget="button" value="添加" type="button" ms-click="addLayout" ms-enabled="canAddRegion"/&gt;
+                    &lt;div style="width:700px; height: 500px; padding-top:10px;"&gt;
+                        &lt;div ms-widget="layout,layoutVM,$layoutVMOptions" class="container"&gt;&lt;/div&gt;
+                    &lt;/div&gt;
+                    &lt;script&gt;
+                        require(["./layout/avalon.layout","./button/avalon.button","./dropdown/avalon.dropdown"], function() &#123;
+                            avalon.define("demo", function(vm) &#123;
+                                // Layout
+                                vm.$layoutVMOptions = &#123;
+                                    northRegion: &#123;
+                                        size: 100,
+                                        resizable: true,
+                                        regionClass: "north"
+                                    &#125;,
+                                    southRegion: &#123;
+                                        size: 110,
+                                        afterRemove: function (region) &#123;
+                                            vm.canAddRegion = true;
+                                            avalon.log("Region Callback called. Remove done. Region: ", region);
+                                        &#125;
+                                    &#125;,
+                                    eastRegion: &#123;
+                                        size: 120
+                                    &#125;,
+                                    afterResize: function (region, beforeSize, afterSize) &#123;
+                                        avalon.log("General Callback called. Resize done. Region: ", region, ". BeforeSize: ", beforeSize, ". AfterSize: ", afterSize);
+                                    &#125;,
+                                    afterRemove: function (region) &#123;
+                                        vm.canAddRegion = true;
+                                        avalon.log("General Callback called. Remove done. Region: ", region);
+                                    &#125;,
+                                    afterAdd: function (region, regionDom, regionConfig) &#123;
+                                        vm.canAddRegion = false;
+                                        avalon.log("General Callback called. Add done. Region: ", region);
+                                    &#125;,
+                                    stretchMax: true,
+                                    resizerSize: 5
+                                &#125;;
+
+                                // 下拉菜单
+                                vm.$regionDropDownOptions = &#123;
+                                    onChange: function () &#123;
+                                        vm.canAddRegion = !avalon.vmodels.layoutVM.hasRegion(avalon.vmodels.layoutVM, avalon.vmodels.dropdownVM.value);
+                                    &#125;
+                                &#125;;
+
+                                // 按钮
+                                vm.canAddRegion = false;
+                                vm.removeLayout = function() &#123;
+                                    avalon.vmodels.layoutVM.removeRegion(avalon.vmodels.layoutVM, avalon.vmodels.dropdownVM.value);
+                                &#125;;
+                                vm.addLayout = function() &#123;
+                                    avalon.vmodels.layoutVM.addRegion(avalon.vmodels.layoutVM, avalon.vmodels.dropdownVM.value, &#123;
+                                        size: "30%",
+                                        regionClass: "additional-css-class"
+                                    &#125;);
+                                &#125;;
+                            &#125;);
+                            avalon.scan()
+                        &#125;)
+                    &lt;/script&gt;
+                &lt;/body&gt;
+            &lt;/html&gt;
+        </pre>
+    </body>
+</html>

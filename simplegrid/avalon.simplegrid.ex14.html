@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>simplegrid</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <script>
+            require(["simplegrid/avalon.simplegrid"], function() {
+                function getData(n) {
+                    var ret = []
+                    for (var i = 0; i < n; i++) {
+                        ret.push({
+                            symbol: Math.random().toString(32).slice(4, 10),
+                            price: range(100, 200),
+                            change: Math.random().toFixed(2) * (Math.random() > 0.5 ? 1 : -1)
+                        })
+                    }
+                    return ret
+                }
+                function range(s, b) {
+                    return s + Math.floor((b - s) * Math.random())
+                }
+                avalon.define("test", function(vm) {
+                    vm.tabs = [1,2,3]
+                    vm.activeIndex  = 0
+                    vm.changeIndex = function(index){
+                         vm.activeIndex = index
+                    }
+                    vm.simplegrid = {
+                        columns: ["symbol", "price", "change"],
+                        data: getData(10)
+                    }
+                    vm.$skipArray = ["simplegrid"]
+                })
+                avalon.scan()
+            })
+        </script>
+        <style>
+            [ms-controller] {
+                visibility: hidden;
+            }
+        </style>
+    </head>
+    <body >
+        <fieldset ms-controller="test">
+            <legend>最简单的例子</legend>
+            <div>
+                <button type="button" ms-repeat="tabs" ms-click="changeIndex($index)">{{$index}}</button>{{activeIndex}}
+            </div>
+            <div ms-repeat="tabs" ms-visible="$index  === activeIndex">
+                <div ms-widget="simplegrid" style="width:99%">
+
+                </div>
+            </div>
+
+       
+        </fieldset>
+    </body>
+</html>

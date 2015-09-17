@@ -1,0 +1,25 @@
+<li class="oni-state-default oni-menu-item" 
+    data-repeat-rendered="_rescan" 
+    ms-repeat-menu="data"   
+    ms-class-11="oni-state-active:!!_canActive(menu, $index)" 
+    ms-class-12="oni-state-disabled:menu.disabled" 
+    ms-class-13="oni-menu-last:$last" 
+    ms-class-14="oni-menu-removable:!!_canRemove(menu)" 
+    ms-class-15="oni-menu-item-{{_depth}}" 
+    ms-class-16="oni-menu-with-sub oni-menu-with-sub-{{_depth}}:_hasSubMenu(menu)" 
+    ms-hover="oni-state-hover" 
+    ms-click-101="_ifEventIsMouseEnter($event, $index)" 
+    ms-data-sub="_hasSubMenu(menu)" 
+    ms-data-depth="_depth" 
+    ms-data-index="$index" 
+    ms-{{MS_OPTION_EVENT}}-100="activate($event, $index)" 
+    > 
+    {{_menuTitle(menu.title, menu, _cutCounter(), cutEnd) | html}}
+    <span ms-if="_hasSubMenu(menu)" class="oni-menu-icon">&gt;</span>
+	<ul ms-if="_hasSubMenu(menu)" class="oni-menu oni-menu-sub oni-helper-clearfix oni-helper-reset" 
+		 ms-data-widget-index="$index" 
+		 ms-class-101="oni-menu-depth-{{_depth+1}}" 
+		 ms-class-102="oni-helper-hidden:!_canActive(menu, $index)" 
+		 ms-data-widget="'menu'">
+	</ul>
+</li>

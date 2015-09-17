@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>spinner test</title>
+        <link type="text/css" rel="stylesheet" charset="utf-8" href="../mocha/mocha.css" />
+        <script src="../avalon.js"></script>
+        <script src="../mocha/mocha.js"></script>
+        <script src="../mocha/expect.js"></script>
+        <style>
+            #testWrapper {
+                margin: -40px 50px 100px 80px;
+            }
+        </style>
+    </head>
+    <body >
+        <div id="mocha"></div>
+        <div id="testWrapper" ms-controller="demo">
+                
+        </div>
+        <script>
+            (function() {
+                mocha.ui('bdd')
+                mocha.setup({timeout: 100000})
+                require(["ready!", "spinner/avalon.spinner"], function() {
+                    var testWrapper = document.getElementById("testWrapper");
+                    var btns = [];
+                    describe("测试spinner组件", function() {
+                        var inputElement = null;
+                        beforeEach(function() {
+                            testWrapper.innerHTML = '<input ms-duplex="p1" ms-widget="spinner, $spinner, $spinnerOpts" />';
+                            inputElement = testWrapper.children[0];
+                        })
+                        afterEach(function() {
+                            testWrapper.innerHTML = testWrapper.textContent = "";
+                        })
+                        it("测试spinner及其回调", function(done) {
+                            var model = avalon.define("demo", function(vm) {
+                                vm.$spinnerOpts = {
+                                    min: 0,
+                                    onsub: function() {
+                                        expect(inputElement.value).to.be("7");
+                                        btns[1].click();
+                                    },
+                                    onadd: function() { 
+                                        expect(inputElement.value).to.be("8");
+                                        done();
+                                    }
+                                }
+                                vm.p1 = 8
+                            })
+                            avalon.scan(inputElement, model);
+                            setTimeout(function() {
+                                var inputPar = inputElement.parentNode,
+                                    uiTextBox = inputPar.parentNode,
+                                    wrapper = uiTextBox.parentNode;
+                                btns = wrapper.getElementsByTagName("button");
+                                expect(avalon(inputPar).hasClass("oni-textbox-input-wrap")).to.be(true);
+                                expect(avalon(uiTextBox).hasClass("oni-textbox")).to.be(true);
+                                expect(avalon(wrapper).hasClass("oni-numberpicker")).to.be(true);
+                                expect(btns.length).to.be(2);
+                                btns[0].click();
+                            }, 400)
+                        })
+                        it("测试spinner的范围限制", function(done) {
+                            avalon(inputElement).bind("blur", function() {
+                                setTimeout(function() {
+                                    expect(inputElement.value).to.be("0");
+                                    expect(model.p1).to.be("0");
+                                    done();
+                                }, 400)
+                            });
+                            avalon(inputElement).bind("focus", function() {
+                                inputElement.value = -2;
+                                inputElement.blur();
+                            })
+                            var model = avalon.define("demo", function(vm) {
+                                vm.$spinnerOpts = {
+                                    min: 0,
+                                    max: 7
+                                }
+                                vm.p1 = 8
+                            })
+                            avalon.scan(inputElement, model);
+                            setTimeout(function() {
+                                expect(inputElement.value).to.be("7");
+                                expect(model.p1).to.be("7");
+                                inputElement.focus();
+                            }, 400)
+                        })
+                    })
+                    mocha.run();
+                })
+            })()
+        </script>
+    </body>
+</html>

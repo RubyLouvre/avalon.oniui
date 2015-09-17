@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" class="overflow">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>dialog demo 1</title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+
+</head>
+<body>
+    <div class="wrapper">
+        <h1>dialog demo 1</h1>
+        <p class="example">最基本的dialog组件（<span class="statement">ms-widget="dialog dialogId"</span>）</p>
+        <p><span class="useDescription">说明：</span>配置ms-widget="dialog,dialogId"就可实现一个简单的弹窗组件，组件默认有确定和取消按钮，点击任意按钮都会关闭弹窗，当然弹窗右上角也会显示关闭按钮，点击关闭弹窗，dialog的子元素可以是模板，组件会自动渲染</p>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;最基本的dialog组件&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;div class="demo-show" ms-important="demo"&gt;
+                        &lt;fieldset&gt;  
+                            &lt;legend&gt;基本的dialog组件&lt;/legend&gt;
+                                &lt;button ms-click="show('aa')"&gt;打开对话框&lt;/button&gt;
+                                &lt;div ms-widget="dialog,aa"&gt;
+                                    呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵
+                                    &lt;p&gt;{{message}}&lt;/p&gt;
+                                    &lt;ul ms-widget="checkboxlist" data-checkboxlist-duplex="check1"&gt;
+                                        &lt;li&gt;&lt;input type="checkbox" value="1"&gt;选项一&lt;/li&gt;
+                                        &lt;li&gt;&lt;input type="checkbox" value="2"&gt;选项二&lt;/li&gt;
+                                        &lt;li&gt;&lt;input type="checkbox" value="3"&gt;选项三&lt;/li&gt;
+                                    &lt;/ul&gt;
+                                &lt;/div&gt;
+                        &lt;/fieldset&gt;
+                        &lt;script&gt; 
+                            require(["dialog/avalon.dialog", "checkboxlist/avalon.checkboxlist"], function() {
+                                avalon.define("demo", function(vm) {
+                                    vm.message = "笑傻了吧！！";
+                                    vm.show = function( id ){
+                                        avalon.vmodels[id].toggle = true;
+                                    }
+                                    vm.check1 = ["1"];
+                                })
+                                avalon.scan();
+                            })
+                        &lt;/script&gt;
+                    &lt;/div&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+        <div>
+            <div class="demo-show" ms-important="demo">
+                <fieldset>  
+                    <legend>基本的dialog组件</legend>
+                        <button ms-click="show('aa')">打开对话框</button>
+                        <div ms-widget="dialog,aa">
+                            呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵
+                            <p>{{message}}</p>
+                            <ul ms-widget="checkboxlist" data-checkboxlist-duplex="check1">
+                                <li><input type="checkbox" value="1">选项一{{name}}</li>
+                                <li><input type="checkbox" value="2">选项二{{name}}</li>
+                                <li><input type="checkbox" value="3">选项三{{name}}</li>
+                            </ul>
+                        </div>
+                </fieldset>
+                <script> 
+                    require(["dialog/avalon.dialog", "checkboxlist/avalon.checkboxlist"], function() {
+                        avalon.define("demo", function(vm) {
+                            vm.message = "笑傻了吧！！";
+                            vm.show = function( id ){
+                                avalon.vmodels[id].toggle = true;
+                            }
+                            vm.name = "shirly"
+                            vm.check1 = ["1"];
+                        })
+                        avalon.scan();
+                    })
+                </script>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

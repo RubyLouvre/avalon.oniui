@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>touch,iscroll-无限下拉</title>
+        <meta content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no,minimal-ui" name="viewport" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="../avalon.js"></script>
+        <script>
+        	window.onerror = function(e) {
+        		alert(JSON.stringify(e))
+        	}
+        </script>
+        <style type="text/css">
+        	*{
+        		padding: 0;
+        		margin: 0;
+        	}
+            html {
+                height: 100%;
+            }
+            body {
+                height: 100%;
+                width: 100%;
+                position: relative;
+            }
+            .g {
+                vertical-align: middle;
+                overflow: hidden;
+                height: 75px;
+                line-height: 75px;
+            }
+            .gaoxiao {
+                height: 100%;
+                overflow: hidden;
+                background: lightgreen;
+            }
+        </style>
+    </head>
+    <body 
+          ms-controller="test">
+        <div ms-iscroll="$,$opt" class="gaoxiao">
+            <ul>
+                <li class="g" 
+                    ms-repeat-item="data" ms-css-margin-top="$index === 0 ? '0' : '-75px'">{{item.title}}</li>
+            </ul>
+        </div>
+        <script>
+            function makeData(cnt) {
+                var res = [],
+                    cnt = cnt || 0
+                while(res.length < 50) {
+                    res.push({
+                        title: "hehe ----- " + cnt 
+                    })
+                    cnt++
+                }
+                avalon.vmodels.test.setData(res, cnt - 50)
+                return res
+            }
+            require(["touch/avalon.iscroll"], function() {
+                avalon.define("test", function(vm) {
+                    vm.$opt = {
+                        getData: makeData,
+                        showLines: 11,
+                        lineHeight: 75,
+                    }
+                    vm.setData = function(data, cnt) {
+                        if(cnt == vm.data.length) {
+                            avalon.vmodels.test.data.push.apply(avalon.vmodels.test.data, data)
+                            // vm.data = data
+                        }
+                    }
+                    vm.data = []
+                    vm.data$ = []
+                })
+                avalon.scan()
+                setTimeout(function() {
+                    // avalon.vmodels.test.data = makeData()
+                    makeData(0)
+                }, 100)
+            })
+        </script>
+    </body>
+</html>

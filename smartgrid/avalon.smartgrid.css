@@ -1,0 +1,296 @@
+@charset "UTF-8";
+/*
+这是每个都组件都应该引用的部分
+*/
+.oni-smartgrid {
+  font-size: 12px;
+  line-height: 20px;
+  position: relative;
+  /*三种容器的规则*/
+  /*三种容器下三角形的共同点*/
+  /*上三角*/
+  /*下三角*/ }
+  .oni-smartgrid .oni-helper-asc, .oni-smartgrid .oni-helper-desc, .oni-smartgrid .oni-helper-ndb {
+    width: 12px;
+    height: 12px;
+    line-height: 1;
+    vertical-align: middle;
+    display: -moz-inline-stack;
+    display: inline-block;
+    vertical-align: middle;
+    *vertical-align: auto;
+    zoom: 1;
+    *display: inline;
+    position: relative;
+    cursor: pointer; }
+  .oni-smartgrid .oni-helper-asc span, .oni-smartgrid .oni-helper-desc span, .oni-smartgrid .oni-helper-ndb span {
+    position: absolute;
+    top: 0px;
+    left: 4px; }
+  .oni-smartgrid .oni-helper-ndb .oni-helper-sort-top, .oni-smartgrid .oni-helper-desc .oni-helper-sort-top {
+    width: 0;
+    height: 0;
+    line-height: 0;
+    font-size: 0;
+    border-top: 0 none;
+    border-right: 6px dashed transparent;
+    border-bottom: 6px solid #ccc;
+    border-left: 6px dashed transparent;
+    top: 0px;
+    left: 0px; }
+  .oni-smartgrid .oni-helper-asc .oni-helper-sort-top {
+    width: 0;
+    height: 0;
+    line-height: 0;
+    font-size: 0;
+    border-top: 0 none;
+    border-right: 6px dashed transparent;
+    border-bottom: 6px solid #000;
+    border-left: 6px dashed transparent;
+    top: 0px;
+    left: 0px; }
+  .oni-smartgrid .oni-helper-ndb .oni-helper-sort-bottom, .oni-smartgrid .oni-helper-asc .oni-helper-sort-bottom {
+    width: 0;
+    height: 0;
+    line-height: 0;
+    font-size: 0;
+    border-top: 6px solid #ccc;
+    border-right: 6px dashed transparent;
+    border-bottom: 0;
+    border-left: 6px dashed transparent;
+    top: 8px;
+    left: 0px; }
+  .oni-smartgrid .oni-helper-desc .oni-helper-sort-bottom {
+    width: 0;
+    height: 0;
+    line-height: 0;
+    font-size: 0;
+    border-top: 6px solid #000;
+    border-right: 6px dashed transparent;
+    border-bottom: 0;
+    border-left: 6px dashed transparent;
+    top: 8px;
+    left: 0px; }
+  .oni-smartgrid .oni-pager {
+    display: inline;
+    float: right; }
+  .oni-smartgrid input {
+    margin: 0; }
+
+.oni-smartgrid-hide {
+  display: none; }
+
+.oni-smartgrid-hover {
+  background-color: #e8f5fd; }
+
+.oni-smartgrid-selected {
+  background-color: #fff7e6; }
+
+.oni-smartgrid-disabled {
+  color: #ccc;
+  background: #fff; }
+  .oni-smartgrid-disabled .oni-dropdown .oni-dropdown-source {
+    border-color: #ccc; }
+
+.oni-smartgrid-hidden input {
+  visibility: hidden; }
+
+.oni-smartgrid-main-wrapper {
+  position: relative;
+  overflow-x: auto;
+  _width: 100%;
+  border: 1px solid #e5e5e5; }
+
+.oni-smartgrid-header {
+  background-color: #f8f8f8;
+  border-bottom: 1px solid #e5e5e5;
+  zoom: 1; }
+
+.oni-smartgrid-header-fixed {
+  background-color: #f8f8f8;
+  border-top: 1px solid #e5e5e5;
+  border-bottom: 1px solid #e5e5e5;
+  border-right: 1px solid #e5e5e5;
+  z-index: 1; }
+
+.oni-smartgrid-column {
+  display: inline-block;
+  *display: inline;
+  _display: inline;
+  zoom: 1;
+  vertical-align: middle;
+  overflow: hidden; }
+
+.oni-smartgrid-column-cell {
+  padding: 7px 5px; }
+
+.oni-smartgrid-body-wrapper {
+  overflow-y: auto;
+  zoom: 1; }
+
+.oni-smartgrid-body {
+  background: #fff; }
+
+.oni-smartgrid-row {
+  border-bottom: 1px solid #f3f3f3;
+  font-size: 0; }
+
+.oni-smartgrid-row .oni-smartgrid-column {
+  font-size: 12px; }
+
+.oni-smartgrid-footer {
+  background-color: #f8f8f8;
+  font-size: 0;
+  padding: 0; }
+  .oni-smartgrid-footer .oni-smartgrid-pager-wrapper {
+    width: 100%;
+    padding: 5px 0px;
+    overflow: hidden;
+    background-color: #f8f8f8; }
+
+.oni-smartgrid-pager-options {
+  font-size: 12px;
+  float: left;
+  height: 26px;
+  line-height: 26px;
+  padding-left: 5px; }
+  .oni-smartgrid-pager-options .oni-smartgrid-showinfo {
+    display: -moz-inline-stack;
+    display: inline-block;
+    vertical-align: middle;
+    *vertical-align: auto;
+    zoom: 1;
+    *display: inline; }
+  .oni-smartgrid-pager-options .oni-dropdown {
+    margin: 0 5px;
+    vertical-align: top; }
+
+.oni-smartgrid-nodata {
+  padding: 23px 0;
+  text-align: center;
+  line-height: 15px; }
+
+/*列设置*/
+.oni-smartgrid-handler-wrap {
+  display: -moz-inline-stack;
+  display: inline-block;
+  vertical-align: middle;
+  *vertical-align: auto;
+  zoom: 1;
+  *display: inline;
+  position: relative;
+  z-index: 1;
+  vertical-align: middle;
+  text-align: left;
+  font-size: 12px; }
+  .oni-smartgrid-handler-wrap .oni-smartgrid-handler-toggle {
+    width: 24px;
+    height: 24px;
+    border: 1px #ccc solid;
+    border-radius: 2px;
+    cursor: pointer;
+    text-align: center;
+    line-height: 28px;
+    outline: none;
+    background: #f8f8f8 url(http://7xkm02.com1.z0.glb.clouddn.com/smartgridsetting.png) no-repeat center;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none; }
+  .oni-smartgrid-handler-wrap .oni-smartgrid-handler-toggle-active {
+    border-color: #3775c0; }
+  .oni-smartgrid-handler-wrap .oni-smartgrid-handler {
+    position: absolute;
+    top: 25px;
+    left: 0;
+    width: 290px;
+    background-color: #fff;
+    border: 1px solid #cccccc; }
+    .oni-smartgrid-handler-wrap .oni-smartgrid-handler .oni-smartgrid-handler-mode {
+      padding: 9px 10px;
+      border-bottom: 1px #f2f2f2 solid;
+      color: #0084bb; }
+      .oni-smartgrid-handler-wrap .oni-smartgrid-handler .oni-smartgrid-handler-mode span {
+        margin: 0 10px 0 0;
+        cursor: pointer;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none; }
+      .oni-smartgrid-handler-wrap .oni-smartgrid-handler .oni-smartgrid-handler-mode .oni-smartgrid-handler-mode-active {
+        font-weight: bold; }
+    .oni-smartgrid-handler-wrap .oni-smartgrid-handler .oni-smartgrid-handler-list {
+      margin: 0;
+      padding: 9px 10px;
+      list-style: none;
+      overflow: hidden; }
+      .oni-smartgrid-handler-wrap .oni-smartgrid-handler .oni-smartgrid-handler-list > li {
+        float: left;
+        width: 135px; }
+        .oni-smartgrid-handler-wrap .oni-smartgrid-handler .oni-smartgrid-handler-list > li > label {
+          display: -moz-inline-stack;
+          display: inline-block;
+          vertical-align: middle;
+          *vertical-align: auto;
+          zoom: 1;
+          *display: inline;
+          cursor: pointer; }
+          .oni-smartgrid-handler-wrap .oni-smartgrid-handler .oni-smartgrid-handler-list > li > label > input {
+            display: -moz-inline-stack;
+            display: inline-block;
+            vertical-align: middle;
+            *vertical-align: auto;
+            zoom: 1;
+            *display: inline;
+            margin-left: 0;
+            cursor: pointer;
+            *vertical-align: -3px; }
+          .oni-smartgrid-handler-wrap .oni-smartgrid-handler .oni-smartgrid-handler-list > li > label .oni-smartgrid-handler-name {
+            display: -moz-inline-stack;
+            display: inline-block;
+            vertical-align: middle;
+            *vertical-align: auto;
+            zoom: 1;
+            *display: inline;
+            max-width: 110px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap; }
+    .oni-smartgrid-handler-wrap .oni-smartgrid-handler .oni-smartgrid-handler-ope {
+      padding: 4px 5px;
+      text-align: right;
+      background-color: #f8f8f8;
+      font-size: 0; }
+      .oni-smartgrid-handler-wrap .oni-smartgrid-handler .oni-smartgrid-handler-ope span {
+        display: -moz-inline-stack;
+        display: inline-block;
+        vertical-align: middle;
+        *vertical-align: auto;
+        zoom: 1;
+        *display: inline;
+        padding: 4px 5px;
+        margin: 0 0 0 5px;
+        line-height: 1;
+        font-size: 12px;
+        border-radius: 2px;
+        cursor: pointer;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none; }
+      .oni-smartgrid-handler-wrap .oni-smartgrid-handler .oni-smartgrid-handler-ope .oni-smartgrid-handler-confirm {
+        background-color: #58b359;
+        color: #fff;
+        border: 1px #45a846 solid; }
+        .oni-smartgrid-handler-wrap .oni-smartgrid-handler .oni-smartgrid-handler-ope .oni-smartgrid-handler-confirm:hover {
+          background-color: #68c969;
+          border-color: #3e973e; }
+      .oni-smartgrid-handler-wrap .oni-smartgrid-handler .oni-smartgrid-handler-ope .oni-smartgrid-handler-cancel {
+        background-color: #f8f8f8;
+        border: 1px #ccc solid; }
+        .oni-smartgrid-handler-wrap .oni-smartgrid-handler .oni-smartgrid-handler-ope .oni-smartgrid-handler-cancel:hover {
+          border-color: #bbb; }
+
+.oni-smartgrid-handler-wrap-right .oni-smartgrid-handler {
+  left: auto;
+  right: 0; }

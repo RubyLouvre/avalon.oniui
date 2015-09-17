@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+    <script src="../avalon.js"></script>
+    <script type="text/javascript">
+        var data = [
+            {
+                area: "北",
+                provinces: [
+                    {
+                        name: "河北",
+                        cities: [
+                            "石家庄", "保定", "唐山"
+                        ]
+                    },
+                    {
+                        name: "吉林",
+                        cities: [
+                            "长春", "吉林", "四平"
+                        ]
+                    }
+                ]
+            },
+            {
+                area: "南",
+                provinces: [
+                    {
+                        name: "江苏",
+                        cities: [
+                            "南京", "台州", "杨州"
+                        ]
+                    },
+                    {
+                        name: "浙江",
+                        cities: [
+                            "宁波", "绍兴", "杭州"
+                        ]
+                    }
+                ]
+            }
+        ];
+
+        var provincesMap = {},
+            citiesMap = {};
+
+        data.forEach(function(v) {
+            provincesMap[v.area] = v.provinces.map(function(p) {
+                citiesMap[p.name] = avalon.mix(true, [], p.cities);
+                return p.name
+            })
+        });
+
+        require(['dropdown/avalon.dropdown.js', "ready!"], function() {
+            var dropdown = avalon.define({
+                $id: "dropdown",
+                $areaOpts: {
+                    onChange: function(n) {
+                        var area = dropdown.places[avalon(this).data("index")];
+                        area.provinces.clear();
+                        area.provinces.pushArray(avalon.mix(true, [], provincesMap[n]));
+                        area.province = area.provinces[0];
+                    }
+                },
+                $provinceOpts: {
+                    onChange: function(n) {
+                        var area = dropdown.places[avalon(this).data("index")];
+                        area.cities.clear();
+                        area.cities.pushArray(avalon.mix(true, [], citiesMap[n]));
+                        area.city = area.cities[0];
+                    }
+                },
+                $cityOpts: {},
+                places: []
+            });
+
+            avalon.scan();
+
+            var places = [];
+            for(var i = 0; i < 3; i++) {
+                var obj = {},
+                    areas = ["南", "北"],
+                    area = areas[Math.floor(2 * Math.random())],
+                    provinces = avalon.mix(true, [], provincesMap[area]),
+                    province = provinces[0],
+                    cities = avalon.mix(true, [], citiesMap[province]);
+
+                obj.areas = areas;
+                obj.provinces = provinces;
+                obj.cities = cities;
+                obj.area = area;
+                obj.province = province;
+                obj.city = cities[Math.floor( (cities.length + 1) * Math.random() )];
+                places.push(obj);
+            }
+            dropdown.places.pushArray(places)
+        });
+    </script>
+</head>
+<body>
+<div class="wrapper">
+    <div ms-controller="dropdown">
+        <h2>dropdown（下拉框）</h2>
+        <p>联动的dropdown</p>
+        <ul>
+            <li ms-repeat="places">
+                <select ms-widget="dropdown,$,$areaOpts" ms-duplex="el.area" ms-data-index="$index">
+                    <option ms-attr-value="item" ms-repeat-item="el.areas">{{item}}</option>
+                </select>
+                <select ms-widget="dropdown,$,$provinceOpts"
+                        ms-duplex="el.province"
+                        data-dropdown-$source="el.provinces"
+                        ms-data-index="$index">
+                    <option ms-attr-value="item" ms-repeat-item="el.provinces">{{item}}</option>
+                </select>
+                <select ms-widget="dropdown,$,$cityOpts"
+                        ms-duplex="el.city"
+                        data-dropdown-$source="el.cities"
+                        ms-data-index="$index">
+                    <option ms-attr-value="item" ms-repeat-item="el.cities">{{item}}</option>
+                </select>
+            </li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

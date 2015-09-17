@@ -1,0 +1,68 @@
+<div class="oni-carousel"
+     ms-css-width="containerWidth"
+     ms-css-height="containerHeight"
+     ms-mouseenter="mouseEnter"
+     ms-mouseleave="mouseLeave(this)"
+        >
+    <div class="oni-carousel-panel"
+         ms-css-width="pictureWidth * pictures.length"
+         ms-css-left="panelOffsetX"
+         ms-css-position="panelPosition"
+            >
+        <div class="oni-carousel-item"
+             ms-repeat="pictures"
+             ms-css-width="pictureWidth"
+             ms-css-position="itemPosition"
+             ms-css-opacity="getOpacity($index)"
+                >
+            <img class="oni-img-placeholder"
+                 ms-if="lazyload"
+                 ms-src="lazyloadImg" />
+            <img class="oni-img-origin"
+                 ms-src="{{el.src}}"
+                 ms-on-load="imgOnload(this, $index)"
+                 ms-attr-alt="{{el.alt}}" />
+            <a class="oni-carousel-link"
+               target="_blank"
+               ms-if="typeof links[$index] !== 'undefined' && links[$index] !== ''"
+               ms-attr-title="{{links[$index].title}}"
+               ms-href="{{links[$index].href}}">
+            </a>
+        </div>
+    </div>
+    <div class="oni-carousel-selection-wrap"
+         ms-class="oni-carousel-selection-wrap-keep-right:showDescription"
+         ms-visible="alwaysShowSelection && componentVisible"
+         ms-css-margin-left="selectionWrapOffset"
+            >
+        <a  class="oni-carousel-selection-link"
+            ms-class="selected:el==currentIndex"
+            ms-mouseenter="selectPic($index,$event)"
+            ms-click="selectPic($index,$event)"
+            ms-mouseleave="mouseLeave(this)"
+            ms-repeat="selections"
+                ></a>
+    </div>
+    <div class="oni-carousel-description-wrap" ms-if="showDescription">
+        <div class="oni-carousel-description"
+             ms-repeat="pictures"
+             ms-visible="currentIndex === $index && pictures[$index].description"
+             ms-attr-title="{{pictures[$index].description}}">
+            {{pictures[$index].description | html}}
+        </div>
+    </div>
+    <img class="oni-carousel-arrow oni-carousel-prev"
+       ms-click="animate(-1)"
+       ms-mouseenter="arrowHover('left')"
+       ms-mouseleave="arrowBlur('left')"
+       ms-visible="arrowVisible && componentVisible"
+       ms-src="arrowLeftSrc"
+    />
+    <img class="oni-carousel-arrow oni-carousel-after"
+       ms-click="animate(1)"
+       ms-mouseenter="arrowHover('right')"
+       ms-mouseleave="arrowBlur('right')"
+       ms-visible="arrowVisible && componentVisible"
+       ms-src="arrowRightSrc"
+    />
+</div>

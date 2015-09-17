@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>simplegrid</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <script>
+            require(["simplegrid/avalon.simplegrid"], function() {
+                function getData(n) {
+                    var ret = []
+                    for (var i = 0; i < n; i++) {
+                        var random = Math.random()
+                        var factor = random > 0.5 ? 1 : -1
+                        ret.push({
+                            symbol: "<b>" + random.toString(32).slice(4, 10) + "</b>",
+                            price: range(100, 200),
+                            change: "<span style='color:" + (factor === 1 ? 'green' : 'red') + "'>" + random.toFixed(2) * factor + "</span>"
+                        })
+                    }
+                    return ret
+                }
+                function range(s, b) {
+                    return s + Math.floor((b - s) * Math.random())
+                }
+                avalon.define("test", function(vm) {
+                    vm.simplegrid = {
+                        columns: ["symbol",  "price", "change"],
+                        data: getData(10)
+                    }
+                    vm.$skipArray = ["simplegrid"]
+                })
+               
+
+  
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body >
+        <fieldset >
+            <legend>最简单的例子</legend>
+            <div ms-controller="test" ms-widget="simplegrid" style="width:99%">
+
+            </div>
+            <h3>要点</h3>
+            <p>我们来看一下默认模板,就会发现其表身的单元格的输出部分一个渲染函数加html过滤器组成,因此data中的数据存在标签会转换成相应的元素节点</p>
+            <pre class="brush:html;gutter:false;toolbar:false;">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;simplegrid&lt;/title&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width"&gt;
+        &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+        &lt;script src="../highlight/shCore.js"&gt;&lt;/script&gt;
+        &lt;script&gt;
+            require(["simplegrid/avalon.simplegrid"], function() {
+                function getData(n) {
+                    var ret = []
+                    for (var i = 0; i &lt; n; i++) {
+                        var random = Math.random()
+                        var factor = random &gt; 0.5 ? 1 : -1
+                        ret.push({
+                            symbol: "&lt;b&gt;"+random.toString(32).slice(4, 10)+"&lt;/b&gt;",
+                            price: range(100, 200),
+                            change: "&lt;span style='color:"+ (factor === 1 ? 'green' : 'red') +"'&gt;" +random.toFixed(2) * factor +"&lt;/span&gt;"
+                        })
+                    }
+                    return ret
+                }
+                function range(s, b) {
+                    return s + Math.floor((b - s) * Math.random())
+                }
+                avalon.define("test", function(vm) {
+                    vm.simplegrid = {
+                        columns: ["symbol", "price", "change"],
+                        data: getData(10)
+                    }
+                    vm.$skipArray = ["simplegrid"]
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body ms-controller="test" &gt;
+            &lt;div ms-widget="simplegrid" style="width:99%"&gt;
+
+            &lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+            </pre>
+          
+
+        </fieldset>
+    </body>
+</html>

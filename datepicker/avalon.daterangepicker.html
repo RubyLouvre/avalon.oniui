@@ -1,0 +1,50 @@
+<div class="oni-daterangepicker"
+     ms-css-width="dateRangeWidth">
+    <div class="oni-datepicker-range-input" 
+        ms-click="_toggleDatepicker(toggle, $event)"
+        ms-class="oni-state-active:toggle"
+        ms-hover="oni-state-hover"
+        >
+        <div class="oni-datepicker-input js-input"
+             ms-class="oni-datepicker-input-disabled: disabled">{{label|html}}</div>
+        <div class="oni-datepicker-icon-wrap">
+            <i class="oni-datepicker-icon oni-icon oni-icon-angle-up" ms-visible="toggle">&#xf028;</i>
+            <i class="oni-datepicker-icon oni-icon oni-icon-angle-down" ms-visible="!toggle">&#xf032;</i>
+        </div>
+    </div>
+    <div class="oni-daterangepicker-content">
+        <div class="oni-datepicker-groups" 
+            ms-visible="toggle"
+            ms-click="_updateMsg">
+            <div class="oni-daterangepicker-quick-operation" ms-if="shortcut">
+                <span ms-click="quickOperation('today')">今天</span>
+                <span ms-click="quickOperation('lastDay')">昨天</span>
+                <span ms-click="quickOperation('lastSeventDays')">过去七天</span>
+                <span ms-click="quickOperation('currentMonth')">本月</span>
+                <span ms-click="quickOperation('lastMonth')">上个月</span>
+            </div>
+            <div class="oni-datepicker-group-first oni-datepicker-group">
+                <input style="display:none" 
+                       ms-data-container="container"
+                       ms-data-input="inputElement"
+                       ms-data-calenderwrapper="calendarWrapper"/>
+            </div>
+            <div class="oni-datepicker-group-second oni-datepicker-group">
+                <input style="display:none" 
+                       ms-data-container="container"
+                       ms-data-input="inputElement"
+                       ms-data-calenderwrapper="calendarWrapper"/>
+            </div>
+            <div class="oni-calendarbox-footer oni-calendarbox-footer-small oni-helper-clearfix">
+                <div class="oni-calendarbox-msg js-msg">{{msg|html}}</div>
+                <div class="oni-calendarbox-btns">
+                    <button type="button" ms-widget="button" data-button-color="success" data-button-size="small" class="oni-btn"
+                            ms-hover="oni-state-hover"
+                            ms-click="_selectDate">确定</button>
+                    <button type="button" ms-widget="button" class="oni-btn" data-button-size="small"
+                    ms-click="_cancelSelectDate">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

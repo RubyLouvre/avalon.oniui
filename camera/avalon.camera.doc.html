@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>图片百叶窗效果组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <meta name="descriptions" content="基于carousel图片轮播组件。注意：此组件动画效果由jquery完成，需要从外部引入。具体引入方法请看示例代码。">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    
+    <body>
+        <div class="wrapper">
+            <h2>camera</h2>
+            <fieldset>
+                <legend>图片百叶窗效果组件</legend>基于carousel图片轮播组件。注意：此组件动画效果由jquery完成，需要从外部引入。具体引入方法请看示例代码。</fieldset>
+            <h3
+            class="table-doc-title">使用说明</h3>
+                <table class="table-doc" border="1">
+                    <colgroup>
+                        <col width="180">
+                            <col width="95">
+                                <col width="120">
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <th>名字</th>
+                            <th>类型</th>
+                            <th>默认值</th>
+                            <th>说明</th>
+                        </tr>
+                        <tr>
+                            <td align="center" colspan="4">配置参数</td>
+                        </tr>
+                        <tr>
+                            <td>pictures</td>
+                            <td>Array</td>
+                            <td>[]</td>
+                            <td>轮播图片素材</td>
+                        </tr>
+                        <tr>
+                            <td>effect</td>
+                            <td>String</td>
+                            <td>"random"</td>
+                            <td>图片切换类型，取值：random:全部随机 / none:无特效 / slideX:横向滑动 / slideY:纵向滑动 / fadeIn:渐入
+                                / crossX:横向交叉 / crossY:纵向交叉 / stepX:横向阶梯 / stepY:纵向阶梯 / rotateFadeIn:旋转式渐入</td>
+                        </tr>
+                        <tr>
+                            <td>timeout</td>
+                            <td>Number</td>
+                            <td>2500</td>
+                            <td>切换时间间隔</td>
+                        </tr>
+                        <tr>
+                            <td>speed</td>
+                            <td>Number</td>
+                            <td>600</td>
+                            <td>切换速度，数值越小速度越快，单位为毫秒</td>
+                        </tr>
+                        <tr>
+                            <td>alwaysShowArrow</td>
+                            <td>Boolean</td>
+                            <td>true</td>
+                            <td>显示左右切换箭头</td>
+                        </tr>
+                        <tr>
+                            <td>alwaysShowSelection</td>
+                            <td>Boolean</td>
+                            <td>true</td>
+                            <td>显示底部圆形切换部件</td>
+                        </tr>
+                        <tr>
+                            <td>hoverStop</td>
+                            <td>Boolean</td>
+                            <td>true</td>
+                            <td>鼠标经过停止播放</td>
+                        </tr>
+                        <tr>
+                            <td>adaptiveWidth</td>
+                            <td>Boolean</td>
+                            <td>false</td>
+                            <td>适应外围宽度</td>
+                        </tr>
+                        <tr>
+                            <td>adaptiveHeight</td>
+                            <td>Boolean</td>
+                            <td>false</td>
+                            <td>适应外围高度</td>
+                        </tr>
+                        <tr>
+                            <td>eventType</td>
+                            <td>String</td>
+                            <td>"click"</td>
+                            <td>触发tab切换的nav上的事件类型，取值click\mouseenter\both</td>
+                        </tr>
+                        <tr>
+                            <td>arrowLeftClass</td>
+                            <td>String</td>
+                            <td>""</td>
+                            <td>左右箭头的className，可不传</td>
+                        </tr>
+                        <tr>
+                            <td>arrowRightClass</td>
+                            <td>String</td>
+                            <td>""</td>
+                            <td>左右箭头的className，可不传</td>
+                        </tr>
+                        <tr>
+                            <td>slicedCols</td>
+                            <td>Number</td>
+                            <td>5</td>
+                            <td>区块列数</td>
+                        </tr>
+                        <tr>
+                            <td>slicedRows</td>
+                            <td>Number</td>
+                            <td>4</td>
+                            <td>区块行数</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <ul class="example-links">
+                    <li>
+                        <a href="avalon.camera.ex.html">图片百叶窗切换组件</a>
+                    </li>
+                    <li>
+                        <a href="avalon.camera.ex1.html">图片百叶窗切换组件-自定义宽高</a>
+                    </li>
+                    <li>
+                        <a href="avalon.camera.ex2.html">图片百叶窗切换组件-自定义切换间隔和切换速度</a>
+                    </li>
+                    <li>
+                        <a href="avalon.camera.ex3.html">图片百叶窗切换组件-自定义区块数量</a>
+                    </li>
+                </ul>
+        </div>
+    </body>
+
+</html>

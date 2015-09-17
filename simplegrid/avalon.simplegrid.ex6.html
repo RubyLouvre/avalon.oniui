@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>simplegrid</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js">
+
+        </script>
+        <script>
+            avalon.config({debug: false})
+            require(["simplegrid/avalon.simplegrid"], function() {
+
+                function getData(n) {
+                    var ret = []
+                    for (var i = 0; i < n; i++) {
+                        var random = Math.random()
+                        var factor = random > 0.5 ? 1 : -1
+                        ret.push({
+                            symbol: '<a href="javascript:alert(1)">' + random.toString(32).slice(4, 10) + "</b>",
+                            price: range(100, 200),
+                            change: "<span onclick='alert(2)' style='color:" + (factor === 1 ? 'green' : 'red') + "'>" + random.toFixed(2) * factor + "</span>"
+                        })
+                    }
+                    return ret
+                }
+                function range(s, b) {
+                    return s + Math.floor((b - s) * Math.random())
+                }
+                avalon.define("test", function(vm) {
+                    vm.simplegrid = {
+                        columns: ["symbol", "price", "change"],
+                        tbodyTemplate: function(str) {
+                            return str.replace(/\|\s*html/, "|sanitize|html")
+                        },
+                        showRows: 10,
+                        data: getData(1000),
+                        pageable: true,
+                        pager: {
+                            totalItems: 2000
+                        }
+                    }
+                    vm.$skipArray = ["simplegrid"]
+                })
+                avalon.scan()
+            })
+        </script>
+
+    </head>
+    <body>
+
+        <fieldset ms-controller="test">
+            <legend>演示无限拖</legend>
+
+            <div ms-widget="simplegrid" style="width:70%;">
+
+            </div>
+            <p>如果数据是用户输入的,可存在的跨域攻击的危险,因此需要过滤一下,我们可以用tbodyTemplate修改一下。tbodyTemplate可以函数也可以是字符串，
+                在这里我们只需要用正则修改一下原模板就行了，无需自己模仿着原来的格式写这么长的字符串。
+            </p>
+            <pre class="brush:js;gutter:false;toolbar:false;">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;simplegrid&lt;/title&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width"&gt;
+        &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+
+        &lt;script&gt;
+            avalon.config({debug: false})
+            require(["simplegrid/avalon.simplegrid"], function() {
+
+                function getData(n) {
+                    var ret = []
+                    for (var i = 0; i &lt; n; i++) {
+                        var random = Math.random()
+                        var factor = random &gt; 0.5 ? 1 : -1
+                        ret.push({
+                            symbol: '&lt;a href="javascript:alert(1)"&gt;' + random.toString(32).slice(4, 10) + "&lt;/b&gt;",
+                            price: range(100, 200),
+                            change: "&lt;span onclick='alert(2)' style='color:" + (factor === 1 ? 'green' : 'red') + "'&gt;" + random.toFixed(2) * factor + "&lt;/span&gt;"
+                        })
+                    }
+                    return ret
+                }
+                function range(s, b) {
+                    return s + Math.floor((b - s) * Math.random())
+                }
+                avalon.define("test", function(vm) {
+                    vm.simplegrid = {
+                        columns: ["symbol", "price", "change"],
+                        tbodyTemplate: function(str) {
+                            return str.replace(/\|\s*html/, "|sanitize|html")
+                        },
+                        showRows: 10,
+                        data: getData(1000)
+                    }
+                    vm.$skipArray = ["simplegrid"]
+                })
+                avalon.scan()
+            })
+        &lt;/script&gt;
+
+    &lt;/head&gt;
+    &lt;body ms-controller="test"&gt;
+            &lt;div ms-widget="simplegrid" style="width:99%;"&gt;
+            &lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+  
+            </pre>
+        </fieldset>
+
+    </body>
+</html>

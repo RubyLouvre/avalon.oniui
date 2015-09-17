@@ -1,0 +1,183 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>dialog demo </title>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<script src="../avalon.js"></script>
+</head>
+<body class="ms-controller" ms-controller="demo">
+    <fieldset>  
+        <legend>dialog组件</legend>
+            <button ms-click="show('aa')">打开对话框</button>
+            <div ms-widget="dialog,aa,$aaOpts" id="dialog">
+                呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵
+            </div>
+    </fieldset>
+    <p>测试IE6下存在select时遮罩遮不住的问题是否解决</p>
+    <select>
+        <option>hello 1 </option>
+        <option>hello 2 </option>        
+        <option>hello 3</option>
+        <option>hello 4</option>
+        <option>hello 5</option>
+    </select>
+    <p>增加z-index看看dialog的z-index是否会自动调整</p>
+    <button ms-click="addZIndex('aa')">add z-index</button>
+    <fieldset>
+        <legend>层上层</legend>
+        <button ms-click="show('ss')">打开对话框</button>
+        <div ms-widget="dialog,ss,$ssOpts">
+            呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵
+            发送到发送到发生发生地方撒旦法撒旦法师打发沙发垫发大水发撒旦飞洒发沙发沙发上大发发送到发送到发大水发送发生地方撒旦法撒旦法撒旦任务二期为热情污染物而犬瘟热日期日期额外人全文尔特我去惹人
+            发送到发送到发生发生地方撒旦法撒旦法师打发沙发垫发大水发撒旦飞洒发沙发沙发上大发发送到发送到发大水发送发生地方撒旦法撒旦法撒旦任务二期为热情污染物而犬瘟热日期日期额外人全文尔特我去惹人
+            <button ms-click="show('gg')">打开对话框</button>
+            <div ms-widget="dialog,gg,$ggOpts">
+                换回来后就会很快更快更好感觉回来了黄金客户
+                发送到发送到发生发生地方撒旦法撒旦法师打发沙发垫发大水发撒旦飞洒发沙发沙发上大发发送到发送到发大水发送发生地方撒旦法撒旦法撒旦任务二期为热情污染物而犬瘟热日期日期额外人全文尔特我去惹人
+                <button ms-click="show('mm')">打开对话框</button>
+                <div ms-widget="dialog,mm,$mmOpts">
+                    哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    
+    <fieldset>  
+        <legend>警告框(模拟alert)</legend>
+            <button ms-click="show('bb')">打开对话框</button>
+            <div ms-widget="dialog,bb,$bbOpts">
+                呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵
+            </div>
+    </fieldset>
+  
+    <fieldset>
+        <legend>设置dialog的宽度(默认为480)</legend>
+
+        <button ms-click="show('ff')">打开对话框</button>
+        <div ms-widget="dialog,ff, $ffOpts">
+        呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵
+        </div>
+    </fieldset> 
+    <script> 
+        require(["dialog/avalon.dialog"], function(avalon) {
+            var model = avalon.define("demo", function(vm) {
+                var dialog;
+                // 要求组件的配置项一定要放在组件的配置对象中，不可放在外部定义的controller，比如这里的demo
+                // 注意配置选项绝不可以监控
+                vm.$aaOpts = {
+                    title: 'dialog title',
+                    modal: false,
+                    onConfirm: function(){
+                        avalon.log(this);
+                        avalon.log(arguments);
+                        alert('执行了submit')
+                        avalon.log("非组件的确定回调");
+                    },
+                    onClose: function(){
+                        alert('执行了cancel')
+                    }
+                };
+                vm.$ssOpts = {
+                    title: "层上层的dialog",
+                    onConfirm: function() {
+                        alert("submit success !");
+                        avalon.log(arguments);
+                        avalon.log(this);
+                    }
+                };
+                vm.$ggOpts = {
+                    title: "gg dialog,在ss dialog之上",
+                    showClose: false
+                };
+                vm.$mmOpts = {
+                    title: "mm dialog 的tittle",
+                    onConfirm: function() {
+                        alert("确定操作，完成之后关闭弹窗");
+                    },
+                    onClose: function() {
+                        alert("取消操作，完成之后关闭弹窗");
+                    }
+                };
+                vm.$bbOpts = {
+                    type: "alert",
+                    showClose: true,
+                    modal: false
+                };
+                vm.$ffOpts = {
+                    type: "alert",
+                    title: "改变dialog的宽度",
+                    width: 300
+                }
+                vm.tpl = '我是tpl';
+                vm.tpl2 = '我是tpl2';
+                vm.show = function( id ){
+                    avalon.vmodels[id].toggle = true;
+                }
+                /**
+                 * 使用方法生成dialog
+                 */
+                vm.$customDialogOptions = {
+                        title: 'customShow',
+                        onConfirm: function() {alert("success !")},
+                        type: 'alert'
+                    };
+                vm.showCustomDialog = function(id) {
+                    if(!dialog) {
+                        // 注意用户动态生成dialog时，需要配置dialog的id,options，model，和content，且属性名是固定的
+                        var config = {
+                            id: id,
+                            model: "demo",
+                            // dialog配置项的值必须是model下的对应配置属性名
+                            options: "$customDialogOptions",
+                            content: '呵呵呵呵 {{tpl}} '
+                        }
+                        dialog = avalon.dialog(config);
+                    }
+                    dialog.toggle = true;
+                }
+                /**
+                 * 更改dialog的content
+                 */
+                vm.changeDialog = function(id) {
+                    var dialog = avalon.vmodels[id];
+                    if(!dialog) {
+                        return;
+                    }
+                    dialog.setContent('{{tpl2}}');
+                }
+                /**
+                 * 更改dialogtitle
+                 */
+                vm.changeTitle = function(id) {
+                    var dialog = avalon.vmodels[id];
+                    if(!dialog) {
+                        return;
+                    }
+                    dialog.setTitle('我是title');
+                };
+                // setModel的参数就是个简单对象，不要监控
+                vm.m = {
+                    tpl2: '我变了',
+                    $title: "改变title并且改变模板然后重新渲染",
+                    $content: "改变modal的content{{tpl2}}",
+                    $noScan: false // 是否需要扫描编译模板，需要编译则设为false或者不定义即可，不需要扫描设为true
+                };
+                vm.changeModel = function(id) {
+                    var dialog = avalon.vmodels[id];
+                    if(!dialog) {
+                        return;
+                    }
+                    dialog.setModel(vm.m);
+                };
+                vm.addZIndex = function(id) {
+                    avalon.vmodels[id].zIndex = 300;
+                }
+            })
+            avalon.scan();
+        })
+    </script>
+</body>
+</html>

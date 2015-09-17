@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>dialog demo 1</title>
+<link type="text/css" rel="stylesheet" href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>dialog demo 10</h1>
+        <p class="example">通过设置draggable=true实现拖拽（<span class="statement">ms-widget="dialog dialogId"</span>）</p>
+        <div class="demo-show" ms-controller="demo">
+            <fieldset>
+                <legend>配置draggable实现拖曳</legend>
+                    <button ms-click="show('aa')">打开对话框</button>
+                    <div ms-widget="dialog,aa" data-dialog-modal="false" data-dialog-draggable="true" data-draggable-ghosting="true">
+                        呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵
+                        <p>{{message}}</p>
+                    </div>
+            </fieldset>
+            <script>
+                require(["dialog/avalon.dialog"], function(avalon) {
+                    avalon.define("demo", function(vm) {
+                        vm.message = "笑傻了吧！！";
+                        vm.show = function( id ){
+                            avalon.vmodels[id].toggle = true;
+                        }
+                    })
+                    avalon.scan();
+                })
+            </script>
+        </div>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;通过加载avalon.draggable实现拖拽&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;div class="demo-show" ms-controller="demo"&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;配置draggable实现拖曳&lt;/legend&gt;
+                                &lt;button ms-click="show('aa')"&gt;打开对话框&lt;/button&gt;
+                                &lt;div ms-widget="dialog,aa" data-dialog-modal="false" data-dialog-draggable="true"&gt;
+                                    呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵
+                                    &lt;p&gt;{{message}}&lt;/p&gt;
+                                &lt;/div&gt;
+                        &lt;/fieldset&gt;
+                        &lt;script&gt;
+                            require(["dialog/avalon.dialog"], function(avalon) {
+                                avalon.define("demo", function(vm) {
+                                    vm.message = "笑傻了吧！！";
+                                    vm.show = function( id ){
+                                        avalon.vmodels[id].toggle = true;
+                                    }
+                                })
+                                avalon.scan();
+                            })
+                        &lt;/script&gt;
+                    &lt;/div&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+    </div>
+</body>
+</html>

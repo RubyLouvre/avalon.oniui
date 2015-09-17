@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>分页组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <meta name="descriptions" content=" 分页组件 用于各种列表与表格的下方 。
+ ">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    
+    <body>
+        <div class="wrapper">
+            <h2>pager</h2>
+            <fieldset>
+                <legend>分页组件</legend>
+                <p>分页组件 用于各种列表与表格的下方 。</p>
+            </fieldset>
+            <h3 class="table-doc-title">使用说明</h3>
+            <table class="table-doc" border="1">
+                <colgroup>
+                    <col width="180">
+                        <col width="95">
+                            <col width="120">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th>名字</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                        <th>说明</th>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="4">配置参数</td>
+                    </tr>
+                    <tr>
+                        <td>getTitle(a,currentPage,totalPages)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>获取页码上的title的函数
+                            <table border="1">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px">参数名/返回值</th>
+                                        <th style="width:70px">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>a</td>
+                                        <td>String|Number</td>
+                                        <td>a 当前页码的类型，如first, prev, next, last, 1, 2, 3</td>
+                                    </tr>
+                                    <tr>
+                                        <td>currentPage</td>
+                                        <td>Number</td>
+                                        <td>currentPage 当前页码</td>
+                                    </tr>
+                                    <tr>
+                                        <td>totalPages</td>
+                                        <td>Number</td>
+                                        <td>totalPages 最大页码</td>
+                                    </tr>
+                                    <tr>
+                                        <td>返回</td>
+                                        <td>String</td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>perPages</td>
+                        <td>Number</td>
+                        <td>10</td>
+                        <td>每页包含多少条目</td>
+                    </tr>
+                    <tr>
+                        <td>showPages</td>
+                        <td>Number</td>
+                        <td>10</td>
+                        <td>中间部分一共要显示多少页(如果两边出现省略号,即它们之间的页数)</td>
+                    </tr>
+                    <tr>
+                        <td>currentPage</td>
+                        <td>Number</td>
+                        <td>1</td>
+                        <td>当前选中的页面 (按照人们日常习惯,是从1开始)，它会被高亮</td>
+                    </tr>
+                    <tr>
+                        <td>_currentPage</td>
+                        <td>Number</td>
+                        <td>1</td>
+                        <td>跳转台中的输入框显示的数字，它默认与currentPage一致</td>
+                    </tr>
+                    <tr>
+                        <td>totalItems</td>
+                        <td>Number</td>
+                        <td>200</td>
+                        <td>总条目数</td>
+                    </tr>
+                    <tr>
+                        <td>totalPages</td>
+                        <td>Number</td>
+                        <td>0</td>
+                        <td>总页数,通过Math.ceil(vm.totalItems / vm.perPages)求得</td>
+                    </tr>
+                    <tr>
+                        <td>pages</td>
+                        <td>Array</td>
+                        <td>[]</td>
+                        <td>要显示的页面组成的数字数组，如[1,2,3,4,5,6,7]</td>
+                    </tr>
+                    <tr>
+                        <td>nextText</td>
+                        <td>String</td>
+                        <td>"&gt;"</td>
+                        <td>“下一页”分页按钮上显示的文字</td>
+                    </tr>
+                    <tr>
+                        <td>prevText</td>
+                        <td>String</td>
+                        <td>" &lt; "</td>
+                        <td>“上一页”分页按钮上显示的文字</td>
+                    </tr>
+                    <tr>
+                        <td>ellipseText</td>
+                        <td>String</td>
+                        <td>"… "</td>
+                        <td>省略的页数用什么文字表示</td>
+                    </tr>
+                    <tr>
+                        <td>firstPage</td>
+                        <td>Number</td>
+                        <td>0</td>
+                        <td>当前可显示的最小页码，不能小于1</td>
+                    </tr>
+                    <tr>
+                        <td>lastPage</td>
+                        <td>Number</td>
+                        <td>0</td>
+                        <td>当前可显示的最大页码，不能大于totalPages</td>
+                    </tr>
+                    <tr>
+                        <td>alwaysShowNext</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>总是显示向后按钮</td>
+                    </tr>
+                    <tr>
+                        <td>alwaysShowPrev</td>
+                        <td>Boolean</td>
+                        <td>false</td>
+                        <td>总是显示向前按钮</td>
+                    </tr>
+                    <tr>
+                        <td>getTemplate(tmpl,opts)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>用于重写模板的函数
+                            <table border="1 ">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px
+                            ">参数名/返回值</th>
+                                        <th style="width:70px ">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>tmpl</td>
+                                        <td>String</td>
+                                        <td>tmpl</td>
+                                    </tr>
+                                    <tr>
+                                        <td>opts</td>
+                                        <td>Object</td>
+                                        <td>opts</td>
+                                    </tr>
+                                    <tr>
+                                        <td>返回</td>
+                                        <td>String</td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>options</td>
+                        <td>Array</td>
+                        <td>[]</td>
+                        <td>数字数组或字符串数组或对象数组,但都转换为对象数组,每个对象都应包含text,value两个属性, 用于决定每页有多少页(看avalon.pager.ex3.html)</td>
+                    </tr>
+                    <tr>
+                        <td>onJump(e,page)</td>
+                        <td>Function</td>
+                        <td></td>
+                        <td>页面跳转时触发的函数,如果当前链接处于不可以点状态(oni-state-disabled),是不会触发的
+                            <table border="1 ">
+                                <tbody>
+                                    <tr>
+                                        <th style="width:100px
+                            ">参数名/返回值</th>
+                                        <th style="width:70px ">类型</th>
+                                        <th>说明</th>
+                                    </tr>
+                                    <tr>
+                                        <td>e</td>
+                                        <td>Event</td>
+                                        <td>e</td>
+                                    </tr>
+                                    <tr>
+                                        <td>page</td>
+                                        <td>Number</td>
+                                        <td>page 当前页码</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="others ">
+                <p>pager 组件有一个重要的jumpPage方法，用于决定它的跳转方式。它有两个参数，第一个事件对象，第二个是跳转方式，见源码：</p>
+                <pre
+                class="brush:javascript;gutter:false;toolbar:false; ">vm.jumpPage = function(event, page) { event.preventDefault() if (page
+                    !== vm.currentPage) { switch (page) { case "first ": vm.currentPage = 1
+                    break case "last ": vm.currentPage = vm.totalPages break case "next ":
+                    vm.currentPage++ if (vm.currentPage &gt; vm.totalPages) { vm.currentPage
+                    = vm.totalPages } break case "prev ": vm.currentPage-- if (vm.currentPage
+                    &lt; 1) { vm.currentPage = 1 } break default: vm.currentPage = page break
+                    } vm.onJump.call(element, event, vm) efficientChangePages(vm.pages, getPages(vm))
+                    } }</pre>
+            </div>
+            <ul class="example-links ">
+                <li>
+                    <a href="avalon.pager.ex1.html ">显示跳转台</a>
+                </li>
+                <li>
+                    <a href="avalon.pager.ex2.html ">指定回调onJump</a>
+                </li>
+                <li>
+                    <a href="avalon.pager.ex3.html ">改变每页显示的数量</a>
+                </li>
+                <li>
+                    <a href="avalon.pager.ex4.html ">指定上一页,下一页的文本</a>
+                </li>
+                <li>
+                    <a href="avalon.pager.ex5.html ">通过左右方向键或滚轮改变页码</a>
+                </li>
+                <li>
+                    <a href="avalon.pager.ex6.html ">总是显示上一页与下一页按钮</a>
+                </li>
+                <li>
+                    <a href="avalon.pager.ex7.html ">多语言支持</a>
+                </li>
+            </ul>
+        </div>
+    </body>
+
+</html>

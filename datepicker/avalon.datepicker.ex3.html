@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>datepicker demo </title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>datepicker demo</h1>
+        <div class="demo-show" ms-controller="demo">
+            <fieldset style="position: relative; z-index: 3">
+                <legend>显示非当前月日期</legend>
+                <input ms-widget="datepicker" data-datepicker-show-other-months="true"/>
+                <p>说明：配置showOtherMonths为true，使得日历可以显示非当前月的日期，当然只会显示上月日期，下月日期不显示</p>
+            </fieldset>
+            <fieldset style="position: relative; z-index: 2">
+                <legend>一次显示3个月份</legend>
+                <input ms-widget="datepicker" data-datepicker-number-of-months="3" />
+                <p>说明：配置numberOfMonths为3，使得日历同时显示3个月份</p>
+            </fieldset>
+            <fieldset style="position: relative; z-index: 1">
+                <legend>通过next、prev切换月份时，一次跳过3个月</legend>
+                <input ms-widget="datepicker" data-datepicker-step-months="3" />
+                <p>说明：配置stepMonths选项，使得通过next、prev切换月份时，可以一次跳过3个月，当然希望跳过几个月根据需要随意配置，默认切换到下个月或者上个月</p>
+            </fieldset>
+            <script> 
+                require(["datepicker/avalon.datepicker"], function(avalon) {
+                    var model = avalon.define("demo", function(vm) {
+                        vm.$aOpts = {
+                            dayNames: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+                        }
+                    })
+                    avalon.scan();
+                })
+            </script>
+        </div>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;datepicker demo&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;div class="demo-show" ms-controller="demo"&gt;
+                        &lt;fieldset style="position: relative; z-index: 3"&gt;
+                            &lt;legend&gt;显示非当前月日期&lt;/legend&gt;
+                            &lt;input ms-widget="datepicker" data-datepicker-show-other-months="true"/&gt;
+                            &lt;p&gt;说明：配置showOtherMonths为true，使得日历可以显示非当前月的日期，当然只会显示上月日期，下月日期不显示&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset style="position: relative; z-index: 2"&gt;
+                            &lt;legend&gt;一次显示3个月份&lt;/legend&gt;
+                            &lt;input ms-widget="datepicker" data-datepicker-number-of-months="3" /&gt;
+                            &lt;p&gt;说明：配置numberOfMonths为3，使得日历同时显示3个月份&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset style="position: relative; z-index: 1"&gt;
+                            &lt;legend&gt;通过next、prev切换月份时，一次跳过3个月&lt;/legend&gt;
+                            &lt;input ms-widget="datepicker" data-datepicker-step-months="3" /&gt;
+                            &lt;p&gt;说明：配置stepMonths选项，使得通过next、prev切换月份时，可以一次跳过3个月，当然希望跳过几个月根据需要随意配置，默认切换到下个月或者上个月&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;script&gt; 
+                            require(["datepicker/avalon.datepicker"], function(avalon) {
+                                var model = avalon.define("demo", function(vm) {
+                                    vm.$aOpts = {
+                                        dayNames: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+                                    }
+                                })
+                                avalon.scan();
+                            })
+                        &lt;/script&gt;
+                    &lt;/div&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+    </div>
+</body>
+</html>
+

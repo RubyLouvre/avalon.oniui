@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>textbox demo 1</title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>textbox demo</h1>
+
+        <div class="demo-show" ms-controller="demo1">
+            <fieldset>
+                <legend>普通文本框</legend>
+                    <input ms-widget="textbox" ms-duplex="a.b" type="textbox" data-textbox-suggest="test" />
+
+                    <input ms-widget="textbox" ms-duplex="a.b2" type="textbox" data-textbox-suggest="test" />
+            </fieldset>
+
+            {{ a.b }}
+
+            <fieldset>
+                <legend>禁用文本框</legend>
+                    <input ms-widget="textbox" ms-disabled="disable" ms-duplex="txt" type="textbox"/>
+
+                    <button ms-click="changeDis">切换禁用</button>
+
+                <p>使用disabled实现</p>
+
+                <ul ms-each-el="arr">
+                    <li>
+                        <input type="checkbox" ms-duplex-radio="el.disabled"/>
+                        <input type="text" ms-widget="textbox" ms-duplex="el.text" ms-disabled="el.disabled"/>
+                    </li>
+                </ul>
+
+                <p>使用enabled实现</p>
+
+                <ul ms-each-el="arr">
+                    <li>
+                        <input type="checkbox" ms-duplex-radio="el.enabled"/>
+                        <input type="text" ms-widget="textbox" ms-duplex="el.text" ms-enabled="el.enabled"/>
+                    </li>
+                </ul>
+            </fieldset>
+
+            {{ txt }}
+
+            <fieldset>
+                <legend>普通文本框</legend>
+                <textarea ms-widget="textbox" ms-duplex="area" data-textbox-placeholder="456"></textarea>
+            </fieldset>
+
+            {{area}}
+
+
+            <fieldset>
+                <legend>特殊suggest</legend>
+                <input ms-widget="textbox" ms-duplex="p" data-textbox-suggest="phone" data-textbox-suggest-focus="true" />
+            </fieldset>
+        </div>
+        <script>
+            require(["textbox/avalon.textbox"], function() {
+                avalon.define("demo1", function(vm) {
+                    vm.a = {
+                        b : "hello" ,
+                        b2 : "aaa"
+                    };
+
+                    vm.txt = "abc";
+                    vm.disable = true;
+                    vm.area = '';
+                    vm.changeDis = function(){
+                        vm.disable = !vm.disable;
+                    };
+
+                    vm.arr = [{
+                        disabled: false,
+                        enabled: true,
+                        text: 'A'
+                    }, {
+                        disabled: false,
+                        enabled: true,
+                        text: 'B'
+                    }];
+
+                    vm.p = "";
+
+                    vm.ooo = function(){
+                        // console.info( arguments );
+                    }
+
+                });
+                avalon.scan();
+                avalon.ui["suggest"].strategies['phone'] = function( value , done ) {
+                    setTimeout(function(){
+                        done( null , value ? [] : [
+                            { value : '13800138000' , text : '<b>日审</b> 13800138000' } ,
+                            { value : '13800138001' , text : '<b>夜审</b> 13800138001' }
+                        ])
+                    },100)
+                }
+                // avalon.scan();
+            })
+        </script>
+    </div>
+</body>
+</html>

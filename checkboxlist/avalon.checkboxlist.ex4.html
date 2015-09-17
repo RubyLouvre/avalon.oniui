@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>checkboxlist demo(配置fetch获取选项)</title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>checkboxlist demo 4</h1>
+        <p class="example">配置checkboxlist-fetch获取用户定义的所有选项值（<span class="statement">data-checkboxlist-fetch="get_options"</span>）</p>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;配置duplex选项&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;div class="demo-show" ms-controller="demo4"&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;data-checkboxlist-duplex="val"&lt;/legend&gt;
+                            &lt;ul ms-widget="checkboxlist" data-checkboxlist-duplex="val" data-checkboxlist-alltext="全部" data-checkboxlist-fetch="get_options"&gt;
+                            &lt;/ul&gt;
+                            {{ val }}
+                        &lt;/fieldset&gt;
+                    &lt;/div&gt;
+                    &lt;script&gt;
+                        require(["./checkboxlist/avalon.checkboxlist"], function(avalon) {
+                            var sss = avalon.define('demo4',function(vm){
+                                vm.val = ["w1", "w2"];
+                                vm.get_options = function( callback ){
+                                    setTimeout(function(){
+                                        sss.val = ["w1","w2","w3"];
+                                        callback([
+                                            { text : '文字1' , value : 'w1' } ,
+                                            { text : '文字2' , value : 'w2' } ,
+                                            { text : '文字3' , value : 'w3' } ,
+                                            { text : '文字4' , value : 'w4' }
+                                        ]);
+                                    },1000);
+                                }
+                            });
+                            avalon.scan();
+                        });
+                    &lt;/script&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+        <div class="demo-show" ms-controller="demo4">
+            <fieldset>
+                <legend>data-checkboxlist-duplex="val"</legend>
+                <ul ms-widget="checkboxlist" data-checkboxlist-duplex="val" data-checkboxlist-alltext="全部" data-checkboxlist-fetch="get_options">
+                </ul>
+                {{ val }}
+            </fieldset>
+        </div>
+        <script>
+            require(["./checkboxlist/avalon.checkboxlist"], function(avalon) {
+                var sss = avalon.define('demo4',function(vm){
+                    vm.val = ["w1", "w2"];
+                    vm.get_options = function( callback ){
+                        setTimeout(function(){
+                            sss.val = ["w1","w2","w3"];
+                            callback([
+                                { text : '文字1' , value : 'w1' } ,
+                                { text : '文字2' , value : 'w2' } ,
+                                { text : '文字3' , value : 'w3' } ,
+                                { text : '文字4' , value : 'w4' }
+                            ]);
+                        },1000);
+                    }
+                });
+                avalon.scan();
+            });
+        </script>
+    </div>
+</body>
+</html>

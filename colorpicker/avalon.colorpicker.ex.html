@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>colorpicker demo</title>
+        <script src="../highlight/shCore.js"></script>
+        <script src="../avalon.js"></script>
+        <link rel="stylesheet" href="../style/avalon.doc.css"/>
+    </head>
+    <body ms-controller="demo">
+        <h1>colorpicker 示例</h1>
+        <fieldset>  
+            <legend>默认设置</legend>
+            <input type="text" ms-widget="colorpicker">
+        </fieldset>
+        <fieldset>  
+            <legend>设置初始颜色</legend>
+            <input type="text" ms-duplex="color_1" ms-widget="colorpicker">{{color_1}}
+        </fieldset>
+        <fieldset>  
+            <legend>关闭自动隐藏</legend>
+            <input type="text" ms-widget="colorpicker, $, $cp_2">
+        </fieldset>
+        <fieldset>  
+            <legend>更改默认颜色</legend>
+            <input type="text" ms-widget="colorpicker, $, $cp_3">
+        </fieldset>
+        <fieldset>  
+            <legend>更改背景颜色</legend>
+            <input type="text" ms-widget="colorpicker, $, $cp_4">
+        </fieldset>
+
+        <pre class="brush:html;gutter:false;">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta charset="utf-8"&gt;
+&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+&lt;title&gt;colorpicker demo&lt;/title&gt;
+&lt;script src="../avalon.js"&gt;&lt;/script&gt;
+&lt;link rel="stylesheet" href="../style/avalon.doc.css"/&gt;
+&lt;/head&gt;
+&lt;body ms-controller="demo"&gt;
+
+	&lt;fieldset&gt;  
+		&lt;legend&gt;默认设置&lt;/legend&gt;
+		&lt;input type="text" ms-widget="colorpicker"&gt;
+	&lt;/fieldset&gt;
+	&lt;fieldset&gt;  
+		&lt;legend&gt;设置初始颜色&lt;/legend&gt;
+		&lt;input type="text" ms-duplex="color_1" ms-widget="colorpicker"&gt;{{color_1}}
+	&lt;/fieldset&gt;
+	&lt;fieldset&gt;  
+		&lt;legend&gt;关闭自动隐藏&lt;/legend&gt;
+		&lt;input type="text" ms-widget="colorpicker, $, $cp_2"&gt;
+	&lt;/fieldset&gt;
+	&lt;fieldset&gt;  
+		&lt;legend&gt;更改默认颜色&lt;/legend&gt;
+		&lt;input type="text" ms-widget="colorpicker, $, $cp_3"&gt;
+	&lt;/fieldset&gt;
+	&lt;fieldset&gt;  
+		&lt;legend&gt;更改背景颜色&lt;/legend&gt;
+		&lt;input type="text" ms-widget="colorpicker, $, $cp_4"&gt;
+	&lt;/fieldset&gt;
+
+	&lt;script&gt;
+            require(["colorpicker/avalon.colorpicker"], function () {
+                var model = avalon.define({
+                    $id: "demo",
+                    color_1:"#ff0000",
+                    $cp_2: {
+                        autoHide:false
+                    },
+                    $cp_3:{
+                        defaultColor:"#0000ff"
+                    },
+                    cp_4:{
+                        bgColor:"#555"
+                    }
+                });
+                avalon.scan();
+            });
+	&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+        </pre>
+        <script>
+            require(["colorpicker/avalon.colorpicker"], function () {
+                var model = avalon.define({
+                    $id: "demo",
+                    color_1:"#ff0000",
+                    $cp_2: {
+                        autoHide:false
+                    },
+                    $cp_3:{
+                        defaultColor:"#0000ff"
+                    },
+                    cp_4:{
+                        bgColor:"#555"
+                    }
+                });
+                avalon.scan();
+            });
+        </script>
+    </body>
+</html>

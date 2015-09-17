@@ -1,0 +1,24 @@
+<li class="oni-checkboxlist-item oni-checkboxlist-all" 
+    ms-css-float="vertical? 'none': 'left'" 
+    ms-if="!!alltext"
+    ms-class="fl:!vertical">
+    <label ms-if="data.size()">
+        <input type="checkbox" 
+               ms-click="_clickAll($event)" 
+               ms-duplex-checked="all" 
+               value = "all"
+               class="checkbox"/> {{alltext}}
+    </label>
+</li>
+<li ms-repeat-cpitem="data" class="oni-checkboxlist-item" 
+    ms-css-float="vertical? 'none': 'left'"
+    ms-class="fl:!vertical">
+    <label>
+        <input type="checkbox" 
+               ms-click="_clickOne($event, $index)"
+               ms-duplex="MS_OPTIONS_DUPLEX"
+               ms-attr-value="{{cpitem.value||cpitem.text}}" 
+               class="checkbox" /> 
+        {{cpitem.text|html}}
+    </label>
+</li>

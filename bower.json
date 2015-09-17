@@ -1,0 +1,23 @@
+{
+  "name": "oniui",
+  "version": "1.3.7",
+  "homepage": "https://github.com/RubyLouvre/avalon.oniui",
+  "authors": [
+    "RubyLouvre ilife5 shirlyLoveU dragonwong roscoe054 gogoyqj"
+  ],
+  "description": "ONIUI is a set of user interface interactions, effects, widgets, and themes built on top of the avalon JavaScript Library.",
+  "keywords": [
+    "UI",
+    "widget",
+    "avalon"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

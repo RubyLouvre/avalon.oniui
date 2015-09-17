@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>carousel组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"
+        />
+        <script>
+            require(["carousel/avalon.carousel"], function() {
+				avalon.define("demo", function(vm) {
+					vm.$opt1 = {
+						pictures: [{
+							src: "http://7xkm02.com1.z0.glb.clouddn.com/carousels1.jpeg"
+						}, {
+							src: "http://7xkm02.com1.z0.glb.clouddn.com/carousels2.jpeg"
+						}, {
+							src: "http://7xkm02.com1.z0.glb.clouddn.com/carousels3.jpeg"
+						}, {
+							src: "http://7xkm02.com1.z0.glb.clouddn.com/carousels4.jpeg"
+						}, {
+							src: "http://7xkm02.com1.z0.glb.clouddn.com/carousels5.jpeg"
+						}],
+						pictureWidth:800,
+						pictureHeight:200
+					}
+					vm.$opt2 = {
+						pictures: [{
+							src: "http://7xkm02.com1.z0.glb.clouddn.com/carousels6.jpeg"
+						}, {
+							src: "http://7xkm02.com1.z0.glb.clouddn.com/carousels7.jpeg"
+						}, {
+							src: "http://7xkm02.com1.z0.glb.clouddn.com/carousels8.jpeg"
+						}, {
+							src: "http://7xkm02.com1.z0.glb.clouddn.com/carousels9.jpeg"
+						}, {
+							src: "http://7xkm02.com1.z0.glb.clouddn.com/carousels10.jpeg"
+						}],
+						pictureWidth:300,
+						pictureHeight:300
+					}
+				})
+				avalon.scan()
+			})
+        </script>
+    </head>
+    
+    <body>
+        <div class="wrapper" ms-controller="demo">
+            <h1>图片轮播组件-自定义宽高</h1>
+            <fieldset>
+                <legend>自定义宽高800×200</legend>
+                <div ms-widget="carousel,carouselDemo1,$opt1"></div>
+            </fieldset>
+            <fieldset>
+                <legend>自定义宽高300×300</legend>
+                <div ms-widget="carousel,carouselDemo2,$opt2"></div>
+            </fieldset>
+            <pre ms-skip class="brush:html;gutter:false;toolbar:false">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    
+    &lt;head&gt;
+        &lt;title&gt;carousel组件&lt;/title&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width"&gt;
+        &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+        &lt;script src="../highlight/shCore.js"&gt;&lt;/script&gt;
+        &lt;link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"
+        /&gt;
+        &lt;script&gt;
+            require(["carousel/avalon.carousel"], function() {
+				avalon.define("demo", function(vm) {
+					vm.$opt1 = {
+						pictures: [{
+							src: "http://7xkm02.com1.z0.glb.clouddn.com/carousels1.jpeg"
+						}, {
+							src: "http://7xkm02.com1.z0.glb.clouddn.com/carousels2.jpeg"
+						}, {
+							src: "http://7xkm02.com1.z0.glb.clouddn.com/carousels3.jpeg"
+						}, {
+							src: "http://7xkm02.com1.z0.glb.clouddn.com/carousels4.jpeg"
+						}, {
+							src: "http://7xkm02.com1.z0.glb.clouddn.com/carousels5.jpeg"
+						}],
+						pictureWidth:800,
+						pictureHeight:200
+					}
+					vm.$opt2 = {
+						pictures: [{
+							src: "http://7xkm02.com1.z0.glb.clouddn.com/carousels6.jpeg"
+						}, {
+							src: "http://7xkm02.com1.z0.glb.clouddn.com/carousels7.jpeg"
+						}, {
+							src: "http://7xkm02.com1.z0.glb.clouddn.com/carousels8.jpeg"
+						}, {
+							src: "http://7xkm02.com1.z0.glb.clouddn.com/carousels9.jpeg"
+						}, {
+							src: "http://7xkm02.com1.z0.glb.clouddn.com/carousels10.jpeg"
+						}],
+						pictureWidth:300,
+						pictureHeight:300
+					}
+				})
+				avalon.scan()
+			})
+        &lt;/script&gt;
+    &lt;/head&gt;
+    
+    &lt;body&gt;
+        &lt;div class="wrapper" ms-controller="demo"&gt;
+            &lt;h1&gt;图片轮播组件-自定义宽高&lt;/h1&gt;
+            &lt;fieldset&gt;
+                &lt;legend&gt;自定义宽高800×200&lt;/legend&gt;
+                &lt;div ms-widget="carousel,carouselDemo1,$opt1"&gt;&lt;/div&gt;
+            &lt;/fieldset&gt;
+            &lt;fieldset&gt;
+                &lt;legend&gt;自定义宽高300×300&lt;/legend&gt;
+                &lt;div ms-widget="carousel,carouselDemo2,$opt2"&gt;&lt;/div&gt;
+            &lt;/fieldset&gt;
+        &lt;/div&gt;
+    &lt;/body&gt;
+
+&lt;/html&gt;
+</pre>
+        </div>
+    </body>
+
+</html>

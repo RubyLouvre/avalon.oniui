@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>slider demo</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+        <style>
+            .scroll-pane { 
+                overflow: hidden; 
+                width: 100%; 
+                border: 1px solid #CCC;
+            }
+            .scroll-content { 
+                width: 2440px; 
+            }
+            .scroll-content-item { 
+                width: 100px; 
+                height: 100px; 
+                float: left; 
+                margin: 10px; 
+                font-size: 3em; 
+                line-height: 100px; 
+                text-align: center; 
+                background: #9a9a9a;
+                border: 1px solid #aaaaaa;
+                color: #EAF5F7;
+                font-weight: bold;
+            }
+            .scroll-bar-wrap { 
+                clear: left; 
+                padding: 0 26.5px;
+                background: #f8f8f8;
+            }
+            .scroll-bar-wrap .oni-slider { 
+                background: #f8f8f8; 
+                border:0; height: 9px; 
+                margin: 0 auto; 
+            }
+            .scroll-bar-wrap .oni-slider .oni-slider-handle { 
+                top: 0; height: 9px;
+                background: #cccccc;
+                border-radius: 0;
+                width: 53px;
+                margin-left: -26.5px;
+            }
+        </style>
+        <script src="../highlight/shCore.js"></script>
+        <script src="../avalon.js"></script>
+    </head>
+    <body>
+        <div class="wrapper">
+            <h1>slider demo</h1>
+            <p class="example">利用slider滚动图片</p>
+            <div ms-skip>
+                <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                    &lt;!DOCTYPE HTML&gt;
+                    &lt;html&gt;
+                    &lt;head&gt;
+                        &lt;meta charset='utf-8'/&gt;
+                        &lt;title&gt;slider demo 1&lt;/title&gt;
+                        &lt;style&gt;
+                            .scroll-pane { 
+                                overflow: hidden; 
+                                width: 100%; 
+                                border: 1px solid #CCC;
+                            }
+                            .scroll-content { 
+                                width: 2440px; 
+                            }
+                            .scroll-content-item { 
+                                width: 100px; 
+                                height: 100px; 
+                                float: left; 
+                                margin: 10px; 
+                                font-size: 3em; 
+                                line-height: 100px; 
+                                text-align: center; 
+                                background: #9a9a9a;
+                                border: 1px solid #aaaaaa;
+                                color: #EAF5F7;
+                                font-weight: bold;
+                            }
+                            .scroll-bar-wrap { 
+                                clear: left; 
+                                padding: 0 26.5px;
+                                background: #f8f8f8;
+                            }
+                            .scroll-bar-wrap .oni-slider { 
+                                background: #f8f8f8; 
+                                border:0; height: 9px; 
+                                margin: 0 auto; 
+                            }
+                            .scroll-bar-wrap .oni-slider .oni-slider-handle { 
+                                top: 0; height: 9px;
+                                background: #cccccc;
+                                border-radius: 0;
+                                width: 53px;
+                                margin-left: -26.5px;
+                            }
+                        &lt;/style&gt;
+                        &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                    &lt;/head&gt;
+                    &lt;body&gt;
+                        &lt;div class="demo-show" ms-controller = "theme"&gt;
+                            &lt;div style="width:70%"&gt;
+                                &lt;div class="scroll-pane" id="panel"&gt;
+                                    &lt;div class="scroll-content" id="panel_content" ms-css-margin-left="scrollMarginLeft"&gt;
+                                        &lt;div class="scroll-content-item oni-widget-header"&gt;1&lt;/div&gt;
+                                        &lt;div class="scroll-content-item oni-widget-header"&gt;2&lt;/div&gt;
+                                        &lt;div class="scroll-content-item oni-widget-header"&gt;3&lt;/div&gt;
+                                        &lt;div class="scroll-content-item oni-widget-header"&gt;4&lt;/div&gt;
+                                        &lt;div class="scroll-content-item oni-widget-header"&gt;5&lt;/div&gt;
+                                        &lt;div class="scroll-content-item oni-widget-header"&gt;6&lt;/div&gt;
+                                        &lt;div class="scroll-content-item oni-widget-header"&gt;7&lt;/div&gt;
+                                        &lt;div class="scroll-content-item oni-widget-header"&gt;8&lt;/div&gt;
+                                        &lt;div class="scroll-content-item oni-widget-header"&gt;9&lt;/div&gt;
+                                        &lt;div class="scroll-content-item oni-widget-header"&gt;10&lt;/div&gt;
+                                        &lt;div class="scroll-content-item oni-widget-header"&gt;11&lt;/div&gt;
+                                        &lt;div class="scroll-content-item oni-widget-header"&gt;12&lt;/div&gt;
+                                        &lt;div class="scroll-content-item oni-widget-header"&gt;13&lt;/div&gt;
+                                        &lt;div class="scroll-content-item oni-widget-header"&gt;14&lt;/div&gt;
+                                        &lt;div class="scroll-content-item oni-widget-header"&gt;15&lt;/div&gt;
+                                        &lt;div class="scroll-content-item oni-widget-header"&gt;16&lt;/div&gt;
+                                        &lt;div class="scroll-content-item oni-widget-header"&gt;17&lt;/div&gt;
+                                        &lt;div class="scroll-content-item oni-widget-header"&gt;18&lt;/div&gt;
+                                        &lt;div class="scroll-content-item oni-widget-header"&gt;19&lt;/div&gt;
+                                        &lt;div class="scroll-content-item oni-widget-header"&gt;20&lt;/div&gt;
+                                        &lt;br style="clear:left"/&gt;
+                                    &lt;/div&gt;
+                                    &lt;div class="scroll-bar-wrap oni-widget-content oni-corner-bottom"&gt;
+                                        &lt;input ms-widget="slider,aaa, $aaaOpts" &gt;
+                                    &lt;/div&gt;
+                                &lt;/div&gt;
+                                &lt;p ms-controller="aaa"&gt;值为{{value}}，百分比为{{percent}}%; min为{{$valueMin}}, max为{{$valueMax}}&lt;/p&gt;
+                            &lt;/div&gt;
+                            &lt;script&gt;
+                                var panel = document.getElementById("panel");
+                                var panel_content = document.getElementById("panel_content");
+                                var scrollWidth = avalon(panel_content).width()-avalon(panel).width();
+                                require(["slider/avalon.slider"], function() {
+                                    var model = avalon.define("theme", function(vm) {
+                                        vm.scrollMarginLeft = 0
+                                        vm.$aaaOpts = {
+                                            onDrag: function(sliderModel, data) {
+                                                model.scrollMarginLeft = -(sliderModel.percent / 100 * scrollWidth) 
+                                            }
+                                        }
+                                    })
+                                    avalon.scan()
+                                })
+                            &lt;/script&gt;
+                        &lt;/div&gt;
+                    &lt;/body&gt;
+                    &lt;/html&gt;
+                </pre>
+            </div>
+            <div class="demo-show" ms-controller = "theme">
+                <div style="width:70%">
+                    <div class="scroll-pane" id="panel">
+                        <div class="scroll-content" id="panel_content" ms-css-margin-left="scrollMarginLeft">
+                            <div class="scroll-content-item oni-widget-header">1</div>
+                            <div class="scroll-content-item oni-widget-header">2</div>
+                            <div class="scroll-content-item oni-widget-header">3</div>
+                            <div class="scroll-content-item oni-widget-header">4</div>
+                            <div class="scroll-content-item oni-widget-header">5</div>
+                            <div class="scroll-content-item oni-widget-header">6</div>
+                            <div class="scroll-content-item oni-widget-header">7</div>
+                            <div class="scroll-content-item oni-widget-header">8</div>
+                            <div class="scroll-content-item oni-widget-header">9</div>
+                            <div class="scroll-content-item oni-widget-header">10</div>
+                            <div class="scroll-content-item oni-widget-header">11</div>
+                            <div class="scroll-content-item oni-widget-header">12</div>
+                            <div class="scroll-content-item oni-widget-header">13</div>
+                            <div class="scroll-content-item oni-widget-header">14</div>
+                            <div class="scroll-content-item oni-widget-header">15</div>
+                            <div class="scroll-content-item oni-widget-header">16</div>
+                            <div class="scroll-content-item oni-widget-header">17</div>
+                            <div class="scroll-content-item oni-widget-header">18</div>
+                            <div class="scroll-content-item oni-widget-header">19</div>
+                            <div class="scroll-content-item oni-widget-header">20</div>
+                            <br style="clear:left"/>
+                        </div>
+                        <div class="scroll-bar-wrap oni-widget-content oni-corner-bottom">
+                            <input ms-widget="slider,aaa, $aaaOpts" >
+                        </div>
+                    </div>
+                    <p ms-controller="aaa">值为{{value}}，百分比为{{percent}}%; min为{{$valueMin}}, max为{{$valueMax}}</p>
+                </div>
+                <script>
+                    var panel = document.getElementById("panel");
+                    var panel_content = document.getElementById("panel_content");
+                    var scrollWidth = avalon(panel_content).width()-avalon(panel).width();
+                    require(["slider/avalon.slider"], function() {
+                        var model = avalon.define("theme", function(vm) {
+                            vm.scrollMarginLeft = 0
+                            vm.$aaaOpts = {
+                                onDrag: function(sliderModel, data) {
+                                    model.scrollMarginLeft = -(sliderModel.percent / 100 * scrollWidth) 
+                                }
+                            }
+                        })
+                        avalon.scan()
+                    })
+                </script>
+            </div>
+        </div>
+    </body>
+</html>

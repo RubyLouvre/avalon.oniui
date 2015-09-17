@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>notice demo </title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<style>
+    .oni-notice.oni-notice-success {
+        background-color: #DFF0D8;
+        border: 1px solid #D6E9C6;
+        color: #468847;
+    }
+</style>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>notice demo</h1>
+        <p class="example">配置notice type为success，设置successClass来配置其样式类，同理当type为error时可以配置errorClass，当type为默认info时可以配置infoClass</p>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;notice demo 1&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;div class="demo-show" ms-controller="noticeDemo"&gt;
+                        &lt;div ms-widget="notice,a" data-notice-type="success"&gt;配置notice type为success，设置successClass来配置其样式类，同理当type为error时可以配置errorClass，当type为默认info时可以配置infoClass&lt;/div&gt;
+                        &lt;button ms-click="toggleNotice('a')"&gt;toggle notice a&lt;/button&gt;
+                        &lt;button ms-click="changeTypeClass('a')"&gt;change class of notice a&lt;/button&gt;
+                        &lt;script&gt;
+                            require(["notice/avalon.notice"], function(avalon) {
+                                var model = avalon.define("noticeDemo", function(vm) {
+                                    vm.toggleNotice = function(id) {
+                                        var noticeVm = avalon.vmodels[id]
+                                        noticeVm.toggle = !noticeVm.toggle
+                                    }
+                                    vm.changeTypeClass = function(id) {
+                                        var noticeVm = avalon.vmodels[id]
+                                        noticeVm.successClass = "oni-notice-success"
+                                    }
+                                })
+                                avalon.scan();
+                            })
+                        &lt;/script&gt;
+                    &lt;/div&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+        <div class="demo-show" ms-controller="noticeDemo">
+            <div ms-widget="notice,a" data-notice-type="success">配置notice type为success，设置successClass来配置其样式类，同理当type为error时可以配置errorClass，当type为默认info时可以配置infoClass</div>
+            <button ms-click="toggleNotice('a')">toggle notice a</button>
+            <button ms-click="changeTypeClass('a')">change class of notice a</button>
+            <script>
+                require(["notice/avalon.notice"], function(avalon) {
+                    var model = avalon.define("noticeDemo", function(vm) {
+                        vm.toggleNotice = function(id) {
+                            var noticeVm = avalon.vmodels[id]
+                            noticeVm.toggle = !noticeVm.toggle
+                        }
+                        vm.changeTypeClass = function(id) {
+                            var noticeVm = avalon.vmodels[id]
+                            noticeVm.successClass = "oni-notice-success"
+                        }
+                    })
+                    avalon.scan();
+                })
+            </script>
+        </div>
+    </div>
+</body>
+</html>

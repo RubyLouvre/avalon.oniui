@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>mmRouter组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="ui/ex.css">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+        <script>
+            require(["mmRouter/mmState", "loading/avalon.loading"], function() {
+                var links = [],
+                    user = "list.person.info",
+                    address = "country.province.city.town.street.house.floor"
+                var s = ["home", user, address]
+                while(s.length) {
+                    var tmp = s[0].split(".")
+                    for(var i = 0; i < tmp.length; i++) {
+                        links.push(tmp.slice(0, i + 1).join("."))
+                    }
+                    s.splice(0, 1)
+                }
+                var home = avalon.define("home", function(vm) {
+                    vm.logs = []
+                    vm.links = links
+                })
+
+                home.logs.$watch("length", function() {
+                    document.getElementById("log").scrollTop = 100000
+                })
+
+                avalon.state.config({
+                    onLoad: function(from, to) {
+                        var me = to
+                        if(this.currentState && this.currentState.stateName == me.stateName) {
+                            loading = avalon.vmodels.loading
+                            if(loading) loading.toggle = false
+                        }
+                        home.logs.push(me.stateName + "执行完毕")
+                    }
+                })
+
+                function onEnter() {
+                    var state = this.stateName,
+                        loading = avalon.vmodels.loading,
+                        me = this,
+                        done = arguments[arguments.length - 2]
+                    // 这个状态是异步，所有需要经由该状态的状态都会受影响
+                    // 标记该状态是异步
+                    home.logs.push(me.stateName + "正在等待中...")
+                    // if(loading) loading.toggle = true
+                    setTimeout(function() {
+                        // 告知done
+                        done && done()
+                    }, 2000)
+                    return false
+                }
+
+                avalon.each(links, function(index, state) {
+                    var tmp = state.split(".")
+                    tmp = "/" + tmp[tmp.length - 1]
+                    avalon.state(state, {
+                        controller: "home",
+                        views: {},
+                        url: tmp,
+                        onAfterLoad: function() {
+                        },
+                        onEnter: onEnter,
+                        onUpdate: function() {
+                            avalon.log(arguments)
+                        }
+                    })
+                })
+                avalon.router.errorback = function() {
+                    avalon.router.go("home", {}, {replace: true})
+                }
+                avalon.config({debug: true})
+                //启动路由
+                avalon.history.start({
+                    basepath: "/mmRouter",
+                    fireAnchor: false
+                })
+
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body ms-controller="home" 
+          ms-widget="loading,loading" data-loading-type="img" data-loading-modal-background="#ccc" data-loading-modal-opacity="0.5">
+        <h1>mmRouter：异步</h1>
+        <div>
+            <p 
+               ms-repeat-link="links">
+                <a 
+                   ms-href="'#!/'+link.replace(/\./g,'/')">{{link}}</a>
+               </p>
+        </div>
+        <div id="log" style="height:300px;overflow:scroll;">
+            <p 
+               ms-repeat-log="logs">{{log}}</p>
+        </div>
+        <pre ms-skip class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;mmRouter组件&lt;/title&gt;
+        &lt;meta charset=&quot;UTF-8&quot;&gt;
+        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width&quot;&gt;
+        &lt;link rel=&quot;stylesheet&quot; href=&quot;ui/ex.css&quot;&gt;
+        &lt;script src=&quot;../avalon.js&quot;&gt;&lt;/script&gt;
+        
+        &lt;script&gt;
+            require([&quot;mmRouter/mmState&quot;, &quot;loading/avalon.loading&quot;], function() {
+                var links = [],
+                    user = &quot;list.person.info&quot;,
+                    address = &quot;country.province.city.town.street.house.floor&quot;
+                var s = [&quot;home&quot;, user, address]
+                while(s.length) {
+                    var tmp = s[0].split(&quot;.&quot;)
+                    for(var i = 0; i &lt; tmp.length; i++) {
+                        links.push(tmp.slice(0, i + 1).join(&quot;.&quot;))
+                    }
+                    s.splice(0, 1)
+                }
+                var home = avalon.define(&quot;home&quot;, function(vm) {
+                    vm.logs = []
+                    vm.links = links
+                })
+
+                home.logs.$watch(&quot;length&quot;, function() {
+                    document.getElementById(&quot;log&quot;).scrollTop = 100000
+                })
+
+                avalon.state.config({
+                    onLoad: function(from, to) {
+                        var me = to
+                        if(this.currentState &amp;&amp; this.currentState.stateName == me.stateName) {
+                            loading = avalon.vmodels.loading
+                            if(loading) loading.toggle = false
+                        }
+                        home.logs.push(me.stateName + &quot;执行完毕&quot;)
+                    }
+                })
+
+                function onEnter() {
+                    var state = this.stateName,
+                        loading = avalon.vmodels.loading,
+                        me = this,
+                        done = arguments[arguments.length - 2]
+                    // 这个状态是异步，所有需要经由该状态的状态都会受影响
+                    // 标记该状态是异步
+                    home.logs.push(me.stateName + &quot;正在等待中...&quot;)
+                    // if(loading) loading.toggle = true
+                    setTimeout(function() {
+                        // 告知done
+                        done &amp;&amp; done()
+                    }, 2000)
+                    return false
+                }
+
+                avalon.each(links, function(index, state) {
+                    var tmp = state.split(&quot;.&quot;)
+                    tmp = &quot;/&quot; + tmp[tmp.length - 1]
+                    avalon.state(state, {
+                        controller: &quot;home&quot;,
+                        views: {},
+                        url: tmp,
+                        onAfterLoad: function() {
+                        },
+                        onEnter: onEnter,
+                        onUpdate: function() {
+                            avalon.log(arguments)
+                        }
+                    })
+                })
+                avalon.router.errorback = function() {
+                    avalon.router.go(&quot;home&quot;, {}, {replace: true})
+                }
+                avalon.config({debug: true})
+                //启动路由
+                avalon.history.start({
+                    basepath: &quot;/mmRouter&quot;,
+                    fireAnchor: false
+                })
+
+                avalon.scan()
+            })
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body ms-controller=&quot;home&quot; 
+          ms-widget=&quot;loading,loading&quot; data-loading-type=&quot;img&quot; data-loading-modal-background=&quot;#ccc&quot; data-loading-modal-opacity=&quot;0.5&quot;&gt;
+        &lt;h1&gt;mmRouter：异步&lt;/h1&gt;
+        &lt;div&gt;
+            &lt;p 
+               ms-repeat-link=&quot;links&quot;&gt;
+                &lt;a 
+                   ms-href=&quot;'#!/'+link.replace(/\./g,'/')&quot;&gt;{{link}}&lt;/a&gt;
+               &lt;/p&gt;
+        &lt;/div&gt;
+        &lt;div id=&quot;log&quot; style=&quot;height:300px;overflow:scroll;&quot;&gt;
+            &lt;p 
+               ms-repeat-log=&quot;logs&quot;&gt;{{log}}&lt;/p&gt;
+        &lt;/div&gt;
+        
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+    </body>
+</html>

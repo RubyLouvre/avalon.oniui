@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>notice demo </title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<style>
+    .oni-notice-detach {
+        text-align: left;
+    }
+    .oni-notice {
+        margin-top: 20px;
+    }
+</style>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>notice demo</h1>
+        <p class="example">设置notice的container为自定义的元素(元素id或元素对象)使notice显示在自定义的位置而不是绑定元素自身，notice默认是占位的，也就是说会根据container的定义显示在对应位置，但可以配置notice为非占位的，非占位的情况下notice append body元素后，看notice f、g示例</p>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;notice demo 1&lt;/title&gt;
+                    &lt;style&gt;
+                        .oni-notice-detach {
+                            text-align: left;
+                        }
+                        .oni-notice {
+                            margin-top: 20px;
+                        }
+                    &lt;/style&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;div class="demo-show" ms-controller="noticeDemo"&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;container test&lt;/legend&gt;
+                            &lt;div id="test"&gt;将notice a、b、c的container设为此#test元素的id看看效果&lt;/div&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;container test1&lt;/legend&gt;
+                            &lt;div id="test1"&gt;将notice d的container设为此#test1元素的dom对象&lt;/div&gt;
+                        &lt;/fieldset&gt;
+                        &lt;div ms-widget="notice,a" data-notice-container="#test" data-notice-type="success" data-notice-content="notice a content"&gt;&lt;/div&gt;
+                        &lt;div ms-widget="notice,b" data-notice-container="#test" data-notice-content="notice b content"&gt;&lt;/div&gt;
+                        &lt;div ms-widget="notice,c" data-notice-container="#test" data-notice-type="error" data-notice-content="notice c content"&gt;&lt;/div&gt;
+                        &lt;div ms-widget="notice,d,$dOpts" data-notice-content="notice d content"&gt;&lt;/div&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;notice e 的container默认，也就是绑定元素自身&lt;/legend&gt;
+                            &lt;div ms-widget="notice,e" data-notice-type="success"&gt;
+                            此notice的container是默认的配置，也就是说此绑定元素是notice的容器     
+                        &lt;/div&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;notice f、g配置为非占位，非占位情况下其container为body&lt;/legend&gt;
+                            &lt;div ms-widget="notice,f" data-notice-is-place=false&gt;
+                                notice content f  ,使用data-notice的配置方式与使用配置对象的方式设值时稍有不同，data-notice-*方式只能是小写，驼峰化的形式必须转为短划线的方式
+                            &lt;/div&gt;
+                            &lt;div ms-widget="notice,g,$gOpts" data-notice-container="#test1"&gt;
+                                notice content g   
+                            &lt;/div&gt;
+                        &lt;/fieldset&gt;
+                        &lt;button ms-click="toggleNotice('a')"&gt;toggle notice a&lt;/button&gt;
+                        &lt;button ms-click="toggleNotice('b')"&gt;toggle notice b&lt;/button&gt;
+                        &lt;button ms-click="toggleNotice('c')"&gt;toggle notice c&lt;/button&gt;
+                        &lt;button ms-click="toggleNotice('d')"&gt;toggle notice d&lt;/button&gt;
+                        &lt;button ms-click="toggleNotice('e')"&gt;toggle notice e&lt;/button&gt;
+                        &lt;button ms-click="toggleNotice('f')"&gt;toggle notice f&lt;/button&gt;
+                        &lt;button ms-click="toggleNotice('g')"&gt;toggle notice g&lt;/button&gt;
+                        &lt;script&gt;
+                            require(["notice/avalon.notice"], function(avalon) {
+
+                                var model = avalon.define("noticeDemo", function(vm) {
+                                    vm.$dOpts = {
+                                        container: document.getElementById("test1")
+                                    }
+                                    vm.$gOpts = {
+                                        isPlace: false,
+                                        type: "success",
+                                        content: "不占位的notice"
+                                    }
+                                    vm.toggleNotice = function(id) {
+                                        var noticeVm = avalon.vmodels[id]
+                                        noticeVm.toggle = !noticeVm.toggle
+                                    }
+                                })
+                                avalon.scan();
+                            })
+                        &lt;/script&gt;
+                    &lt;/div&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+        <div class="demo-show" ms-controller="noticeDemo">
+            <fieldset>
+                <legend>container test</legend>
+                <div id="test">将notice a、b、c的container设为此#test元素的id看看效果</div>
+            </fieldset>
+            <fieldset>
+                <legend>container test1</legend>
+                <div id="test1">将notice d的container设为此#test1元素的dom对象</div>
+            </fieldset>
+            <div ms-widget="notice,a" data-notice-container="#test" data-notice-type="success" data-notice-content="notice a content"></div>
+            <div ms-widget="notice,b" data-notice-container="#test" data-notice-content="notice b content"></div>
+            <div ms-widget="notice,c" data-notice-container="#test" data-notice-type="error" data-notice-content="notice c content"></div>
+            <div ms-widget="notice,d,$dOpts" data-notice-content="notice d content"></div>
+            <fieldset>
+                <legend>notice e 的container默认，也就是绑定元素自身</legend>
+                <div ms-widget="notice,e" data-notice-type="success">
+                此notice的container是默认的配置，也就是说此绑定元素是notice的容器     
+            </div>
+            </fieldset>
+            <fieldset>
+                <legend>notice f、g配置为非占位，非占位情况下其container为body</legend>
+                <div ms-widget="notice,f" data-notice-is-place=false>
+                    notice content f  ,使用data-notice的配置方式与使用配置对象的方式设值时稍有不同，data-notice-*方式只能是小写，驼峰化的形式必须转为短划线的方式
+                </div>
+                <div ms-widget="notice,g,$gOpts" data-notice-container="#test1">
+                    notice content g   
+                </div>
+            </fieldset>
+            <button ms-click="toggleNotice('a')">toggle notice a</button>
+            <button ms-click="toggleNotice('b')">toggle notice b</button>
+            <button ms-click="toggleNotice('c')">toggle notice c</button>
+            <button ms-click="toggleNotice('d')">toggle notice d</button>
+            <button ms-click="toggleNotice('e')">toggle notice e</button>
+            <button ms-click="toggleNotice('f')">toggle notice f</button>
+            <button ms-click="toggleNotice('g')">toggle notice g</button>
+            <script>
+                require(["notice/avalon.notice"], function(avalon) {
+
+                    var model = avalon.define("noticeDemo", function(vm) {
+                        vm.$dOpts = {
+                            container: document.getElementById("test1")
+                        }
+                        vm.$gOpts = {
+                            isPlace: false,
+                            type: "success",
+                            content: "不占位的notice"
+                        }
+                        vm.toggleNotice = function(id) {
+                            var noticeVm = avalon.vmodels[id]
+                            noticeVm.toggle = !noticeVm.toggle
+                        }
+                    })
+                    avalon.scan();
+                })
+            </script>
+        </div>
+    </div>
+</body>
+</html>

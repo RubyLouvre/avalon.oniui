@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>处理自适应问题</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+
+        <script>
+            require(["simplegrid/avalon.simplegrid"], function() {
+                function getData(n) {
+                    var ret = []
+                    for (var i = 0; i < n; i++) {
+                        ret.push({
+                            symbol: Math.random().toString(32).slice(4, 10),
+                            price: range(100, 200),
+                            change: Math.random().toFixed(2) * (Math.random() > 0.5 ? 1 : -1)
+                        })
+                    }
+                    return ret
+                }
+                function range(s, b) {
+                    return s + Math.floor((b - s) * Math.random())
+                }
+                avalon.define("test", function(vm) {
+                    vm.simplegrid = {
+                        columns: ["symbol", "price", "change"],
+                        onInit: function(model) {
+                            setTimeout(function() {
+                                model.reRender([], model)
+                            }, 3000)
+                            setTimeout(function() {
+                                model.reRender(getData(20), model)
+                                avalon.log(model)
+                            }, 8000)
+                        },
+                        
+                        data: getData(10)
+                    }
+                    vm.$skipArray = ["simplegrid"]
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body ms-controller="test">
+        <div ms-widget="simplegrid" style="width:70%;">
+
+        </div>
+    </body>
+</html>

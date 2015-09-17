@@ -1,0 +1,122 @@
+<h3 id='c-$fire'>$fire方法</h3>
+<p>此方法是位于VM中，与$watch, $unwatch构成一套自定义事件系统，实现模块（VM）间的通信。</p>
+<p>$fire可以传多个参数， 第一个参数为事件名，或者说是VM上已存在的属性名，当VM中对应的属性发生变化时，框架内部就调用$fire方法，
+    依次传入属性名，当前属性值，过去属性值。
+</p>
+<p>在avalon1.32中，$fire进行增强，在属性名前添加了一些特殊标记, 它就能触发其他VM的$watch回调函数。</p>
+<ul>
+    <li>up!xxx, 向上冒泡</li>
+    <li>down!xxx, 向下捕获</li>
+    <li>all!xxx, 全局广播</li>
+</ul>
+<pre class="brush:html;gutter:false;toolbar:false">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;by 司徒正美&lt;/title&gt;
+        &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8"&gt;
+        &lt;script src="avalon.js"&gt;&lt;/script&gt;
+        &lt;script&gt;
+            avalon.define("ancestor", function(vm) {
+                vm.aaa = '1111111111'
+                vm.$watch("aaa", function(v) {
+                    avalon.log(v)
+                    avalon.log("ancestor.aaa事件被触发了")
+                })
+                vm.click = function() {
+                    avalon.log("向下广播")
+                    vm.$fire("down!aaa", "capture")
+                }
+            })
+            avalon.define("parent", function(vm) {
+                vm.text = "222222222"
+                vm.aaa = '3333333333'
+                vm.$watch("aaa", function(v) {
+                    avalon.log(v)
+                    avalon.log("parent.aaa事件被触发了")
+                })
+                vm.click = function() {
+                    console.log("全局扩播")
+                    vm.$fire("all!aaa", "broadcast")
+                }
+            })
+            avalon.define("son", function(vm) {
+                vm.$watch("aaa", function(v) {
+                    avalon.log(v)
+                    avalon.log("son.aaa事件被触发了")
+                })
+                vm.click = function() {
+                    console.log("向上冒泡")
+                    vm.$fire("up!aaa", "bubble")
+                }
+            })
+        &lt;/script&gt;
+        &lt;style&gt;
+
+        &lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body class="ms-controller"   ms-controller="ancestor"&gt;
+        &lt;h3&gt;avalon vm.$fire的升级版 &lt;/h3&gt;
+        &lt;button type="button" ms-click="click"&gt;
+            capture
+        &lt;/button&gt;
+        &lt;div ms-controller="parent"&gt;
+            &lt;button type="button" ms-click="click"&gt;broadcast&lt;/button&gt;
+            &lt;div ms-controller="son"&gt;
+                &lt;button type="button" ms-click="click"&gt;
+                    bubble
+                &lt;/button&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+<script>
+    avalon.define("c-ancestor", function(vm) {
+        vm.aaa = '1111111111'
+        vm.$watch("aaa", function(v) {
+            avalon.log(v)
+            avalon.log("ancestor.aaa事件被触发了")
+        })
+        vm.click = function() {
+            avalon.log("向下广播")
+            vm.$fire("down!aaa", "capture")
+        }
+    })
+    avalon.define("c-parent", function(vm) {
+        vm.text = "222222222"
+        vm.aaa = '3333333333'
+        vm.$watch("aaa", function(v) {
+            avalon.log(v)
+            avalon.log("parent.aaa事件被触发了")
+        })
+        vm.click = function() {
+            console.log("全局扩播")
+            vm.$fire("all!aaa", "broadcast")
+        }
+    })
+    avalon.define("c-son", function(vm) {
+        vm.$watch("aaa", function(v) {
+            avalon.log(v)
+            avalon.log("son.aaa事件被触发了")
+        })
+        vm.click = function() {
+            console.log("向上冒泡")
+            vm.$fire("up!aaa", "bubble")
+        }
+    })
+</script>
+
+<div class="ms-controller"   ms-controller="c-ancestor">
+    <h3>avalon vm.$fire的升级版(请在控制台下查看效果) </h3>
+    <button type="button" ms-click="click">capture</button>
+    <div ms-controller="c-parent">
+        <button type="button" ms-click="click">broadcast</button>
+        <div ms-controller="c-son">
+            <button type="button" ms-click="click">
+                bubble
+            </button>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+        <script src="../avalon.js"></script>
+        <script src="../highlight/shCore.js"></script>
+    </script>
+
+    <script>
+        require(["menu/avalon.menu"], function() {
+            avalon.define("test", function(vm) {
+                vm.listen = function() {
+                    vm.$fire("all!notify", 10, 100, 1000)
+                }
+                vm.menu = {
+                    onInit: function(btnvm) {
+                        btnvm.$watch("notify", function(a, b, c) {
+                            avalon.log([a, b, c])
+                        })
+                    },
+                    onSelect: function(e, data) {
+                        avalon.log(this)
+                        avalon.log(data.length)
+                    }
+                }
+                vm.$skipArray = ["menu"]
+            })
+            avalon.scan()
+        })
+    </script>
+</head>
+<body ms-controller="test">
+    <button type="button" ms-click="listen">
+        listen
+    </button>
+    <ul ms-widget="menu">
+        <li>动物</li>
+        <li>植物</li>
+        <li data-disabled="true">X物</li>
+        <li>人类
+            <ul>
+                <li data-disabled="true">火星人</li>
+                <li>地球人
+                    <ul>
+                        <li><a href="#iddd">白人</a></li>
+                        <li>黑人</li>
+                        <li data-disabled="true">灰人</li>
+                    </ul>
+                </li>
+                <li>木星人</li>
+                <li>金星人</li>
+            </ul>
+        </li>
+    </ul>
+</body>
+</html>

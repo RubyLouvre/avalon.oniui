@@ -1,0 +1,100 @@
+
+@import "../chameleon/oniui-theme";
+$uiname : ".oni-progressbar";
+@if($oinui-theme == smoothness) {
+	$progressbar: (
+		bg: #DEDEDE,
+		barBg: #619FE8,
+		rightBg: #ddd,
+		overlayBg:url("http://source.qunarzz.com/general/oniui/progressbar/indeterminate.gif") repeat-x #ddd,
+		labelBg:#6AA5E9,
+		labelColor: #fff,
+		labelColor2: #619FE8,
+		circleRadius: 38px,
+		circleBorder:4px
+	) !global
+}
+div#{$uiname}-circle{
+	border:none;
+	background-color: transparent;
+}
+#{$uiname}{
+	width: 100%;
+	position: relative;
+	height: 6px;
+	border:none;
+	background-color: map-get($progressbar, bg);
+	font-family: Verdana,Arial,sans-serif;
+	// means #{$pr}-bar
+	&-bar{
+		z-index: 1;
+		position: relative;
+		background-color: map-get($progressbar, barBg);
+		height: 100%;
+		width: 0;
+		float: left;
+		display: inline;
+	}
+	&-bar-right {
+		background: map-get($progressbar, rightBg);
+	}
+	&-overlay{
+		width: 100%;
+		position: relative;
+		z-index: 1;
+		height: 100%;
+		overflow: hidden;
+		background: map-get($progressbar, overlayBg);
+	}
+
+	&-label{
+		position: absolute;
+		left:50%;
+		z-index: 10;
+		margin: 0 auto;
+		color: map-get($progressbar, labelColor);
+	}
+	&-circle{
+		#{$uiname}-label{
+			font-size: 13px;
+			left: 0;
+			width: 100%;
+			text-align: center;
+			color: map-get($progressbar, labelColor2);
+		}
+		&-bar{
+			border: map-get($progressbar, circleBorder) solid map-get($progressbar, barBg);
+			position: absolute;
+			color: map-get($progressbar, labelColor);
+			background-color: map-get($progressbar, barBg);
+			width: map-get($progressbar, circleRadius);
+			height: map-get($progressbar, circleRadius);
+			z-index: -1;
+			visibility: hidden;
+			padding: 0;
+			margin: 0;
+		}
+	}
+	&-normal &-label{
+		background-color: map-get($progressbar, labelBg);
+		padding: 2px 4px;
+		font-size: 13px;
+		top: -25px;
+		height: 14px;
+		color: #fff;
+		line-height: 14px;
+		left:0;
+		border-radius: 2px;
+	}
+	&-right &-label{
+		left:50%;
+	}
+	&-arrow {
+		@include triangle($direction: bottom, $width: 10px, $height: 5px, $color: map-get($progressbar, labelBg));
+		overflow: hidden;
+		bottom: -5px;
+		left: 50%;
+		position: absolute;
+		margin-left: -5px;
+	}
+}

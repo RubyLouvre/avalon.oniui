@@ -1,0 +1,22 @@
+## mmState
+#### √ 抽象url：state基本模型
+
+    {
+        stateName: 状态名
+        parentState: 父状态名
+        url: url规则
+        onBeforeChange: 切入某个state之前触发
+        onChange: onEnter or onUpdate - 状态响应逻辑
+        onBeforeUnload: state退出前触发
+        onAfterUnload: 退出后触发
+        async: 异步，暂停切换进程
+
+        ...
+
+        views: 视图配置
+
+        controller：avalon vmodel
+
+    }
+
+

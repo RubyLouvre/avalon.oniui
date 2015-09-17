@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>dialog demo 2</title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>dialog demo 2</h1>
+        <p class="example">通过事件接口配置用户的回调操作</p>
+        <p><span class="useDescription">说明：</span>所有dialog的配置项都定义在一个统一的配置对象中传给dialog widget，比如:ms-widget="dialog,aa,$aaOpts",注意必须定义成以"$"开头或者放在controller的$skipArray中，防止avalon对其进行扫描而影响性能。onOpen属性定义open dialog时的回调，onConfirm定义点击确定按钮之后的回调，onClose定义点击“close”时的回调，onCancel定义点击“取消”按钮时的回调。</p>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;点击弹窗的确定和取消按钮进行自定义回调操作&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;div class="demo-show" ms-controller="demo"&gt;
+                        &lt;fieldset&gt;  
+                            &lt;legend&gt;可自定义回调操作的dialog&lt;/legend&gt;
+                                &lt;button ms-click="show('aa')"&gt;打开对话框&lt;/button&gt;
+                                &lt;div ms-widget="dialog,aa,$aaOpts"&gt;
+                                    呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵
+                                &lt;/div&gt;
+                        &lt;/fieldset&gt;
+                        &lt;script&gt; 
+                            require(["dialog/avalon.dialog"], function(avalon) {
+                                avalon.define("demo", function(vm) {
+                                    vm.show = function( id ){
+                                        avalon.vmodels[id].toggle = true;
+                                    }
+                                    vm.title = "可自定义回调操作的dialog"
+                                    vm.$aaOpts = {
+                                        onOpen: function() {
+                                            alert("open dialog");
+                                        },
+                                        onConfirm: function(){
+                                            alert('success')
+                                        },
+                                        onClose: function(){
+                                            alert('fail')
+                                        }
+                                    }
+                                })
+                                avalon.scan();
+                            })
+                        &lt;/script&gt;
+                    &lt;/div&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+        <div class="demo-show" ms-controller="demo">
+            <fieldset>  
+                <legend>可自定义回调操作的dialog</legend>
+                    <button ms-click="show('aa')">打开对话框</button>
+                    <div ms-widget="dialog,aa,$aaOpts">
+                        呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵呵
+                    </div>
+            </fieldset>
+            <script> 
+                require(["dialog/avalon.dialog"], function(avalon) {
+                    avalon.define("demo", function(vm) {
+                        vm.show = function( id ){
+                            avalon.vmodels[id].toggle = true;
+                        }
+                        vm.title = "可自定义回调操作的dialog"
+                        vm.$aaOpts = {
+                            onOpen: function() {
+                                alert("open dialog");
+                            },
+                            onConfirm: function(){
+                                alert('success')
+                            },
+                            onClose: function(){
+                                alert('fail')
+                            },
+                            onCancel: function() {
+                                alert("cancel");
+                            }
+                        }
+                    })
+                    avalon.scan();
+                })
+            </script>
+        </div>
+    </div>
+</body>
+</html>
+

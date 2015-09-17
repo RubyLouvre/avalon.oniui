@@ -1,0 +1,41 @@
+
+@import "../chameleon/oniui-theme";
+$uiname : ".oni-loading";
+@if($oinui-theme == smoothness) {
+	$loading: (
+		bg: #fff,
+		borderColor:#aaaaaa
+	) !global
+}
+div#{$uiname} {
+	position: absolute;
+}
+#{$uiname} {
+	// current style
+	// means #{$uiname}-bar
+	//&-class {
+		//border: 1px solid map-get($loading, borderColor);
+	//}
+	position:absolute;
+	left:50%;
+	top:50%;
+	&-modal{
+		position: absolute;
+		height: 100%;
+		width: 100%;
+		top:0;
+		left: 0;
+		background: #fff;
+		& iframe{
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			left: 0;
+			top: 0;
+			z-index: -1;
+			zoom:1;
+			background: transparent;
+			border: none;
+		}
+	}
+}

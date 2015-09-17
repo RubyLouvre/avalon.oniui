@@ -1,0 +1,9 @@
+<li tabindex="0" 
+    ms-class-100="{{levelClass(leaf)}}" 
+    ms-attr-id="leaf.$id" 
+    ms-visible="!leaf.isHidden"
+    ms-attr-level="leaf.level"
+    ms-attr-timeStamp="timeStamp()" 
+    ms-repeat-leaf="children">
+    {{loadLeafTemplate(leaf)|html}}
+</li>

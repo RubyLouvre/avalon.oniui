@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>datepicker demo </title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>datepicker demo</h1>
+        <div class="demo-show" ms-controller="demo">
+            <fieldset style="position:relative; z-index: 2">
+                <legend>移动端不使用dropdown切换月份或年份</legend>
+                <input ms-widget="datepicker" data-datepicker-mobile-month-and-year="true" data-datepicker-allow-blank="true"/>
+                <p>说明：设置mobileMonthAndYear为true使得datepicker在mobile下通过mobile的形式选择月份和年份而不是dropdown的形式</p>
+            </fieldset>
+            <fieldset style="position:relative; z-index: 1">
+                <legend>移动端不使用dropdown切换月份或年份</legend>
+                <input ms-widget="datepicker" data-datepicker-min-date="2012-01-01" data-datepicker-max-date="2015-12-31" data-datepicker-mobile-month-and-year="true"/>
+                <p>说明：根据minDate和maxDate确定可选择的年份和月份</p>
+            </fieldset>
+            <script> 
+                require(["datepicker/avalon.datepicker"], function(avalon) {
+                    var model = avalon.define("demo", function(vm) {
+                    })
+                    avalon.scan();
+                })
+            </script>
+        </div>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;datepicker demo&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;div class="demo-show" ms-controller="demo"&gt;
+                        &lt;fieldset style="position:relative; z-index: 2"&gt;
+                            &lt;legend&gt;移动端不使用dropdown切换月份或年份&lt;/legend&gt;
+                            &lt;input ms-widget="datepicker" data-datepicker-mobile-month-and-year="true"/&gt;
+                            &lt;p&gt;说明：设置mobileMonthAndYear为true使得datepicker在mobile下通过mobile的形式选择月份和年份而不是dropdown的形式&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset style="position:relative; z-index: 1"&gt;
+                            &lt;legend&gt;移动端不使用dropdown切换月份或年份&lt;/legend&gt;
+                            &lt;input ms-widget="datepicker" data-datepicker-min-date="2012-01-01" data-datepicker-max-date="2015-12-31" data-datepicker-mobile-month-and-year="true"/&gt;
+                            &lt;p&gt;说明：根据minDate和maxDate确定可选择的年份和月份&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;script&gt; 
+                            require(["datepicker/avalon.datepicker"], function(avalon) {
+                                var model = avalon.define("demo", function(vm) {
+                                })
+                                avalon.scan();
+                            })
+                        &lt;/script&gt;
+                    &lt;/div&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+    </div>
+</body>
+</html>
+

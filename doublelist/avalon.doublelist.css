@@ -1,0 +1,56 @@
+
+/*
+这是每个都组件都应该引用的部分
+*/
+div.oni-doublelist {
+  font-size: 12px; }
+
+.oni-doublelist-menu {
+  width: 180px;
+  height: 190px;
+  border: 1px solid #d4d4d4;
+  background: white;
+  float: left;
+  display: inline; }
+.oni-doublelist ul {
+  width: 100%; }
+.oni-doublelist-option {
+  width: 58px;
+  height: 62px;
+  padding: 10px;
+  vertical-align: middle;
+  float: left;
+  display: inline;
+  margin-top: 40px;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box; }
+.oni-doublelist li {
+  list-style: none;
+  padding: 5px 6px;
+  cursor: pointer;
+  color: black; }
+.oni-doublelist li.oni-state-hover {
+  background-color: #f8f8f8; }
+.oni-doublelist li.oni-state-active {
+  background-color: #3775c0;
+  color: white; }
+.oni-doublelist li.oni-state-disabled {
+  cursor: default;
+  color: #999999;
+  background: white; }
+.oni-doublelist .oni-dbl-button {
+  height: 24px;
+  *height: auto;
+  line-height: 24px;
+  padding: 0;
+  background-color: #f8f8f8;
+  border: 1px solid #d4d4d4;
+  border-radius: 2px;
+  color: black;
+  text-align: center;
+  margin-top: 10px;
+  cursor: pointer; }
+.oni-doublelist-option div.oni-state-disabled {
+  border-color: #dedede;
+  color: #ccc; }

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>验证框架</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css">
+        <script src="../avalon.js">
+
+        </script>
+        <script src="../highlight/shCore.js">
+
+        </script>
+        <style >
+            .error{
+                border:1px  solid red;
+
+            }
+            .success{
+                border:1px  solid greenyellow;
+            }
+            .error-tip{
+                color: red;
+                background:pink;
+            }
+        </style>
+        <script>
+            require(["validation/avalon.validation", "ready!"], function() {
+                var validationVM
+                avalon.define({
+                    $id: "test",
+                    $skipArray: ["validation"],
+                    a: 'bbb',
+                    b: "",
+                    c: "5",
+                    d: "",
+                    clearAll: function() {
+                        validationVM && validationVM.resetAll()
+                    },
+                    checkAll: function() {
+                        validationVM && validationVM.validateAll()
+                    },
+                    validation: {
+                        valiedateInBlur: false,
+                        onInit: function(v) {
+                            validationVM = v
+                        },
+                        onReset: function(e, data) {
+                            data.valueResetor()
+                        },
+                        onValidateAll: function(reasons) {
+                            var msg = []
+                            reasons.forEach(function(reason) {
+                                msg.push(reason.getMessage())
+                            })
+                            if (reasons.length === 0) {
+                                alert("全部验证成功！")
+                            } else {
+                                alert(msg.join("\n"))
+                            }
+                        }
+                    }
+                })
+                avalon.scan()
+            })
+        </script>
+    </head>
+    <body>
+        <form ms-controller="test" ms-widget="validation">
+            <pre>重复密码</pre>
+            <form id="form8">
+                <pre>重复密码，单框验证</pre>
+                <input type="password" ms-duplex-alpha_numeric="a" id="password"/>
+                <input type="password" ms-duplex-alpha_numeric-repeat="b" data-duplex-repeat="password"/>
+                <input type="button" value="验证" ms-click="checkAll" />
+                <input type="button" value="重置" ms-click="clearAll" />
+            </form>
+        </form>
+    </body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>daterangepicker demo </title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>daterangepicker demo</h1>
+        <div class="demo-show" ms-controller="demo">
+            <fieldset>
+                <legend>默认配置项的日期范围选择框</legend>
+                <div ms-widget="daterangepicker"></div>
+            </fieldset>
+            <fieldset>
+                <legend>设置日期范围框的起始日期和结束日期的日历说明</legend>
+                <div ms-widget="daterangepicker" data-daterangepicker-from-label="起始日期" data-daterangepicker-to-label="结束日期"></div>
+                <p>fromLabel设置起始日期的日历label，toLabel设置结束日期的日历label</p>
+            </fieldset>
+            <fieldset>
+                <legend>设置日期范围框的说明文字</legend>
+                <div ms-widget="daterangepicker" data-daterangepicker-label="请选择起始日期和结束日期"></div>
+                <p>laebl设置日期范围框的默认说明文字，当选中日期时会自动更新此label</p>
+            </fieldset>
+            <script> 
+                require(["datepicker/avalon.daterangepicker"], function(avalon) {
+                    var model = avalon.define("demo", function(vm) {
+                        
+                    })
+                    avalon.scan();
+                })
+            </script>
+        </div>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;daterangepicker demo&lt;/title&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;div class="demo-show" ms-controller="demo"&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;默认配置项的日期范围选择框&lt;/legend&gt;
+                            &lt;div ms-widget="daterangepicker"&gt;&lt;/div&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;设置日期范围框的起始日期和结束日期的日历说明&lt;/legend&gt;
+                            &lt;div ms-widget="daterangepicker" data-daterangepicker-from-label="起始日期" data-daterangepicker-to-label="结束日期"&gt;&lt;/div&gt;
+                            &lt;p&gt;fromLabel设置起始日期的日历label，toLabel设置结束日期的日历label&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;fieldset&gt;
+                            &lt;legend&gt;设置日期范围框的说明文字&lt;/legend&gt;
+                            &lt;div ms-widget="daterangepicker" data-daterangepicker-label="请选择起始日期和结束日期"&gt;&lt;/div&gt;
+                            &lt;p&gt;laebl设置日期范围框的默认说明文字，当选中日期时会自动更新此label&lt;/p&gt;
+                        &lt;/fieldset&gt;
+                        &lt;script&gt; 
+                            require(["datepicker/avalon.daterangepicker"], function(avalon) {
+                                var model = avalon.define("demo", function(vm) {
+                                    
+                                })
+                                avalon.scan();
+                            })
+                        &lt;/script&gt;
+                    &lt;/div&gt; 
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+    </div>
+</body>
+</html>
+

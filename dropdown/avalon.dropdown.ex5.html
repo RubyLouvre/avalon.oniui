@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+        <script src="../avalon.js"></script>
+        <script type="text/javascript">
+            require(['dropdown/avalon.dropdown', "domReady!"], function() {
+                var dm = avalon.define('dropdown', function(vm) {
+                    vm.value = 'value5';
+                    vm.dropdown = {
+                        onChange: function() {
+                            console.log(dm.value)
+                        },
+                        onSelect: function() {
+                            console.log(dm.value)
+                        }
+                    }
+                });
+                avalon.scan();
+            });
+        </script>
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    <body>
+        <div class="wrapper">
+            <div ms-controller="dropdown">
+                <h2>dropdown（下拉框）</h2>
+                <p>使用html配置并使用duplex绑定</p>
+                <select ms-widget="dropdown"
+                        ms-duplex="value">
+                    <optgroup label="group1">
+                        <option value="value1">Value 1</option>
+                        <option>textValue</option>
+                        <option label="label" value="labelValue">with label</option>
+                        <option value="value2" selected>Value 2</option>
+                        <option value="value3">Value 3</option>
+                    </optgroup>
+                    <optgroup label="group2">
+                        <option value="value4">Value 4</option>
+                        <option value="value5" disabled>Value 5</option>
+                        <option value="value6">Value 6</option>
+                    </optgroup>
+                </select>
+                <p>{{value}}</p>
+            </div>
+            <pre class="brush:html;gutter:false;toolbar:false;" ms-skip>
+    &lt;!DOCTYPE html&gt;
+    &lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;&lt;/title&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta name="viewport" content="width=device-width"&gt;
+        &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+        &lt;script type="text/javascript"&gt;
+            require('dropdown/avalon.dropdown.js', function() {
+                avalon.ready(function() {
+                    avalon.define('dropdown', function(vm) {
+                        vm.value = 'value5';
+                    });
+                    avalon.scan();
+                });
+            });
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+    &lt;div class="frame" ms-controller="dropdown"&gt;
+        &lt;h2&gt;dropdown（下拉框）&lt;/h2&gt;
+        &lt;p&gt;使用html配置并使用duplex绑定&lt;/p&gt;
+        &lt;select ms-widget="dropdown"
+                ms-duplex="value"&gt;
+            &lt;optgroup label="group1"&gt;
+                &lt;option value="value1"&gt;Value 1&lt;/option&gt;
+                &lt;option&gt;textValue&lt;/option&gt;
+                &lt;option label="label" value="labelValue"&gt;with label&lt;/option&gt;
+                &lt;option value="value2" selected&gt;Value 2&lt;/option&gt;
+                &lt;option value="value3"&gt;Value 3&lt;/option&gt;
+            &lt;/optgroup&gt;
+            &lt;optgroup label="group2"&gt;
+                &lt;option value="value4"&gt;Value 4&lt;/option&gt;
+                &lt;option value="value5" disabled&gt;Value 5&lt;/option&gt;
+                &lt;option value="value6"&gt;Value 6&lt;/option&gt;
+            &lt;/optgroup&gt;
+        &lt;/select&gt;
+        &lt;p&gt;{{value}}&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;/body&gt;
+    &lt;/html&gt;
+            </pre>
+        </div>
+    </body>
+</html>

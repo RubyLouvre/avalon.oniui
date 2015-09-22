@@ -711,12 +711,12 @@ define(["avalon",
 
         //设置label以及title
         function setLabelTitle(value) {
+            if(!vmodel.multiple && avalon.type(value)==="array") {
+                value = value[0];
+            }
+
             var option = vmodel.data.$model.filter(function(item) {
-                if(typeof value === "object"){
-                    return item.value === value[0];
-                } else{
-                    return item.value === value;
-                }
+                return item.value === value;
             });
 
             option = option.length > 0 ? option[0] : null

@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /*
 这是每个都组件都应该引用的部分
 */
@@ -65,6 +66,10 @@
 .oni-datepicker-timer {
   border-top: 1px solid #efefef;
   padding: 5px 0; }
+  .oni-datepicker-timer .oni-datepicker-slide-wrap {
+    margin: 0;
+    padding: 0;
+    background-color: transparent; }
   .oni-datepicker-timer .oni-btn {
     height: 26px;
     overflow: visible;
@@ -142,7 +147,7 @@
   background: #3775c0;
   color: #fff; }
 .oni-datepicker-month-year .oni-datepicker-prev-year, .oni-datepicker-month-year .oni-datepicker-next-year {
-  color: #999999; }
+  color: #999; }
 .oni-datepicker-month-year .oni-state-disabled {
   color: #ccc;
   cursor: default;
@@ -181,7 +186,6 @@
 .oni-datepicker-calendar-week, .oni-datepicker-calendar-days {
   border-collapse: collapse;
   border-spacing: 0;
-  table-layout: fixed;
   margin-bottom: 5px;
   width: 100%; }
 
@@ -241,7 +245,7 @@
   background: #3775c0; }
 .oni-datepicker-dropdown .oni-dropdown:hover .oni-dropdown-source {
   border-color: #3775c0;
-  border-bottom-color: #cccccc; }
+  border-bottom-color: #ccc; }
 
 .oni-datepicker-input-wrapper {
   background: #fff;

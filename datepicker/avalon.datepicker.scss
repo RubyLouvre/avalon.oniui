@@ -67,6 +67,12 @@ $uiname-dropdown: "oni-dropdown";
 .#{$uiname}-timer {
     border-top: 1px solid #efefef;
     padding: 5px 0;
+
+    .#{$uiname}-slide-wrap{
+        margin: 0;
+        padding: 0;
+        background-color: transparent;
+    }
     .oni-btn {
         height: 26px;
         overflow: visible;

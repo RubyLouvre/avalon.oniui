@@ -30,7 +30,8 @@ body {
   height: auto;
   position: relative;
   padding: 40px 60px;
-  background-color: #fff; }
+  overflow-x: hidden;
+  background-color: #fff;  }
   body::-webkit-scrollbar {
     width: 9px; }
   body::-webkit-scrollbar-track-piece {

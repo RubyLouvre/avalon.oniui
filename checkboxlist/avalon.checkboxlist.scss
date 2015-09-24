@@ -1,22 +1,22 @@
 
 @import "../chameleon/oniui-theme";
 $uiname: "oni-checkboxlist";
-$inputMargin: 0;
+
 .#{$uiname} {
-    list-style: none;
-    padding: 0;
-}
-.#{$uiname}-item {
-    &.fl {
-        padding-right: 10px;
+    .#{$uiname}-horizontal{
+        @include inline-block;
+        padding-right: 10px;   
     }
-    input {
-        vertical-align: middle;
-        margin: $inputMargin;
+    .#{$uiname}-all{
+         padding-right: 20px;
+    }
+    .#{$uiname}-item {
+        label{
+            cursor:pointer;
+        }
+        .checkbox {
+            @include reset-input;
+        }
     }
 }
-.#{$uiname}-all {
-    &.fl {
-        padding-right: 20px;
-    }
-}
+

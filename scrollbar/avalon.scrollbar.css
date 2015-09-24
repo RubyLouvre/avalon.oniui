@@ -1,14 +1,17 @@
+.oni-scrollbar-arrow b, .oni-scrollbar-arrow-down b, .oni-scrollbar-left .oni-state-active .oni-scrollbar-trangle-up, .oni-scrollbar-right .oni-state-active .oni-scrollbar-trangle-up, .oni-scrollbar-left .oni-state-active .oni-scrollbar-trangle-down, .oni-scrollbar-right .oni-state-active .oni-scrollbar-trangle-down, .oni-scrollbar-top .oni-state-active .oni-scrollbar-trangle-up, .oni-scrollbar-bottom .oni-state-active .oni-scrollbar-trangle-up, .oni-scrollbar-top .oni-state-active .oni-scrollbar-trangle-down, .oni-scrollbar-bottom .oni-state-active .oni-scrollbar-trangle-down, .oni-scrollbar-top .oni-scrollbar-arrow b, .oni-scrollbar-bottom .oni-scrollbar-arrow b, .oni-scrollbar-top .oni-scrollbar-arrow-down b, .oni-scrollbar-bottom .oni-scrollbar-arrow-down b {
+  width: 0;
+  height: 0;
+  line-height: 0;
+  font-size: 0; }
 
 /*
 这是每个都组件都应该引用的部分
 */
-div.oni-scrollbar {
+.oni-scrollbar {
   position: absolute;
   margin: 0;
   padding: 0;
-  border: 0; }
-
-.oni-scrollbar {
+  border: 0;
   width: 10px;
   height: 100%;
   left: auto;
@@ -17,23 +20,25 @@ div.oni-scrollbar {
   bottom: auto;
   background: #f8f8f8;
   z-index: 100;
-  transition: opacity .5s;
-  -webkit-transition: opacity .5s;
-  -moz-transition: opacity .5s;
-  -o-transition: opacity .5s;
-  -ms-transition: opacity .5s; }
+  -webkit-transition: opacity 0.5s;
+  -moz-transition: opacity 0.5s;
+  -ms-transition: opacity 0.5s;
+  -o-transition: opacity 0.5s;
+  transition: opacity 0.5s; }
   .oni-scrollbar-arrow {
     position: absolute;
-    background: #eeeeee;
+    background: #eee;
     top: 0;
     left: 0;
     width: 10px;
     height: 10px; }
+    .oni-scrollbar-arrow .oni-state-hover {
+      background: #aaa; }
+    .oni-scrollbar-arrow .oni-state-active {
+      background: #999; }
+    .oni-scrollbar-arrow .oni-state-disabled {
+      background: #e9e9e9; }
     .oni-scrollbar-arrow b {
-      width: 0;
-      height: 0;
-      line-height: 0;
-      font-size: 0;
       border-top: 0 none;
       border-right: 4px dashed transparent;
       border-bottom: 4px solid #bcbcbc;
@@ -45,60 +50,34 @@ div.oni-scrollbar {
       margin-left: -4px;
       font-size: 0;
       line-height: 0; }
-    div .oni-scrollbar-arrow-down {
+    .oni-scrollbar-arrow-down {
       top: auto;
       bottom: 0; }
-      div .oni-scrollbar-arrow-down b {
-        width: 0;
-        height: 0;
-        line-height: 0;
-        font-size: 0;
+      .oni-scrollbar-arrow-down b {
         border-top: 4px solid #bcbcbc;
         border-right: 4px dashed transparent;
         border-bottom: 0;
         border-left: 4px dashed transparent; }
-  .oni-scrollbar .oni-state-hover {
-    background: #aaaaaa; }
-  .oni-scrollbar .oni-state-active {
-    background: #999999; }
-  .oni-scrollbar .oni-state-disabled {
-    background: #e9e9e9; }
-  .oni-scrollbar-left .oni-state-active b.oni-scrollbar-trangle-up, .oni-scrollbar-right .oni-state-active b.oni-scrollbar-trangle-up {
-    width: 0;
-    height: 0;
-    line-height: 0;
-    font-size: 0;
+  .oni-scrollbar-left .oni-state-active .oni-scrollbar-trangle-up, .oni-scrollbar-right .oni-state-active .oni-scrollbar-trangle-up {
     border-top: 0 none;
     border-right: 4px dashed transparent;
-    border-bottom: 4px solid white;
+    border-bottom: 4px solid #fff;
     border-left: 4px dashed transparent; }
-  .oni-scrollbar-left .oni-state-active b.oni-scrollbar-trangle-down, .oni-scrollbar-right .oni-state-active b.oni-scrollbar-trangle-down {
-    width: 0;
-    height: 0;
-    line-height: 0;
-    font-size: 0;
-    border-top: 4px solid white;
+  .oni-scrollbar-left .oni-state-active .oni-scrollbar-trangle-down, .oni-scrollbar-right .oni-state-active .oni-scrollbar-trangle-down {
+    border-top: 4px solid #fff;
     border-right: 4px dashed transparent;
     border-bottom: 0;
     border-left: 4px dashed transparent; }
-  .oni-scrollbar-top .oni-state-active b.oni-scrollbar-trangle-up, .oni-scrollbar-bottom .oni-state-active b.oni-scrollbar-trangle-up {
-    width: 0;
-    height: 0;
-    line-height: 0;
-    font-size: 0;
+  .oni-scrollbar-top .oni-state-active .oni-scrollbar-trangle-up, .oni-scrollbar-bottom .oni-state-active .oni-scrollbar-trangle-up {
     border-top: 4px dashed transparent;
-    border-right: 4px solid white;
+    border-right: 4px solid #fff;
     border-bottom: 4px dashed transparent;
     border-left: 0; }
-  .oni-scrollbar-top .oni-state-active b.oni-scrollbar-trangle-down, .oni-scrollbar-bottom .oni-state-active b.oni-scrollbar-trangle-down {
-    width: 0;
-    height: 0;
-    line-height: 0;
-    font-size: 0;
+  .oni-scrollbar-top .oni-state-active .oni-scrollbar-trangle-down, .oni-scrollbar-bottom .oni-state-active .oni-scrollbar-trangle-down {
     border-top: 4px dashed transparent;
     border-right: 0;
     border-bottom: 4px dashed transparent;
-    border-left: 4px solid white; }
+    border-left: 4px solid #fff; }
   .oni-scrollbar-scroller {
     overflow: hidden; }
   .oni-scrollbar-left {
@@ -126,11 +105,11 @@ div.oni-scrollbar {
       position: absolute;
       width: 100%;
       left: 0;
-      background: #cccccc; }
+      background: #ccc; }
     .oni-scrollbar-draggerpar .oni-state-hover {
-      background: #999999; }
+      background: #999; }
     .oni-scrollbar-draggerpar .oni-state-active {
-      background: #888888; }
+      background: #888; }
     .oni-scrollbar-draggerpar .oni-state-disabled {
       background: #e9e9e9; }
   .oni-scrollbar-top .oni-scrollbar-ragger, .oni-scrollbar-bottom .oni-scrollbar-ragger {
@@ -138,10 +117,6 @@ div.oni-scrollbar {
     width: auto;
     top: 0; }
   .oni-scrollbar-top .oni-scrollbar-arrow b, .oni-scrollbar-bottom .oni-scrollbar-arrow b {
-    width: 0;
-    height: 0;
-    line-height: 0;
-    font-size: 0;
     border-top: 4px dashed transparent;
     border-right: 4px solid #bcbcbc;
     border-bottom: 4px dashed transparent;
@@ -152,10 +127,6 @@ div.oni-scrollbar {
     right: 0;
     left: auto; }
     .oni-scrollbar-top .oni-scrollbar-arrow-down b, .oni-scrollbar-bottom .oni-scrollbar-arrow-down b {
-      width: 0;
-      height: 0;
-      line-height: 0;
-      font-size: 0;
       border-top: 4px dashed transparent;
       border-right: 0;
       border-bottom: 4px dashed transparent;

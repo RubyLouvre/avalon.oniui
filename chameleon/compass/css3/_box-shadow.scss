@@ -6,10 +6,8 @@
 // Each shadow argument should adhere to the standard css3 syntax for the
 // box-shadow property.
 @mixin box-shadow($args...) {
-  $shadow : list-compact($args);
-  @include experimental(box-shadow, $shadow,
-    -moz, -webkit, not -o, not -ms, not -khtml, official
-  );
+ // $shadow : list-compact($args);
+  @include prefix(box-shadow, $args...);
 }
 // @include box-shadow(-1px -1px 2px rgba(0, 0, 0, 0.05), 0 1px 1px white inset);
 

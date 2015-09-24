@@ -10,11 +10,9 @@ $uiname: "oni-suggest";
     top: 3px;
     left: -6px;
     z-index: 1;
-    border: 1px solid #cccccc;
-    padding: 0;
-    margin: 0;
+    border: 1px solid #ccc;
     @if($oinui-theme == smoothness) {
-        background-color: #ffffff;
+        background-color: #fff;
     }
     .#{$uiname}-item {
         overflow: hidden;
@@ -28,8 +26,8 @@ $uiname: "oni-suggest";
         color: $ui-state-active-color;
     }
     .#{$uiname}-item-hover {
-        background-color: #f8f8f8;
-        color: #333333;
+        background-color: $ui-state-hover-background-color;
+        color: #333;
     }
 }
 

@@ -1,6 +1,6 @@
 
 @import "../chameleon/oniui-theme";
-$uiname : ".oni-scrollbar";
+$uiname : "oni-scrollbar";
 @if($oinui-theme == smoothness) {
 	$scrollbar: (
 		bg: #f8f8f8,
@@ -17,13 +17,11 @@ $uiname : ".oni-scrollbar";
 	) !global;
 } @else {
 }
-div#{$uiname} {
+.#{$uiname} {
 	position: absolute;
 	margin: 0;
 	padding: 0;
 	border: 0;
-}
-#{$uiname} {
 	width: 10px;
 	height: 100%;
 	left: auto;
@@ -33,11 +31,7 @@ div#{$uiname} {
 	background:map-get($scrollbar, bg);
 	// fix ie8 opacity bug
 	z-index: 100;
-	transition:opacity .5s;
-	-webkit-transition:opacity .5s;
-	-moz-transition:opacity .5s;
-	-o-transition:opacity .5s;
-	-ms-transition:opacity .5s;
+	@include prefix(transition,opacity .5s);
 	&-arrow{
 		position: absolute;
 		background:map-get($scrollbar, arrBg);
@@ -45,6 +39,15 @@ div#{$uiname} {
 		left: 0;
 		width: 10px;
 		height: 10px;
+		.oni-state-hover{
+    		background: map-get($scrollbar, arrHoverBg);
+	    }
+	    .oni-state-active{
+	    	background: map-get($scrollbar, arrActiveBg);
+	    }
+	    .oni-state-disabled{
+	    	background: map-get($scrollbar, arrDisabledBg);
+	    }
 	    b{
 	    	@include triangle($direction: top, $width: 8px, $height: 4px, $color: map-get($scrollbar, arrColor));
 			position: absolute;
@@ -55,40 +58,30 @@ div#{$uiname} {
 			font-size: 0;
 			line-height: 0;
 	    }
-	    div &-down{
+	    &-down{
 	    	top: auto;
 	    	bottom: 0;
 	    	b{
 	    		@include triangle($direction: bottom, $width: 8px, $height: 4px, $color: map-get($scrollbar, arrColor));
-		    
 	    	}
 	    }
 	}
-    .oni-state-hover{
-    	background: map-get($scrollbar, arrHoverBg);
-    }
-    .oni-state-active{
-    	background: map-get($scrollbar, arrActiveBg);
-    }
-    .oni-state-disabled{
-    	background: map-get($scrollbar, arrDisabledBg);
-    }
     &-left,&-right{
     	.oni-state-active {
-    		b#{$uiname}-trangle-up {
+    		.#{$uiname}-trangle-up {
 				@include triangle($direction: top, $width: 8px, $height: 4px, $color: map-get($scrollbar, arrActiveColor));
     		}
-    		b#{$uiname}-trangle-down {
+    		.#{$uiname}-trangle-down {
 				@include triangle($direction: bottom, $width: 8px, $height: 4px, $color: map-get($scrollbar, arrActiveColor));
     		}
     	}
     }
     &-top,&-bottom{
     	.oni-state-active {
-    		b#{$uiname}-trangle-up {
+    		.#{$uiname}-trangle-up {
 				@include triangle($direction: left, $width: 8px, $height: 4px, $color: map-get($scrollbar, arrActiveColor));
     		}
-    		b#{$uiname}-trangle-down {
+    		.#{$uiname}-trangle-down {
 				@include triangle($direction: right, $width: 8px, $height: 4px, $color: map-get($scrollbar, arrActiveColor));
     		}
     	}
@@ -120,7 +113,7 @@ div#{$uiname} {
 		top:0;
 		width: 100%;
 		height: 100%;
-		#{$uiname}-dragger{
+		.#{$uiname}-dragger{
 			position: absolute;
 			width: 100%;
 			left: 0;
@@ -137,7 +130,7 @@ div#{$uiname} {
 		}
 	}
 	&-top,&-bottom {
-		#{$uiname}{
+		.#{$uiname}{
 			&-ragger {
 				height: 100%;
 				width: auto;
@@ -158,9 +151,9 @@ div#{$uiname} {
 		}
 	}
 }
-#{$uiname}-large{
+.#{$uiname}-large{
 	width: 14px;
-	#{$uiname}{
+	.#{$uiname}{
 		&-arrow{
 			width: 14px;
 			height: 14px;
@@ -170,19 +163,17 @@ div#{$uiname} {
 		}
 	}
 }
-#{$uiname}-bottom-large{
+.#{$uiname}-bottom-large{
 	height: 14px;
 }
-#{$uiname}-small{
+.#{$uiname}-small{
 	width: 8px;
-	#{$uiname}{
-		&-arrow{
-			width: 8px;
-			height: 8px;
-		}
+	.#{$uiname}-arrow{
+		width: 8px;
+		height: 8px;
 	}
 }
-#{$uiname}-bottom-small{
+.#{$uiname}-bottom-small{
 	height: 8px;
 }
 .ui-scrollbar-scroller{overflow:hidden;}

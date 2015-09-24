@@ -1,7 +1,6 @@
-<li class="oni-checkboxlist-item oni-checkboxlist-all" 
-    ms-css-float="vertical? 'none': 'left'" 
+<li class="oni-checkboxlist-item oni-checkboxlist-all"
     ms-if="!!alltext"
-    ms-class="fl:!vertical">
+    ms-class="oni-checkboxlist-horizontal:!vertical">
     <label ms-if="data.size()">
         <input type="checkbox" 
                ms-click="_clickAll($event)" 
@@ -10,9 +9,8 @@
                class="checkbox"/> {{alltext}}
     </label>
 </li>
-<li ms-repeat-cpitem="data" class="oni-checkboxlist-item" 
-    ms-css-float="vertical? 'none': 'left'"
-    ms-class="fl:!vertical">
+<li ms-repeat-cpitem="data" class="oni-checkboxlist-item"
+    ms-class="oni-checkboxlist-horizontal:!vertical">
     <label>
         <input type="checkbox" 
                ms-click="_clickOne($event, $index)"

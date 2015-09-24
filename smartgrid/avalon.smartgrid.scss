@@ -172,7 +172,8 @@ $uiname: "oni-smartgrid";
         padding: 9px 10px;
         border-bottom: 1px #f2f2f2 solid;
         color: #0084bb;
-        span{
+        .#{$uiname}-handler-mode-item{
+            @include inline-block();
             margin: 0 10px 0 0;
             cursor: pointer;
             @include user-select();
@@ -225,14 +226,11 @@ $uiname: "oni-smartgrid";
             @include user-select();
         }
 
-        .#{$uiname}-handler-confirm{
-            background-color: #58b359;
-            color: #fff;
-            border: 1px #45a846 solid;
+        .#{$uiname}-handler-btn{
+            padding: 0 3px;
 
-            &:hover{
-                background-color: #68c969;
-                border-color: #3e973e;
+            .oni-button-text{
+                margin: 0;
             }
         }
 

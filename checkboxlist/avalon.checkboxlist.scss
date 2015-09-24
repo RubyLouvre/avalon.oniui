@@ -4,11 +4,13 @@ $uiname: "oni-checkboxlist";
 
 .#{$uiname} {
     .#{$uiname}-horizontal{
-        @include inline-block;
-        padding-right: 10px;   
-    }
-    .#{$uiname}-all{
-         padding-right: 20px;
+        .#{$uiname}-item {
+            @include inline-block;
+            padding-right: 10px;
+        }
+        .#{$uiname}-all{
+            padding-right: 20px;
+        }   
     }
     .#{$uiname}-item {
         label{

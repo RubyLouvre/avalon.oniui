@@ -1,9 +1,4 @@
-.oni-scrollbar-arrow b, .oni-scrollbar-arrow-down b, .oni-scrollbar-left .oni-state-active .oni-scrollbar-trangle-up, .oni-scrollbar-right .oni-state-active .oni-scrollbar-trangle-up, .oni-scrollbar-left .oni-state-active .oni-scrollbar-trangle-down, .oni-scrollbar-right .oni-state-active .oni-scrollbar-trangle-down, .oni-scrollbar-top .oni-state-active .oni-scrollbar-trangle-up, .oni-scrollbar-bottom .oni-state-active .oni-scrollbar-trangle-up, .oni-scrollbar-top .oni-state-active .oni-scrollbar-trangle-down, .oni-scrollbar-bottom .oni-state-active .oni-scrollbar-trangle-down, .oni-scrollbar-top .oni-scrollbar-arrow b, .oni-scrollbar-bottom .oni-scrollbar-arrow b, .oni-scrollbar-top .oni-scrollbar-arrow-down b, .oni-scrollbar-bottom .oni-scrollbar-arrow-down b {
-  width: 0;
-  height: 0;
-  line-height: 0;
-  font-size: 0; }
-
+@charset "UTF-8";
 /*
 这是每个都组件都应该引用的部分
 */
@@ -32,13 +27,17 @@
     left: 0;
     width: 10px;
     height: 10px; }
-    .oni-scrollbar-arrow .oni-state-hover {
+    .oni-scrollbar-arrow .oni-scrollbar-state-hover {
       background: #aaa; }
-    .oni-scrollbar-arrow .oni-state-active {
+    .oni-scrollbar-arrow .oni-scrollbar-state-active {
       background: #999; }
-    .oni-scrollbar-arrow .oni-state-disabled {
+    .oni-scrollbar-arrow .oni-scrollbar-state-disabled {
       background: #e9e9e9; }
     .oni-scrollbar-arrow b {
+      width: 0;
+      height: 0;
+      line-height: 0;
+      font-size: 0;
       border-top: 0 none;
       border-right: 4px dashed transparent;
       border-bottom: 4px solid #bcbcbc;
@@ -54,26 +53,46 @@
       top: auto;
       bottom: 0; }
       .oni-scrollbar-arrow-down b {
+        width: 0;
+        height: 0;
+        line-height: 0;
+        font-size: 0;
         border-top: 4px solid #bcbcbc;
         border-right: 4px dashed transparent;
         border-bottom: 0;
         border-left: 4px dashed transparent; }
-  .oni-scrollbar-left .oni-state-active .oni-scrollbar-trangle-up, .oni-scrollbar-right .oni-state-active .oni-scrollbar-trangle-up {
+  .oni-scrollbar-left .oni-scrollbar-state-active .oni-scrollbar-trangle-up, .oni-scrollbar-right .oni-scrollbar-state-active .oni-scrollbar-trangle-up {
+    width: 0;
+    height: 0;
+    line-height: 0;
+    font-size: 0;
     border-top: 0 none;
     border-right: 4px dashed transparent;
     border-bottom: 4px solid #fff;
     border-left: 4px dashed transparent; }
-  .oni-scrollbar-left .oni-state-active .oni-scrollbar-trangle-down, .oni-scrollbar-right .oni-state-active .oni-scrollbar-trangle-down {
+  .oni-scrollbar-left .oni-scrollbar-state-active .oni-scrollbar-trangle-down, .oni-scrollbar-right .oni-scrollbar-state-active .oni-scrollbar-trangle-down {
+    width: 0;
+    height: 0;
+    line-height: 0;
+    font-size: 0;
     border-top: 4px solid #fff;
     border-right: 4px dashed transparent;
     border-bottom: 0;
     border-left: 4px dashed transparent; }
-  .oni-scrollbar-top .oni-state-active .oni-scrollbar-trangle-up, .oni-scrollbar-bottom .oni-state-active .oni-scrollbar-trangle-up {
+  .oni-scrollbar-top .oni-scrollbar-state-active .oni-scrollbar-trangle-up, .oni-scrollbar-bottom .oni-scrollbar-state-active .oni-scrollbar-trangle-up {
+    width: 0;
+    height: 0;
+    line-height: 0;
+    font-size: 0;
     border-top: 4px dashed transparent;
     border-right: 4px solid #fff;
     border-bottom: 4px dashed transparent;
     border-left: 0; }
-  .oni-scrollbar-top .oni-state-active .oni-scrollbar-trangle-down, .oni-scrollbar-bottom .oni-state-active .oni-scrollbar-trangle-down {
+  .oni-scrollbar-top .oni-scrollbar-state-active .oni-scrollbar-trangle-down, .oni-scrollbar-bottom .oni-scrollbar-state-active .oni-scrollbar-trangle-down {
+    width: 0;
+    height: 0;
+    line-height: 0;
+    font-size: 0;
     border-top: 4px dashed transparent;
     border-right: 0;
     border-bottom: 4px dashed transparent;
@@ -106,17 +125,21 @@
       width: 100%;
       left: 0;
       background: #ccc; }
-    .oni-scrollbar-draggerpar .oni-state-hover {
+    .oni-scrollbar-draggerpar .oni-scrollbar-state-hover {
       background: #999; }
-    .oni-scrollbar-draggerpar .oni-state-active {
+    .oni-scrollbar-draggerpar .oni-scrollbar-state-active {
       background: #888; }
-    .oni-scrollbar-draggerpar .oni-state-disabled {
+    .oni-scrollbar-draggerpar .oni-scrollbar-state-disabled {
       background: #e9e9e9; }
   .oni-scrollbar-top .oni-scrollbar-ragger, .oni-scrollbar-bottom .oni-scrollbar-ragger {
     height: 100%;
     width: auto;
     top: 0; }
   .oni-scrollbar-top .oni-scrollbar-arrow b, .oni-scrollbar-bottom .oni-scrollbar-arrow b {
+    width: 0;
+    height: 0;
+    line-height: 0;
+    font-size: 0;
     border-top: 4px dashed transparent;
     border-right: 4px solid #bcbcbc;
     border-bottom: 4px dashed transparent;
@@ -127,6 +150,10 @@
     right: 0;
     left: auto; }
     .oni-scrollbar-top .oni-scrollbar-arrow-down b, .oni-scrollbar-bottom .oni-scrollbar-arrow-down b {
+      width: 0;
+      height: 0;
+      line-height: 0;
+      font-size: 0;
       border-top: 4px dashed transparent;
       border-right: 0;
       border-bottom: 4px dashed transparent;

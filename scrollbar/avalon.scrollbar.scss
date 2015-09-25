@@ -39,13 +39,13 @@ $uiname : "oni-scrollbar";
 		left: 0;
 		width: 10px;
 		height: 10px;
-		.oni-state-hover{
+		.oni-scrollbar-state-hover{
     		background: map-get($scrollbar, arrHoverBg);
 	    }
-	    .oni-state-active{
+	    .oni-scrollbar-state-active{
 	    	background: map-get($scrollbar, arrActiveBg);
 	    }
-	    .oni-state-disabled{
+	    .oni-scrollbar-state-disabled{
 	    	background: map-get($scrollbar, arrDisabledBg);
 	    }
 	    b{
@@ -67,7 +67,7 @@ $uiname : "oni-scrollbar";
 	    }
 	}
     &-left,&-right{
-    	.oni-state-active {
+    	.oni-scrollbar-state-active {
     		.#{$uiname}-trangle-up {
 				@include triangle($direction: top, $width: 8px, $height: 4px, $color: map-get($scrollbar, arrActiveColor));
     		}
@@ -77,7 +77,7 @@ $uiname : "oni-scrollbar";
     	}
     }
     &-top,&-bottom{
-    	.oni-state-active {
+    	.oni-scrollbar-state-active {
     		.#{$uiname}-trangle-up {
 				@include triangle($direction: left, $width: 8px, $height: 4px, $color: map-get($scrollbar, arrActiveColor));
     		}
@@ -119,13 +119,13 @@ $uiname : "oni-scrollbar";
 			left: 0;
 			background: map-get($scrollbar, draggerBg);
 		}		
-		.oni-state-hover{
+		.oni-scrollbar-state-hover{
 			background: map-get($scrollbar, draggerHoverBg);
 		}
-		.oni-state-active{
+		.oni-scrollbar-state-active{
 			background:map-get($scrollbar, draggerActiveBg);
 		}
-		.oni-state-disabled{
+		.oni-scrollbar-state-disabled{
 			background: map-get($scrollbar, draggerDisabledBg);
 		}
 	}

@@ -369,7 +369,7 @@ define(["../mmPromise/mmPromise", "./mmRouter"], function() {
             avalon.clearHTML(element)
             // oldElement = element
             element.removeAttribute("ms-view")
-            element.setAttribute("ui-view", data.value)
+            element.setAttribute("ui-view", data.value || data.expr || "")
             // 本次更新的dom需要用缓存
             if(cacheTpl) {
                 // 已缓存

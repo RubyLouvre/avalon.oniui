@@ -243,9 +243,7 @@ define("models", function(){
                 "懒加载组件-默认配置": "avalon.lazyload.ex.html",
                 "懒加载组件-自定义effect(加载效果)和各自delay(加载延迟)": "avalon.lazyload.ex1.html",
                 "懒加载组件-自定义加载中图片": "avalon.lazyload.ex2.html",
-                "懒加载组件-预加载采用文字模式": "avalon.lazyload.ex3.html",
-                "懒加载组件-懒加载页面元素": "avalon.lazyload.ex4.html",
-                "懒加载组件-自定义懒加载尺寸": "avalon.lazyload.ex5.html"
+                "懒加载组件-预加载采用文字模式": "avalon.lazyload.ex3.html"
             },
             "JSON": {},
             "live": {
@@ -332,9 +330,9 @@ define("models", function(){
                 "mmRouter综合示例三: scrolltoview": "avalon.mmRouter.ex2.html",
                 "mmRouter试验田: 最新版mmRouter试验田": "avalon.mmRouter.ex3.html",
                 "mmRouter: avalon.state": "avalon.mmRouter.ex4.html",
-                "mmRouter综合示例五: html5Mode[pushState,popState]，可能需要服务器支持": "avalon.mmRouter.ex5.html",
-                "mmRouter：登录跳转": "avalon.mmRouter.ex6.html",
-                "mmRouter：异步": "avalon.mmRouter.ex7.html",
+                "mmRouter综合示例五: html5Mode pushState,popState, 可能需要服务器支持": "avalon.mmRouter.ex5.html",
+                "mmRouter: 登录跳转": "avalon.mmRouter.ex6.html",
+                "mmRouter: 异步": "avalon.mmRouter.ex7.html",
                 "todos": "avalon.mmRouter.ex8.html",
                 "mmRouter-基于状态机的路由器": "avalon.mmRouter.ex9.html"
             },

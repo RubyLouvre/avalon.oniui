@@ -15,6 +15,7 @@ body{
   color: $color-normal;
   font-size: $font-normal;
   font-family: $font-stack;
+  overflow-x: hidden;
 }
 ul,ol{
   list-style: none;

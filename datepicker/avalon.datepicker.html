@@ -93,8 +93,8 @@
                     </p>
                 </div>
                 <div class="oni-datepicker-timer oni-helper-clearfix" ms-if="timer">
-                    <button type="button" class="oni-btn oni-btn-small" style="float: left" ms-click="_getNow">{{regional.nowText}}</button>
-                    <button type="button" class="oni-btn oni-btn-primary oni-btn-small" style="float:right" ms-click="_selectTime">{{regional.confirmText}}</button>
+                    <button type="button" ms-widget="button" data-button-size="small" ms-click="_getNow">{{regional.nowText}}</button>
+                    <button  type="button" ms-widget="button" data-button-size="small" data-button-color="success" ms-click="_selectTime">{{regional.confirmText}}</button>
                 </div>
                 <div class="oni-datepicker-watermark" 
                      ms-if="watermark"

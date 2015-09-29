@@ -70,32 +70,8 @@
     margin: 0;
     padding: 0;
     background-color: transparent; }
-  .oni-datepicker-timer .oni-btn {
-    height: 26px;
-    overflow: visible;
-    _overflow-y: hidden;
-    padding: 0 10px;
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
-    -ms-border-radius: 2px;
-    -o-border-radius: 2px;
-    border-radius: 2px;
-    font-size: 12px;
-    color: #333;
-    background-color: #f8f8f8;
-    border: 1px solid #ccc;
-    cursor: pointer; }
-    .oni-datepicker-timer .oni-btn:hover {
-      -webkit-box-shadow: 1px 1px 0 0 rgba(0, 0, 0, 0.1);
-      -moz-box-shadow: 1px 1px 0 0 rgba(0, 0, 0, 0.1);
-      -ms-box-shadow: 1px 1px 0 0 rgba(0, 0, 0, 0.1);
-      -o-box-shadow: 1px 1px 0 0 rgba(0, 0, 0, 0.1);
-      box-shadow: 1px 1px 0 0 rgba(0, 0, 0, 0.1);
-      border-color: #bbb; }
-  .oni-datepicker-timer .oni-btn-small {
-    height: 22px;
-    padding: 0 5px;
-    font-size: 12px; }
+  .oni-datepicker-timer .oni-button-success {
+    float: right; }
   .oni-datepicker-timer .oni-datepicker-timer-line, .oni-datepicker-timer label {
     margin: 0; }
     .oni-datepicker-timer .oni-datepicker-timer-line .oni-datepicker-timer-title, .oni-datepicker-timer label .oni-datepicker-timer-title {

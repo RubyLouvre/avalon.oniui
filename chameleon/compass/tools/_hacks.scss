@@ -1,0 +1,58 @@
+
+@import "../config";
+
+// The `zoom` approach generates less CSS but does not validate.
+// Set this to `block` to use the display-property to hack the
+// element to gain layout.
+$default-has-layout-approach: zoom !default;
+
+// This mixin causes an element matching the selector
+// to gain the "hasLayout" property in internet explorer.
+// More information on [hasLayout](http://reference.sitepoint.com/css/haslayout).
+@mixin has-layout($approach: $default-has-layout-approach) {
+    @if $legacy-support-for-ie {
+        @if $approach == zoom {
+            @include has-layout-zoom;
+        } @else if $approach == block {
+            @include has-layout-block;
+        } @else {
+            @warn "Unknown has-layout approach: #{$approach}";
+            @include has-layout-zoom;
+        }
+    }
+}
+
+@mixin has-layout-zoom {
+    @if $legacy-support-for-ie6 or $legacy-support-for-ie7 {
+        *zoom: 1;
+    }
+}
+
+@mixin has-layout-block {
+    @if $legacy-support-for-ie {
+        // This makes ie6 get layout
+        display: inline-block;
+        // and this puts it back to block
+        & { display: block; }
+    }
+}
+
+// A hack to supply IE6 (and below) with a different property value.
+// [Read more](http://www.cssportal.com/css-hacks/#in_css-important).
+@mixin hack-ie6-min($property, $value) {
+    @if $legacy-support-for-ie6 {
+        #{$property}: auto!important;
+        #{$property}: #{$value};
+    }
+}
+//移除一个数值的单位
+@function strip-units($number) {
+    @return $number / ($number * 0 + 1);
+}
+
+@mixin hack-ie6-max($property, $value) {
+    @if $legacy-support-for-ie6 {
+        $prop: if($property == "width" , scrollWidth , scrollHeight);
+        _#{$property}:expression(this.#{ $prop } > #{strip-units($value)} ? "#{$value}" : "auto");
+    }
+}

@@ -1,0 +1,74 @@
+
+// Shape/Polygon/Triangle
+// @author 司徒正美
+// $direction: 其值可以为top,  bottom, left, right 或者是 top-left， top-right, bottom-left, bottom-right
+// $width: 像素值，em值
+// $height: 像素值，em值， half, auto。half为宽的一半，比较好看，auto则与宽相等
+// $color: 底色
+//默认生成高为底的一半的等腰三角形
+
+@mixin triangle($direction: top, $width: 1em, $height: half, $color: #000){
+    @if ($direction == top or $direction == right or $direction == bottom or $direction == left){
+        @if ($height == half){
+            $height: $width/2;
+        }@else if ($height == auto){
+            $height: $width;
+        }
+    } @else{
+        @if ($height == half or $height == auto)  {
+            $height: $width/2;
+        }
+    }
+    // width is divided by 2 because it's used twice !
+    $width: $width/2;
+
+    width: 0;
+    height: 0;
+    line-height:0;//fix IE6
+    font-size: 0;
+
+    @if ($direction == top) {
+        border-top:0 none;
+        border-right: $width dashed transparent;
+        border-bottom: $height solid $color;
+        border-left: $width dashed transparent;
+    }  @else if ($direction == bottom)  {
+        border-top: $height solid $color;
+        border-right: $width dashed transparent;
+        border-bottom:0;
+        border-left: $width dashed transparent;
+    }  @else if ($direction == left) {
+        border-top: $width dashed transparent;
+        border-right: $height solid $color;
+        border-bottom: $width dashed transparent;
+        border-left:0;
+    }   @else if ($direction == right)  {
+        border-top: $width dashed transparent;
+        border-right:0;
+        border-bottom: $width dashed transparent;
+        border-left: $height solid $color;
+    }   @else if ($direction == top-left) {
+        border-top: $height solid $color;
+        border-right: $width dashed transparent;
+        border-bottom: $height dashed transparent;
+        border-left: $width solid $color;
+    }  @else if ($direction == top-right) {
+        border-top: $height solid $color;
+        border-right: $width solid $color;
+        border-bottom: $height dashed transparent;
+        border-left: $width dashed transparent;
+    }  @else if ($direction == bottom-left) {
+        border-top: $height dashed transparent;
+        border-right: $width dashed transparent;
+        border-bottom: $height solid $color;
+        border-left: $width solid $color;
+    }  @else if ($direction == bottom-right) {
+        border-top: $height dashed transparent;
+        border-right: $width solid $color;
+        border-bottom: $height solid $color;
+        border-left: $width dashed transparent;
+    } @else {
+        // https://gist.github.com/1671259
+        @warn "#{error("The direction used does not exist")}";
+    }
+}

@@ -1,0 +1,20 @@
+
+@function compact($args...) {
+    $ret: ();
+    @each $i in $args{
+        @if($i){//if 不会过滤0
+            $ret: append($ret, $i, comma);
+        }
+    }
+    @return $ret;
+}
+
+@function list-compact($args...) {
+    $ret: ();
+    @each $i in $args{
+        @if($i){//if 不会过滤0
+            $ret: append($ret, $i, comma);
+        }
+    }
+    @return $ret;
+}

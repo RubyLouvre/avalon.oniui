@@ -1,0 +1,26 @@
+
+@import "hacks";
+
+// 全浏览器兼容min-height
+@mixin min-height($value) {
+    min-height: $value;
+    @include hack-ie6-min(height, $value); 
+}
+
+// 全浏览器兼容min-width
+@mixin min-width($value) {
+    min-width: $value;
+    @include hack-ie6-min(width, $value); 
+}
+
+// 全浏览器兼容max-height
+@mixin max-height($value) {
+    max-height: $value;
+    @include hack-ie6-max(height, $value); 
+}
+// 全浏览器兼容max-width
+@mixin max-width($value) {
+    max-width: $value;
+    @include hack-ie6-max(width, $value); 
+}
+

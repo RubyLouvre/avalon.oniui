@@ -45,6 +45,10 @@ define(["../avalon.getModel", "text!./avalon.checkboxlist.html", "css!../chamele
                 element.className += "oni-checkboxlist";
                 element.innerHTML = vmodel.template;
 
+                if(!options.vertical){
+                    avalon(element).addClass("oni-checkboxlist-horizontal")
+                }
+
                 if (continueScan) {
                     continueScan()
                 } else {

@@ -1,17 +1,15 @@
+@charset "UTF-8";
 /*
 这是每个都组件都应该引用的部分
 */
-.oni-checkboxlist .oni-checkboxlist-horizontal {
+.oni-checkboxlist .oni-checkboxlist-item label {
+  cursor: pointer; }
+
+.oni-checkboxlist-horizontal .oni-checkboxlist-item {
   display: inline-block;
   vertical-align: middle;
   *display: inline;
   *zoom: 1;
   padding-right: 10px; }
-.oni-checkboxlist .oni-checkboxlist-all {
+.oni-checkboxlist-horizontal .oni-checkboxlist-all {
   padding-right: 20px; }
-.oni-checkboxlist .oni-checkboxlist-item label {
-  cursor: pointer; }
-.oni-checkboxlist .oni-checkboxlist-item .checkbox {
-  margin: 0;
-  vertical-align: middle;
-  cursor: pointer; }

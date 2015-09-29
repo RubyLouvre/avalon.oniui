@@ -3,22 +3,23 @@
 $uiname: "oni-checkboxlist";
 
 .#{$uiname} {
-    .#{$uiname}-horizontal{
-        .#{$uiname}-item {
-            @include inline-block;
-            padding-right: 10px;
-        }
-        .#{$uiname}-all{
-            padding-right: 20px;
-        }   
-    }
     .#{$uiname}-item {
         label{
             cursor:pointer;
         }
         .checkbox {
-            @include reset-input;
+//            @include reset-input;
         }
+    }
+}
+
+.#{$uiname}-horizontal{
+    .#{$uiname}-item {
+        @include inline-block;
+        padding-right: 10px;
+    }
+    .#{$uiname}-all{
+        padding-right: 20px;
     }
 }
 

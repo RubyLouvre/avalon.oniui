@@ -140,3 +140,8 @@
       display: block !important; }
     @else {
       display: block; } } }
+@mixin reset-input($cursor:pointer){
+  margin:0;
+  vertical-align:middle;
+  cursor: $cursor;
+}

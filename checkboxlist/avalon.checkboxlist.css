@@ -4,6 +4,10 @@
 */
 .oni-checkboxlist .oni-checkboxlist-item label {
   cursor: pointer; }
+.oni-checkboxlist .oni-checkboxlist-item .checkbox {
+  margin: 0;
+  vertical-align: middle;
+  cursor: pointer; }
 
 .oni-checkboxlist-horizontal .oni-checkboxlist-item {
   display: inline-block;

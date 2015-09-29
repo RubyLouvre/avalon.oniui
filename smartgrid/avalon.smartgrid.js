@@ -1133,7 +1133,7 @@ define(["avalon",
             container = document.getElementById(sgVmodel.colHandlerContainer)
         }
 
-        var containerCtrlId = "colHandler_" + Date.now()
+        var containerCtrlId = "colHandler_" + new Date().getTime();
 
         container.setAttribute("ms-controller", containerCtrlId)
 

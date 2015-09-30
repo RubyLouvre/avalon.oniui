@@ -1153,9 +1153,9 @@ define(["avalon",
         handlerTpl += "        <\/li>";
         handlerTpl += "    <\/ul>";
         handlerTpl += "    <ul class=\"oni-smartgrid-handler-list\">";
-        handlerTpl += "        <li ms-repeat=\"colHandlerData\">";
+        handlerTpl += "        <li ms-repeat=\"colHandlerData\" class=\"oni-smartgrid-handler-list-item\">";
         handlerTpl += "            <label>";
-        handlerTpl += "                <input type=\"checkbox\"";
+        handlerTpl += "                <input class=\"checkbox\" type=\"checkbox\"";
         handlerTpl += "                       ms-duplex-checked=\"el.toggle\"";
         handlerTpl += "                       ms-attr-disabled=\"el.isLock\"\/>";
         handlerTpl += "                <span class=\"oni-smartgrid-handler-name\">{{el.name}}<\/span>";
@@ -1163,9 +1163,9 @@ define(["avalon",
         handlerTpl += "        <\/li>";
         handlerTpl += "    <\/ul>";
         handlerTpl += "    <div class=\"oni-smartgrid-handler-ope\">";
-        handlerTpl += "        <span ms-widget=\"button\" data-button-color=\"success\" ms-hover=\"oni-state-hover\" ";
-        handlerTpl += "              class=\"oni-smartgrid-handler-btn\" ms-click=\"confirmColHandler()\">确定<\/span>";
-        handlerTpl += "        <span ms-widget=\"button\" class=\"oni-smartgrid-handler-btn\" ms-click=\"cancelColHandler()\">取消<\/span>";
+        handlerTpl += "        <button ms-widget=\"button\" data-button-size=\"small\" data-button-color=\"success\" ";
+        handlerTpl += "              ms-click=\"confirmColHandler()\">确定<\/button>";
+        handlerTpl += "        <button ms-widget=\"button\" data-button-size=\"small\" ms-click=\"cancelColHandler()\">取消<\/span>";
         handlerTpl += "    <\/div>";
         handlerTpl += "<\/div>";
 

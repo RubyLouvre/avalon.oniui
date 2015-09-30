@@ -22,6 +22,8 @@
       white-space: nowrap;
       white-space: nowrap;
       overflow: hidden;
+      -ms-text-overflow: ellipsis;
+      -o-text-overflow: ellipsis;
       text-overflow: ellipsis;
       overflow: hidden;
       height: 18px;
@@ -74,6 +76,8 @@
   .oni-dropdown .oni-dropdown-item {
     white-space: nowrap;
     overflow: hidden;
+    -ms-text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
     text-overflow: ellipsis;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -104,27 +108,27 @@
   _width: auto !important;
   z-index: 1001; }
 
-.oni-dropdown-state-hover .oni-dropdown-source {
+.oni-state-hover .oni-dropdown-source {
   border-color: #999; }
 
-.oni-dropdown-state-focus .oni-dropdown-source {
+.oni-state-focus .oni-dropdown-source {
   border-color: #3775c0; }
 
-.oni-dropdown-state-disabled .oni-dropdown-source {
+.oni-state-disabled .oni-dropdown-source {
   background-color: #F5F5F5;
   border-color: #D9D9D9;
   color: #ccc;
   cursor: default; }
-.oni-dropdown-state-disabled .oni-dropdown-icon {
+.oni-state-disabled .oni-dropdown-icon {
   cursor: default; }
 
-.oni-dropdown-state-small .oni-dropdown-source {
+.oni-state-small .oni-dropdown-source {
   border-radius: 2px; }
-.oni-dropdown-state-small .oni-dropdown-input {
+.oni-state-small .oni-dropdown-input {
   padding-top: 1px;
   padding-bottom: 1px; }
-.oni-dropdown-state-small .oni-dropdown-icon {
+.oni-state-small .oni-dropdown-icon {
   top: -19px; }
 
-.oni-dropdown-state-error .oni-dropdown-source, .oni-dropdown-state-error .oni-dropdown-source {
+.oni-dropdown-state-error .oni-dropdown-source, .oni-dropdown-state-error:hover .oni-dropdown-source {
   border-color: #ff8888; }

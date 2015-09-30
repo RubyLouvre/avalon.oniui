@@ -87,7 +87,8 @@
   list-style: none; }
 
 // Reset a table
-@mixin reset-table {
+@mixin reset-table($table-layout:fixed) {
+  table-layout:$table-layout;
   border-collapse: collapse;
   border-spacing: 0; }
 

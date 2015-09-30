@@ -1,4 +1,9 @@
-@charset "UTF-8";
+.oni-smartgrid .oni-helper-ndb .oni-helper-sort-top, .oni-smartgrid .oni-helper-desc .oni-helper-sort-top, .oni-smartgrid .oni-helper-asc .oni-helper-sort-top, .oni-smartgrid .oni-helper-ndb .oni-helper-sort-bottom, .oni-smartgrid .oni-helper-asc .oni-helper-sort-bottom, .oni-smartgrid .oni-helper-desc .oni-helper-sort-bottom {
+  width: 0;
+  height: 0;
+  line-height: 0;
+  font-size: 0; }
+
 /*
 这是每个都组件都应该引用的部分
 */
@@ -25,10 +30,6 @@
     top: 0px;
     left: 4px; }
   .oni-smartgrid .oni-helper-ndb .oni-helper-sort-top, .oni-smartgrid .oni-helper-desc .oni-helper-sort-top {
-    width: 0;
-    height: 0;
-    line-height: 0;
-    font-size: 0;
     border-top: 0 none;
     border-right: 6px dashed transparent;
     border-bottom: 6px solid #ccc;
@@ -36,10 +37,6 @@
     top: 0px;
     left: 0px; }
   .oni-smartgrid .oni-helper-asc .oni-helper-sort-top {
-    width: 0;
-    height: 0;
-    line-height: 0;
-    font-size: 0;
     border-top: 0 none;
     border-right: 6px dashed transparent;
     border-bottom: 6px solid #000;
@@ -47,10 +44,6 @@
     top: 0px;
     left: 0px; }
   .oni-smartgrid .oni-helper-ndb .oni-helper-sort-bottom, .oni-smartgrid .oni-helper-asc .oni-helper-sort-bottom {
-    width: 0;
-    height: 0;
-    line-height: 0;
-    font-size: 0;
     border-top: 6px solid #ccc;
     border-right: 6px dashed transparent;
     border-bottom: 0;
@@ -58,10 +51,6 @@
     top: 8px;
     left: 0px; }
   .oni-smartgrid .oni-helper-desc .oni-helper-sort-bottom {
-    width: 0;
-    height: 0;
-    line-height: 0;
-    font-size: 0;
     border-top: 6px solid #000;
     border-right: 6px dashed transparent;
     border-bottom: 0;
@@ -241,27 +230,9 @@
     text-align: right;
     background-color: #f8f8f8;
     font-size: 0; }
-    .oni-smartgrid-handler .oni-smartgrid-handler-ope span {
-      display: inline-block;
-      vertical-align: middle;
-      *display: inline;
-      *zoom: 1;
-      padding: 4px 5px;
-      margin: 0 0 0 5px;
-      line-height: 1;
-      font-size: 12px;
-      border-radius: 2px;
-      cursor: pointer;
-      -webkit-touch-callout: none;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      user-select: none; }
-    .oni-smartgrid-handler .oni-smartgrid-handler-ope .oni-smartgrid-handler-btn {
-      padding: 0 3px; }
-      .oni-smartgrid-handler .oni-smartgrid-handler-ope .oni-smartgrid-handler-btn .oni-button-text {
-        margin: 0; }
-    .oni-smartgrid-handler .oni-smartgrid-handler-ope .oni-smartgrid-handler-cancel {
-      background-color: #f8f8f8;
-      border: 1px #ccc solid; }
-      .oni-smartgrid-handler .oni-smartgrid-handler-ope .oni-smartgrid-handler-cancel:hover {
-        border-color: #bbb; }
+    .oni-smartgrid-handler .oni-smartgrid-handler-ope .oni-button {
+      margin-left: 5px; }
+
+.oni-smartgrid-handler-wrap-right .oni-smartgrid-handler {
+  left: auto;
+  right: 0; }

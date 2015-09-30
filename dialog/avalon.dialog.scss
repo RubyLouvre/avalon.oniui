@@ -16,7 +16,7 @@ $uiname: "oni-dialog";
                 background-color: #f3f3f3;
             }
             .#{$uiname}-close {
-                @include float-right();
+                float:right;
                 padding: 1px 10px 1px 9px;
                 margin-top: 5px;
                 cursor: pointer;
@@ -53,7 +53,7 @@ $uiname: "oni-dialog";
                 background-color: #f8f8f8;
             }
             .#{$uiname}-btns {
-                @include float-right();
+                float:right;
                 font-size: 0;
             }
             .oni-button {

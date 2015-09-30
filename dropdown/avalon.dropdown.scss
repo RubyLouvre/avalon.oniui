@@ -125,17 +125,17 @@ $ui-divider-state-default-color: #f2f2f2;
 }
 
 //各种状态
-.#{$uiname}-state-hover {
+.oni-state-hover {
     .#{$uiname}-source {
         border-color: map-get($ui-source, hoverBoderColor);
     }
 }
-.#{$uiname}-state-focus {
+.oni-state-focus {
     .#{$uiname}-source {
         border-color: #3775c0
     }
 }
-.#{$uiname}-state-disabled {
+.oni-state-disabled {
     .#{$uiname}-source {
         background-color: $ui-state-disabled-background-color;
         border-color: $ui-state-disabled-border-color;
@@ -146,7 +146,7 @@ $ui-divider-state-default-color: #f2f2f2;
         cursor: default;
     }
 }
-.#{$uiname}-state-small {
+.oni-state-small {
     .#{$uiname}-source {
         border-radius: 2px;
     }
@@ -158,7 +158,7 @@ $ui-divider-state-default-color: #f2f2f2;
         top: -19px;
     }
 }
-.#{$uiname}-state-error,.#{$uiname}-state-error {
+.#{$uiname}-state-error,.#{$uiname}-state-error:hover{
     .#{$uiname}-source {
         border-color: $ui-state-error-border-color;
     }

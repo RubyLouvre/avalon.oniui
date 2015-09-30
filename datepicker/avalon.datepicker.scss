@@ -67,46 +67,12 @@ $uiname-dropdown: "oni-dropdown";
 .#{$uiname}-timer {
     border-top: 1px solid #efefef;
     padding: 5px 0;
-
-    .#{$uiname}-slide-wrap{
-        margin: 0;
-        padding: 0;
-        background-color: transparent;
+    .#{$uiname}-time-title {
+        @include inline-block();
+        width: 50px;
     }
-    .oni-btn {
-        height: 26px;
-        overflow: visible;
-        _overflow-y: hidden;
-        padding: 0 10px;
-        @include border-radius(2px);
-        @if($oinui-theme == smoothness) {
-            font-size: 12px;
-            color: #333;
-            background-color: #f8f8f8;
-            border: 1px solid #ccc;
-        }
-        cursor: pointer;
-        &:hover {
-            @include box-shadow(1px 1px 0 0 rgba(0,0,0,0.1));
-            @if($oinui-theme == smoothness) {
-                //background-color: #f8f8f8;
-                border-color: #bbb;
-                //color: #333;
-            }
-        }
-    }
-    
-    .oni-btn-small {
-        height: 22px;
-        padding: 0 5px;
-        font-size: 12px;
-    }
-    .#{$uiname}-timer-line, label {
-        margin: 0;
-        .#{$uiname}-timer-title {
-            @include inline-block();
-            width: 50px;
-        }
+    .#{$uiname}-slide-wrap, label {
+        margin: 0;   
     }
 }
 .#{$uiname}-content-content {
@@ -198,7 +164,7 @@ $uiname-dropdown: "oni-dropdown";
 }
 
 .#{$uiname}-calendar-week, .#{$uiname}-calendar-days {
-    @include reset-table;
+    @include reset-table();
     margin-bottom: 5px;
     width: 100%;
 }

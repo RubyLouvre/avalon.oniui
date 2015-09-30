@@ -214,36 +214,14 @@ $uiname: "oni-smartgrid";
         text-align: right;
         background-color: #f8f8f8;
         font-size: 0;
-
-        span{
-            @include inline-block();
-            padding: 4px 5px;
-            margin: 0 0 0 5px;
-            line-height: 1;
-            font-size: 12px;
-            border-radius: 2px;
-            cursor: pointer;
-            @include user-select();
-        }
-
-        .#{$uiname}-handler-btn{
-            padding: 0 3px;
-
-            .oni-button-text{
-                margin: 0;
-            }
-        }
-
-        .#{$uiname}-handler-cancel{
-            background-color: #f8f8f8;
-            border: 1px #ccc solid;
-
-            &:hover{
-                border-color: #bbb;
-            }
+        .oni-button{
+            margin-left:5px;
         }
     }
 }
 .#{$uiname}-handler-wrap-right{
-    
+    .#{$uiname}-handler {
+        left: auto;
+        right: 0;
+    }
 }

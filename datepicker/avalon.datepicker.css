@@ -19,9 +19,9 @@
     margin-top: -2px;
     *margin-top: 0; }
     .oni-datepicker .oni-dropdown-source .oni-dropdown-input {
-      padding: 0 21px 0 6px;
+      padding: 0 21px 0 6px !important;
       line-height: 20px;
-      height: 20px; }
+      height: 20px !important; }
     .oni-datepicker .oni-dropdown-source .oni-dropdown-icon {
       top: -20px;
       line-height: 20px; }
@@ -73,6 +73,8 @@
     width: 50px; }
   .oni-datepicker-timer .oni-datepicker-slide-wrap, .oni-datepicker-timer label {
     margin: 0; }
+  .oni-datepicker-timer .oni-button-success {
+    float: right; }
 
 .oni-datepicker-content-content {
   padding: 0 10px;
@@ -207,7 +209,7 @@
   color: #333;
   font-size: 12px;
   padding: 0;
-  text-indent: 0;
+  text-indent: 0 !important;
   text-align: center; }
 .oni-datepicker-dropdown .oni-dropdown-item-hover {
   background: #f5f5f5; }
@@ -232,9 +234,10 @@
     border: 0 none;
     cursor: pointer;
     outline: none;
-    padding: 3px 90px 3px 6px;
-    width: 90px;
+    padding: 3px 95px 3px 6px;
+    width: 95px;
     height: 18px;
+    line-height: 18px;
     margin: 0;
     font-size: 12px; }
 
@@ -248,3 +251,8 @@
 
 .oni-datepicker-active {
   border-color: #3775c0; }
+
+.oni-datepicker-default .special-cell {
+  color: #008000; }
+.oni-datepicker-selected .special-cell {
+  color: #fff; }

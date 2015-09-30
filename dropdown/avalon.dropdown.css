@@ -20,10 +20,7 @@
       *display: inline;
       *zoom: 1;
       white-space: nowrap;
-      white-space: nowrap;
       overflow: hidden;
-      -ms-text-overflow: ellipsis;
-      -o-text-overflow: ellipsis;
       text-overflow: ellipsis;
       overflow: hidden;
       height: 18px;
@@ -59,25 +56,23 @@
     border: 1px solid #d4d4d4;
     overflow-y: scroll;
     padding: 3px 0; }
-    .oni-dropdown .oni-dropdown-menu-inner .oni-state-disabled {
+    .oni-dropdown .oni-dropdown-menu-inner .oni-dropdown-state-disabled {
       border-color: #D9D9D9;
       background-color: #F5F5F5;
       color: #999; }
-    .oni-dropdown .oni-dropdown-menu-inner .oni-state-hover {
+    .oni-dropdown .oni-dropdown-menu-inner .oni-dropdown-state-hover {
       border-color: #f8f8f8;
       background-color: #f8f8f8;
       color: #000; }
-    .oni-dropdown .oni-dropdown-menu-inner .oni-state-active {
+    .oni-dropdown .oni-dropdown-menu-inner .oni-dropdown-state-active {
       border-color: #3775c0;
       background-color: #3775c0;
       color: #fff; }
-      .oni-dropdown .oni-dropdown-menu-inner .oni-state-active .oni-icon {
+      .oni-dropdown .oni-dropdown-menu-inner .oni-dropdown-state-active .oni-icon {
         color: #fff; }
   .oni-dropdown .oni-dropdown-item {
     white-space: nowrap;
     overflow: hidden;
-    -ms-text-overflow: ellipsis;
-    -o-text-overflow: ellipsis;
     text-overflow: ellipsis;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -108,18 +103,18 @@
   _width: auto !important;
   z-index: 1001; }
 
-.oni-state-hover .oni-dropdown-source {
+.oni-dropdown-state-hover .oni-dropdown-source {
   border-color: #999; }
 
-.oni-state-focus .oni-dropdown-source {
+.oni-dropdown-state-focus .oni-dropdown-source {
   border-color: #3775c0; }
 
-.oni-state-disabled .oni-dropdown-source {
+.oni-dropdown-state-disabled .oni-dropdown-source {
   background-color: #F5F5F5;
   border-color: #D9D9D9;
   color: #ccc;
   cursor: default; }
-.oni-state-disabled .oni-dropdown-icon {
+.oni-dropdown-state-disabled .oni-dropdown-icon {
   cursor: default; }
 
 .oni-state-small .oni-dropdown-source {

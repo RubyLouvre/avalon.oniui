@@ -21,9 +21,9 @@ $uiname-dropdown: "oni-dropdown";
         margin-top: -2px;
         *margin-top: 0;
         .oni-dropdown-input {
-            padding: 0 21px 0 6px;
+            padding: 0 21px 0 6px!important;
             line-height: 20px;
-            height: 20px;
+            height: 20px!important;
         }
         .oni-dropdown-icon {
             top: -20px;
@@ -73,6 +73,9 @@ $uiname-dropdown: "oni-dropdown";
     }
     .#{$uiname}-slide-wrap, label {
         margin: 0;   
+    }
+    .oni-button-success{
+        float: right;
     }
 }
 .#{$uiname}-content-content {
@@ -234,7 +237,7 @@ $uiname-dropdown: "oni-dropdown";
         color: #333;
         font-size: 12px;
         padding: 0;
-        text-indent: 0;
+        text-indent: 0!important;
         text-align: center;
     }
     .oni-dropdown-item-hover {
@@ -264,9 +267,10 @@ $uiname-dropdown: "oni-dropdown";
         border: 0 none;
         cursor: pointer;
         outline: none;
-        padding: 3px 90px 3px 6px;
-        width: 90px;
+        padding: 3px 95px 3px 6px;
+        width: 95px;
         height: 18px;
+        line-height:18px;
         margin: 0;
         font-size: 12px;
     }
@@ -281,4 +285,13 @@ $uiname-dropdown: "oni-dropdown";
 }
 .#{$uiname}-active {
     border-color: #3775c0;
+}
+
+.special-cell{
+    @at-root .oni-datepicker-default &{
+        color: #008000;
+    }
+    @at-root .oni-datepicker-selected &{
+        color: #fff;
+    }
 }

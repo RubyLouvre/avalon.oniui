@@ -27,7 +27,6 @@ $ui-divider-state-default-color: #f2f2f2;
         cursor: pointer;
         .#{$uiname}-input {
             @include inline-block();
-            @include nowrap();
             @include ellipsis();
             overflow: hidden;
             height: 18px;
@@ -66,13 +65,13 @@ $ui-divider-state-default-color: #f2f2f2;
         overflow-y: scroll;
         padding: 3px 0;
         //禁用
-        .oni-state-disabled {
+        .#{$uiname}-state-disabled {
             border-color: $ui-state-disabled-border-color;
             background-color: $ui-state-disabled-background-color;
             color: $ui-state-disabled-color;
         }
         //掠过
-        .oni-state-hover {
+        .#{$uiname}-state-hover {
           @if($oinui-theme == smoothness){
             border-color:  $ui-state-hover-border-color;
             background-color: $ui-state-hover-border-color;
@@ -80,7 +79,7 @@ $ui-divider-state-default-color: #f2f2f2;
           }
         }
         //选中
-        .oni-state-active {
+        .#{$uiname}-state-active {
             border-color: $ui-state-active-border-color;
             background-color: $ui-state-active-background-color;
             color: $ui-state-active-color;
@@ -125,17 +124,17 @@ $ui-divider-state-default-color: #f2f2f2;
 }
 
 //各种状态
-.oni-state-hover {
+.#{$uiname}-state-hover {
     .#{$uiname}-source {
         border-color: map-get($ui-source, hoverBoderColor);
     }
 }
-.oni-state-focus {
+.#{$uiname}-state-focus {
     .#{$uiname}-source {
         border-color: #3775c0
     }
 }
-.oni-state-disabled {
+.#{$uiname}-state-disabled {
     .#{$uiname}-source {
         background-color: $ui-state-disabled-background-color;
         border-color: $ui-state-disabled-border-color;

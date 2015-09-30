@@ -10,6 +10,7 @@ define(["../avalon.getModel",
         "./avalon.datepicker.lang",
         "text!./avalon.datepicker.html", 
         "../dropdown/avalon.dropdown",
+        "../button/avalon.button",
         "../slider/avalon.slider",
         "css!../chameleon/oniui-common.css",
         "css!./avalon.datepicker.css"], function(avalon, holidayDate, sourceHTML) {
@@ -1179,7 +1180,7 @@ define(["../avalon.getModel",
         startDay: 1, //@config 设置每一周的第一天是哪天，0代表Sunday，1代表Monday，依次类推, 默认从周一开始
         minute: 0, //@config 设置time的默认minute
         hour: 0, //@config 设置time的hour
-        width: 90, //@config 设置日历框宽度
+        width: 95, //@config 设置日历框宽度
         showTip: true, //@config 是否显示节日提示
         disabled: false, //@config 是否禁用日历组件
         changeMonthAndYear: false, //@config 是否可以通过下拉框选择月份或者年份

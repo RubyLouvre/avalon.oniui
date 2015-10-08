@@ -91,10 +91,10 @@
   top: 60px;
   left: 10px;
   background: transparent;
+  _background: #fff;
   color: #000;
-  _color: #f2f2f2;
-  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=5);
   opacity: 0.05;
+  filter:alpha(opacity=5);
   text-align: center; }
 
 .oni-datepicker-month-year span {
@@ -227,8 +227,9 @@
   font-size: 12px;
   position: relative;
   display: inline-block;
+  vertical-align: middle;
   *display: inline;
-  zoom: 1;
+  *zoom: 1;
   z-index: 1; }
   .oni-datepicker-input-wrapper input {
     border: 0 none;
@@ -250,7 +251,7 @@
   color: #b5b5b5; }
 
 .oni-datepicker-active {
-  border-color: #3775c0; }
+  border-color: #3775c0 !important; }
 
 .oni-datepicker-default .special-cell {
   color: #008000; }

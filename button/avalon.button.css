@@ -5,7 +5,7 @@
 button.oni-button, input.oni-button { height: 26px; }
 button.oni-button .oni-icon, button.oni-button .oni-button-text, input.oni-button .oni-icon, input.oni-button .oni-button-text { *margin-top: -2px; }
 
-.oni-button { display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; overflow: hidden; _display: inline; padding: 0 10px; margin: 0; font-size: 12px; border: 1px solid transparent; text-align: center; vertical-align: middle; cursor: pointer; color: #333; text-decoration: none; outline: 0; height: 24px; font-family: fontawesome; }
+.oni-button { display: -moz-inline-stack; display: inline-block; vertical-align: middle; *vertical-align: auto; zoom: 1; *display: inline; overflow: hidden; padding: 0 10px; margin: 0; font-size: 12px; border: 1px solid transparent; text-align: center; vertical-align: middle; cursor: pointer; color: #333; text-decoration: none; outline: 0; height: 24px; font-family: fontawesome; *font-family: sans-serif; }
 .oni-button:link { text-decoration: none; }
 .oni-button.oni-state-default { border-color: #ccc; background-color: #f8f8f8; }
 .oni-button:hover { background-color: #f5f5f5; border-color: #d9d9d9; }

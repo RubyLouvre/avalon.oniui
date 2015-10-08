@@ -90,8 +90,8 @@ $uiname-dropdown: "oni-dropdown";
     top: 60px;
     left: 10px;
     background: transparent;
+    _background:#fff;
     color: #000;
-    _color: lighten(#000, 95%);
     @include opacity(0.05);
     text-align: center;
 }
@@ -259,9 +259,7 @@ $uiname-dropdown: "oni-dropdown";
     color: #333;
     font-size: 12px;
     position: relative;
-    display: inline-block;
-    *display: inline;
-    zoom: 1;
+    @include inline-block();
     z-index: 1;
     input {
         border: 0 none;
@@ -284,7 +282,7 @@ $uiname-dropdown: "oni-dropdown";
     color: #b5b5b5;
 }
 .#{$uiname}-active {
-    border-color: #3775c0;
+    border-color: #3775c0!important;
 }
 
 .special-cell{

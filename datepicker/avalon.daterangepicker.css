@@ -1,4 +1,3 @@
-@charset "UTF-8";
 /*
 这是每个都组件都应该引用的部分
 */
@@ -6,7 +5,8 @@
   display: inline-block;
   vertical-align: middle;
   *display: inline;
-  *zoom: 1; }
+  *zoom: 1;
+  *vertical-align: auto; }
 
 .oni-daterangepicker {
   width: 260px;
@@ -75,7 +75,8 @@
       display: inline-block;
       vertical-align: middle;
       *display: inline;
-      *zoom: 1; }
+      *zoom: 1;
+      *vertical-align: auto; }
     .oni-daterangepicker-content .oni-datepicker-groups .oni-datepicker-content {
       position: static;
       -webkit-box-shadow: none;
@@ -90,7 +91,6 @@
       line-height: 22px;
       padding: 4px 0;
       *width: 466px;
-      _width: 466px;
       background: #f8f8f8; }
     .oni-daterangepicker-content .oni-datepicker-groups .oni-calendarbox-msg {
       padding-left: 10px;
@@ -118,4 +118,5 @@
     vertical-align: middle;
     *display: inline;
     *zoom: 1;
+    *vertical-align: auto;
     cursor: pointer; }

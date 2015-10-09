@@ -58,7 +58,7 @@ $uiname: "oni-textbox";
         position: relative;
         z-index: 1000;
     }
-    .#{$uiname}-disabled {
+    @at-root .#{$uiname}-disabled {
         background-color: $ui-state-disabled-background-color;
         border-color: $ui-state-disabled-border-color;
         cursor: default;
@@ -69,10 +69,13 @@ $uiname: "oni-textbox";
         }
         .#{$uiname}-input {
             cursor: default;
-            background-color: $ui-state-disabled-background-color;
+            background-color: $ui-state-disabled-background-color!important;
             @if($oinui-theme == smoothness) {
-                color: #ccc;
+                color: #ccc!important;
             }
+        }
+        &.#{$uiname}-hover {
+            border-color: $ui-state-disabled-border-color;
         }
     }
 }

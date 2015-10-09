@@ -4,7 +4,16 @@
     <div class="oni-datepicker-wrapper" ms-css-position="_position" ms-class="{{_getPositionClass(position)}}">
         <div class="oni-datepicker-content">
             <div class="oni-datepicker-label" ms-if="numberOfMonths===1">{{calendarLabel}}</div>
-           
+           <i  class="oni-datepicker-prev oni-icon" 
+                ms-if="numberOfMonths!==1" 
+                ms-click="_prev(prevMonth, $event)"
+                ms-class="oni-datepicker-prev-disabled:!prevMonth" 
+                style="left:15px; top:9px">&#xf047;</i>
+            <i  class="oni-datepicker-next oni-icon" 
+                ms-if="numberOfMonths!==1" 
+                ms-click="_next(nextMonth, $event)"
+                ms-class="oni-datepicker-next-disabled:!nextMonth" 
+                style="right:15px; top:9px">&#xf03e;</i>
             <div class="oni-datepicker-content-content" 
                  ms-repeat-calendar="data" 
                  ms-visible="_datepickerToggle"
@@ -134,7 +143,6 @@
                     </tfoot>
                 </table>
             </div>
-
             <div class="oni-datepicker-content-content oni-datepicker-month-year" ms-if="mobileMonthAndYear" ms-visible="_yearToggle" ms-css-width='calendarWidth'>
                 <table>
                     <thead>
@@ -184,17 +192,6 @@
                     </tfoot>
                 </table>
             </div>
-
-             <i  class="oni-datepicker-prev oni-icon" 
-                ms-if="numberOfMonths!==1" 
-                ms-click="_prev(prevMonth, $event)"
-                ms-class="oni-datepicker-prev-disabled:!prevMonth" 
-                style="left:15px; top:9px">&#xf047;</i>
-            <i  class="oni-datepicker-next oni-icon" 
-                ms-if="numberOfMonths!==1" 
-                ms-click="_next(nextMonth, $event)"
-                ms-class="oni-datepicker-next-disabled:!nextMonth" 
-                style="right:15px; top:9px">&#xf03e;</i>
         </div>
     </div>
 </div>

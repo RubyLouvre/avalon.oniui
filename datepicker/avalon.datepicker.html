@@ -79,22 +79,21 @@
                 </table>
                 <div class="oni-datepicker-timer" ms-if="timer">
                     <label>
-                        <span>{{regional.timerText}}</span>
-                        <b>{{hour|timer}}</b>&nbsp;:
-                        <b>{{minute|timer}}</b>
+                        <span class="oni-datepicker-time-title">{{regional.timerText}}</span>
+                        <b>{{hour|timer}}&nbsp;:&nbsp;{{minute|timer}}</b>
                     </label>
-                    <p>
-                        <span>{{regional.hourText}}</span>
+                    <div class="oni-datepicker-slide-wrap">
+                        <span class="oni-datepicker-time-title">{{regional.hourText}}</span>
                         <input ms-widget="slider, $, sliderHourOpts" data-slider-max="23" data-slider-min="0" data-slider-value="hour" data-slider-width="140">
-                    </p>
-                    <p>
-                        <span>{{regional.minuteText}}</span>
+                    </div>
+                    <div class="oni-datepicker-slide-wrap">
+                        <span  class="oni-datepicker-time-title">{{regional.minuteText}}</span>
                         <input ms-widget="slider, $, sliderMinuteOpts" data-slider-max="59" data-slider-min="0" data-slider-width="140" data-slider-value="minute">
-                    </p>
+                    </div>
                 </div>
                 <div class="oni-datepicker-timer oni-helper-clearfix" ms-if="timer">
-                    <button type="button" class="oni-btn oni-btn-small" style="float: left" ms-click="_getNow">{{regional.nowText}}</button>
-                    <button type="button" class="oni-btn oni-btn-primary oni-btn-small" style="float:right" ms-click="_selectTime">{{regional.confirmText}}</button>
+                    <button type="button" ms-widget="button" data-button-size="small" ms-click="_getNow">{{regional.nowText}}</button>
+                    <button  type="button" ms-widget="button" data-button-size="small" data-button-color="success" ms-click="_selectTime">{{regional.confirmText}}</button>
                 </div>
                 <div class="oni-datepicker-watermark" 
                      ms-if="watermark"

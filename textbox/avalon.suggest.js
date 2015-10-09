@@ -169,26 +169,24 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
                     suggestHtml.style.width = $textboxContainer.outerWidth() - 2 - avalon(suggestHtml).css("paddingLeft").replace(styleReg, '$1') - avalon(suggestHtml).css("paddingRight").replace(styleReg, '$1') + 'px'
 
                     var listHeight = avalon(suggestHtml).height(),
-                        offsetTop = getOffset(textboxContainer).top,
+                        offsetTop = getOffsetTop(textboxContainer),
                         inputHeight = avalon(textboxContainer).height(),
-                        windowHeihgt = avalon(window).height()
+                        windowHeihgt = document.body.clientHeight
 
                     var offsetBottom = windowHeihgt - offsetTop - inputHeight,
                         exceedBottom = listHeight > offsetBottom
 
                     if(exceedBottom){
-                        avalon(suggestHtml).css({top: "initial", bottom: inputHeight + 3 + "px"})
+                        avalon(suggestHtml).css({top: "auto", bottom: inputHeight + 3 + "px"})
                     }
 
-                    function getOffset( el ) {
-                        var _x = 0;
+                    function getOffsetTop( el ) {
                         var _y = 0;
-                        while( el && !isNaN( el.offsetLeft ) && !isNaN( el.offsetTop ) ) {
-                            _x += el.offsetLeft - el.scrollLeft;
-                            _y += el.offsetTop - el.scrollTop;
+                        while( el && !isNaN( el.offsetTop ) ) {
+                            _y += el.offsetTop;
                             el = el.offsetParent;
                         }
-                        return { top: _y, left: _x };
+                        return _y;
                     }
                 }
             })

@@ -82,9 +82,7 @@
   display: inline-block;
   vertical-align: middle;
   *display: inline;
-  *zoom: 1;
-  white-space: normal;
-  word-break: break-word; }
+  *zoom: 1;}
 
 .oni-datepicker-watermark {
   position: absolute;

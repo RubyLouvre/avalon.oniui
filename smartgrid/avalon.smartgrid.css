@@ -195,9 +195,9 @@
     .oni-smartgrid-handler .oni-smartgrid-handler-mode-active {
       font-weight: bold; }
   .oni-smartgrid-handler .oni-smartgrid-handler-list {
-    margin: 0;
+    float: left;
+    _width:101%;
     padding: 9px 10px;
-    list-style: none;
     overflow: hidden; }
     .oni-smartgrid-handler .oni-smartgrid-handler-list .oni-smartgrid-handler-name {
       display: inline-block;

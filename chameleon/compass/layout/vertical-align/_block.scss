@@ -72,5 +72,6 @@
     @if $legacy-support-for-ie{
         *display:inline;
         *zoom:1;
+        *vertical-align:auto;
     }
 }

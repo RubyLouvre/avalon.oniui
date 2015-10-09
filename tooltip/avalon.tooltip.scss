@@ -12,7 +12,7 @@ $uiname : "oni-tooltip";
 	visibility: hidden;
 }
 .#{$uiname}{
-	padding: 10px;
+	padding: 10px!important;
 	position: absolute;
 	max-width: 300px;
 	overflow: visible;

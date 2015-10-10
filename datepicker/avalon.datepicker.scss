@@ -82,8 +82,6 @@ $uiname-dropdown: "oni-dropdown";
     padding: 0 10px;
     position: relative;
     @include inline-block();
-    white-space: normal;
-    word-break: break-word;
 }
 .#{$uiname}-watermark {
     position: absolute;

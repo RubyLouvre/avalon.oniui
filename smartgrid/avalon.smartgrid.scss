@@ -183,9 +183,9 @@ $uiname: "oni-smartgrid";
         }
     }
     .#{$uiname}-handler-list{
-        margin: 0;
+        float:left; 
+        _width:101%;
         padding: 9px 10px;
-        list-style: none;
         overflow: hidden;
         .oni-smartgrid-handler-name{
             @include inline-block();

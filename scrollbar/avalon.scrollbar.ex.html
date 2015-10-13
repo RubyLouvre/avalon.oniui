@@ -77,5 +77,11 @@
 </pre>
         </div>
     </div>
+    <script>
+        // 修复IE6下不显示滚动条
+        if(!window.XMLHttpRequest){
+            avalon(document.body).css("padding", "0")
+        }
+    </script>
 </body>
 </html>

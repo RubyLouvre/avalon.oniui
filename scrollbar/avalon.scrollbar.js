@@ -633,6 +633,11 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
                 vmodel.breakOutCallback && vmodel.breakOutCallback(breakOut, vmodel, obj)
             }
             vm._scrollTo = function(x, y) {
+                if(!document.querySelector){ // fix IE 67下嵌套滚动条无效bug
+                    if(avalon(scroller[0]).css("position") === "static"){
+                        avalon(scroller[0]).css("position", "relative")
+                    }
+                }
                 if(y != void 0) {
                     scroller[0].scrollTop = y
                     vmodel.scrollTop = scroller[0].scrollTop

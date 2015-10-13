@@ -8,7 +8,8 @@
     <script src="../avalon.js"></script>
     <script type="text/javascript">
         require(['dropdown/avalon.dropdown.js', 'dialog/avalon.dialog.js', "ready!"], function() {
-            avalon.define('dropdown', function(vm) {
+            var keep
+            var vmodel = avalon.define('dropdown', function(vm) {
                 vm.dup = 2;
                 vm.data = [
                     {
@@ -28,17 +29,17 @@
                     onChange: function(newVal, oldValue, vmodel, valueStateKeep) {
                         if (newVal == "3") {
                             avalon.vmodels.dia.toggle = true
-                            avalon.vmodels.dia.valueStateKeep = valueStateKeep
+                            keep = valueStateKeep
                             return false
                         }
                     }
                 }
                 vm.dialog = {
                     onConfirm: function() {
-                        avalon.vmodels.dia.valueStateKeep(false)
+                        keep(false)
                     },
                     onCancel: function() {
-                        avalon.vmodels.dia.valueStateKeep(true)
+                        keep(true)
                     }
                 }
             });

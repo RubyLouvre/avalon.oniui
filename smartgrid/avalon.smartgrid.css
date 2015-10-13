@@ -176,7 +176,8 @@
   left: 0;
   width: 290px;
   background-color: #fff;
-  border: 1px solid #ccc; }
+  border: 1px solid #ccc;
+  overflow: hidden; }
   .oni-smartgrid-handler .oni-smartgrid-handler-mode {
     padding: 9px 10px;
     border-bottom: 1px #f2f2f2 solid;
@@ -195,7 +196,6 @@
     .oni-smartgrid-handler .oni-smartgrid-handler-mode-active {
       font-weight: bold; }
   .oni-smartgrid-handler .oni-smartgrid-handler-list {
-    float: left;
     _width:101%;
     padding: 9px 10px;
     overflow: hidden; }

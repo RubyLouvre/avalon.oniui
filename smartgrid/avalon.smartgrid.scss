@@ -168,6 +168,7 @@ $uiname: "oni-smartgrid";
     width: 290px;
     background-color: #fff;
     border: 1px solid #ccc;
+    overflow:hidden;
     .#{$uiname}-handler-mode{
         padding: 9px 10px;
         border-bottom: 1px #f2f2f2 solid;
@@ -183,7 +184,6 @@ $uiname: "oni-smartgrid";
         }
     }
     .#{$uiname}-handler-list{
-        float:left; 
         _width:101%;
         padding: 9px 10px;
         overflow: hidden;

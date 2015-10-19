@@ -255,29 +255,31 @@ $uiname-dropdown: "oni-dropdown";
     border: 1px solid #ccc;
     cursor: pointer;
     color: #333;
-    font-size: 12px;
-    position: relative;
     @include inline-block();
-    z-index: 1;
-    input {
-        border: 0 none;
-        cursor: pointer;
-        outline: none;
-        padding: 3px 95px 3px 6px;
-        width: 95px;
-        height: 18px;
-        line-height:18px;
-        margin: 0;
-        font-size: 12px;
+    .#{$uiname}-input-position{
+        position:relative;
+        font-size:0;
+        line-height:0;
+        input {
+            border: none;
+            cursor: pointer;
+            outline: none;
+            padding: 3px 95px 3px 6px;
+            width: 95px;
+            height: 18px;
+            line-height:18px;
+            font-size: 12px;
+        }
+        .#{$uiname}-tip {
+            position: absolute;
+            top: 3px;
+            right: 10px;
+            line-height: 18px;
+            height: 18px;
+            color: #b5b5b5;
+            font-size: 12px;
+        }
     }
-}
-.#{$uiname}-tip {
-    position: absolute;
-    top: 3px;
-    right: 10px;
-    line-height: 18px;
-    height: 18px;
-    color: #b5b5b5;
 }
 .#{$uiname}-active {
     border-color: #3775c0!important;

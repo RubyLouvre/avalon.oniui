@@ -200,11 +200,11 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
                 var selectObj = vmodel.list[idx],
                     selectValue = selectObj.value
 
+                vmodel.toggle = false;
                 vmodel.onChangeCallback(selectValue, vmodel.inputElement, event, selectObj);
                 if (typeof vmodel.onSelectItem === "function") {
                     vmodel.onSelectItem.call(null, selectValue, vmodel.inputElement, event, selectObj)
                 }
-                vmodel.toggle = false;
             }
             // 当点击input框之外的区域时，隐藏提示框?
             vm.hidepromptinfo = function(event) {

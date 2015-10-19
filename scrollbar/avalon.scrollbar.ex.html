@@ -33,7 +33,7 @@
     <body ms-controller="test" ms-widget="scrollbar,$bar" style="padding-bottom:0;" class="" data-scrollbar-position="right">
         <div class="oni-scrollbar-scroller oni-helper-reset">
             <h1>scrollbar-document.body带上下小箭头</h1>
-            <p style="width:800px" ms-repeat="data" data-repeat-rendered="up" class="oni-helper-reset">left {{$index}} <span style="float:right;">right {{$index}} </span></p>
+            <div style="width:800px" ms-repeat="data" data-repeat-rendered="up" class="oni-helper-reset">left {{$index}} <span style="float:right;">right {{$index}} </span></div>
         <pre ms-skip class="brush:html;gutter:false;toolbar:false">&lt;!DOCTYPE html&gt;
 &lt;html&gt;
     &lt;head&gt;
@@ -77,5 +77,11 @@
 </pre>
         </div>
     </div>
+    <script>
+        // 修复IE6下不显示滚动条
+        if(!window.XMLHttpRequest){
+            avalon(document.body).css("padding", "0")
+        }
+    </script>
 </body>
 </html>

@@ -41,13 +41,13 @@ $uiname : "oni-scrollbar";
 		left: 0;
 		width: 10px;
 		height: 10px;
-		.oni-scrollbar-state-hover{
+		@at-root .oni-scrollbar-state-hover{
     		background: map-get($scrollbar, arrHoverBg);
 	    }
-	    .oni-scrollbar-state-active{
+	    @at-root .oni-scrollbar-state-active{
 	    	background: map-get($scrollbar, arrActiveBg);
 	    }
-	    .oni-scrollbar-state-disabled{
+	    @at-root .oni-scrollbar-state-disabled{
 	    	background: map-get($scrollbar, arrDisabledBg);
 	    }
 	    b{

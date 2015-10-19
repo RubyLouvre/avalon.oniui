@@ -21,13 +21,13 @@ $uiname: "oni-suggest";
         padding: 3px 5px;
         word-break: break-all;
     }
+    .#{$uiname}-item-hover {
+        background-color: $ui-state-hover-background-color!important;
+        color: #333;
+    }
     .#{$uiname}-item-selected {
         background-color: $ui-state-active-background-color;
         color: $ui-state-active-color;
-    }
-    .#{$uiname}-item-hover {
-        background-color: $ui-state-hover-background-color;
-        color: #333;
     }
 }
 

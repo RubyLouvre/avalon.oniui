@@ -1,0 +1,174 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge" />
+<title>datepicker demo</title>
+<link type="text/css" rel="stylesheet"  href="../highlight/shCore.css"/>
+<link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+<style type="text/css">
+    .syntaxhighlighter {
+        width: 100% !important; 
+    }
+    .oni-datepicker-calendar-days tr {
+        border-bottom: 1px solid #ccc;
+    }
+    .oni-datepicker-calendar-days td {
+        vertical-align: top;
+        padding: 3px 0 0;
+        height: 52px;
+    }
+    .oni-datepicker-calendar-days td.oni-datepicker-selected {
+        background: #fff;
+    }
+    .oni-datepicker-selected .calendarCell{
+        background: #fcbe15;
+        color: #fff;
+    }
+    .calendarCell {
+        padding: 3px;
+    }
+    .calendarCell .activity {
+        background: #aaa;
+        color: #fff;
+        margin-top: 10px;
+    }
+    .oni-datepicker-selected .calendarCell .activity {
+        background: #09b6de;
+    }
+    .calendarCell p {
+        margin: 0;
+    }
+</style>
+<script src="../highlight/shCore.js"></script>
+<script src="../avalon.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>onBeforeRender demo</h1>
+        <fieldset>
+            <legend>set datepicker calendarWidth</legend>
+            <div ms-controller="demo">
+                <input ms-widget="datepicker, d1" data-datepicker-calendar-width='300' data-datepicker-watermark='false'/>
+            <script>
+                var dates = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]
+                require(["datepicker/avalon.datepicker"], function(avalon) {
+                    var model = avalon.define("demo", function(vm) {
+                        vm.datepicker = {
+                            onBeforeRender: function(vmodel, month, year, callback) {
+                                setTimeout(function() { // 模拟ajax
+                                    if (month === 8) {// 9月份的3、5、8、10、16、19、20、21、24、27号无活动
+                                        dates = [true, true, false, true, false, true, true, false, true, false, true, true, true, true, true, false, true, true, false, false, false, true, true, false, true, true, false, true, true, true, false]
+                                    } else if (month === (new Date()).getMonth()) { 
+                                        dates = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]
+                                    } else { // 10月份没有活动
+                                        dates = []
+                                    }
+                                    
+                                    if (callback) {
+                                        callback()
+                                    }
+                                }, 1000)
+                            },
+                            dateCellRender: function(date, vmodel, dateObject) {
+                                if (dates[dateObject.day-1]) {
+                                    return "<div class='calendarCell'><p>"+date+"</p><p class='activity'>活动</p></div>"
+                                }
+                                return date
+                            }
+                        }
+                    })
+                    avalon.scan();
+                })
+            </script>
+        </div>
+        </fieldset>
+        <div ms-skip>
+            <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
+                &lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;head&gt;
+                    &lt;meta charset='utf-8'/&gt;
+                    &lt;title&gt;datepicker demo&lt;/title&gt;
+                    &lt;style type="text/css"&gt;
+                        .syntaxhighlighter {
+                            width: 100% !important; 
+                        }
+                        .oni-datepicker-calendar-days tr {
+                            border-bottom: 1px solid #ccc;
+                        }
+                        .oni-datepicker-calendar-days td {
+                            vertical-align: top;
+                            padding: 3px 0 0;
+                            height: 52px;
+                        }
+                        .oni-datepicker-calendar-days td.oni-datepicker-selected {
+                            background: #fff;
+                        }
+                        .oni-datepicker-selected .calendarCell{
+                            background: #fcbe15;
+                            color: #fff;
+                        }
+                        .calendarCell {
+                            padding: 3px;
+                        }
+                        .calendarCell .activity {
+                            background: #aaa;
+                            color: #fff;
+                            margin-top: 10px;
+                        }
+                        .oni-datepicker-selected .calendarCell .activity {
+                            background: #09b6de;
+                        }
+                        .calendarCell p {
+                            margin: 0;
+                        }
+                    &lt;/style&gt;
+                    &lt;script src='avalon.js'&gt;&lt;/script&gt;
+                &lt;/head&gt;
+                &lt;body&gt;
+                    &lt;div ms-controller="demo"&gt;
+                        &lt;fieldset style="margin-top: 20px; padding: 20px 10px;"&gt;
+                            &lt;legend&gt;set datepicker calendarWidth&lt;/legend&gt;
+                            &lt;input ms-widget="datepicker, d1" data-datepicker-calendar-width='300' data-datepicker-watermark='false'/&gt;
+                        &lt;/fieldset&gt;
+                        &lt;script&gt; 
+                            var dates = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]
+                            require(["datepicker/avalon.datepicker"], function(avalon) {
+                                var model = avalon.define("demo", function(vm) {
+                                    vm.datepicker = {
+                                        onBeforeRender: function(vmodel, month, year, callback) {
+                                            setTimeout(function() { // 模拟ajax
+                                                if (month === 8) {// 9月份的3、5、8、10、16、19、20、21、24、27号无活动
+                                                    dates = [true, true, false, true, false, true, true, false, true, false, true, true, true, true, true, false, true, true, false, false, false, true, true, false, true, true, false, true, true, true, false]
+                                                } else if (month === (new Date()).getMonth()) { 
+                                                    dates = [true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true]
+                                                } else { // 10月份没有活动
+                                                    dates = []
+                                                }
+                                                
+                                                if (callback) {
+                                                    callback()
+                                                }
+                                            }, 1000)
+                                        },
+                                        dateCellRender: function(date, vmodel, dateObject) {
+                                            if (dates[dateObject.day-1]) {
+                                                return "<div class='calendarCell'><p>"+date+"</p><p class='activity'>活动</p></div>"
+                                            }
+                                            return date
+                                        }
+                                    }
+                                })
+                                avalon.scan();
+                            })
+                        &lt;/script&gt;
+                    &lt;/div&gt;
+                &lt;/body&gt;
+                &lt;/html&gt;
+            </pre>
+        </div>
+    </div>
+</body>
+</html>
+

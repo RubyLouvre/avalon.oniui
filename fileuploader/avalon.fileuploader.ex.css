@@ -15,3 +15,7 @@ p.end {
 body {
 	padding: 20px 100px;
 }
+
+p > span {
+    display: block;
+}

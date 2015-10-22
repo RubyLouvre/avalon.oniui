@@ -208,6 +208,8 @@ define(["avalon",
             $initRender = true,
             _dataVM,
             _data = []
+        options._parentContainer = null
+        options._parentContainerWidth = 0
         if (typeof options.data === 'number') {
             for (var i = 0, v; v = vmodels[i++];) {
                 if (v._uiName && v._uiName === 'smartgrid') {
@@ -281,7 +283,9 @@ define(["avalon",
             '_enabledData',
             '_filterCheckboxData',
             'maxGridWidth',
-            'bodyHeight'
+            'bodyHeight',
+            '_parentContainer',
+            '_parentContainerWidth'
         ].concat(options.$skipArray);
         var vmodel = avalon.define(vmId, function (vm) {
             avalon.mix(vm, options);
@@ -419,6 +423,21 @@ define(["avalon",
             vm.hideLoading = function () {
                 vmodel.loadingVModel.toggle = false;
             };
+            /**
+             * 响应window.resize以调整宽度为百分比的内容
+             */
+            vm._adjustColWidth = function() {
+                var cols = vmodel.columns,
+                    parentWidth = avalon(vmodel.container.parentNode).width()
+
+                for(var i = 0, len = cols.length; i < len; i++){
+                    var col = cols[i]
+                    
+                    if( String(col.originalWidth).indexOf("%") !== -1){
+                        col.width = Math.floor((parentWidth * parseInt(col.originalWidth, 10)) / 100) -1
+                    }
+                }
+            }
             vm._selectAll = function (event, selected) {
                 var datas = vmodel.data, rows = containerWrapper.children, onSelectAll = vmodel.onSelectAll,
                     val = event ? event.target.checked : selected, 
@@ -488,7 +507,7 @@ define(["avalon",
                     maxWidthColumn = columnsInfo.maxWidthColumn,
                     maxWidth = maxWidthColumn.configWidth,
                     adjustColumns = [maxWidthColumn],
-                    autoWidth = autoWidth = parentContainerWidth - showColumnWidth + maxWidth,
+                    autoWidth = parentContainerWidth - showColumnWidth + maxWidth,
                     rows = Array.prototype.slice.call(containerWrapper.children)
                 if (!autoWidth) {
                     return false
@@ -508,12 +527,17 @@ define(["avalon",
                 })
             };
             vm._getTemplate = function (defineDatas, startIndex) {
-                var fn, html, id = 'smartgrid_tmp_' + tempId, dt = defineDatas || vmodel.data, _columns = vmodel.columns, columns = _columns.$model, selectableType = vmodel.selectable && vmodel.selectable.type || '', datas = [];
+                var fn, html,
+                    id = 'smartgrid_tmp_' + tempId, dt = defineDatas || vmodel.data, _columns = vmodel.columns, columns = _columns.$model,
+                    selectableType = vmodel.selectable && vmodel.selectable.type || '', datas = [];
+
                 avalon.each(dt, function(i, item) {
                     if(item.$id && item.$id != "remove") datas.push(item)
                 })
-                var dataLen = datas.length
-                checkRow = selectableType === 'Checkbox';
+
+                var dataLen = datas.length,
+                    checkRow = selectableType === 'Checkbox';
+
                 if (!EJS[id]) {
                     fn = EJS.compile(options.template, vmodel.htmlHelper);
                     EJS[id] = fn;
@@ -540,6 +564,7 @@ define(["avalon",
                     startIndex: startIndex || 0,
                     checkRow: checkRow
                 });
+
                 return html;
             };
             vm._getAllCheckboxDisabledStatus = function(allSelected) {
@@ -643,11 +668,16 @@ define(["avalon",
                     vmodel._gridWidth = avalon(gridEle).innerWidth()
                 }
                 vmodel.addRows(void 0, init, noShowLoading)
+                if (avalon.type(data) === 'array' && data.length) {
+                    ajustColumnWidth(vmodel)
+                }
                 if (sorting) {
                     sorting = false;
                 } else if (!init) {
                     vmodel.container.scrollIntoView();
                 }
+
+                vm._adjustColWidth()
             };
             vm.$init = function () {
                 var container = vmodel.container, gridFrame = '';
@@ -701,10 +731,28 @@ define(["avalon",
                     }
                 }
                 element.resizeTimeoutId = 0;
+
+                if(vmodel.colHandlerContainer !== ""){
+                    addColHandlerTo(vmodel.colHandlerContainer, vmodel)
+                }
                 if (typeof options.onInit === 'function') {
                     options.onInit.call(element, vmodel, options, vmodels);
                 }
+
+                ajustColumnWidth(vmodel)
+
+                if (window.addEventListener){
+                    window.addEventListener("resize", function(){
+                        vm._adjustColWidth()
+                    });
+                }
+                else{
+                    window.attachEvent("onresize", function(){
+                        vm._adjustColWidth()
+                    });
+                }
             };
+            
             vm.$remove = function () {
                 var container = vmodel.container;
                 container.innerHTML = container.textContent = '';
@@ -737,7 +785,8 @@ define(["avalon",
     format: "upperCaseName" <span>//包装列数据的方法，此方法名对应到htmlHelper对象中的方法</span>
 }, ...]</pre>
          */
-        columns: [], 
+        columns: [],
+        colHandlerContainer: "", //@config 为列显隐设置按钮指定一个容器，不配置该项则按钮不出现，可传DOM节点或id
         allChecked: true, //@config 当设置selectable之后，是否显示表头的全选框，默认显示，false不显示
         htmlHelper: {}, //@config 包装数据的方法集合,可<a href="avalon.smartgrid.ex2.html">参见实例2</a>的使用
         noResult: '暂时没有数据', //@config 数据为空时表格的提示信息
@@ -750,7 +799,7 @@ define(["avalon",
         remoteSort: avalon.noop,
         isAffix: false, //@config 表头在表格内容超过可视区高度时是否吸顶，true吸顶，false不吸顶，默认不吸顶
         affixHeight: 0, //@config 配置吸顶元素距离窗口顶部的高度
-        selectable: false, //@config 为表格添加Checkbox或者Radio操作项，格式为<pre>{type: 'Checkbox'}</pre>
+        selectable: false, //@config 为表格添加Checkbox或者Radio操作项，格式为<pre>{type: 'Checkbox', width: '25px'}</pre>
         bodyHeight: 0,
         //@config 设置loading缓冲的配置项，具体使用方法参见loading文档
         loading: { 
@@ -795,6 +844,23 @@ define(["avalon",
          */
         onSelectAll: avalon.noop
     };
+    function ajustColumnWidth (options) {
+        var changeFlag = false,
+            t = 0;
+        t = setInterval(function() {
+            var width = options._parentContainer.width() -2,
+                parentContainerWidth = options._parentContainerWidth;
+            if (width != parentContainerWidth) {
+                options._parentContainerWidth  = width
+                changeFlag = true
+            } else {
+                if (changeFlag) {
+                    options._adjustColWidth()
+                }
+                clearInterval(t)
+            }
+        }, 300)
+    }
     function initContainer(options, element) {
         var container = options.container;
         if (container) {
@@ -815,7 +881,7 @@ define(["avalon",
         var type = options.selectable.type;
         if (type === 'Checkbox' || type === "Radio") {
             avalon.bind(containerWrapper, 'click', function (event) {
-                var target = event.target, $target = avalon(target), $row = avalon(target.parentNode.parentNode), datas = options.data, onSelectAll = options.onSelectAll, enabledData = options._enabledData, disabledData = options._disabledData, dataIndex = $target.attr('data-index'),
+                var target = event.target, $target = avalon(target), $row = avalon(target.parentNode.parentNode.parentNode), datas = options.data, onSelectAll = options.onSelectAll, enabledData = options._enabledData, disabledData = options._disabledData, dataIndex = $target.attr('data-index'),
                     filterCheckboxData = options._filterCheckboxData;
                 if (!$target.attr('data-role') || dataIndex === null) {
                     return;
@@ -917,11 +983,18 @@ define(["avalon",
     }
     function perfectColumns(options, element, vmId) {
         var columns = options.columns, selectColumn = {}, 
-            parentContainerWidth = avalon(options.container.parentNode).width() -2, 
+            parentContainer = avalon(options.container.parentNode),
+            parentContainerWidth = parentContainer.width() -2, 
             allColumnWidth = 0, maxWidth = 0, maxWidthColumn = {};
+
+        options._parentContainer = parentContainer
+        options._parentContainerWidth = parentContainerWidth
         for (var i = 0, len = columns.length; i < len; i++) {
             var column = columns[i], format = column.format, htmlFunction = '', _columnWidth = column.width, columnWidth = ~~_columnWidth;
             column.align = column.align || 'center';
+
+            column.originalWidth = _columnWidth
+
             if (column.toggle === void 0 || column.isLock) {
                 column.toggle = true;
             }
@@ -968,7 +1041,19 @@ define(["avalon",
             ;
         }
         if (options.selectable) {
-            var type = options.selectable.type, selectFormat, allSelected = true;
+            var type = options.selectable.type,
+                selectFormat,
+                allSelected = true,
+                selectableWidth = options.selectable.width || 25;
+
+            if(typeof selectableWidth === "string"){
+                if(selectableWidth.indexOf("%") !== -1){
+                    selectableWidth = parseInt(selectableWidth, 10) / 100 * parentContainerWidth
+                } else{
+                    selectableWidth = parseInt(selectableWidth, 10)
+                }
+            }
+
             if (type === 'Checkbox' || type === 'Radio') {
                 selectFormat = function (vmId, field, index, selected, rowData, disable, allSelected) {
                     if (allSelected && type === 'Radio')
@@ -985,8 +1070,9 @@ define(["avalon",
             selectColumn = {
                 key: 'selected',
                 name: selectFormat(options.$id, 'selected', -1, allSelected, [], null, true),
-                width: 25,
-                configWidth: 25,
+                width: selectableWidth,
+                configWidth: selectableWidth,
+                originalWidth: options.selectable.width || 25,
                 sortable: false,
                 type: options.selectable.type,
                 format: selectFormat,
@@ -994,7 +1080,7 @@ define(["avalon",
                 align: 'center',
                 customClass: ''
             };
-            allColumnWidth += 25;
+            allColumnWidth += selectableWidth;
             columns.unshift(selectColumn);
         }
         for (var _columns = [], i = 0; i < len; i++) {
@@ -1003,8 +1089,9 @@ define(["avalon",
                 _columns.push(column)
             }
         }
-        var autoWidth = 0
-        autoWidth = parentContainerWidth - allColumnWidth + maxWidth
+
+        var autoWidth = Math.floor(parentContainerWidth - allColumnWidth + maxWidth) - 1
+
         if (allColumnWidth > parentContainerWidth) {
             if (!_columns.length) {
                 options.maxGridWidth = allColumnWidth + 20
@@ -1019,7 +1106,7 @@ define(["avalon",
                 } else {
                     autoWidth = parentContainerWidth - allColumnWidth
                 }
-            } 
+            }
             setColumnWidth(_columns, autoWidth)
         }
         options.columns = columns;
@@ -1034,6 +1121,188 @@ define(["avalon",
         }
     }
     return avalon;
+
+    // 添加对列显示/隐藏的控制
+    function addColHandlerTo(container, sgVmodel){
+        if(!container){
+            return
+        }
+
+        if(typeof container === "string"){
+            container = document.getElementById(sgVmodel.colHandlerContainer)
+        }
+
+        var containerCtrlId = "colHandler_" + Date.now()
+
+        container.setAttribute("ms-controller", containerCtrlId)
+
+        var handlerWrap = document.createElement("div"),
+            handlerTpl = "";
+
+        handlerTpl += "<div class=\"oni-smartgrid-handler-toggle\"";
+        handlerTpl += "     ms-class=\"oni-smartgrid-handler-toggle-active: handlerWindowVisible\"";
+        handlerTpl += "     ms-click=\"toggleHandlerWindow()\">";
+        handlerTpl += "<\/div>";
+        handlerTpl += "<div class=\"oni-smartgrid-handler\" ms-visible=\"handlerWindowVisible\">";
+        handlerTpl += "    <div class=\"oni-smartgrid-handler-mode\">";
+        handlerTpl += "        <span ms-repeat=\"colHandlerModes\"";
+        handlerTpl += "              ms-class=\"oni-smartgrid-handler-mode-active: colHandlerMode === $key\"";
+        handlerTpl += "              ms-click=\"changeColHandlerMode($key)\">";
+        handlerTpl += "            {{$val}}";
+        handlerTpl += "        <\/span>";
+        handlerTpl += "    <\/div>";
+        handlerTpl += "    <ul class=\"oni-smartgrid-handler-list\">";
+        handlerTpl += "        <li ms-repeat=\"colHandlerData\">";
+        handlerTpl += "            <label>";
+        handlerTpl += "                <input type=\"checkbox\"";
+        handlerTpl += "                       ms-duplex-checked=\"el.toggle\"";
+        handlerTpl += "                       ms-attr-disabled=\"el.isLock\"\/>";
+        handlerTpl += "                <span class=\"oni-smartgrid-handler-name\">{{el.name}}<\/span>";
+        handlerTpl += "            <\/label>";
+        handlerTpl += "        <\/li>";
+        handlerTpl += "    <\/ul>";
+        handlerTpl += "    <div class=\"oni-smartgrid-handler-ope\">";
+        handlerTpl += "        <span class=\"oni-smartgrid-handler-confirm\" ms-click=\"confirmColHandler()\">确定<\/span>";
+        handlerTpl += "        <span class=\"oni-smartgrid-handler-cancel\" ms-click=\"cancelColHandler()\">取消<\/span>";
+        handlerTpl += "    <\/div>";
+        handlerTpl += "<\/div>";
+
+        handlerWrap.innerHTML = handlerTpl
+        container.appendChild(handlerWrap)
+
+        avalon.define(containerCtrlId, function(vm){
+            // 列显隐窗口是否可见
+            vm.handlerWindowVisible = false
+            vm.toggleHandlerWindow = function(){
+                vm.handlerWindowVisible = !vm.handlerWindowVisible
+
+                if(vm.handlerWindowVisible){
+                    vm.colHandlerMode = "defaults"
+                    vm.changeColHandlerMode("defaults")
+                }
+            }
+
+            // 控制列显示/隐藏模式
+            vm.colHandlerModes = {
+                defaults: "默认",
+                all: "全部",
+                custom: "自定义"
+            }
+            vm.colHandlerMode = "defaults"
+            vm.changeColHandlerMode = function(mode){
+                vm.colHandlerMode = mode
+
+                // 根据显隐模式更新显隐数据
+                if(mode === 'defaults'){
+                    updateHandlerData(vm.defaultColHandlerData)
+                } else if(mode === "all"){
+                    updateHandlerData()
+                } else{
+                    updateHandlerData(getColumnData())
+                }
+
+                function updateHandlerData(dataSource){
+                    var colHandlerData = vm.colHandlerData
+
+                    for(var i = 0, len = colHandlerData.length; i < len; i++){
+                        if(typeof dataSource === "object"){
+                            colHandlerData[i].toggle = dataSource[i].toggle
+                        } else{
+                            colHandlerData[i].toggle = true
+                        }
+                    }
+                }
+            }
+
+            // 维护列显隐数据
+            vm.defaultColHandlerData = avalon.mix(true, [], getColumnData())
+            vm.colHandlerData = avalon.mix(true, [], getColumnData())
+
+            /**
+             * 点击确定时，将列显隐数据应用到表格中
+             */
+            vm.confirmColHandler = function(){
+                var visibleColKeys = [],
+                    unVisibleColKeys = [],
+                    colHandlerData = vm.colHandlerData
+
+                for(var i = 0, len = colHandlerData.length; i < len; i++){
+                    if(colHandlerData[i].toggle){
+                        visibleColKeys.push(colHandlerData[i].key)
+                    } else{
+                        unVisibleColKeys.push(colHandlerData[i].key)
+                    }
+                }
+
+                sgVmodel.setColumns(visibleColKeys, true)
+                sgVmodel.setColumns(unVisibleColKeys, false)
+
+                vm.handlerWindowVisible = false
+            }
+
+            /**
+             * 点击取消，隐藏设置框
+             */
+            vm.cancelColHandler = function(){
+                vm.handlerWindowVisible = false
+            }
+        })
+
+        setHandlerLayout()
+
+        /**
+         * 设置列显隐处理布局样式
+         */
+        function setHandlerLayout(){
+
+            avalon(handlerWrap).addClass("oni-smartgrid-handler-wrap")
+
+            // 控制小窗口往哪边出现
+            var offsetLeft = getOffsetLeft(handlerWrap),
+                clientWidth = avalon.css(document.body, "width")
+
+            if(offsetLeft > clientWidth / 2){
+                avalon(handlerWrap).addClass("oni-smartgrid-handler-wrap-right")
+            }
+
+            function getOffsetLeft(ele) {
+                var left = 0;
+
+                do {
+                    left += ele.offsetLeft || 0;
+                    ele = ele.offsetParent;
+                } while(ele);
+
+                return left
+            }
+        }
+
+        /**
+         * 获取当前表格中每列的显示/隐藏情况
+         */
+        function getColumnData(){
+            var columnsData = [],
+                columns = sgVmodel.columns
+
+            for(var i = 0, len = columns.length; i < len; i++){
+
+                if(columns[i].key === "selected" && columns[i].name.slice(1,6) === "input"){
+                    continue;
+                }
+
+                columnsData.push({
+                    key: columns[i].key,
+                    name: columns[i].name,
+                    toggle: columns[i].toggle,
+                    isLock: columns[i].isLock
+                })
+            }
+
+            return columnsData
+        }
+
+        avalon.scan()
+    }
 })
 /**
  @links
@@ -1049,6 +1318,7 @@ define(["avalon",
  [嵌套的表格](avalon.smartgrid.ex10.html)
  [grid会根据columns配置的width自主决定是否显示水平滚动条](avalon.smartgrid.ex11.html)
  [通过设置bodyHeight使得表格体可以垂直滚动](avalon.smartgrid.ex12.html)
+ [自定义列的显示/隐藏](avalon.smartgrid.ex13.html)
  */
 
 /**

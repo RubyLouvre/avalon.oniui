@@ -12,7 +12,7 @@
 <body>
     <div class="wrapper">
         <h1>textbox demo 3</h1>
-        <p class="example">切换禁用组件（<span class="statement">ms-disabled来控制</span>）</p>
+        <p class="example">切换禁用组件（<span class="statement">ms-attr-disabled来控制</span>）</p>
         <div ms-skip>
             <pre class="brush: js; html-script: true; gutter: false; toolbar: false">
                 &lt;!DOCTYPE HTML&gt;
@@ -25,7 +25,7 @@
                 &lt;body&gt;
                 &lt;div class="demo-show" ms-controller="demo3"&gt;
                         &lt;form&gt;
-                            &lt;input ms-widget="textbox" ms-disabled="disable" ms-duplex="txt" type="textbox"/&gt;
+                            &lt;input ms-widget="textbox" ms-attr-disabled="disable" ms-duplex="txt" type="textbox"/&gt;
                             &lt;button ms-click="changeDis" type="button"&gt;切换禁用&lt;/button&gt;
 
                             &lt;p&gt;输入框的值是： {{txt}}&lt;/p&gt;
@@ -50,7 +50,7 @@
         </div>
         <div class="demo-show" ms-controller="demo3">
             <form>
-                <input ms-widget="textbox" ms-disabled="disable" ms-duplex="txt" type="textbox"/>
+                <input ms-widget="textbox" ms-attr-disabled="disable" ms-duplex="txt" type="textbox"/>
                 <button ms-click="changeDis" type="button">切换禁用</button>
                 <p>输入框的值是： {{txt}}</p>
             </form>

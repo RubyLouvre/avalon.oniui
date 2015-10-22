@@ -70,7 +70,7 @@ define(["avalon",
         for (var i = 0, n = dataModel.length; i < n; i++) {
             if (dataModel[i].value == options.value) {
                 options.activeIndex = i
-                options.currentOption = dataModel[i];
+                options.currentOption = avalon.mix(true, {}, dataModel[i]);
                 break;
             }
         }
@@ -159,30 +159,32 @@ define(["avalon",
                     }
 
                     vmodel.$watch("value", function(n, o) {
-                        var onChange = avalon.type(vmodel.onChange) === "function" && vmodel.onChange || false
-                        if (keepState) {
-                            keepState = false
-                            return 
-                        }
-                        function valueStateKeep(stateKeep) {
-                            if (stateKeep) {
-                                keepState = true
-                                vmodel.value = o
-                            } else {
+                        avalon.nextTick(function(){
+                            var onChange = avalon.type(vmodel.onChange) === "function" && vmodel.onChange || false
+                            if (keepState) {
+                                keepState = false
+                                return
+                            }
+                            function valueStateKeep(stateKeep) {
+                                if (stateKeep) {
+                                    keepState = true
+                                    vmodel.value = o
+                                } else {
+                                    if (duplexModel) {
+                                        duplexModel[1][duplexModel[0]] = n
+                                        element.value = n
+                                    }
+                                    vmodel.currentOption = setLabelTitle(n);
+                                }
+                            }
+                            if ((onChange && onChange.call(element, n, o, vmodel, valueStateKeep) !== false) || !onChange) {
                                 if (duplexModel) {
                                     duplexModel[1][duplexModel[0]] = n
                                     element.value = n
                                 }
                                 vmodel.currentOption = setLabelTitle(n);
                             }
-                        }
-                        if ((onChange && onChange.call(element, n, o, vmodel, valueStateKeep) !== false) || !onChange) {
-                            if (duplexModel) {
-                                duplexModel[1][duplexModel[0]] = n
-                                element.value = n
-                            }
-                            vmodel.currentOption = setLabelTitle(n);
-                        }
+                        })
                     });
                 } else {
                     vmodel.value.$watch("length", function() {
@@ -320,7 +322,9 @@ define(["avalon",
                     if (!(option = setLabelTitle(vmodel.value))) {
                         vmodel.currentOption = vmodel.data[0].$model;
                         vmodel.activeIndex = 0;
-                        setLabelTitle(vmodel.value = vmodel.data[0].value);
+                        var v = vmodel.data[0].value;
+                        if(vmodel.multiple && !(v instanceof Array)) v = [v]; // 保证类型一致
+                        setLabelTitle(vmodel.value = v);
                     } else {
                         vmodel.activeIndex = vmodel.data.$model.indexOf(option)
                     }
@@ -707,6 +711,10 @@ define(["avalon",
 
         //设置label以及title
         function setLabelTitle(value) {
+            if(!vmodel.multiple && avalon.type(value)==="array") {
+                value = value[0];
+            }
+
             var option = vmodel.data.$model.filter(function(item) {
                 return item.value === value;
             });

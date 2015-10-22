@@ -1,0 +1,299 @@
+@import "../../../chameleon/compass/css3";
+@import "global";
+@import "widget";
+@import "apis";
+@import "download";
+
+/*
+* reset
+*/
+html,body,div,p,ul,ol,li,h1,h2,h3,h4,h5{
+  margin: 0;
+  padding: 0;
+}
+html, body{
+  height: 100%;
+}
+body{
+  position: relative;
+  color: $color-normal;
+  background-color: $color-background-blue;
+  font-size: $font-normal;
+  font-family: $font-stack;
+}
+ul,ol{
+  list-style: none;
+}
+a{
+  cursor: pointer;
+  text-decoration: none;
+  color: $color-normal;
+}
+h1,h2,h3,h4,h5{
+  color: $color-title;
+  font-size: $font-large;
+}
+.ms-controller, .ms-important{
+  visibility: hidden;
+}
+
+/*
+* custom classes
+*/
+.overdot{
+  @include inline-block;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+  -o-text-overflow:ellipsis;
+  overflow:hidden;
+}
+.iconfont{
+  font-family:"iconfont";
+  font-size:16px;font-style:normal;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-stroke-width: 0.2px;
+  -moz-osx-font-smoothing: grayscale;
+}
+@font-face {font-family: 'iconfont';
+  src: url('../fonts/iconfont.eot'); /* IE9*/
+  src: url('../fonts/iconfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('../fonts/iconfont.woff') format('woff'), /* chrome、firefox */
+  url('../fonts/iconfont.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+  url('../fonts/iconfont.svg#uxiconfont') format('svg'); /* iOS 4.1- */
+}
+
+/*
+* layout
+*/
+.oni-layout-header{
+  background-color: $color-header-bg;
+  color: #fff;
+  min-width: $width-screen-min;
+
+  .oniicon{
+    border: 0 none;
+    vertical-align: middle;
+  }
+
+  .container{
+    height: 80px;
+    line-height: 80px;
+    padding: 0 12px;
+    overflow: hidden;
+
+    .nav{
+      @include inline-block;
+
+      .nav-list{
+        margin: -5px 0 0 140px;
+
+        .nav-item{
+          @include inline-block;
+          margin: 0 10px 0 0;
+
+          .nav-link{
+            @include inline-block;
+            width: 120px;
+            height: 40px;
+            line-height: 40px;
+            color: #fff;
+            text-align: center;
+            border-radius: $border-radiaus-btn;
+            border: 1px #383d50 solid;
+          }
+        }
+
+        .active{
+          .nav-link{
+            background-color: $color-theme-blue;
+          }
+        }
+      }
+    }
+  }
+}
+
+
+.oni-layout-search-bar{
+  min-width: $width-screen-min;
+  border-bottom: 1px $color-border-grey solid;
+  background-color: $color-background-blue;
+
+  .search-section{
+    width: 276px;
+    padding: 10px 0px;
+    border-right: 1px $color-border-grey solid;
+
+    .search-wrap{
+      margin: 0 12px;
+      border: 1px #e5e9f2 solid;
+      background-color: #fff;
+      font-size: 0;
+
+      &:hover{
+        border-color: #ccc;
+      }
+      .search-input{
+        width: 212px;
+        height: 30px;
+        line-height: 30px;
+        padding: 0 0 0 10px;
+        vertical-align: middle;
+        font-size: 14px;
+        border: none;
+        outline: none;
+        *margin: -15px 0 0;
+      }
+      .icon-search{
+        @include inline-block;
+        width: 25px;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        font-size: 18px;
+        color: #2a2d33;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+// 搜索条下方主体容器
+.oni-layout-main-container{
+  background-color: $color-background-blue;
+  position: absolute;
+  top: 133px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  *top: 135px;
+
+  // 目录列表
+  .aside{
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 276px;
+    border-right: 1px $color-border-grey solid;
+    font-size: 14px;
+    overflow: auto;
+
+    &::-webkit-scrollbar {
+      width: 9px;
+    }
+    &::-webkit-scrollbar-track-piece {
+      background-color: #f9fafe;
+      border-left: 1px $color-border-grey solid;
+    }
+    &::-webkit-scrollbar-thumb {
+      height: 50px;
+      background-color: #a0b0c0;
+      border-radius: 10px;
+    }
+
+    .list-name{
+      margin: 20px 12px 20px 30px;
+    }
+
+    .list {
+      margin: -10px 0 30px;
+      overflow: hidden;
+
+      .list-item{
+        .list-item-link{
+          @include inline-block;
+          padding: 0 42px 0 40px;
+          width: 185px;
+          height: 34px;
+          line-height: 34px;
+          cursor: pointer;
+
+          &:before {
+            @include inline-block;
+            content: "";
+            width: 4px;
+            height: 4px;
+            background-color: #212121;
+            border-radius: 50%;
+          }
+        }
+      }
+    }
+
+
+    .list .active-dir, .list-item:hover{
+      background-color: $color-theme-blue;
+      color: #fff;
+
+      .list-item-link {
+        &:before {
+          background-color: #fff;
+        }
+      }
+
+      >a{
+        color: #fff;
+      }
+
+      .iconfont{
+        color: #fff;
+      }
+    }
+
+    .icon-arrow{
+      font-size: 16px;
+      color: #5c5f67;
+    }
+
+    .current-widget, .backto-menu, .icon-arrow{
+      height: 43px;
+      line-height: 43px;
+      cursor: pointer;
+    }
+
+    .backto-menu{
+      position: relative;
+      max-width: 100%;
+      padding-left: 30px;
+      overflow: hidden;
+      border-bottom: 1px $color-border-grey solid;
+
+      .list-item-link{
+        padding: 0;
+      }
+      .icon-arrow{
+        position: absolute;
+        left: 9px;
+        top: 0;
+      }
+    }
+
+    .current-widget{
+      position: relative;
+      border-bottom: 1px $color-border-grey solid;
+
+      .list-item-link{
+        padding: 0 12px;
+      }
+      .icon-arrow{
+        position: absolute;
+        right: 3px;
+        top: 0;
+        color: #5c5f67;
+      }
+    }
+  }
+
+  // 右侧内容部分
+  .oni-layout-main{
+    position: absolute;
+    left: 277px;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    min-width: $width-screen-min - 277px;
+    overflow: hidden;
+  }
+}
+

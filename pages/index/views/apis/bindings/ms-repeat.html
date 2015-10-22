@@ -1,0 +1,477 @@
+<h3 id="ms-repeat">循环绑定(ms-repeat)</h3>
+<p>用法为ms-repeat-xxx="array", 其中xxx可以随意命名（<span style="color:red">注意，不能出现大写，因为属性名在HTML规范中，
+        会全部转换为小写，详见<a href="https://github.com/RubyLouvre/avalon/issues/354">这里</a></span>），如item, el。
+    array对应VM中的一个普通数组或一个监控数组。监控数组拥有原生数组的所有方法，并且比它还多了set, remove, removeAt, removeAll, ensure, pushArray与 clear方法 。详见<a href="http://rubylouvre.github.io/mvvm/avalon.each.html">这里</a>。</p>
+<p>在早期，avalon提供了一个功能相似的ms-each绑定。ms-each与ms-repeat的不同之处在于，前者循环它的孩子(以下图为例，可能包含LI元素两边的空白)，后者循环它自身。</p>
+<center><img src="http://images.cnblogs.com/cnblogs_com/rubylouvre/495346/o_ms-each.jpg"></center>
+<p>注意，ms-each, ms-repeat会生成一个<strong style="color:red">新的代理VM对象</strong>放进当前的vmodels的前面，这个代理对象拥有el， $index, $first, $last, $remove, $outer， $itemName等属性。另一个会产生VM对象的绑定是ms-widget。</p>
+<ol>
+    <li>el: 不一定叫这个名字，比如说ms-each-item，它就变成item了。默认为el。指向当前元素。</li>
+    <li>$first: 判定是否为监控数组的第一个元素</li>
+    <li>$last: 判定是否为监控数组的最后一个元素</li>
+    <li>$index: 得到当前元素的索引值</li>
+    <li>$outer: 得到外围循环的那个元素。</li>
+    <li>$itemName: 保存el（或item, elem）这个名字。</li>
+    <li>$remove：这是一个方法，用于移除此元素</li>
+</ol>
+<p>我们还可以通过data-repeat-rendered, data-each-rendered来指定这些元素都插入DOM被渲染了后执行的回调，this指向元素节点，
+    有一个参数表示为当前的操作，是add, del, move, index还是clear</p>
+<pre class="brush:html;gutter:false;toolbar:false">
+            vm.array = [1,2,3]
+            vm.rendered = function(action){
+               if(action === "add"){
+                   avalon.log("渲染完毕")//注意，我们通过vm.array.push(4,5)添加元素，会连续两次触发rendered，第一次add，第二次为index
+               }
+           }
+           &lt;li data-repeat-rendered="rendered" ms-repeat="array"&gt;{{el}}&lt;/li&gt;
+</pre>
+<br/>
+<pre class="brush:html;gutter:false;toolbar:false;" ms-skip> 
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;&lt;/title&gt;
+        &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8"&gt;
+
+        &lt;script src="avalon.js"&gt;&lt;/script&gt;
+        &lt;style&gt;
+            .id2013716 {
+                width: 200px;
+                float:left;
+            }
+        &lt;/style&gt;
+        &lt;script&gt;
+            var a = avalon.define("array", function(vm) {
+                vm.array = ["1", "2", "3", "4"]
+            })
+            setTimeout(function() {
+                a.array.set(0, 7)
+            }, 1000);
+            var b = avalon.define("complex", function(vm) {
+                vm.array = [{name: "xxx", sex: "aaa", c: {number: 2}}, {name: "yyy", sex: "bbb", c: {number: 4}}]//
+            });
+            setTimeout(function() {
+                b.array[0].c.number = 9
+                b.array[0].name = "1000"
+            }, 1000)
+
+            setTimeout(function() {
+                a.array.push(5, 6, 7, 8, 9)
+            }, 1000)
+            setTimeout(function() {
+                a.array.unshift("a", "b", "c", "d")
+            }, 2000)
+            setTimeout(function() {
+                a.array.shift()
+                b.array[1].name = 7
+            }, 3000)
+            setTimeout(function() {
+                a.array.pop()
+            }, 4000)
+            setTimeout(function() {
+                a.array.splice(1, 3, "x", "y", "z")
+                b.array[1].name = "5000"
+            }, 5000)
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;fieldset class="id2013716" ms-controller="array"&gt;
+            &lt;legend&gt;例子&lt;/legend&gt;
+            &lt;ul ms-each="array"&gt;
+                &lt;li &gt;数组的第{{$index+1}}个元素为{{el}}&lt;/li&gt;
+            &lt;/ul&gt;
+            &lt;p&gt;size: &lt;b style="color:red"&gt;{{array.size()}}&lt;/b&gt;&lt;/p&gt;
+        &lt;/fieldset&gt;
+
+        &lt;fieldset  class="id2013716" ms-controller="complex"&gt;
+            &lt;legend&gt;例子&lt;/legend&gt;
+            &lt;ul &gt;
+                &lt;li ms-repeat-el="array"&gt;{{el.name+" "+el.sex}}它的内容为 number:{{el.c.number}}&lt;/li&gt;
+            &lt;/ul&gt;
+        &lt;/fieldset&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+<br/>
+<pre class="brush:html;gutter:false;toolbar:false;" ms-skip> 
+&lt;!DOCTYPE HTML&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta charset="utf-8"&gt;
+        &lt;title&gt;&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body ms-controller="page"&gt;
+        &lt;h3&gt;ms-each实现数组循环&lt;/h3&gt;
+        &lt;div ms-each="arr"&gt;
+            {{$index}} &lt;button ms-click="$remove"&gt;{{el}} 点我删除&lt;/button&gt;
+        &lt;/div&gt;
+        &lt;h3&gt;ms-repeat实现数组循环&lt;/h3&gt;
+        &lt;table border="1" width="800px" style="background:blueviolet"&gt;
+            &lt;tr&gt;
+                &lt;td ms-repeat="arr"&gt;
+                    {{el}}  {{$first}} {{$last}}
+                &lt;/td&gt;
+            &lt;/tr&gt;
+        &lt;/table&gt;
+        &lt;h3&gt;ms-repeat实现数组循环&lt;/h3&gt;
+        &lt;ul&gt;
+            &lt;li ms-repeat="arr"&gt;&lt;button ms-click="$remove"&gt;测试{{$index}}&lt;/button&gt;{{el}}&lt;/li&gt;
+        &lt;/ul&gt;
+        &lt;h3&gt;ms-repeat实现对象循环&lt;/h3&gt;
+        &lt;ol &gt;
+            &lt;li ms-repeat="object"&gt;{{$key}}:{{$val}}&lt;/li&gt;
+        &lt;/ol&gt;
+        &lt;h3&gt;ms-with实现对象循环&lt;/h3&gt;
+        &lt;ol ms-with="object"&gt;
+            &lt;li&gt;{{$key}}:{{$val}}&lt;/li&gt;
+        &lt;/ol&gt;
+        &lt;h3&gt;通过指定data-with-sorted规定只输出某一部分建值及它们的顺序，只能循环对象时有效&lt;/h3&gt;
+        &lt;ol ms-with="bigobject" data-with-sorted="order" title='with'&gt;
+            &lt;li&gt;{{$key}}:{{$val}}&lt;/li&gt;
+        &lt;/ol&gt;
+        &lt;ol title='repeat'&gt;
+            &lt;li ms-repeat="bigobject" data-with-sorted="order"&gt;{{$key}}:{{$val}}&lt;/li&gt;
+        &lt;/ol&gt;
+        &lt;h3&gt;ms-repeat实现数组双重循环&lt;/h3&gt;
+        &lt;table border="1" style="background:yellow" width="400px"&gt;
+            &lt;tr ms-repeat="dbarray"&gt;&lt;td ms-repeat-elem="el.array"&gt;{{elem}}&lt;/td&gt;&lt;/tr&gt;
+        &lt;/table&gt;
+        &lt;h3&gt;ms-each实现数组双重循环&lt;/h3&gt;
+        &lt;table border="1" style="background:green" width="400px"&gt;
+            &lt;tbody  ms-each="dbarray"&gt;
+                &lt;tr ms-each-elem="el.array"&gt;&lt;td&gt;{{elem}}&lt;/td&gt;&lt;/tr&gt;
+            &lt;/tbody&gt;
+        &lt;/table&gt;
+        &lt;h3&gt;ms-with实现对象双重循环，并通过$outer访问外面的键名&lt;/h3&gt;
+        &lt;div ms-repeat="dbobjec"&gt;{{$key}}:&lt;strong ms-repeat="$val"&gt;{{$key}}&nbsp;{{$val}} &lt;span style="font-weight: normal"&gt;{{$outer.$key}}&lt;/span&gt;|&nbsp;&lt;/strong&gt;&lt;/div&gt;
+        &lt;script src="avalon.js"&gt;&lt;/script&gt;
+        &lt;script&gt;
+            var model = avalon.define('page', function(vm) {
+                vm.arr = ["a", "b", "c", "d", "e", "f", "g", "h"]
+                vm.object = {
+                    "kkk": "vvv", "kkk2": "vvv2", "kkk3": "vvv3"
+                }
+                vm.aaa = {
+                    aaa2: "vvv2",
+                    aaa21: "vvv21",
+                    aaa22: "vvv22"
+                }
+                vm.bigobject = {
+                    title: 'xxx',
+                    name: '777',
+                    width: 30,
+                    align: 'center',
+                    sortable: true,
+                    cols: "cols3",
+                    url: 'data/stockQuote.json',
+                    method: 'get',
+                    remoteSort: true,
+                    sortName: 'SECUCODE',
+                    sortStatus: 'asc'
+                }
+                vm.order = function() {
+                    return ["name", "sortStatus", "sortName", "method", "align"]
+                }
+                vm.dbobjec = {
+                    aaa: {
+                        aaa2: "vvv2",
+                        aaa21: "vvv21",
+                        aaa22: "vvv22"
+                    },
+                    bbb: {
+                        bbb2: "ccc2",
+                        bbb21: "ccc21",
+                        bbb22: "ccc22"
+                    }
+                }
+                vm.dbarray = [
+                    {
+                        array: ["a", "b", "c"]
+                    },
+                    {
+                        array: ["e", "f", "d"]
+                    }
+                ]
+            });
+            setTimeout(function() {
+                model.object = {
+                    a1: 4444,
+                    a2: 5555
+                }
+                model.bigobject = {
+                    title: 'yyy',
+                    method: 'post',
+                    name: '999',
+                    width: 78,
+                    align: 'left',
+                    sortable: false,
+                    cols: "cols5",
+                    url: 'data/xxx.json',
+                    remoteSort: false,
+                    sortName: 'FAILURE',
+                    sortStatus: 'bbb'
+                }
+            }, 3000)
+        &lt;/script&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+<br/>
+<pre class="brush:html;gutter:false;toolbar:false;" ms-skip> 
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;demo&lt;/title&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;script type="text/javascript" src="avalon.js"&gt;&lt;/script&gt;
+        &lt;style type="text/css"&gt;
+            body{color:#333;font-size:12px;}
+            table{border-collapse:collapse;table-layout:fixed;border:1px solid #e8e8e8;}
+            th{background-color:#f5f5f5;}
+            td,th{border:1px solid #000;height:25px;width:75px;}
+            .cked{background-color:#D3F6F2;}
+        &lt;/style&gt;
+        &lt;script type="text/javascript"&gt;
+           
+                var Tr = function(rIndex) {
+                    this.rIndex = rIndex;
+                    this.cells = [];
+                }
+                var Td = function(rIndex, cIndex, txt) {
+                            this.rIndex = rIndex;
+                            this.cIndex = cIndex;
+                            this.text = txt;
+                            this.checked = false; //选中
+                            this.editing = false; //编辑
+                        };
+
+                var table = avalon.define("ms-repeat-table", function(vm) {
+                    vm.widths = [];
+                    vm.rows = [];
+
+                    //table追加一列
+                    vm.addColumn = function() {
+                        var rs = vm.rows, cIndex = vm.widths.size();
+                        for (var i = 0, max = vm.rows.size(); i &lt; max; i++) {
+                                    var newTd = new Td(i + 1, cIndex, "new" + (i+ 1));
+                                    rs[i].cells.push(newTd);
+                        }
+                        vm.widths.push(75);
+                    }
+
+                    //移除最后一列
+                    vm.removeCol = function() {
+                        var rs = vm.rows;
+                        for (var i = 0, max = vm.rows.size(); i &lt; max; i++) {
+                            rs[i].cells.pop();
+                        }
+                        vm.widths.pop();
+                    }
+//单击
+                    vm.clickTd = function(cell) {
+                        console.log(cell.$model);
+                        cell.checked = !cell.checked;
+                    }
+
+                    //双击编辑
+                    vm.edit = function(cell) {
+                        if (!cell.editing) {
+                            cell.editing = true;
+                            var input = this.getElementsByTagName("input")[0]
+
+                            setTimeout(function() {//获取焦点
+                                if (window.netscape) {
+                                    var n = input.value.length
+                                    input.selectionStart = n
+                                    input.selectionEnd = n
+                                } else {
+                                    input.value = input.value
+                                }
+
+                                input.focus()
+                            })
+                        }
+                    }
+                    vm.cancel = function(cell) {
+                        cell.editing = false;
+
+                    }
+                });
+
+                var number = 1
+                function initTable(x, y) {
+                    var rows = [], widths = [];
+
+                    for (var i = 0; i &lt; y; i++) {
+                        var row = new Tr(i + 1);
+                        for (var j = 0; j &lt; x; j++) {
+                            row.cells.push(new Td(i + 1, j + 1, number++));
+                            if (i == 0) {
+                                widths.push(75);
+                            }
+                        }
+                        rows.push(row);
+                    }
+
+                    table.rows.pushArray(rows);
+                    table.widths.pushArray(widths);
+                }
+                //初始化一个大小为7x7的table
+                initTable(7, 7);
+
+           
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body ms-controller="ms-repeat-table"&gt;
+        &lt;button type="button" ms-click="removeCol"&gt;删除最后一列&lt;/button&gt;
+        &lt;button type="button" ms-click="addColumn"&gt;追加一列&lt;/button&gt;
+        &lt;table&gt;
+            &lt;thead&gt;
+                &lt;tr&gt;
+                    &lt;th style="width: 35px;"&gt;
+                    &lt;/th&gt;
+                    &lt;th ms-repeat-w="widths" ms-css-width="w"&gt;
+                        {{$index+1}}
+                    &lt;/th&gt;
+                &lt;/tr&gt;
+            &lt;/thead&gt;
+            &lt;tbody&gt;
+                &lt;tr ms-repeat-tr="rows"&gt;
+                    &lt;th&gt;
+                        {{$index+1}}
+                    &lt;/th&gt;
+                    &lt;td ms-repeat-td="tr.cells" ms-click="clickTd(td)" ms-class="cked:td.checked" ms-dblclick="edit(td)" style="width: 75px;"&gt;
+                        &lt;div ms-if="!td.editing"&gt;
+                            {{td.text}}
+                        &lt;/div&gt;
+                        &lt;input type="text" ms-duplex="td.text" ms-if="td.editing" ms-blur="cancel(td)" style="width: 73px;" /&gt;
+                    &lt;/td&gt;
+                &lt;/tr&gt;
+            &lt;/tbody&gt;
+        &lt;/table&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</pre>
+<script>
+    var Tr = function(rIndex) {
+        this.rIndex = rIndex;
+        this.cells = [];
+    }
+    var Td = function(rIndex, cIndex, txt) {
+        this.rIndex = rIndex;
+        this.cIndex = cIndex;
+        this.text = txt;
+        this.checked = false; //选中
+        this.editing = false; //编辑
+    };
+    var table = avalon.define("ms-repeat-table", function(vm) {
+        vm.widths = [];
+        vm.rows = [];
+
+        //table追加一列
+        vm.addColumn = function() {
+            var rs = vm.rows, cIndex = vm.widths.size();
+            for (var i = 0, max = vm.rows.size(); i < max; i++) {
+                var newTd = new Td(i + 1, cIndex, "new" + (i + 1));
+                rs[i].cells.push(newTd);
+            }
+            vm.widths.push(75);
+        }
+
+        //移除最后一列
+        vm.removeCol = function() {
+            var rs = vm.rows;
+            for (var i = 0, max = vm.rows.size(); i < max; i++) {
+                rs[i].cells.pop();
+            }
+            vm.widths.pop();
+        }
+//单击
+        vm.clickTd = function(cell) {
+            cell.checked = !cell.checked;
+        }
+
+        //双击编辑
+        vm.edit = function(cell) {
+            if (!cell.editing) {
+                cell.editing = true;
+                var input = this.getElementsByTagName("input")[0]
+
+                setTimeout(function() {//获取焦点
+                    if (window.netscape) {
+                        var n = input.value.length
+                        input.selectionStart = n
+                        input.selectionEnd = n
+                    } else {
+                        input.value = input.value
+                    }
+
+                    input.focus()
+                })
+            }
+        }
+        vm.cancel = function(cell) {
+            cell.editing = false;
+
+        }
+    });
+
+    var number = 1
+    function initTable(x, y) {
+        var rows = [], widths = [];
+
+        for (var i = 0; i < y; i++) {
+            var row = new Tr(i + 1);
+            for (var j = 0; j < x; j++) {
+                row.cells.push(new Td(i + 1, j + 1, number++));
+                if (i == 0) {
+                    widths.push(75);
+                }
+            }
+            rows.push(row);
+        }
+
+        table.rows.pushArray(rows);
+        table.widths.pushArray(widths);
+    }
+    //初始化一个大小为7x7的table
+    initTable(7, 7);
+
+</script>
+<style>
+    .ms-repeat-table{color:#333;font-size:12px;}
+    .ms-repeat-table  table{border-collapse:collapse;table-layout:fixed;border:1px solid #e8e8e8;}
+    .ms-repeat-table  th{background-color:#f5f5f5;}
+    .ms-repeat-table  td, .ms-repeat-table  th{
+        border:1px solid #000;height:25px;width:75px;
+    }
+    .ms-repeat-table .cked{background-color:#D3F6F2;}
+</style>
+<div ms-controller="ms-repeat-table" class="ms-repeat-table">
+    <button type="button" ms-click="removeCol">删除最后一列</button>
+    <button type="button" ms-click="addColumn">追加一列</button>
+    <table class="table-doc">
+        <thead>
+            <tr>
+                <th style="width: 35px;">
+                </th>
+                <th ms-repeat-w="widths" ms-css-width="w">
+                    {{$index+1}}
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ms-repeat-tr="rows">
+                <th>
+                    {{$index+1}}
+                </th>
+                <td ms-repeat-td="tr.cells" ms-click="clickTd(td)" ms-class="cked:td.checked" ms-dblclick="edit(td)" style="width: 75px;">
+                    <div ms-if="!td.editing">
+                        {{td.text}}
+                    </div>
+                    <input type="text" ms-duplex="td.text" ms-if="td.editing" ms-blur="cancel(td)" style="width: 73px;" />
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

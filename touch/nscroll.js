@@ -1,4 +1,4 @@
-define(["./iscroll.js"], function(iScroll) {
+define(["./iscroll"], function(iScroll) {
 	var SCROLL_OPT = {
         scrollX: false,
         scrollY: true,

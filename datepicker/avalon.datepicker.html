@@ -65,13 +65,14 @@
                 <table class="oni-datepicker-calendar-days" id='oni-datepicker-days'>
                     <tbody>
                         <tr ms-repeat-days="calendar.rows"
-                            ms-if-loop="_rowShow(days)">
+                            ms-visible="_rowShow(days, _uc)">
                             <td class="oni-datepicker-default"
                                 ms-repeat-item="days"
                                 ms-class="{{_setDayClass($index, $outer.$index, $outer.$outer.$index, item)}}"
                                 ms-hover="{{_setHoverClass($index, $outer.$index, $outer.$outer.$index, item)}}"
                                 ms-click="_selectDate($index, $outer.$index, $outer.$outer.$index, $event)"
                                 ms-html="_dateCellRender($outer.$index, $index, $outer.$outer.$index, item)"
+                                ms-attr-title="_dateCellRender($outer.$index, $index, $outer.$outer.$index, item)"
                                 ></td>
                         </tr>
                     </tbody>

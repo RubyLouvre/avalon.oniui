@@ -1,0 +1,226 @@
+<h3 id='c-collection'>监控数组</h3>
+<p>操作此数组的方法会同步视图的特殊数组，它是由VM中的数组自动转换而来。方便与ms-repeat, ms-each配合使用，
+    能批量同步一大堆DOM节点。
+</p>
+<p>监控数组的方法与普通数组没什么不同，它只是被重写了某一部分方法，如
+    pop, shift, unshift, push, splice，sort, revert。其次添加了四个移除方法，remove, removeAt, removeAll, clear，
+    及ensure，pushArray, size，set方法。
+</p>
+<ul>
+    <li>pushArray(el), 要求传入一数组，然后将它里面的元素全部到当前数组的末端。</li>
+    <li>remove(el), 要求传入一元素，通过全等于比较进行移除。</li>
+    <li>removeAt(index), 要求传入一数字，会移除对应位置的元素。</li>
+    <li>removeAll(arrayOrFunction), 有三种用法，如果是一个函数，则过滤比较后得到真值的元素，如果是一数组，则将此数组中与原数组相等于的元素全部移除；不会，则全部清空。
+    </li>
+    <li>clear()，相当于removeAll()的第三种方法，清空数组的所有元素。由于需要同步视图的缘故，不能通过vm.array.length = 0的方法来清空元素。</li>
+    <li>ensure(el)，只有当数组不存在此元素时，只添加此元素。</li>
+    <li>size()，返回数组的长度。由于length属性是固有属性，无法hack，也就无法实现双向绑定，因此请用它来代替length。</li>
+    <li>set(index, el)，用于更新某一索引位置中的元素，因为简单数组元素的数组，是不会转换它的元素。</li>
+</ul>
+<div ms-skip>
+    <pre class="brush:html;gutter:false;toolbar:false">
+&lt;!DOCTYPE HTML&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;meta http-equiv="X-UA-Compatible" content="IE=edge" /&gt; 
+        &lt;title&gt;ms-each&lt;/title&gt;
+        &lt;script src="avalon.js" type="text/javascript"&gt;&lt;/script&gt;
+
+        &lt;script&gt;
+            avalon.define("array", function(vm) {
+                vm.array = ["1", "2", "3", "4"]
+                vm.del = function() {
+                    this.$vmodel.$remove()
+                }
+                "push,unshift,remove,ensure".replace(/\w+/g, function(method) {
+                    vm[method] = function(e) {
+                        if (this.value && e.which == 13) {//this为input元素
+                            vm.array[method](this.value);
+                            this.value = "";
+                        }
+                    }
+                })
+
+                vm.removeAt = function(e) {
+                    if (isFinite(this.value) && e.which == 13) {//this为input元素
+                        var a = ~~this.value
+                        vm.array.removeAt(a)
+                        this.value = "";
+                    }
+                }
+                "pop,shift,sort,reverse".replace(/\w+/g, function(method) {
+                    vm[method] = function(e) {
+                        vm.array[method]();
+                    }
+                })
+            });
+            if (!Date.now) {
+                Date.now = function() {
+                    return new Date - 0;
+                }
+            }
+            avalon.define('page', function(vm) {
+                vm.selected = "name"
+                vm.options = ["name", "size", "date"]
+                vm.trend = 1
+                vm.data = [
+                    {name: "aaa", size: 213, date: Date.now() + 20},
+                    {name: "bbb", size: 4576, date: new Date - 4},
+                    {name: "ccc", size: 563, date: new Date - 7},
+                    {name: "eee", size: 3713, date: 9 + Date.now()},
+                    {name: "555", size: 389, date: Date.now() - 20}
+                ];
+                vm.$watch("selected", function(v) {
+                    var t = parseFloat(vm.trend)
+                    vm.data.sort(function(a, b) {
+                        var ret = a[v] &gt; b[v] ? 1 : -1
+                        return t * ret
+                    })
+                })
+                vm.$watch("trend", function(t) {
+                    var v = vm.selected, t = parseFloat(t)
+                    vm.data.sort(function(a, b) {
+                        var ret = a[v] &gt; b[v] ? 1 : -1
+                        return t * ret
+                    })
+                })
+            });
+
+        &lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;fieldset ms-controller="array"&gt;
+            &lt;legend&gt;示例一&lt;/legend&gt;
+            &lt;ul ms-each-el="array"&gt;
+                &lt;li &gt;数组的第{{$index+1}}个元素为{{el}}&lt;/li&gt;
+            &lt;/ul&gt;
+            &lt;p&gt;对数组进行push操作，并回车&lt;input ms-keypress="push"&gt;&lt;/p&gt;
+            &lt;p&gt;对数组进行unshift操作，并回车&lt;input ms-keypress="unshift"&gt;&lt;/p&gt;
+            &lt;p&gt;对数组进行ensure操作，并回车&lt;input ms-keypress="ensure"&gt;&lt;br/&gt;
+                (只有数组不存在此元素才push进去)&lt;/p&gt;
+            &lt;p&gt;对数组进行remove操作，并回车&lt;input ms-keypress="remove"&gt;&lt;/p&gt;
+            &lt;p&gt;对数组进行removeAt操作，并回车&lt;input ms-keypress="removeAt"&gt;&lt;/p&gt;
+            &lt;p&gt;&lt;button type="button" ms-click="sort"&gt;对数组进行sort操作&lt;/button&gt;&lt;/p&gt;
+            &lt;p&gt;&lt;button type="button" ms-click="reverse"&gt;对数组进行reverse操作&lt;/button&gt;&lt;/p&gt;
+            &lt;p&gt;&lt;button type="button" ms-click="shift"&gt;对数组进行shift操作&lt;/button&gt;&lt;/p&gt;
+            &lt;p&gt;&lt;button type="button" ms-click="pop"&gt;对数组进行pop操作&lt;/button&gt;&lt;/p&gt;
+            &lt;p&gt;当前数组的长度为&lt;span style="color:red"&gt;{{array.size()}}&lt;/span&gt;，注意 我们无法修改数组length的固有行为，因此它无法同步视图，需要用size方法。&lt;/p&gt;
+        &lt;/fieldset&gt;
+        &lt;fieldset ms-controller="page"&gt;
+            &lt;legend&gt;示例二&lt;/legend&gt;
+            &lt;p&gt;&lt;select ms-each-el="options" ms-duplex="selected"&gt;
+                    &lt;option&gt;{{el}}&lt;/option&gt;
+                &lt;/select&gt;
+                &lt;select ms-duplex="trend"&gt;
+                    &lt;option value="1"&gt;up&lt;/option&gt;
+                    &lt;option value="-1"&gt;down&lt;/option&gt;
+                &lt;/select&gt;
+            &lt;/p&gt;
+            &lt;table width="500px" border="1"&gt;
+                &lt;tbody ms-each-el="data"&gt;
+                    &lt;tr&gt;
+                        &lt;td&gt;{{el.name}}&lt;/td&gt; &lt;td&gt;{{el.size}}&lt;/td&gt; &lt;td&gt;{{el.date}}&lt;/td&gt;
+                    &lt;/tr&gt;
+                &lt;/tbody&gt;
+            &lt;/table&gt;
+        &lt;/fieldset&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+    </pre>   
+</div>
+<fieldset ms-controller="c-collection1">
+    <legend>示例一</legend>
+    <ul ms-each-el="array">
+        <li >数组的第{{$index+1}}个元素为{{el}}</li>
+    </ul>
+    <p>对数组进行push操作，并回车<input ms-keypress="push"></p>
+    <p>对数组进行unshift操作，并回车<input ms-keypress="unshift"></p>
+    <p>对数组进行ensure操作，并回车<input ms-keypress="ensure"><br/>
+        (只有数组不存在此元素才push进去)</p>
+    <p>对数组进行remove操作，并回车<input ms-keypress="remove"></p>
+    <p>对数组进行removeAt操作，并回车<input ms-keypress="removeAt"></p>
+    <p><button type="button" ms-click="sort">对数组进行sort操作</button></p>
+    <p><button type="button" ms-click="reverse">对数组进行reverse操作</button></p>
+    <p><button type="button" ms-click="shift">对数组进行shift操作</button></p>
+    <p><button type="button" ms-click="pop">对数组进行pop操作</button></p>
+    <p>当前数组的长度为<span style="color:red">{{array.size()}}</span>，注意 我们无法修改数组length的固有行为，因此它无法同步视图，需要用size方法。</p>
+</fieldset>
+<fieldset ms-controller="c-collection2">
+    <legend>示例二</legend>
+    <p><select ms-each-el="options" ms-duplex="selected">
+            <option>{{el}}</option>
+        </select>
+        <select ms-duplex="trend">
+            <option value="1">up</option>
+            <option value="-1">down</option>
+        </select>
+    </p>
+    <table class="table-doc">
+        <tbody ms-each-el="data">
+            <tr>
+                <td>{{el.name}}</td> <td>{{el.size}}</td> <td>{{el.date}}</td>
+            </tr>
+        </tbody>
+    </table>
+</fieldset>
+<script>
+    avalon.define("c-collection1", function(vm) {
+        vm.array = ["1", "2", "3", "4"]
+        vm.del = function() {
+            this.$vmodel.$remove()
+        }
+        "push,unshift,remove,ensure".replace(/\w+/g, function(method) {
+            vm[method] = function(e) {
+                if (this.value && e.which == 13) {//this为input元素
+                    vm.array[method](this.value);
+                    this.value = "";
+                }
+            }
+        })
+
+        vm.removeAt = function(e) {
+            if (isFinite(this.value) && e.which == 13) {//this为input元素
+                var a = ~~this.value
+                vm.array.removeAt(a)
+                this.value = "";
+            }
+        }
+        "pop,shift,sort,reverse".replace(/\w+/g, function(method) {
+            vm[method] = function(e) {
+                vm.array[method]();
+            }
+        })
+    });
+    if (!Date.now) {
+        Date.now = function() {
+            return new Date - 0;
+        }
+    }
+    avalon.define('c-collection2', function(vm) {
+        vm.selected = "name"
+        vm.options = ["name", "size", "date"]
+        vm.trend = 1
+        vm.data = [
+            {name: "aaa", size: 213, date: Date.now() + 20},
+            {name: "bbb", size: 4576, date: new Date - 4},
+            {name: "ccc", size: 563, date: new Date - 7},
+            {name: "eee", size: 3713, date: 9 + Date.now()},
+            {name: "555", size: 389, date: Date.now() - 20}
+        ];
+        vm.$watch("selected", function(v) {
+            var t = parseFloat(vm.trend)
+            vm.data.sort(function(a, b) {
+                var ret = a[v] > b[v] ? 1 : -1
+                return t * ret
+            })
+        })
+        vm.$watch("trend", function(t) {
+            var v = vm.selected, t = parseFloat(t)
+            vm.data.sort(function(a, b) {
+                var ret = a[v] > b[v] ? 1 : -1
+                return t * ret
+            })
+        })
+    });
+</script>

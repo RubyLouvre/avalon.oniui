@@ -11,7 +11,7 @@
  *    <p>fileLocalToken：在客户端生成的一个唯一的文件ID，不会和其他文件重复。</p>
  *    <p>__flashfile：是否为一个由flash产生的文件。IE6-9等不支持File接口的浏览器下始终为true，其他的浏览器下始终是false。</p>
  *    <p>__html5file：与__flashfile互斥。表示是一个HTML5的文件。</p>
- *    <p>status：与__flashfile互斥。表示是一个HTML5的文件。</p>
+ *    <p>status：文件状态</p>
  *    <p>chunked：是否开启分块。</p>
  *    <p>blobs：分块的数组。里面包含1到多个blob类的实例。</p>
  *    <p>uploadedPercentage：已上传的百分比。0到100，精确到小数点后两位。</p>
@@ -20,6 +20,7 @@
  *    <p>事件介绍</p>
  *    <p>fileProgressed事件：当文件的上传进度发生变化时产生的事件。包含两个参数，参数1为文件对象本身，参数2为之前的文件上传进度。</p>
  *    <p>fileStatusChanged事件：当文件的状态发生变化时产生的事件。包含两个参数，参数1为文件对象本身，参数2为变化前的文件状态代码。</p>
+ *	  <p>requestDone事件：收到文件上传请求（包含分块请求）的服务器响应后触发的事件。包含三个参数，参数1为文件对象本身，参数2为textStatus，参数3位responseText。</p>
  *  @updatetime 2015-4-7
  */
 define(["avalon"], function ($$) {
@@ -67,7 +68,7 @@ define(["avalon"], function ($$) {
 		}
 	}
 
-	fileConstructor.prototype.onBlobUploaded = function (blob, responseText) {
+	fileConstructor.prototype.onBlobUploaded = function (blob, responseText, textStatus) {
 		this.doneBlobs++;
 		if (this.doneBlobs != this.blobs.length) {
 			this.setUploadedPercentage(Math.min(100, this.sumUploadedBytes() / this.size * 100));
@@ -75,6 +76,7 @@ define(["avalon"], function ($$) {
 			this.setUploadedPercentage(100, true);
 			this.setStatus(this.FILE_UPLOADED);
 		}
+		this.dispatchEvent('requestDone', this, textStatus, responseText);
 	}
 
 	fileConstructor.prototype.onBlobErrored = function (blob, errorText) {

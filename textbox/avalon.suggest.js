@@ -28,6 +28,7 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
          * suggest 下拉框
          */
         var limit = options.limit,  // 最多显示条数配置：最多显示多少条suggest，超出显示滚动条
+            disableLetter = options.disableLetter,//是否对字母的suggest进行过滤
             suggest,  // ui-suggest
             suggestCtr = options.suggestCtr || {
                 _minIndex: 0,           // 显示口第一条suggest index
@@ -164,12 +165,36 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
                         suggestHtml.style.cssText = "margin:0;left:0;top:0;width:"+suggestHtmlWidth ;
                         return ;
                     }
-                    suggestHtml.style.width = $textboxContainer.outerWidth() - 2 - avalon(suggestHtml).css("paddingLeft").replace(styleReg, '$1') - avalon(suggestHtml).css("paddingRight").replace(styleReg, '$1') + 'px';
+
+                    suggestHtml.style.width = $textboxContainer.outerWidth() - 2 - avalon(suggestHtml).css("paddingLeft").replace(styleReg, '$1') - avalon(suggestHtml).css("paddingRight").replace(styleReg, '$1') + 'px'
+
+                    var listHeight = avalon(suggestHtml).height(),
+                        offsetTop = getOffset(textboxContainer).top,
+                        inputHeight = avalon(textboxContainer).height(),
+                        windowHeihgt = avalon(window).height()
+
+                    var offsetBottom = windowHeihgt - offsetTop - inputHeight,
+                        exceedBottom = listHeight > offsetBottom
+
+                    if(exceedBottom){
+                        avalon(suggestHtml).css({top: "initial", bottom: inputHeight + 3 + "px"})
+                    }
+
+                    function getOffset( el ) {
+                        var _x = 0;
+                        var _y = 0;
+                        while( el && !isNaN( el.offsetLeft ) && !isNaN( el.offsetTop ) ) {
+                            _x += el.offsetLeft - el.scrollLeft;
+                            _y += el.offsetTop - el.scrollTop;
+                            el = el.offsetParent;
+                        }
+                        return { top: _y, left: _x };
+                    }
                 }
             })
             // 监控searchText值的变化，及时更新提示列表?
             vm.$watch('searchText',function(v){
-                vmodel.updateSource(v , vmodel, limit);
+                vmodel.updateSource(v , vmodel, limit, disableLetter);
             });
             
             // 处理提示项的鼠标点击，也就是更新input值，同时隐藏提示框?
@@ -256,7 +281,13 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
                 event.preventDefault();
                 if (!vmodel.toggle) return ;
                 vmodel.toggle = false;
-                vmodel.onChangeCallback( vmodel.list[vmodel.selectedIndex].value , vmodel.inputElement, event );
+
+                vmodel.inputElement.blur()
+
+                setTimeout(function(){
+                    vmodel.onChangeCallback( vmodel.list[vmodel.selectedIndex].value , vmodel.inputElement,
+                                                event, vmodel.list[vmodel.selectedIndex]);
+                }, 0)
             break;
             case 38:
                 // arrow up
@@ -271,7 +302,7 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
                 if (vmodel.selectedIndex === -1) {
                     vmodel.selectedIndex = vmodel.list.length - 1
                 }
-                vmodel.onChangeCallback( vmodel.list[vmodel.selectedIndex].value , vmodel.inputElement, event );
+                vmodel.onChangeCallback( vmodel.list[vmodel.selectedIndex].value , vmodel.inputElement, event, vmodel.list[vmodel.selectedIndex]);
 
                 // prevent default behavior to move cursor at the the begenning
                 event.preventDefault()
@@ -289,7 +320,7 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
                 if (vmodel.selectedIndex === vmodel.list.length) {
                     vmodel.selectedIndex = 0
                 }
-                vmodel.onChangeCallback( vmodel.list[vmodel.selectedIndex].value , vmodel.inputElement, event );
+                vmodel.onChangeCallback( vmodel.list[vmodel.selectedIndex].value , vmodel.inputElement, event, vmodel.list[vmodel.selectedIndex]);
                 
                 // prevent default behavior to move cursor at the the end
                 event.preventDefault()
@@ -302,36 +333,43 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
             break;
         }
     }
-    function updateSource(value , vmodel, limit) {
+    function updateSource(value , vmodel, limit, disableLetter) {
 
         if( vmodel.loading == true ) return;
         var s = avalon.ui["suggest"].strategies[vmodel.strategy ];
         if( !s ) return;
         vmodel.loading = true;
-        // 根据提示类型提供的方法过滤的数据来渲染提示视图?
-        s(value, function(array){
-            vmodel.selectedIndex = 0;
-            vmodel.list.removeAll();
-            avalon.each(array , function(idx, val){
-                if( typeof val == 'string' ) {
-                    vmodel.list.push({text: val , value: val});
+        //判断是否对字母进行过滤，即输入包含字母时不调用s更新
+        if(!disableLetter || !(disableLetter && /[a-z]/.test(value))){
+             // 根据提示类型提供的方法过滤的数据来渲染提示视图?
+            s(value, function (array) {
+                vmodel.selectedIndex = 0;
+                vmodel.list.removeAll();
+                avalon.each(array, function (idx, val) {
+                    if (typeof val == 'string') {
+                        vmodel.list.push({
+                            text: val,
+                            value: val
+                        });
+                    } else {
+                        vmodel.list.push(val);
+                    }
+                });
+                vmodel.loading = false;
+                if (array.length == 0) {
+                    vmodel.toggle = false;
                 } else {
-                    vmodel.list.push( val );
+                    vmodel.toggle = true;
                 }
-            })
+                //重置suggest列表
+                if (limit) {
+                    vmodel.suggestCtr.reset();
+                }
+            },vmodel.inputElement);
+        }else{
+            vmodel.list.clear();
             vmodel.loading = false;
-            if( array.length == 0 ) {
-                vmodel.toggle = false;
-            } else {
-                vmodel.toggle = true;
-            }
-
-            
-            //重置suggest列表
-            if(limit){
-                vmodel.suggestCtr.reset();
-            }
-        });
+        }
     };
     widget.defaults = {
         inputElement : "" , 

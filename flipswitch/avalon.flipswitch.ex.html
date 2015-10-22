@@ -4,9 +4,7 @@
         <title>flipswitch组件</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
-        <style type="text/css">
-            
-        </style>
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
         <script src="../avalon.js"></script>
         <script src="../highlight/shCore.js"></script>
         <script>
@@ -17,10 +15,11 @@
                             this.style.display = "block"
                         }
                     }
-                    vm.goal = []
+                    vm.goal = false
                     vm.$skipArray = ["flipswitch"]
+                    vm.hehe = [{c: true}, {c: false}]
                 })
-                avalon.vmodels.test.goal.$watch("length", function(v) {
+                avalon.vmodels.test.$watch("goal", function(v) {
                     console.log(v)
                 })
                 avalon.scan()
@@ -31,8 +30,13 @@
 <div ms-controller="test">
         <h1>不同大小size，默认设置，选中状态</h1>
         <div>
+            <b>支持ms-repeat</b>
+            <div ms-repeat-item="hehe">
+                <input type="checkbox" ms-widget="flipswitch" ms-duplex="item.c" ms-attr-title="item.c">
+            </div>
             <p>---------size=mini---------</p>
             <div class="this-for-test-3">
+                checked属性优先级低于duplex
                 <input checked="checked" 
                        ms-duplex="goal" type="checkbox" ms-widget="flipswitch" data-flipswitch-size="mini">
             </div>
@@ -72,7 +76,7 @@
                     vm.goal = []
                     vm.$skipArray = [&quot;flipswitch&quot;]
                 })
-                avalon.vmodels.test.goal.$watch(&quot;length&quot;, function(v) {
+                avalon.vmodels.test.$watch("goal", function(v) {
                     console.log(v)
                 })
                 avalon.scan()

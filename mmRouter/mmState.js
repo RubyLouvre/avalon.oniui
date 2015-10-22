@@ -402,6 +402,7 @@ define(["../mmPromise/mmPromise", "./mmRouter"], function () {
                 // 更新现在使用的cache名字
                 $element.data("currentCache", cacheTpl)
                 if (templateCache[cacheTpl])
+                    _local.$ctrl.$onCacheRendered && _local.$ctrl.$onCacheRendered.apply(element, [_local])
                     return
             } else {
                 element.innerHTML = html

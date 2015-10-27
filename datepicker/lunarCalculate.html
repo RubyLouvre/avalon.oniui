@@ -561,7 +561,10 @@
             if(verifyYear(startYear) && verifyYear(endYear)){
                 var resultArea = id("resultArea")
 
-                resultArea.value = JSON.stringify(generate(startYear, endYear), null, 4)
+                var holidayData = generate(startYear, endYear),
+                    formattedData = format(holidayData)
+
+                resultArea.value = JSON.stringify(formattedData, null, 4)
             }
         }
 
@@ -598,18 +601,35 @@
                 var dragonBoatFestData = calendar.lunar2solar(year, 5, 5)
                 holidays[dragonBoatFestData.cYear + '-' + (dragonBoatFestData.cMonth) + "-" + dragonBoatFestData.cDay] = {"holidayName": "端午节"}
 
-                // 国庆节
-                holidays[year + '-10-01'] = {"holidayName": "国庆节"}
-
                 // 中秋节
                 var midAutumnFestData = calendar.lunar2solar(year, 8, 15)
                 holidays[midAutumnFestData.cYear + '-' + (midAutumnFestData.cMonth) + "-" + midAutumnFestData.cDay] = {"holidayName": "中秋节"}
+
+                // 国庆节
+                holidays[year + '-10-01'] = {"holidayName": "国庆节"}
 
                 // 圣诞节
                 holidays[year + '-12-25'] = {"holidayName": "圣诞节"}
             }
 
             return holidays
+        }
+
+        function format(holidays){
+            var formattedData = {}
+
+            for(var fullDate in holidays){
+                var year = fullDate.split("-")[0],
+                    month = parseInt(fullDate.split("-")[1]),
+                    date = parseInt(fullDate.split("-")[2])
+
+                month = month < 10 ? "0" + month : String(month)
+                date = date < 10 ? "0" + date : String(date)
+
+                formattedData[year + "-" + month + "-" + date] = holidays[fullDate]
+            }
+
+            return formattedData
         }
 
         function verifyYear(year){

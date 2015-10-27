@@ -173,12 +173,11 @@
                                 <pre
                                 class="brush:javascript;gutter:false;toolbar:false">
                                     remoteSort: function(field, trend, vmodel, callback){
-                                        $.ajax({ url: url,
-                                            data: { sortField: field, sortTrend: trend, xxx: xxxx },
-                                                dataType: "json",
-                                                callback: function(json){ callback(data.gridData)
-                                            }
-                                        })
+                                        $.ajax({ url: url,data: {
+                                            sortField: field, sortTrend: trend, xxx: xxxx
+                                        },
+                                        dataType: "json",
+                                        callback: function(json){ callback(data.gridData) }})
                                     }
                                 </pre>
                             </td>

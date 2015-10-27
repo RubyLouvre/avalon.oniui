@@ -527,8 +527,6 @@ define(["avalon",
             return tmpl
         },
         reRender: function(data, vm) {
-            vm.showRows = vm.showRows || vm.perPages || data.length;
-
             avalon.each(vm.addColumnCallbacks, function(n, fn) {
                 fn(data)
             })

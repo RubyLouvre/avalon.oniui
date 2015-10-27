@@ -169,24 +169,26 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
                     suggestHtml.style.width = $textboxContainer.outerWidth() - 2 - avalon(suggestHtml).css("paddingLeft").replace(styleReg, '$1') - avalon(suggestHtml).css("paddingRight").replace(styleReg, '$1') + 'px'
 
                     var listHeight = avalon(suggestHtml).height(),
-                        offsetTop = getOffsetTop(textboxContainer),
+                        offsetTop = getOffset(textboxContainer).top,
                         inputHeight = avalon(textboxContainer).height(),
-                        windowHeihgt = document.body.clientHeight
+                        windowHeihgt = avalon(window).height()
 
                     var offsetBottom = windowHeihgt - offsetTop - inputHeight,
                         exceedBottom = listHeight > offsetBottom
 
                     if(exceedBottom){
-                        avalon(suggestHtml).css({top: "auto", bottom: inputHeight + 3 + "px"})
+                        avalon(suggestHtml).css({top: "initial", bottom: inputHeight + 3 + "px"})
                     }
 
-                    function getOffsetTop( el ) {
+                    function getOffset( el ) {
+                        var _x = 0;
                         var _y = 0;
-                        while( el && !isNaN( el.offsetTop ) ) {
-                            _y += el.offsetTop;
+                        while( el && !isNaN( el.offsetLeft ) && !isNaN( el.offsetTop ) ) {
+                            _x += el.offsetLeft - el.scrollLeft;
+                            _y += el.offsetTop - el.scrollTop;
                             el = el.offsetParent;
                         }
-                        return _y;
+                        return { top: _y, left: _x };
                     }
                 }
             })
@@ -200,11 +202,11 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
                 var selectObj = vmodel.list[idx],
                     selectValue = selectObj.value
 
-                vmodel.toggle = false;
                 vmodel.onChangeCallback(selectValue, vmodel.inputElement, event, selectObj);
                 if (typeof vmodel.onSelectItem === "function") {
                     vmodel.onSelectItem.call(null, selectValue, vmodel.inputElement, event, selectObj)
                 }
+                vmodel.toggle = false;
             }
             // 当点击input框之外的区域时，隐藏提示框?
             vm.hidepromptinfo = function(event) {

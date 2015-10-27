@@ -20,14 +20,6 @@
   @if $official                                        {         #{$property} : $value; }
 }
 
-@mixin prefix($property, $value) {
-      // 遍历输出厂商代码
-      @each $vendor in $vendor-prefix {
-          #{$vendor}#{$property}: $value;
-      }
-    #{$property}: $value;
-}
-
 // Same as experimental(), but for cases when the property is the same and the value is vendorized
 @mixin experimental-value($property, $value,
   $moz      : $experimental-support-for-mozilla,

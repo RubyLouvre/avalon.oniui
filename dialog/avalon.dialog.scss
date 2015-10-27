@@ -1,28 +1,28 @@
+
 @import "../chameleon/oniui-theme";
 $uiname: "oni-dialog";
 .#{$uiname} {
     position: absolute;
     text-align: left;
     .#{$uiname}-inner {
-
-        @include box-shadow($oniui-shadow-box);
+        box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1);
         @if($oinui-theme == smoothness) {
-            background-color: $ui-widget-content-color;
-            border: 1px solid #ccc;
+            background-color: #ffffff;
+            border: 1px solid #cccccc;
         }
-    }
-    .#{$uiname}-header {
+        .#{$uiname}-header {
             @if($oinui-theme == smoothness) {
                 background-color: #f3f3f3;
             }
             .#{$uiname}-close {
-                float:right;
+                display: inline;
+                @include float-right();
                 padding: 1px 10px 1px 9px;
                 margin-top: 5px;
                 cursor: pointer;
                 @if($oinui-theme == smoothness) {
                     background-color: #f3f3f3;
-                    color: #666;
+                    color: #666666;
                 }
                 .oni-icon {
                     cursor: pointer;
@@ -31,7 +31,7 @@ $uiname: "oni-dialog";
                     border-right: 0;
                     padding: 0 10px 0 8px;
                     @if($oinui-theme == smoothness) {
-                        background-color: #fff;
+                        background-color: #ffffff;
                         border: 1px solid #dedede;
                     }
                 }
@@ -53,15 +53,17 @@ $uiname: "oni-dialog";
                 background-color: #f8f8f8;
             }
             .#{$uiname}-btns {
-                float:right;
+                display: inline;
+                @include float-right();
                 font-size: 0;
-            }
-            .oni-button {
-                margin-left: 10px;
+                .oni-button {
+                    margin-left: 10px;
+                }
             }
         }
+    }
 }
-.#{$uiname}-mask {
+.#{$uiname}-layout {
     display: none;
     *position: absolute;
     left: 0;

@@ -330,9 +330,9 @@ define("models", function(){
                 "mmRouter综合示例三: scrolltoview": "avalon.mmRouter.ex2.html",
                 "mmRouter试验田: 最新版mmRouter试验田": "avalon.mmRouter.ex3.html",
                 "mmRouter: avalon.state": "avalon.mmRouter.ex4.html",
-                "mmRouter综合示例五: html5Mode pushState,popState, 可能需要服务器支持": "avalon.mmRouter.ex5.html",
-                "mmRouter: 登录跳转": "avalon.mmRouter.ex6.html",
-                "mmRouter: 异步": "avalon.mmRouter.ex7.html",
+                "mmRouter综合示例五: html5Mode[pushState,popState]，可能需要服务器支持": "avalon.mmRouter.ex5.html",
+                "mmRouter：登录跳转": "avalon.mmRouter.ex6.html",
+                "mmRouter：异步": "avalon.mmRouter.ex7.html",
                 "todos": "avalon.mmRouter.ex8.html",
                 "mmRouter-基于状态机的路由器": "avalon.mmRouter.ex9.html"
             },

@@ -11,9 +11,8 @@ define(["avalon",
     "../loading/avalon.loading",
     "../pager/avalon.pager",
     "../dropdown/avalon.dropdown",
-    "../button/avalon.button",
     "css!../chameleon/oniui-common.css",
-    "css!./avalon.smartgrid.css",
+    "css!./avalon.smartgrid.css"
 ], function(avalon, template) {
     var tempId = new Date() - 0, templateArr = template.split('MS_OPTION_EJS'), gridHeader = templateArr[0],
     // 表格视图结构
@@ -666,7 +665,7 @@ define(["avalon",
                     $initRender = false
                 }
                 if (!vmodel.noHeader && init && vmodel.isAffix && !vmodel.maxGridWidth) {
-                    vmodel._gridWidth = avalon(gridEle).innerWidth() -2
+                    vmodel._gridWidth = avalon(gridEle).innerWidth()
                 }
                 vmodel.addRows(void 0, init, noShowLoading)
                 if (avalon.type(data) === 'array' && data.length) {
@@ -882,7 +881,7 @@ define(["avalon",
         var type = options.selectable.type;
         if (type === 'Checkbox' || type === "Radio") {
             avalon.bind(containerWrapper, 'click', function (event) {
-                var target = event.target, $target = avalon(target), $row = avalon(target.parentNode.parentNode.parentNode), datas = options.data, onSelectAll = options.onSelectAll, enabledData = options._enabledData, disabledData = options._disabledData, dataIndex = $target.attr('data-index'),
+                var target = event.target, $target = avalon(target), $row = avalon(target.parentNode.parentNode), datas = options.data, onSelectAll = options.onSelectAll, enabledData = options._enabledData, disabledData = options._disabledData, dataIndex = $target.attr('data-index'),
                     filterCheckboxData = options._filterCheckboxData;
                 if (!$target.attr('data-role') || dataIndex === null) {
                     return;
@@ -1133,7 +1132,7 @@ define(["avalon",
             container = document.getElementById(sgVmodel.colHandlerContainer)
         }
 
-        var containerCtrlId = "colHandler_" + new Date().getTime();
+        var containerCtrlId = "colHandler_" + Date.now()
 
         container.setAttribute("ms-controller", containerCtrlId)
 
@@ -1145,17 +1144,17 @@ define(["avalon",
         handlerTpl += "     ms-click=\"toggleHandlerWindow()\">";
         handlerTpl += "<\/div>";
         handlerTpl += "<div class=\"oni-smartgrid-handler\" ms-visible=\"handlerWindowVisible\">";
-        handlerTpl += "    <ul class=\"oni-smartgrid-handler-mode\">";
-        handlerTpl += "        <li class=\"oni-smartgrid-handler-mode-item\" ms-repeat=\"colHandlerModes\"";
+        handlerTpl += "    <div class=\"oni-smartgrid-handler-mode\">";
+        handlerTpl += "        <span ms-repeat=\"colHandlerModes\"";
         handlerTpl += "              ms-class=\"oni-smartgrid-handler-mode-active: colHandlerMode === $key\"";
         handlerTpl += "              ms-click=\"changeColHandlerMode($key)\">";
         handlerTpl += "            {{$val}}";
-        handlerTpl += "        <\/li>";
-        handlerTpl += "    <\/ul>";
+        handlerTpl += "        <\/span>";
+        handlerTpl += "    <\/div>";
         handlerTpl += "    <ul class=\"oni-smartgrid-handler-list\">";
-        handlerTpl += "        <li ms-repeat=\"colHandlerData\" class=\"oni-smartgrid-handler-list-item\">";
+        handlerTpl += "        <li ms-repeat=\"colHandlerData\">";
         handlerTpl += "            <label>";
-        handlerTpl += "                <input class=\"checkbox\" type=\"checkbox\"";
+        handlerTpl += "                <input type=\"checkbox\"";
         handlerTpl += "                       ms-duplex-checked=\"el.toggle\"";
         handlerTpl += "                       ms-attr-disabled=\"el.isLock\"\/>";
         handlerTpl += "                <span class=\"oni-smartgrid-handler-name\">{{el.name}}<\/span>";
@@ -1163,14 +1162,10 @@ define(["avalon",
         handlerTpl += "        <\/li>";
         handlerTpl += "    <\/ul>";
         handlerTpl += "    <div class=\"oni-smartgrid-handler-ope\">";
-        handlerTpl += "        <button ms-widget=\"button\" data-button-size=\"small\" data-button-color=\"success\" ";
-        handlerTpl += "              ms-click=\"confirmColHandler()\">确定<\/button>";
-        handlerTpl += "        <button ms-widget=\"button\" data-button-size=\"small\" ms-click=\"cancelColHandler()\">取消<\/span>";
+        handlerTpl += "        <span class=\"oni-smartgrid-handler-confirm\" ms-click=\"confirmColHandler()\">确定<\/span>";
+        handlerTpl += "        <span class=\"oni-smartgrid-handler-cancel\" ms-click=\"cancelColHandler()\">取消<\/span>";
         handlerTpl += "    <\/div>";
         handlerTpl += "<\/div>";
-
-        //<button  ms-click="_confirm">{{confirmName}}</button>
-        //<button ms-widget="button" ms-if="type =='confirm'" ms-click="_cancel">{{cancelName}}</button>
 
         handlerWrap.innerHTML = handlerTpl
         container.appendChild(handlerWrap)

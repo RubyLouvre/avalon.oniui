@@ -676,7 +676,6 @@ define(["avalon",
                 } else if (!init) {
                     vmodel.container.scrollIntoView();
                 }
-
                 vm._adjustColWidth()
             };
             vm.$init = function () {
@@ -1237,6 +1236,8 @@ define(["avalon",
                 sgVmodel.setColumns(visibleColKeys, true)
                 sgVmodel.setColumns(unVisibleColKeys, false)
 
+                computeToggledWidth()
+
                 vm.handlerWindowVisible = false
             }
 
@@ -1249,6 +1250,51 @@ define(["avalon",
         })
 
         setHandlerLayout()
+        computeToggledWidth()
+
+        /**
+         * 设置列显隐处理后宽度
+         */
+        function computeToggledWidth(){
+            var cols = sgVmodel.columns.$model,
+                parentWidth = avalon(sgVmodel.container.parentNode).width() - 2,
+                computableWidth = 0,
+                unComputableWidth = 0,
+                computableColNum = 0
+
+            // 计算可分配宽度
+            for(var i in cols){
+                if(cols[i].toggle){
+                    var colConfigWidth = cols[i].configWidth
+
+                    if(typeof colConfigWidth === "string" && colConfigWidth.indexOf("%") !== -1){
+                        unComputableWidth += parentWidth * parseInt(colConfigWidth) / 100
+                    } else{
+                        unComputableWidth += parseInt(colConfigWidth)
+                    }
+                }
+            }
+
+            computableWidth = parentWidth - unComputableWidth
+
+            // 计算可分配列数
+            for(var i in cols){
+                var col = cols[i]
+
+                if(col.configWidth === 0 && col.toggle){
+                    computableColNum += 1
+                }
+            }
+
+            // 为这些列分配宽度
+            for(var i in cols){
+                var col = cols[i]
+
+                if(col.configWidth === 0 && col.toggle){
+                    sgVmodel.columns[i].width = Math.floor(computableWidth / computableColNum)
+                }
+            }
+        }
 
         /**
          * 设置列显隐处理布局样式

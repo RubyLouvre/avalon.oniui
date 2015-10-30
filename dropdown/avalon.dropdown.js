@@ -143,9 +143,10 @@ define(["avalon",
                 //如果原来的select没有子节点，那么为它添加option与optgroup
                 if (!hasBuiltinTemplate) {
                     element.appendChild(getFragmentFromData(dataModel));
-                    avalon.each(["multiple", "size"], function(i, attr) {
-                        avalon(element).attr(attr, vmodel[attr]);
-                    });
+                    avalon(element).attr("size", vmodel["size"]);
+                    if(vmodel["multiple"]){
+                        avalon(element).attr("multiple", vmodel["multiple"]);
+                    }
                 }
 
                 if (!vmodel.multiple) {

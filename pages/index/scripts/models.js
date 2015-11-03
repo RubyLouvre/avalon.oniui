@@ -8,6 +8,7 @@ define("models", function(){
             "UI组件": {
                 "accordion": "手风琴",
                 "at": "@组件",
+                "breadcrumb": "面包屑组件",
                 "browser": "浏览器检测模块",
                 "button": "按钮",
                 "camera": "百叶窗图片轮播",
@@ -78,6 +79,9 @@ define("models", function(){
             },
             "at": {
                 "例子1": "avalon.at.ex1.html"
+            },
+            "breadcrumb": {
+                "例子": "avalon.breadcrumb.ex.html"
             },
             "browser": {
                 "例子": "avalon.browser.ex.html"

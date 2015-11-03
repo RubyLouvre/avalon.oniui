@@ -1,0 +1,62 @@
+@charset "UTF-8";
+/*
+这是每个都组件都应该引用的部分
+*/
+.oni-breadcrumb {
+  overflow: hidden;
+  white-space: nowrap; }
+  .oni-breadcrumb .oni-breadcrumb-list {
+    display: -moz-inline-stack;
+    display: inline-block;
+    vertical-align: middle;
+    *vertical-align: auto;
+    zoom: 1;
+    *display: inline; }
+    .oni-breadcrumb .oni-breadcrumb-list .oni-breadcrumb-item {
+      display: -moz-inline-stack;
+      display: inline-block;
+      vertical-align: middle;
+      *vertical-align: auto;
+      zoom: 1;
+      *display: inline;
+      font-size: 0; }
+      .oni-breadcrumb .oni-breadcrumb-list .oni-breadcrumb-item .oni-breadcrumb-link {
+        font-size: 14px;
+        cursor: pointer; }
+  .oni-breadcrumb .oni-breadcrumb-division {
+    display: -moz-inline-stack;
+    display: inline-block;
+    vertical-align: middle;
+    *vertical-align: auto;
+    zoom: 1;
+    *display: inline;
+    margin: 0 5px;
+    vertical-align: baseline;
+    font-size: 12px;
+    color: #C8C8C8; }
+
+.oni-breadcrumb-arrow-left, .oni-breadcrumb-arrow-right {
+  display: -moz-inline-stack;
+  display: inline-block;
+  vertical-align: middle;
+  *vertical-align: auto;
+  zoom: 1;
+  *display: inline;
+  width: 20px;
+  margin: 1px 0 0;
+  font-size: 16px;
+  color: #3775C0;
+  text-align: center;
+  cursor: pointer;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none; }
+  .oni-breadcrumb-arrow-left.oni-breadcrumb-arrow-disabled, .oni-breadcrumb-arrow-right.oni-breadcrumb-arrow-disabled {
+    color: #D3D3D3;
+    cursor: default; }
+
+.oni-breadcrumb-arrow-left {
+  float: left; }
+
+.oni-breadcrumb-arrow-right {
+  float: right; }

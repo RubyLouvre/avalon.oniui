@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>面包屑组件</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <meta name="descriptions" content="面包屑导航
+" />
+        <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"
+        />
+        <script src="../highlight/shCore.js"></script>
+    </head>
+    
+    <body>
+        <div class="wrapper">
+            <h2>breadcrumb</h2>
+            <fieldset>
+                <legend>面包屑组件</legend>面包屑导航</fieldset>
+            <h3 class="table-doc-title">使用说明</h3>
+            <table class="table-doc" border="1">
+                <colgroup>
+                    <col width="180" />
+                    <col width="95" />
+                    <col width="120" />
+                </colgroup>
+                <tr>
+                    <th>名字</th>
+                    <th>类型</th>
+                    <th>默认值</th>
+                    <th>说明</th>
+                </tr>
+                <tr>
+                    <td align="center" colspan="4">配置参数</td>
+                </tr>
+                <tr>
+                    <td>data</td>
+                    <td>Array</td>
+                    <td>[]</td>
+                    <td>导航链接</td>
+                </tr>
+                <tr>
+                    <td>division</td>
+                    <td>String</td>
+                    <td>""</td>
+                    <td>导航间分隔符，可配置"/",">"等等</td>
+                </tr>
+                <tr>
+                    <td>switchStep</td>
+                    <td>String</td>
+                    <td>""</td>
+                    <td>超出容器后，每点击一下箭头导航列表移动的距离</td>
+                </tr>
+                <tr>
+                    <td>onClick</td>
+                    <td>Member</td>
+                    <td>avalon.noop</td>
+                    <td>回调函数，回调参数包括target,level,text,href</td>
+                </tr>
+            </table>
+            <ul class="example-links"></ul>
+        </div>
+    </body>
+
+</html>

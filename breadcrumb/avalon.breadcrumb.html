@@ -1,0 +1,14 @@
+<div class="oni-breadcrumb-arrow-left oni-icon"
+     ms-class="oni-breadcrumb-arrow-disabled: _leftArrowDisabled"
+     ms-if="_arrowsVisible" ms-click="_switch(-1)">&#xf047;</div>
+<div class="oni-breadcrumb-arrow-right oni-icon"
+     ms-class="oni-breadcrumb-arrow-disabled: _rightArrowDisabled"
+     ms-if="_arrowsVisible" ms-click="_switch(1)">&#xf03e;</div>
+<div class="oni-breadcrumb">
+    <div class="oni-breadcrumb-list" ms-css-margin-left="_listMargin">
+        <div class="oni-breadcrumb-item" ms-repeat="data">
+            <a class="oni-breadcrumb-link" ms-attr-href="el.href" ms-click="_clickNav($event, $index)">{{el.text}}</a>
+            <div class="oni-breadcrumb-division" ms-if="$index !== data.length - 1">{{division}}</div>
+        </div>
+    </div>
+</div>

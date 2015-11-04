@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>breadcrumb</title>
+    <script src="../avalon.js"></script>
+    <script src="../highlight/shCore.js"></script>
+    <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"
+            />
+</head>
+<body class="ms-controller" ms-controller="demo">
+
+<div class="wrapper">
+    <h1>breadcrumb</h1>
+    <fieldset>
+        <legend>配置不同divider</legend>
+        <div ms-widget="breadcrumb, $, $opt1"></div>
+        <div ms-widget="breadcrumb, $, $opt2"></div>
+        <div ms-widget="breadcrumb, $, $opt3"></div>
+    </fieldset>
+    <fieldset>
+        <legend>通过onClick获取所点击的导航信息</legend>
+        <div ms-widget="breadcrumb, $, $opt4"></div>
+        <ul>
+            <li>点击的元素：{{clickInfo.target}}</li>
+            <li>点击的层级：{{clickInfo.level}}</li>
+            <li>点击的文字：{{clickInfo.text}}</li>
+            <li>点击的连接：{{clickInfo.href}}</li>
+        </ul>
+    </fieldset>
+    <fieldset>
+        <legend>当导航超出容器自动出现箭头</legend>
+        <div style="display:inline-block; width: 300px;">
+            <div ms-widget="breadcrumb, $, $opt5"></div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>自定义switchStep，即点击左右箭头移动的距离</legend>
+        <div style="display:inline-block; width: 300px;">
+            <div ms-widget="breadcrumb, $, $opt6"></div>
+        </div>
+    </fieldset>
+    
+    <pre ms-skip class="brush:html;gutter:false;toolbar:false">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head lang="en"&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;breadcrumb&lt;/title&gt;
+    &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+    &lt;script src="../highlight/shCore.js"&gt;&lt;/script&gt;
+    &lt;link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"
+            /&gt;
+&lt;/head&gt;
+&lt;body class="ms-controller" ms-controller="demo"&gt;
+
+&lt;div class="wrapper"&gt;
+    &lt;h1&gt;breadcrumb&lt;/h1&gt;
+    &lt;fieldset&gt;
+        &lt;legend&gt;配置不同divider&lt;/legend&gt;
+        &lt;div ms-widget="breadcrumb, $, $opt1"&gt;&lt;/div&gt;
+        &lt;div ms-widget="breadcrumb, $, $opt2"&gt;&lt;/div&gt;
+        &lt;div ms-widget="breadcrumb, $, $opt3"&gt;&lt;/div&gt;
+    &lt;/fieldset&gt;
+    &lt;fieldset&gt;
+        &lt;legend&gt;通过onClick获取所点击的导航信息&lt;/legend&gt;
+        &lt;div ms-widget="breadcrumb, $, $opt4"&gt;&lt;/div&gt;
+        &lt;ul&gt;
+            &lt;li&gt;点击的元素：{{clickInfo.target}}&lt;/li&gt;
+            &lt;li&gt;点击的层级：{{clickInfo.level}}&lt;/li&gt;
+            &lt;li&gt;点击的文字：{{clickInfo.text}}&lt;/li&gt;
+            &lt;li&gt;点击的连接：{{clickInfo.href}}&lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/fieldset&gt;
+    &lt;fieldset&gt;
+        &lt;legend&gt;当导航超出容器自动出现箭头&lt;/legend&gt;
+        &lt;div style="display:inline-block; width: 300px;"&gt;
+            &lt;div ms-widget="breadcrumb, $, $opt5"&gt;&lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/fieldset&gt;
+    &lt;fieldset&gt;
+        &lt;legend&gt;自定义switchStep，即点击左右箭头移动的距离&lt;/legend&gt;
+        &lt;div style="display:inline-block; width: 300px;"&gt;
+            &lt;div ms-widget="breadcrumb, $, $opt6"&gt;&lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/fieldset&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+    require(["breadcrumb/avalon.breadcrumb"], function() {
+        var defaultData = [
+            {text: "首页", href: "#首页"},
+            {text: "关于", href: "#首页?menu=关于"},
+            {text: "联系我们", href: "#首页?menu=store&page=联系我们"}
+        ]
+
+        var demoVM = avalon.define('demo', function (vm) {
+            // container1
+            vm.$opt1 = {
+                data: defaultData
+            }
+            vm.$opt2 = {
+                data: defaultData,
+                division: "/"
+            }
+            vm.$opt3 = {
+                data: defaultData,
+                division: "&gt;"
+            }
+
+            // container2
+            vm.$opt4 = {
+                data: defaultData,
+                onClick: function (e, data) {
+                    demoVM.clickInfo.target = e.target.outerHTML
+                    demoVM.clickInfo.level = data.level
+                    demoVM.clickInfo.text = data.text
+                    demoVM.clickInfo.href = data.href
+                }
+            }
+            vm.clickInfo = {
+                target: "",
+                level: "",
+                text: "",
+                href: ""
+            }
+
+            // container3
+            vm.$opt5 = {
+                data: [{text: "首页"}, {text: "关于"}, {text: "联系我们"}, {text: "导航4"},
+                    {text: "导航5"}, {text: "导航6"}, {text: "导航7"}, {text: "导航8"},
+                    {text: "导航9"}, {text: "导航10"}, {text: "导航11"}, {text: "导航12"}]
+            }
+
+            // container4
+            vm.$opt6 = {
+                data: [{text: "首页"}, {text: "关于"}, {text: "联系我们"}, {text: "导航4"},
+                    {text: "导航5"}, {text: "导航6"}, {text: "导航7"}, {text: "导航8"},
+                    {text: "导航9"}, {text: "导航10"}, {text: "导航11"}, {text: "导航12"}],
+                switchStep: "100px"
+            }
+        });
+
+        avalon.scan()
+    })
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+</div>
+
+<script>
+    require(["breadcrumb/avalon.breadcrumb"], function() {
+        var defaultData = [
+            {text: "首页", href: "#首页"},
+            {text: "关于", href: "#首页?menu=关于"},
+            {text: "联系我们", href: "#首页?menu=store&page=联系我们"}
+        ]
+
+        var demoVM = avalon.define('demo', function (vm) {
+            // container1
+            vm.$opt1 = {
+                data: defaultData
+            }
+            vm.$opt2 = {
+                data: defaultData,
+                division: "/"
+            }
+            vm.$opt3 = {
+                data: defaultData,
+                division: ">"
+            }
+
+            // container2
+            vm.$opt4 = {
+                data: defaultData,
+                onClick: function (e, data) {
+                    demoVM.clickInfo.target = e.target.outerHTML
+                    demoVM.clickInfo.level = data.level
+                    demoVM.clickInfo.text = data.text
+                    demoVM.clickInfo.href = data.href
+                }
+            }
+            vm.clickInfo = {
+                target: "",
+                level: "",
+                text: "",
+                href: ""
+            }
+
+            // container3
+            vm.$opt5 = {
+                data: [{text: "首页"}, {text: "关于"}, {text: "联系我们"}, {text: "导航4"},
+                    {text: "导航5"}, {text: "导航6"}, {text: "导航7"}, {text: "导航8"},
+                    {text: "导航9"}, {text: "导航10"}, {text: "导航11"}, {text: "导航12"}]
+            }
+
+            // container4
+            vm.$opt6 = {
+                data: [{text: "首页"}, {text: "关于"}, {text: "联系我们"}, {text: "导航4"},
+                    {text: "导航5"}, {text: "导航6"}, {text: "导航7"}, {text: "导航8"},
+                    {text: "导航9"}, {text: "导航10"}, {text: "导航11"}, {text: "导航12"}],
+                switchStep: "100px"
+            }
+        });
+
+        avalon.scan()
+    })
+</script>
+</body>
+</html>

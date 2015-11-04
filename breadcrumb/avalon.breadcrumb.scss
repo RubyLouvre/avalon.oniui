@@ -1,0 +1,63 @@
+@charset "utf-8";
+@import "../chameleon/oniui-theme";
+
+@if($oinui-theme == smoothness) {
+	$carousel: (
+			bg: #fff,
+			borderColor:#aaaaaa
+	) !global
+}
+
+.oni-breadcrumb {
+	overflow: hidden;
+	white-space: nowrap;
+
+	.oni-breadcrumb-list{
+		@include inline-block();
+
+		.oni-breadcrumb-item {
+			@include inline-block();
+			font-size: 0;
+
+			.oni-breadcrumb-link{
+				font-size: 14px;
+				cursor: pointer;
+			}
+		}
+	}
+
+	.oni-breadcrumb-division{
+		@include inline-block();
+		margin: 0 5px;
+		vertical-align: baseline;
+		font-size: 12px;
+		color: #C8C8C8;
+	}
+}
+
+.oni-breadcrumb-arrow-left, .oni-breadcrumb-arrow-right{
+	@include inline-block();
+	width: 20px;
+	margin: 1px 0 0;
+	font-size: 16px;
+	color: #3775C0;
+	text-align: center;
+	cursor: pointer;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+
+	&.oni-breadcrumb-arrow-disabled{
+		color: #D3D3D3;
+		cursor: default;
+	}
+}
+
+.oni-breadcrumb-arrow-left{
+	float: left;
+}
+
+.oni-breadcrumb-arrow-right{
+	float: right;
+}
+

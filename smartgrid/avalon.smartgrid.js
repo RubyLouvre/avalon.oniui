@@ -751,6 +751,8 @@ define(["avalon",
                         vm._adjustColWidth()
                     });
                 }
+
+                computeToggledWidth(vmodel)
             };
             
             vm.$remove = function () {

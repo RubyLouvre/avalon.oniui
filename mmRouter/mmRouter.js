@@ -1,8 +1,13 @@
-define(["./mmHistory"], function() {
+/*
+ * 
+ * version 0.8
+ * built in 2015.11.16
+ */
+define(["./mmHistory"], function () {
 
     function Router() {
         var table = {}
-        "get,post,delete,put".replace(avalon.rword, function(name) {
+        "get,post,delete,put".replace(avalon.rword, function (name) {
             table[name] = []
         })
         this.routingTable = table
@@ -29,10 +34,12 @@ define(["./mmHistory"], function() {
 
 
     function queryToString(obj) {
-        if(typeof obj == 'string') return obj
+        if (typeof obj == 'string')
+            return obj
         var str = []
-        for(var i in obj) {
-            if(i == "query") continue
+        for (var i in obj) {
+            if (i == "query")
+                continue
             str.push(i + '=' + encodeURIComponent(obj[i]))
         }
         return str.length ? '?' + str.join("&") : ''
@@ -40,10 +47,10 @@ define(["./mmHistory"], function() {
 
     var placeholder = /([:*])(\w+)|\{(\w+)(?:\:((?:[^{}\\]+|\\.|\{(?:[^{}\\]+|\\.)*\})+))?\}/g
     Router.prototype = {
-        error: function(callback) {
+        error: function (callback) {
             this.errorback = callback
         },
-        _pathToRegExp: function(pattern, opts) {
+        _pathToRegExp: function (pattern, opts) {
             var keys = opts.keys = [],
                     //      segments = opts.segments = [],
                     compiled = '^', last = 0, m, name, regexp, segment;
@@ -74,7 +81,7 @@ define(["./mmHistory"], function() {
 
         },
         //添加一个路由规则
-        add: function(method, path, callback, opts) {
+        add: function (method, path, callback, opts) {
             var array = this.routingTable[method.toLowerCase()]
             if (path.charAt(0) !== "/") {
                 throw "path必须以/开头"
@@ -88,7 +95,7 @@ define(["./mmHistory"], function() {
             avalon.Array.ensure(array, this._pathToRegExp(path, opts))
         },
         //判定当前URL与已有状态对象的路由规则是否符合
-        route: function(method, path, query) {
+        route: function (method, path, query) {
             path = path.trim()
             var states = this.routingTable[method]
             for (var i = 0, el; el = states[i++]; ) {
@@ -109,7 +116,7 @@ define(["./mmHistory"], function() {
                 this.errorback()
             }
         },
-        _parseArgs: function(match, stateObj) {
+        _parseArgs: function (match, stateObj) {
             var keys = stateObj.keys
             for (var j = 0, jn = keys.length; j < jn; j++) {
                 var key = keys[j]
@@ -126,17 +133,17 @@ define(["./mmHistory"], function() {
                 match[j] = stateObj.params[key.name] = val
             }
         },
-        getLastPath: function() {
+        getLastPath: function () {
             return getCookie("msLastPath")
         },
-        setLastPath: function(path) {
+        setLastPath: function (path) {
             setCookie("msLastPath", path)
         },
         /*
          *  @interface avalon.router.redirect
          *  @param hash 访问的url hash
          */
-        redirect: function(hash) {
+        redirect: function (hash) {
             this.navigate(hash, {replace: true})
         },
         /*
@@ -145,16 +152,25 @@ define(["./mmHistory"], function() {
          *  @param options 扩展配置
          *  @param options.replace true替换history，否则生成一条新的历史记录
          *  @param options.silent true表示只同步url，不触发url变化监听绑定
-        */
-        navigate: function(hash, options) {
+         */
+        navigate: function (hash, options) {
             var parsed = parseQuery((hash.charAt(0) !== "/" ? "/" : "") + hash),
-                options = options || {}
-            if(hash.charAt(0) === "/")
-                hash = hash.slice(1)// 修正出现多扛的情况 fix http://localhost:8383/mmRouter/index.html#!//
+                    options = options || {}
+            if (hash.charAt(0) === "/")
+                hash = hash.slice(1)// 修正出现多扛的情况 fix http://localhost:8383/index.html#!//
             // 在state之内有写history的逻辑
-            if(!avalon.state || options.silent) avalon.history && avalon.history.updateLocation(hash, avalon.mix({}, options, {silent: true}))
+            if (!avalon.state || options.silent) {
+                if (avalon.history) {
+                    avalon.History.started = false
+                    avalon.history.updateLocation(hash
+                            , avalon.mix({}, options, {silent: true}))
+                    setTimeout(function () {
+                        avalon.History.started = true
+                    }, 150)
+                }
+            }
             // 只是写历史而已
-            if(!options.silent) {
+            if (!options.silent) {
                 this.route("get", parsed.path, parsed.query, options)
             }
         },
@@ -162,12 +178,12 @@ define(["./mmHistory"], function() {
          *  @interface avalon.router.when 配置重定向规则
          *  @param path 被重定向的表达式，可以是字符串或者数组
          *  @param redirect 重定向的表示式或者url
-        */
-        when: function(path, redirect) {
+         */
+        when: function (path, redirect) {
             var me = this,
-                path = path instanceof Array ? path : [path]
-            avalon.each(path, function(index, p) {
-                me.add("get", p, function() {
+                    path = path instanceof Array ? path : [path]
+            avalon.each(path, function (index, p) {
+                me.add("get", p, function () {
                     var info = me.urlFormate(redirect, this.params, this.query)
                     me.navigate(info.path + info.query, {replace: true})
                 })
@@ -178,15 +194,16 @@ define(["./mmHistory"], function() {
          *  @interface avalon.router.get 添加一个router规则
          *  @param path url表达式
          *  @param callback 对应这个url的回调
-        */
-        get: function(path, callback) {},
-        urlFormate: function(url, params, query) {
+         */
+        get: function (path, callback) {
+        },
+        urlFormate: function (url, params, query) {
             var query = query ? queryToString(query) : "",
-                hash = url.replace(placeholder, function(mat) {
-                    var key = mat.replace(/[\{\}]/g, '').split(":")
-                    key = key[0] ? key[0] : key[1]
-                    return params[key] !== undefined ? params[key] : ''
-                }).replace(/^\//g, '')
+                    hash = url.replace(placeholder, function (mat) {
+                        var key = mat.replace(/[\{\}]/g, '').split(":")
+                        key = key[0] ? key[0] : key[1]
+                        return params[key] !== undefined ? params[key] : ''
+                    }).replace(/^\//g, '')
             return {
                 path: hash,
                 query: query
@@ -211,7 +228,7 @@ define(["./mmHistory"], function() {
         $types: {
             date: {
                 pattern: "[0-9]{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[1-2][0-9]|3[0-1])",
-                decode: function(val) {
+                decode: function (val) {
                     return new Date(val.replace(/\-/g, "/"))
                 }
             },
@@ -219,13 +236,13 @@ define(["./mmHistory"], function() {
                 pattern: "[^\\/]*"
             },
             bool: {
-                decode: function(val) {
+                decode: function (val) {
                     return parseInt(val, 10) === 0 ? false : true;
                 },
                 pattern: "0|1"
             },
-            int: {
-                decode: function(val) {
+            'int': {
+                decode: function (val) {
                     return parseInt(val, 10);
                 },
                 pattern: "\\d+"
@@ -233,8 +250,8 @@ define(["./mmHistory"], function() {
         }
     }
 
-    "get,put,delete,post".replace(avalon.rword, function(method) {
-        return  Router.prototype[method] = function(a, b, c) {
+    "get,put,delete,post".replace(avalon.rword, function (method) {
+        return  Router.prototype[method] = function (a, b, c) {
             this.add(method, a, b, c)
         }
     })
@@ -256,7 +273,7 @@ define(["./mmHistory"], function() {
     }
 
     if (supportLocalStorage()) {
-        Router.prototype.getLastPath = function() {
+        Router.prototype.getLastPath = function () {
             return localStorage.getItem("msLastPath")
         }
         var cookieID
@@ -272,10 +289,10 @@ define(["./mmHistory"], function() {
         }
     }
 
-       
+
 
     function escapeCookie(value) {
-        return String(value).replace(/[,;"\\=\s%]/g, function(character) {
+        return String(value).replace(/[,;"\\=\s%]/g, function (character) {
             return encodeURIComponent(character)
         });
     }

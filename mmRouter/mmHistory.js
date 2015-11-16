@@ -1,3 +1,9 @@
+/*
+ * 
+ * version 0.8
+ * built in 2015.11.16
+ */
+
 define(["avalon"], function(avalon) {
     var anchorElement = document.createElement('a')
 
@@ -131,25 +137,28 @@ define(["avalon"], function(avalon) {
             // 支持popstate 就监听popstate
             // 支持hashchange 就监听hashchange
             // 否则的话只能每隔一段时间进行检测了
-            function checkUrl(e) {
+            function checkUrl() {
+                if(!History.started){
+                    return false
+                }
                 var iframe = that.iframe
                 if (that.monitorMode === "iframepoll" && !iframe) {
                     return false
                 }
-                var pageHash = that.getFragment(), hash
+                var pageHash = that.getFragment(), hash, lastHash = avalon.router.getLastPath()
                 if (iframe) {//IE67
                     var iframeHash = that.getHash(iframe)
                     //与当前页面hash不等于之前的页面hash，这主要是用户通过点击链接引发的
-                    if (pageHash !== that.fragment) {
+                    if (pageHash !== lastHash) {
                         that._setIframeHistory(that.prefix + pageHash)
                         hash = pageHash
                         //如果是后退按钮触发hash不一致
-                    } else if (iframeHash !== that.fragment) {
+                    } else if (iframeHash !== lastHash) {
                         that.location.hash = that.prefix + iframeHash
                         hash = iframeHash
                     }
 
-                } else if (pageHash !== that.fragment) {
+                } else if (pageHash !== lastHash) {
                     hash = pageHash
                 }
                 if (hash !== void 0) {
@@ -241,9 +250,9 @@ define(["avalon"], function(avalon) {
     //劫持页面上所有点击事件，如果事件源来自链接或其内部，
     //并且它不会跳出本页，并且以"#/"或"#!/"开头，那么触发updateLocation方法
     avalon.bind(document, "click", function(event) {
-        var defaultPrevented = "defaultPrevented" in event ? event['defaultPrevented'] : event.returnValue === false,
-            routeElementJudger = avalon.history.options.routeElementJudger
-        if (defaultPrevented || event.ctrlKey || event.metaKey || event.which === 2)
+        var defaultPrevented = "defaultPrevented" in event ? event['defaultPrevented'] : event.returnValue === false
+
+        if (!History.started || defaultPrevented || event.ctrlKey || event.metaKey || event.which === 2)
             return
         var target = event.target
         while (target.nodeName !== "A") {
@@ -261,6 +270,7 @@ define(["avalon"], function(avalon) {
             }
             var hash = href.replace(prefix, "").trim()
             if(!(href.indexOf(prefix) === 0 && hash !== "")) {
+                var routeElementJudger = avalon.history.options.routeElementJudger
                 hash = routeElementJudger(target, href)
                 if(hash === true) hash = href
             }

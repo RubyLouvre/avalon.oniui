@@ -1,8 +1,9 @@
 /*
  * 
- * version 0.8
- * built in 2015.11.16
+ * version 0.9
+ * built in 2015.11.19
  */
+
 define(["./mmHistory"], function () {
 
     function Router() {
@@ -159,18 +160,10 @@ define(["./mmHistory"], function () {
             if (hash.charAt(0) === "/")
                 hash = hash.slice(1)// 修正出现多扛的情况 fix http://localhost:8383/index.html#!//
             // 在state之内有写history的逻辑
-            if (!avalon.state || options.silent) {
-                if (avalon.history) {
-                    avalon.History.started = false
-                    avalon.history.updateLocation(hash
-                            , avalon.mix({}, options, {silent: true}))
-                    setTimeout(function () {
-                        avalon.History.started = true
-                    }, 150)
-                }
-            }
+            avalon.history && avalon.history.navigate(hash, false)
             // 只是写历史而已
-            if (!options.silent) {
+            if (!options.silent && this.lastHash !== hash) {
+                this.lastHash = hash
                 this.route("get", parsed.path, parsed.query, options)
             }
         },
@@ -319,8 +312,9 @@ define(["./mmHistory"], function () {
  <script src="avalon.js"></script>
  <script>
  require(["mmRouter"], function() {
- var model = avalon.define('xxx', function(vm) {
- vm.currPath = ""
+ var model = avalon.define({
+    $id: 'xxx',
+    currPath: ''
  })
  avalon.router.get("/aaa", function(a) {
  model.currPath = this.path

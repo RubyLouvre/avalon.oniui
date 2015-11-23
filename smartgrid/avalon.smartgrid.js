@@ -882,7 +882,7 @@ define(["avalon",
         var type = options.selectable.type;
         if (type === 'Checkbox' || type === "Radio") {
             avalon.bind(containerWrapper, 'click', function (event) {
-                var target = event.target, $target = avalon(target), $row = avalon(target.parentNode.parentNode), datas = options.data, onSelectAll = options.onSelectAll, enabledData = options._enabledData, disabledData = options._disabledData, dataIndex = $target.attr('data-index'),
+                var target = event.target, $target = avalon(target), $row = avalon(target.parentNode.parentNode.parentNode), datas = options.data, onSelectAll = options.onSelectAll, enabledData = options._enabledData, disabledData = options._disabledData, dataIndex = $target.attr('data-index'),
                     filterCheckboxData = options._filterCheckboxData;
                 if (!$target.attr('data-role') || dataIndex === null) {
                     return;

@@ -1098,7 +1098,6 @@ define(["avalon",
                 options.maxGridWidth = allColumnWidth + 20
             } else {
                 _columns.push(maxWidthColumn)
-                setColumnWidth(_columns, autoWidth)
             }
         } else {
             if (maxWidth) {

@@ -137,10 +137,11 @@ define(["avalon"], function (avalon) {
             }
 
 
-            this.fragment = this.getFragment()
+        
             this.prefix = "#" + this.options.hashPrefix + "/"
             // 将前后出现的//变成/
             this.root = ('/' + this.options.root + '/').replace(/^\/+|\/+$/g, '/')
+            this.fragment = this.getFragment()
             var hasHash = this.atRoot()
             if (this.monitorMode === "popstate" && supportPushState && hasHash) {
                 this.navigate(this.getHash(), {replace: true})

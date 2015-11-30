@@ -7,7 +7,7 @@
      tabindex="0">
     <div class="oni-dropdown-source">
         <div class="oni-dropdown-input"
-             ms-title="title"
+             ms-attr-title="title"
              ms-css-width="titleWidth"
              id="title-MS_OPTION_ID">
             {{currentOption.data.titleValue|sanitize|html}}
@@ -36,7 +36,7 @@ MS_OPTION_TEMPLATE
              id="list-MS_OPTION_ID">
             <div ms-repeat="data"  class="oni-dropdown-item"
                  ms-click-12="_select($index, $event)"
-                 ms-title="el.title||el.label"
+                 ms-attr-title="el.title||el.label"
                  ms-hover="oni-dropdown-state-hover: el.enable"
                  ms-class-1="oni-dropdown-state-disabled:!el.enable"
                  ms-class-2="oni-dropdown-state-active:isActive(el) "

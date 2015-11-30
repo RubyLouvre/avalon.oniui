@@ -1,4 +1,7 @@
-define(["../mmPromise/mmPromise", "./mmRouter"], function () {
+/**
+ * verson 0.9
+ */
+define(["./mmPromise", "./mmRouter"], function () {
 //重写mmRouter中的route方法     
     avalon.router.route = function (method, path, query, options) {
         path = path.trim()
@@ -47,11 +50,11 @@ define(["../mmPromise/mmPromise", "./mmRouter"], function () {
         }
     }
     // 事件管理器
-    var Event = window.$eventManager = avalon.define({
-        $id: "$eventManager",
-        $flag: 0,
-        uiqKey: function () {
-            return "flag" + (++Event.$flag)
+    var Event = window.$eventManager = avalon.define("$eventManager", function (vm) {
+        vm.$flag = 0;
+        vm.uiqKey = function () {
+            vm.$flag++
+            return "flag" + vm.$flag++
         }
     })
     function removeOld() {
@@ -236,8 +239,15 @@ define(["../mmPromise/mmPromise", "./mmRouter"], function () {
             this.currentState = toState
             this.prevState = fromState
             mmState._toParams = toParams
-            if (info && avalon.history)
-                avalon.history.updateLocation(info.path + info.query, avalon.mix({}, options, {silent: true}), !fromState && location.hash)
+            if (info && avalon.history) {
+                if (avalon.history.updateLocation) {
+                    avalon.history.updateLocation(info.path + info.query,
+                            avalon.mix({silent: true}, options), !fromState && location.hash)
+                } else {
+                    avalon.history.navigate(info.path + info.query,
+                            avalon.mix({silent: true}, options))
+                }
+            }
             callStateFunc("onBegin", this, fromState, toState)
             this.popOne(exitChain, toParams, function (success) {
                 // 中断
@@ -401,10 +411,8 @@ define(["../mmPromise/mmPromise", "./mmRouter"], function () {
                 element.appendChild(fragment)
                 // 更新现在使用的cache名字
                 $element.data("currentCache", cacheTpl)
-                if (templateCache[cacheTpl]) {
-                    _local.$ctrl.$onCacheRendered && _local.$ctrl.$onCacheRendered.apply(element, [_local])
+                if (templateCache[cacheTpl])
                     return
-                }
             } else {
                 element.innerHTML = html
                 $element.data("currentCache", false)
@@ -925,9 +933,16 @@ define(["../mmPromise/mmPromise", "./mmRouter"], function () {
      */
     avalon.controller.loader = function (url, callback) {
         // 没有错误回调...
-        avalon.require(url, function ($ctrl) {
+        function wrapper($ctrl) {
             callback && callback($ctrl)
-        })
+        }
+        if (window.requirejs) {
+            requirejs([url], wrapper)
+        } else if (typeof require === "function" && require.ensure) {
+            require.ensure([url], wrapper)
+        } else if (avalon.require) {
+            avalon.require([url], wrapper)
+        }
     }
 
     function _controller() {

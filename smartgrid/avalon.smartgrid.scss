@@ -42,7 +42,7 @@ $uiname: "oni-smartgrid";
         left: 0px;
     }
     .oni-pager {
-        float: right; 
+        float: right;
     }
     input {
         margin: 0;
@@ -122,7 +122,7 @@ $uiname: "oni-smartgrid";
     float: left;
     height: 26px;
     line-height: 26px;
-    padding-left: 5px; 
+    padding-left: 5px;
     font-size:12px;
     .#{$uiname}-showinfo {
         @include inline-block();
@@ -168,7 +168,6 @@ $uiname: "oni-smartgrid";
     width: 290px;
     background-color: #fff;
     border: 1px solid #ccc;
-    overflow:hidden;
     .#{$uiname}-handler-mode{
         padding: 9px 10px;
         border-bottom: 1px #f2f2f2 solid;
@@ -184,8 +183,9 @@ $uiname: "oni-smartgrid";
         }
     }
     .#{$uiname}-handler-list{
-        _width:101%;
+        margin: 0;
         padding: 9px 10px;
+        list-style: none;
         overflow: hidden;
         .oni-smartgrid-handler-name{
             @include inline-block();

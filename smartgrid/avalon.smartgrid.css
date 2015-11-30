@@ -1,9 +1,4 @@
-.oni-smartgrid .oni-helper-ndb .oni-helper-sort-top, .oni-smartgrid .oni-helper-desc .oni-helper-sort-top, .oni-smartgrid .oni-helper-asc .oni-helper-sort-top, .oni-smartgrid .oni-helper-ndb .oni-helper-sort-bottom, .oni-smartgrid .oni-helper-asc .oni-helper-sort-bottom, .oni-smartgrid .oni-helper-desc .oni-helper-sort-bottom {
-  width: 0;
-  height: 0;
-  line-height: 0;
-  font-size: 0; }
-
+@charset "UTF-8";
 /*
 这是每个都组件都应该引用的部分
 */
@@ -30,6 +25,10 @@
     top: 0px;
     left: 4px; }
   .oni-smartgrid .oni-helper-ndb .oni-helper-sort-top, .oni-smartgrid .oni-helper-desc .oni-helper-sort-top {
+    width: 0;
+    height: 0;
+    line-height: 0;
+    font-size: 0;
     border-top: 0 none;
     border-right: 6px dashed transparent;
     border-bottom: 6px solid #ccc;
@@ -37,6 +36,10 @@
     top: 0px;
     left: 0px; }
   .oni-smartgrid .oni-helper-asc .oni-helper-sort-top {
+    width: 0;
+    height: 0;
+    line-height: 0;
+    font-size: 0;
     border-top: 0 none;
     border-right: 6px dashed transparent;
     border-bottom: 6px solid #000;
@@ -44,6 +47,10 @@
     top: 0px;
     left: 0px; }
   .oni-smartgrid .oni-helper-ndb .oni-helper-sort-bottom, .oni-smartgrid .oni-helper-asc .oni-helper-sort-bottom {
+    width: 0;
+    height: 0;
+    line-height: 0;
+    font-size: 0;
     border-top: 6px solid #ccc;
     border-right: 6px dashed transparent;
     border-bottom: 0;
@@ -51,6 +58,10 @@
     top: 8px;
     left: 0px; }
   .oni-smartgrid .oni-helper-desc .oni-helper-sort-bottom {
+    width: 0;
+    height: 0;
+    line-height: 0;
+    font-size: 0;
     border-top: 6px solid #000;
     border-right: 6px dashed transparent;
     border-bottom: 0;
@@ -176,8 +187,7 @@
   left: 0;
   width: 290px;
   background-color: #fff;
-  border: 1px solid #ccc;
-  overflow: hidden; }
+  border: 1px solid #ccc; }
   .oni-smartgrid-handler .oni-smartgrid-handler-mode {
     padding: 9px 10px;
     border-bottom: 1px #f2f2f2 solid;
@@ -196,8 +206,9 @@
     .oni-smartgrid-handler .oni-smartgrid-handler-mode-active {
       font-weight: bold; }
   .oni-smartgrid-handler .oni-smartgrid-handler-list {
-    _width:101%;
+    margin: 0;
     padding: 9px 10px;
+    list-style: none;
     overflow: hidden; }
     .oni-smartgrid-handler .oni-smartgrid-handler-list .oni-smartgrid-handler-name {
       display: inline-block;

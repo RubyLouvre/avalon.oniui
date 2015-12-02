@@ -96,6 +96,7 @@ define(["avalon",
             vm.menuHeight = vm.height;  //下拉列表框高度
             vm.dataSource = dataSource;    //源节点的数据源，通过dataSource传递的值将完全模拟select
             vm.focusClass =  false
+            vm.source = [];
             vm.$init = function(continueScan) {
                 //根据multiple的类型初始化组件
                 if (vmodel.multiple) {
@@ -225,7 +226,7 @@ define(["avalon",
                     vmodel.readOnly = readOnlyModel[1][readOnlyModel[0]];
                 }
 
-                //获取$source信息
+                // 获取$source信息(兼容$source异步传值)
                 if(vmodel.$source) {
                     if(avalon.type(vmodel.$source) === "string") {
                         var sourceModel = avalon.getModel(vmodel.$source, vmodels);
@@ -243,6 +244,10 @@ define(["avalon",
                         vmodel._refresh(n)
                     });
                 }
+                // 新异步方式
+                vmodel.source.$watch('length', function(n) {
+                    vmodel._refresh(n)
+                });
                 avalon.scan(element.parentNode, [vmodel].concat(vmodels));
                 if(continueScan){
                     continueScan()
@@ -316,7 +321,10 @@ define(["avalon",
                 if (len > 0) {
                     //当data改变时，解锁滚动条
                     vmodel._disabledScrollbar(false);
-                    vmodel.data.pushArray(getDataFromOption(vmodel.$source.$model || vmodel.$source));
+                    if(vmodel.$source){
+                        vmodel.data.pushArray(getDataFromOption(vmodel.$source.$model || vmodel.$source));
+                    }
+                    vmodel.data.pushArray(getDataFromOption(vmodel.source.$model || vmodel.source));
                     var option
                     //当data改变时，尝试使用之前的value对label和title进行赋值，如果失败，使用data第一项
                     if (!(option = setLabelTitle(vmodel.value))) {
@@ -346,7 +354,7 @@ define(["avalon",
                     vmodel.toggle = false
                 }
             };
-            
+
             vm._keydown = function(event) {
                 if(vmodel.keyboardEvent === false) {
                     return;
@@ -555,13 +563,13 @@ define(["avalon",
             vm._styleFix = function(resetHeight) {
                 var MAX_HEIGHT = options.height || 200,
                     $menu = avalon(vmodel.menuNode),
-                    height = '' 
+                    height = ''
 
                 if (resetHeight) {
                     vmodel.menuHeight = ''
                     avalon(vmodel.dropdownNode).css({ 'height': '' });
                 }
-                
+
                 height = vmodel.dropdownNode.scrollHeight
                 vmodel.menuWidth = !ie6 ? vmodel.listWidth - $menu.css("borderLeftWidth").replace(styleReg, "$1") - $menu.css("borderRightWidth").replace(styleReg, "$1") : vmodel.listWidth;
                 if (height > MAX_HEIGHT) {

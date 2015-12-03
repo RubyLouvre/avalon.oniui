@@ -1,6 +1,7 @@
 var expect = chai.expect;
 
 describe('smartgrid ex2', function(){
+    this.timeout(5000);
 
     it('初始化时渲染8条数据', function(){
         var clearBtn = $("button:contains('重新渲染数据')")

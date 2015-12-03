@@ -100,11 +100,15 @@ $uiname: "oni-smartgrid";
 .#{$uiname}-footer {
     background-color: #f8f8f8;
     font-size: 0;
+    border: 1px solid #e5e5e5;
+    border-width: 0 1px;
     .#{$uiname}-pager-wrapper {
         width: 100%;
         padding: 5px 0px;
         overflow: hidden;
-    }   
+        border: 1px solid #e5e5e5;
+        border-width: 0 0 1px;
+    }
 }
 .#{$uiname}-row {
     border-bottom: 1px solid #f3f3f3;

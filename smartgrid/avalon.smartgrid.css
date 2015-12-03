@@ -18,6 +18,7 @@
     vertical-align: middle;
     *display: inline;
     *zoom: 1;
+    *vertical-align: auto;
     position: relative;
     cursor: pointer; }
   .oni-smartgrid .oni-helper-asc span, .oni-smartgrid .oni-helper-desc span, .oni-smartgrid .oni-helper-ndb span {
@@ -117,11 +118,15 @@
 
 .oni-smartgrid-footer {
   background-color: #f8f8f8;
-  font-size: 0; }
+  font-size: 0;
+  border: 1px solid #e5e5e5;
+  border-width: 0 1px; }
   .oni-smartgrid-footer .oni-smartgrid-pager-wrapper {
     width: 100%;
     padding: 5px 0px;
-    overflow: hidden; }
+    overflow: hidden;
+    border: 1px solid #e5e5e5;
+    border-width: 0 0 1px; }
 
 .oni-smartgrid-row {
   border-bottom: 1px solid #f3f3f3;
@@ -133,6 +138,7 @@
   vertical-align: middle;
   *display: inline;
   *zoom: 1;
+  *vertical-align: auto;
   overflow: hidden; }
   .oni-smartgrid-column-cell {
     padding: 7px 5px; }
@@ -147,7 +153,8 @@
     display: inline-block;
     vertical-align: middle;
     *display: inline;
-    *zoom: 1; }
+    *zoom: 1;
+    *vertical-align: auto; }
   .oni-smartgrid-pager-options .oni-dropdown {
     margin: 0 5px; }
 
@@ -157,6 +164,7 @@
   vertical-align: middle;
   *display: inline;
   *zoom: 1;
+  *vertical-align: auto;
   position: relative;
   z-index: 1;
   text-align: left;
@@ -197,6 +205,7 @@
       vertical-align: middle;
       *display: inline;
       *zoom: 1;
+      *vertical-align: auto;
       margin: 0 10px 0 0;
       cursor: pointer;
       -webkit-touch-callout: none;
@@ -215,6 +224,7 @@
       vertical-align: middle;
       *display: inline;
       *zoom: 1;
+      *vertical-align: auto;
       max-width: 110px;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -224,6 +234,7 @@
       vertical-align: middle;
       *display: inline;
       *zoom: 1;
+      *vertical-align: auto;
       margin-left: 0;
       cursor: pointer;
       *vertical-align: -3px; }
@@ -235,6 +246,7 @@
         vertical-align: middle;
         *display: inline;
         *zoom: 1;
+        *vertical-align: auto;
         cursor: pointer; }
   .oni-smartgrid-handler .oni-smartgrid-handler-ope {
     padding: 4px 5px;

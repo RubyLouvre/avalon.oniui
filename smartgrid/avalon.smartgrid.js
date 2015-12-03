@@ -438,6 +438,43 @@ define(["avalon",
                         col.width = Math.floor((parentWidth * parseInt(col.originalWidth, 10)) / 100) -1
                     }
                 }
+
+                var cols = vmodel.columns.$model,
+                    parentWidth = avalon(vmodel.container.parentNode).width() - 2,
+                    computableWidth = 0,
+                    unComputableWidth = 0,
+                    computableColNum = 0
+
+                // 计算可分配宽度
+                for(var i in cols){
+                    if(cols[i].toggle){
+                        var colConfigWidth = cols[i].configWidth
+
+                        if(col.configWidth !== 0 && col.toggle){
+                            unComputableWidth += parseInt(colConfigWidth)
+                        }
+                    }
+                }
+
+                computableWidth = parentWidth - unComputableWidth
+
+                // 计算可分配列数
+                for(var i in cols){
+                    var col = cols[i]
+
+                    if(col.configWidth === 0 && col.toggle){
+                        computableColNum += 1
+                    }
+                }
+
+                // 为这些列分配宽度
+                for(var i in cols){
+                    var col = cols[i]
+
+                    if(col.configWidth === 0 && col.toggle){
+                        vmodel.columns[i].width = Math.floor(computableWidth / computableColNum)
+                    }
+                }
             }
             vm._selectAll = function (event, selected) {
                 var datas = vmodel.data, rows = containerWrapper.children, onSelectAll = vmodel.onSelectAll,

@@ -207,6 +207,8 @@ $uiname: "oni-smartgrid";
         &-item{
             float: left;
             width: 135px;
+            height: 20px;
+            line-height: 20px;
             label{
                 @include inline-block();
                 cursor: pointer;  

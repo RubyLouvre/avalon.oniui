@@ -240,7 +240,9 @@
       *vertical-align: -3px; }
     .oni-smartgrid-handler .oni-smartgrid-handler-list-item {
       float: left;
-      width: 135px; }
+      width: 135px;
+      height: 20px;
+      line-height: 20px; }
       .oni-smartgrid-handler .oni-smartgrid-handler-list-item label {
         display: inline-block;
         vertical-align: middle;

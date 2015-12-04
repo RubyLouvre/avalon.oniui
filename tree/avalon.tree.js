@@ -1030,7 +1030,7 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html",
                 var evt = cmd, eventName = upperFirstLetter(cmd),
                     beforeFunc = vm.callback["before" + eventName],
                     onFunc = vm.callback["on" + eventName],
-                    res,
+                    res, _action = action || "",
                     arg = {
                         e: event,
                         leaf: leaf,
@@ -1042,8 +1042,9 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html",
                     }, ele = event ? event.srcElement || event.target : null,
                     callbackEnabled = !event || !event.cancelCallback
                 // 执行前检测，返回
-                vmodel.$fire("e:before" + eventName, arg)
-                if(callbackEnabled) {
+                // 修复nodeCreated触发两次的bug
+                if(!(cmd === "nodeCreated" && !_action.split)) vmodel.$fire("e:before" + eventName, arg)
+                if(callbackEnabled && !(cmd === "nodeCreated" && !_action.split)) {
                     // callback里面可能只preventDefault
                     if(arg.cancel || beforeFunc && beforeFunc.call(ele, arg) === false || arg.cancel) {
                         arg.preventDefault()
@@ -1060,9 +1061,11 @@ define(["avalon", "text!./avalon.tree.html", "text!./avalon.tree.leaf.html",
                 if(res !== undefine) arg.res = res
                 // 被消除
                 if(arg.cancel) return
-                vmodel.$fire("e:" + cmd, arg) 
+                if(!(cmd === "nodeCreated" && !_action.split)) vmodel.$fire("e:" + cmd, arg) 
                 if(callbackEnabled) {
-                    onFunc && onFunc.call(ele, arg)
+                    if(!(cmd === "nodeCreated" && !_action.split)) {
+                        onFunc && onFunc.call(ele, arg)
+                    }
                 }
                 return res
             }

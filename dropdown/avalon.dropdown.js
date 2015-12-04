@@ -96,6 +96,7 @@ define(["avalon",
             vm.menuHeight = vm.height;  //下拉列表框高度
             vm.dataSource = dataSource;    //源节点的数据源，通过dataSource传递的值将完全模拟select
             vm.focusClass =  false
+            vm.source = [];
             vm.$init = function(continueScan) {
                 //根据multiple的类型初始化组件
                 if (vmodel.multiple) {
@@ -143,10 +144,9 @@ define(["avalon",
                 //如果原来的select没有子节点，那么为它添加option与optgroup
                 if (!hasBuiltinTemplate) {
                     element.appendChild(getFragmentFromData(dataModel));
-                    avalon(element).attr("size", vmodel["size"]);
-                    if(vmodel["multiple"]){
-                        avalon(element).attr("multiple", vmodel["multiple"]);
-                    }
+                    avalon.each(["multiple", "size"], function(i, attr) {
+                        avalon(element).attr(attr, vmodel[attr]);
+                    });
                 }
 
                 if (!vmodel.multiple) {
@@ -226,7 +226,7 @@ define(["avalon",
                     vmodel.readOnly = readOnlyModel[1][readOnlyModel[0]];
                 }
 
-                //获取$source信息
+                // 获取$source信息(兼容$source异步传值)
                 if(vmodel.$source) {
                     if(avalon.type(vmodel.$source) === "string") {
                         var sourceModel = avalon.getModel(vmodel.$source, vmodels);
@@ -244,6 +244,10 @@ define(["avalon",
                         vmodel._refresh(n)
                     });
                 }
+                // 新异步方式
+                vmodel.source.$watch('length', function(n) {
+                    vmodel._refresh(n)
+                });
                 avalon.scan(element.parentNode, [vmodel].concat(vmodels));
                 if(continueScan){
                     continueScan()
@@ -317,7 +321,10 @@ define(["avalon",
                 if (len > 0) {
                     //当data改变时，解锁滚动条
                     vmodel._disabledScrollbar(false);
-                    vmodel.data.pushArray(getDataFromOption(vmodel.$source.$model || vmodel.$source));
+                    if(vmodel.$source){
+                        vmodel.data.pushArray(getDataFromOption(vmodel.$source.$model || vmodel.$source));
+                    }
+                    vmodel.data.pushArray(getDataFromOption(vmodel.source.$model || vmodel.source));
                     var option
                     //当data改变时，尝试使用之前的value对label和title进行赋值，如果失败，使用data第一项
                     if (!(option = setLabelTitle(vmodel.value))) {
@@ -347,7 +354,7 @@ define(["avalon",
                     vmodel.toggle = false
                 }
             };
-            
+
             vm._keydown = function(event) {
                 if(vmodel.keyboardEvent === false) {
                     return;
@@ -556,13 +563,13 @@ define(["avalon",
             vm._styleFix = function(resetHeight) {
                 var MAX_HEIGHT = options.height || 200,
                     $menu = avalon(vmodel.menuNode),
-                    height = '' 
+                    height = ''
 
                 if (resetHeight) {
                     vmodel.menuHeight = ''
                     avalon(vmodel.dropdownNode).css({ 'height': '' });
                 }
-                
+
                 height = vmodel.dropdownNode.scrollHeight
                 vmodel.menuWidth = !ie6 ? vmodel.listWidth - $menu.css("borderLeftWidth").replace(styleReg, "$1") - $menu.css("borderRightWidth").replace(styleReg, "$1") : vmodel.listWidth;
                 if (height > MAX_HEIGHT) {
@@ -671,8 +678,8 @@ define(["avalon",
                 }
                 //尝试在当前的data中查找value对应的选项，如果没有，将value设置为data中的option第一项的value
                 var option = opt.data.filter(function(item) {
-                    return item.value === opt.value  && !item.group
-                }),
+                        return item.value === opt.value  && !item.group
+                    }),
                     options = opt.data.filter(function(item) {
                         return !item.group
                     })
@@ -712,19 +719,13 @@ define(["avalon",
 
         //设置label以及title
         function setLabelTitle(value) {
-            if(!vmodel.multiple && avalon.type(value)==="array") {
-                value = value[0];
-            }
-
             var option = vmodel.data.$model.filter(function(item) {
                 return item.value === value;
             });
 
             option = option.length > 0 ? option[0] : null
 
-            if(!option && vmodel.data.length) {
-                avalon.log("[log] avalon.dropdown 设置label出错");
-            } else if (option) {
+            if (option) {
                 vmodel.label = option.label;
                 vmodel.title = option.title || option.label || "";
             }
@@ -783,7 +784,7 @@ define(["avalon",
         onShow: null,    //@config 下拉框展示的回调函数
         onHide: null,    //@config 下拉框隐藏的回调函数
         onChange: null,  //@config value改变时的回调函数
-        $hasDuplex: false, 
+        $hasDuplex: false,
         multipleChange: false,
         keyboardEvent: true,  //@config 是否支持键盘事件
         /**
@@ -990,8 +991,8 @@ define(["avalon",
 
 /**
  @links
- 
-[使用html配置multiple组件](avalon.dropdown.ex16.html)
+
+ [使用html配置multiple组件](avalon.dropdown.ex16.html)
  [使用html配置multiple组件](avalon.dropdown.ex1.html)
  [使用html配置multiple并使用双工绑定](avalon.dropdown.ex2.html)
  [使用option配置multiple并使用双工绑定](avalon.dropdown.ex3.html)

@@ -64,6 +64,7 @@ require(["pages/index/scripts/models", "pages/index/scripts/utils", "pages/index
         }
     })
 
+    var init = 1
     avalon.state.config({
         onLoad: function(){
             if(QReport){
@@ -79,9 +80,11 @@ require(["pages/index/scripts/models", "pages/index/scripts/utils", "pages/index
                 QReport.pv({
                     pg: hash,
                     widgetId: widgetId,
-                    ex: ex
+                    ex: ex,
+                    init: init
                 })
             }
+            init = 0
         }
     })
 

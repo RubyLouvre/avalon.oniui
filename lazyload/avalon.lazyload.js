@@ -109,14 +109,13 @@ define(["avalon"], function() {
             placeholderText.imgEle = element
             lazyElementArr.push(placeholderText)
         }
-
     }
 
     //init
     avalon.bind(window, "load", function() {
         _delayload(options)
     })
-    setInterval(function(){
+    var loadInterval = setInterval(function(){
         _delayload(options)
     },100)
 
@@ -215,6 +214,9 @@ define(["avalon"], function() {
 
             //加载正确的图片(originalSrc),条件是屏幕范围内并且要防止重复设置
             if (eleTop < winTop + winHeight && eleTop + eleHeight > winTop && !imgItem.lazyloaded) {
+
+                clearInterval(loadInterval)
+
                 //延迟加载
                 setTimeout((function(i, imgItem, originalSrc) {
                     return function() {

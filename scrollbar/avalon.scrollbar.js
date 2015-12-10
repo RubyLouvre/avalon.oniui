@@ -22,6 +22,9 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
         }
     }
 
+    // IE 6,7,8滚动条不上效果
+    var isIE678 = navigator.userAgent.match(/msie [678]/gi)
+
     function strToNumber(s) {
         return Math.round(parseFloat(s)) || 0
     }
@@ -266,16 +269,18 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
                 if(item) {
                     clearTimeout(item.data("oni-scrollbar-hidetimer"))
                     item.css("visibility", "visible")
-                    item.css("opacity", 1)
-                    if(!always) {
-                        item.data("oni-scrollbar-hidetimer", setTimeout(function() {
-                            item.css("opacity", 0)
-                        }, 1000))
+                    if(!isIE678) {
+                        item.css("opacity", 1)
+                        if(!always) {
+                            item.data("oni-scrollbar-hidetimer", setTimeout(function() {
+                                item.css("opacity", 0)
+                            }, 1000))
+                        }
                     }
                 }
             }
             vm._hide = function(e,index) {
-                if(vmodel.show != "scrolling") return
+                if(vmodel.show != "scrolling" || !isIE678) return
                 if(index && bars[index]) {
                     bars[index].css("opacity", 0)
                 } else {
@@ -322,8 +327,8 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
                 var hPadding = scroller.width() - scroller.innerWidth(),
                     // 竖直方向内间距
                     vPadding = scroller.height() - scroller.innerHeight()
-                scroller.css("height", h + vPadding)
-                scroller.css("width", w + hPadding )
+                if(h + vPadding > 0) scroller.css("height", h + vPadding)
+                if(w + hPadding > 0) scroller.css("width", w + hPadding )
                 viewW = scroller[0].scrollWidth
                 viewH = scroller[0].scrollHeight
                 barDictionary = {
@@ -360,7 +365,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
                     // hidden bar
                     if(!barDictionary[item]) {
                         if(bar) {
-                            bar.css("opacity", 0)
+                            if(!isIE678) bar.css("opacity", 0)
                             bar.css("visibility", "hidden")
                             bar.data("oni-scrollbar-needed", false)
                         }
@@ -369,10 +374,12 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
                         if(bar) {
                             bar.data("oni-scrollbar-needed", true)
                             bar.css("visibility", "visible")
-                            if(vmodel.show == "scrolling" || vmodel.show == "never"){
-                                bar.css("opacity", 0)
-                            } else {
-                                bar.css("opacity", 1)
+                            if(!isIE678) {
+                                if(vmodel.show == "scrolling" || vmodel.show == "never"){
+                                    bar.css("opacity", 0)
+                                } else {
+                                    bar.css("opacity", 1)
+                                }
                             }
                         }
                     }
@@ -407,6 +414,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
                                 ]
                             }
                             avalon.each(barCss, function(index, css) {
+                                if(index == 1 && css[1] <= 0) return
                                 bar.css.apply(bar, css)
                             })
                             bh = bar.height()
@@ -427,12 +435,13 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
                         var ex
                         if(isVertical) {
                             ex = vmodel.show == "always" ? bw : 0
-                            scroller.css("width", w + hPadding - ex)
+                            if(w + hPadding - ex > 0) scroller.css("width", w + hPadding - ex)
                         } else {
                             ex = vmodel.show == "always" ? bh : 0
-                            scroller.css("height", h + vPadding - ex)
+                            if(h + vPadding - ex) scroller.css("height", h + vPadding - ex)
                         }
                         avalon.each(draggerParCss, function(index, css) {
+                            if(index == 1 && css[1] <= 0) return
                             draggerpar.css.apply(draggerpar, css)
                         })
                         sh = bh - headerLength * bw
@@ -473,6 +482,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
                             x = x > 0 ? (x > viewW - w + ex ? viewW - w + ex : x) : 0
                         }
                         avalon.each(draggerCss, function(index, css) {
+                            if(index == 2 && css[1] <= 0) return
                             dragger.css.apply(dragger, css)
                         })
                         if(ifInit) {

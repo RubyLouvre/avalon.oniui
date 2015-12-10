@@ -65,7 +65,9 @@ define(["../draggable/avalon.draggable"], function(avalon) {
         //data.originalX = offset.left; data.originalY = offset.top;
         options.beforeStart = function(event, data) {
             var target = data.$element;
-            data.dragX = data.dragY = false
+            if(_drag === avalon.noop){
+                data.dragX = data.dragY = false
+            }
             var dir = getDirection(event, target, data);
             if (dir === "")
                 return;
@@ -107,6 +109,7 @@ define(["../draggable/avalon.draggable"], function(avalon) {
         }
         data.value = ""
         data.draggable = options
+
         draggable(data, vmodels)
 
     }

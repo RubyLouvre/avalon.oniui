@@ -1,8 +1,10 @@
 //=========================================
 //  数据交互模块 by 司徒正美
+//  版本: 1.0.0
+//  最近更新: 2015/4/30
 //==========================================
-define(["avalon", "../mmPromise/mmPromise"], function(avalon) {
-    var global = this || (0, eval)("this")
+define("mmRequest", ["avalon", "mmPromise"], function(avalon) {
+    var global = window
     var DOC = global.document
     var encode = encodeURIComponent
     var decode = decodeURIComponent
@@ -15,6 +17,8 @@ define(["avalon", "../mmPromise/mmPromise"], function(avalon) {
     var rquery = /\?/
     var rjsonp = /(=)\?(?=&|$)|\?\?/
     var r20 = /%20/g
+    var radd = /\+/g
+    var r5b5d = /%5B(.*?)%5D$/;
 
     var originAnchor = document.createElement("a")
     originAnchor.href = location.href
@@ -44,7 +48,7 @@ define(["avalon", "../mmPromise/mmPromise"], function(avalon) {
         if (code) {
             if (code.indexOf("use strict") === 1) {
                 var script = document.createElement("script")
-                script.text = code
+                script.text = code;
                 head.appendChild(script).parentNode.removeChild(script)
             } else {
                 indirect(code)
@@ -54,8 +58,8 @@ define(["avalon", "../mmPromise/mmPromise"], function(avalon) {
 
     if (!String.prototype.startsWith) {
         String.prototype.startsWith = function(searchString, position) {
-            position = position || 0
-            return this.lastIndexOf(searchString, position) === position
+            position = position || 0;
+            return this.lastIndexOf(searchString, position) === position;
         }
     }
 
@@ -65,7 +69,8 @@ define(["avalon", "../mmPromise/mmPromise"], function(avalon) {
         //在IE下如果重置了document.domain，直接访问window.location会抛错，但用document.URL就ok了
         //http://www.cnblogs.com/WuQiang/archive/2012/09/21/2697474.html
         isLocal = rlocalProtocol.test(location.protocol)
-    } catch (e) {}
+    } catch (e) {
+    }
 
     new function() {
         //http://www.cnblogs.com/rubylouvre/archive/2010/04/20/1716486.html
@@ -80,9 +85,10 @@ define(["avalon", "../mmPromise/mmPromise"], function(avalon) {
             try {
                 if (eval("new " + axo)) {
                     avalon.xhr = new Function("return new " + axo)
-                    break
+                    break;
                 }
-            } catch (e) {}
+            } catch (e) {
+            }
         }}
     var supportCors = "withCredentials" in avalon.xhr()
 
@@ -97,11 +103,11 @@ define(["avalon", "../mmPromise/mmPromise"], function(avalon) {
                 xml = tmp.parseFromString(data, "text/xml")
             } else { // IE
                 xml = new ActiveXObject("Microsoft.XMLDOM") //"Microsoft.XMLDOM"
-                xml.async = "false"
+                xml.async = "false";
                 xml.loadXML(data)
             }
         } catch (e) {
-            xml = void 0
+        xml = void  0
         }
         if (!xml || !xml.documentElement || xml.getElementsByTagName("parsererror").length) {
             avalon.error("Invalid XML: " + data)
@@ -129,29 +135,29 @@ define(["avalon", "../mmPromise/mmPromise"], function(avalon) {
         opts.url = opts.url.replace(rhash, "").replace(rprotocol, location.protocol + "//")
 
         if (typeof opts.crossDomain !== "boolean") { //判定是否跨域
-            var urlAnchor = document.createElement("a")
+            var urlAnchor = document.createElement("a");
             // Support: IE6-11+
             // IE throws exception if url is malformed, e.g. http://example.com:80x/
             try {
-                urlAnchor.href = opts.url
+                urlAnchor.href = opts.url;
                 // in IE7-, get the absolute path
-                var absUrl = !"1"[0] ? urlAnchor.getAttribute("href", 4) : urlAnchor.href
+                var absUrl = !"1"[0] ? urlAnchor.getAttribute("href", 4) : urlAnchor.href;
                 urlAnchor.href = absUrl
-                opts.crossDomain = originAnchor.protocol + "//" + originAnchor.host !== urlAnchor.protocol + "//" + urlAnchor.host
+                opts.crossDomain = originAnchor.protocol + "//" + originAnchor.host !== urlAnchor.protocol + "//" + urlAnchor.host;
             } catch (e) {
-                opts.crossDomain = true
+            opts.crossDomain = true;
             }
         }
         opts.hasContent = !rnoContent.test(opts.type) //是否为post请求
         if (!opts.hasContent) {
             if (querystring) { //如果为GET请求,则参数依附于url上
-                opts.url += (rquery.test(opts.url) ? "&" : "?") + querystring
+                opts.url += (rquery.test(opts.url) ? "&" : "?") + querystring;
             }
             if (opts.cache === false) { //添加时间截
                 opts.url += (rquery.test(opts.url) ? "&" : "?") + "_time=" + (new Date() - 0)
             }
         }
-        return opts
+        return opts;
     }
     /**
      * 伪XMLHttpRequest类,用于屏蔽浏览器差异性
@@ -166,32 +172,32 @@ define(["avalon", "../mmPromise/mmPromise"], function(avalon) {
      */
     var XHRMethods = {
         setRequestHeader: function(name, value) {
-            this.requestHeaders[name] = value
-            return this
+            this.requestHeaders[name] = value;
+            return this;
         },
         getAllResponseHeaders: function() {
-            return this.readyState === 4 ? this.responseHeadersString : null
+            return this.readyState === 4 ? this.responseHeadersString : null;
         },
         getResponseHeader: function(name, match) {
             if (this.readyState === 4) {
                 while ((match = rheaders.exec(this.responseHeadersString))) {
-                    this.responseHeaders[match[1]] = match[2]
+                    this.responseHeaders[match[1]] = match[2];
                 }
-                match = this.responseHeaders[name]
+                match = this.responseHeaders[name];
             }
-            return match === undefined ? null : match
+            return match === undefined ? null : match;
         },
         overrideMimeType: function(type) {
-            this.mimeType = type
-            return this
+            this.mimeType = type;
+            return this;
         },
         // 中止请求
         abort: function(statusText) {
-            statusText = statusText || "abort"
+            statusText = statusText || "abort";
             if (this.transport) {
                 this.respond(0, statusText)
             }
-            return this
+            return this;
         },
         /**
          * 用于派发success,error,complete等回调
@@ -218,37 +224,78 @@ define(["avalon", "../mmPromise/mmPromise"], function(avalon) {
                         var dataType = this.options.dataType || this.options.mimeType
                         if (!dataType && this.responseText || this.responseXML) { //如果没有指定dataType，则根据mimeType或Content-Type进行揣测
                             dataType = this.getResponseHeader("Content-Type") || ""
-                            dataType = dataType.match(/json|xml|script|html/) || ["text"]
-                            dataType = dataType[0]
+                            dataType = dataType.match(/json|xml|script|html/i) || ["text"]
+                            dataType = dataType[0].toLowerCase()
                         }
                         var responseText = this.responseText || '',
                             responseXML = this.responseXML || ''
                         try {
                             this.response = avalon.ajaxConverters[dataType].call(this, responseText, responseXML)
                         } catch (e) {
-                            isSuccess = false
-                            this.error = e
-                            statusText = "parsererror"
+                        isSuccess = false
+                        this.error = e
+                        statusText = "parsererror"
                         }
                     }
                 }
             }
-            this.status = status
+            this.status = status;
             this.statusText = statusText + ""
             if (this.timeoutID) {
                 clearTimeout(this.timeoutID)
                 delete this.timeoutID
             }
             this._transport = this.transport
+
+            /**
+             * global event handler
+             */
+            var that = this
+
             // 到这要么成功，调用success, 要么失败，调用 error, 最终都会调用 complete
             if (isSuccess) {
                 this._resolve([this.response, statusText, this])
+                /**
+                 * global event handler
+                 */
+                window.setTimeout(function() {
+                    avalon.ajaxGlobalEvents.success(that, that.options, that.response)
+                }, 0)
             } else {
                 this._reject([this, statusText, this.error])
+                /**
+                 * global event handler
+                 */
+                window.setTimeout(function() {
+                    avalon.ajaxGlobalEvents.error(that, that.options, statusText)
+                }, 0)
             }
             delete this.transport
+
+            /**
+             * global event handler
+             */
+            ajaxActive--
+
+            window.setTimeout(function() {
+                avalon.ajaxGlobalEvents.complete(that, that.options)
+            }, 0)
+
+            if (ajaxActive === 0) {
+                // 最后一个
+                window.setTimeout(function() {
+                    avalon.ajaxGlobalEvents.stop()
+                }, 0)
+            }
+
         }
     }
+    /**
+     * global event handler
+     */
+    // 记录当前活跃的 ajax 数
+    var ajaxActive = 0
+
     //ajax主函数
     avalon.ajax = function(opts, promise) {
         if (!opts || !opts.url) {
@@ -344,9 +391,22 @@ define(["avalon", "../mmPromise/mmPromise"], function(avalon) {
                 promise.dispatch(0, "timeout")
             }, opts.timeout)
         }
+
+        /**
+         * global event handler
+         */
+        if (ajaxActive === 0) {
+            // 第一个
+            avalon.ajaxGlobalEvents.start()
+        }
+        avalon.ajaxGlobalEvents.send(promise, opts)
+        ajaxActive++
+
+
+
         promise.request()
         return promise
-    }
+    };
     "get,post".replace(avalon.rword, function(method) {
         avalon[method] = function(url, data, callback, type) {
             if (typeof data === "function") {
@@ -361,7 +421,7 @@ define(["avalon", "../mmPromise/mmPromise"], function(avalon) {
                 success: callback,
                 dataType: type
             })
-        }
+        };
     })
     function ok(val) {
         return val
@@ -377,9 +437,9 @@ define(["avalon", "../mmPromise/mmPromise"], function(avalon) {
     }
     avalon.upload = function(url, form, data, callback, dataType) {
         if (typeof data === "function") {
-            dataType = callback
-            callback = data
-            data = void 0
+            dataType = callback;
+            callback = data;
+            data = void 0;
         }
         return avalon.ajax({
             url: url,
@@ -388,12 +448,23 @@ define(["avalon", "../mmPromise/mmPromise"], function(avalon) {
             form: form,
             data: data,
             success: callback
-        })
+        });
     }
+
+
+    /**
+     * global event handler
+     */
+    avalon.ajaxGlobalEvents = {};
+
+    ["start", "stop", "complete", "error", "success", "send"].forEach(function(method) {
+        avalon.ajaxGlobalEvents[method] = avalon.noop
+    })
+
     avalon.ajaxConverters = { //转换器，返回用户想要做的数据
         text: function(text) {
             // return text || "";
-            return text
+            return text;
         },
         xml: function(text, xml) {
             return xml !== void 0 ? xml : parseXML(text)
@@ -409,10 +480,10 @@ define(["avalon", "../mmPromise/mmPromise"], function(avalon) {
         },
         script: function(text) {
             parseJS(text)
-            return text
+            return text;
         },
         jsonp: function() {
-            var json, callbackName
+            var json, callbackName;
             if (this.jsonpCallback.startsWith('avalon.')) {
                 callbackName = this.jsonpCallback.replace(/avalon\./, '')
                 json = avalon[callbackName]
@@ -420,120 +491,177 @@ define(["avalon", "../mmPromise/mmPromise"], function(avalon) {
             } else {
                 json = window[this.jsonpCallback]
             }
-            return json
+            return json;
         }
     }
 
-    avalon.param = function(a) {
+    var rbracket = /\[\]$/
+    avalon.param = function(obj) {
         var prefix,
             s = [],
             add = function(key, value) {
-                value = (value == null ? "" : value)
-                s[s.length] = encode(key) + "=" + encode(value)
-            }
+                // If value is a function, invoke it and return its value
+                value = typeof value === "function" ? value() : (value == null ? "" : value);
+                s[s.length] = encodeURIComponent(key) + "=" + encodeURIComponent(value);
+        }
+        // 处理数组与类数组的jquery对象
+        if (Array.isArray(obj)) {
+            // Serialize the form elements
+            avalon.each(obj, add)
 
-        if (Array.isArray(a) || !avalon.isPlainObject(a)) {
-            avalon.each(a, function(subKey, subVal) {
-                add(subKey, subVal)
-            })
         } else {
-            for (prefix in a) {
-                paramInner(prefix, a[prefix], add)
+            for (prefix in obj) {
+                paramInner(prefix, obj[prefix], add);
             }
         }
 
         // Return the resulting serialization
-        return s.join("&").replace(r20, "+")
+        return s.join("&").replace(r20, "+");
     }
 
     function paramInner(prefix, obj, add) {
-        var name
+        var name;
         if (Array.isArray(obj)) {
             // Serialize array item.
             avalon.each(obj, function(i, v) {
-                paramInner(prefix + "[" + (typeof v === "object" ? i : "") + "]", v, add)
-            })
+                if (rbracket.test(prefix)) {
+                    // Treat each array item as a scalar.
+                    add(prefix, v);
+                } else {
+                    // Item is non-scalar (array or object), encode its numeric index.
+                    paramInner(
+                        prefix + "[" + (typeof v === "object" ? i : "") + "]",
+                        v,
+                        add);
+                }
+            });
         } else if (avalon.isPlainObject(obj)) {
             // Serialize object item.
             for (name in obj) {
-                paramInner(prefix + "[" + name + "]", obj[name], add)
+                paramInner(prefix + "[" + name + "]", obj[name], add);
             }
+
         } else {
             // Serialize scalar item.
-            add(prefix, obj)
+            add(prefix, obj);
+        }
+    }
+    //将一个字符串转换为对象
+    function tryDecodeURIComponent(value) {
+        try {
+            return decodeURIComponent(value);
+        } catch (e) {
+        return value
         }
     }
 
-    //将一个字符串转换为对象
-    avalon.unparam = function(input) {
-        var items, temp,
-            expBrackets = /\[(.*?)\]/g,
-            expVarname = /(.+?)\[/,
-            result = {}
 
-        if ((temp = avalon.type(input)) != 'string' || (temp == 'string' && !temp.length))
-            return {}
-        if (input.indexOf("?") !== -1) {
-            input = input.split("?").pop()
+    //a%5B0%5D%5Bvalue%5D a%5B1%5D%5B%5D
+    function addSubObject(host, text, value) {
+        var match = text.match(r5b5d)
+        if (!match) {
+            return true
         }
-        items = decode(input).split('&')
 
-        if (!(temp = items.length) || (temp == 1 && temp === ''))
-            return result
-
-        items.forEach(function(item) {
-            if (!item.length)
-            return
-            temp = item.split("=")
-            var key = temp.shift(),
-                value = temp.join('=').replace(/\+/g, ' '),
-                size, link,
-                subitems = []
-
-            if (!key.length)
-            return
-
-            while ((temp = expBrackets.exec(key)))
-            subitems.push(temp[1])
-
-            if (!(size = subitems.length)) {
-                result[key] = value
-                return
+        var steps = []
+        var first = true
+        var step, index, key
+        while (index = text.lastIndexOf("%5B")) {
+            if (index === -1) {
+                break
             }
-            size--
-            temp = expVarname.exec(key)
-
-            if (!temp || !(key = temp[1]) || !key.length)
-            return
-
-            if (avalon.type(result[key]) !== 'object')
-                result[key] = {}
-
-            link = result[key]
-
-            avalon.each(subitems, function(subindex, subitem) {
-                if (!(temp = subitem).length) {
-                    temp = 0
-
-                    avalon.each(link, function(num) {
-                        if (!isNaN(num) && num >= 0 && (num % 1 === 0) && num >= temp)
-                            temp = Number(num) + 1
+            key = text.slice(index).slice(3, -3)
+            text = text.slice(0, index)
+            if (key === "") {
+                steps.unshift({
+                    action: "pushArrayElement"
+                })
+            } else if ((key >>> 0) + "" === key) {
+                steps.unshift({
+                    action: "setSubArray",
+                    value: key
+                })
+            } else {
+                if (first) {
+                    steps.unshift({
+                        action: "setObjectProperty",
+                        value: tryDecodeURIComponent(key)
+                    })
+                } else {
+                    steps.unshift({
+                        action: "setSubObjet",
+                        value: tryDecodeURIComponent(key)
                     })
                 }
-                if (subindex == size) {
-                    link[temp] = value
-                } else if (avalon.type(link[temp]) !== 'object') {
-                    link = link[temp] = {}
-                } else {
-                    link = link[temp]
+            }
+            first = false
+        }
+        first = true
+        while (step = steps.shift()) {
+            var isObject = /Object/.test(step.action)
+            if (first) {
+                if (!(text in host)) {
+                    host[text] = isObject ? {} : []
                 }
-
-            })
-
-        })
-        return result
+                first = false
+                host = host[text]
+            }
+            switch (step.action) {
+                case "pushArrayElement":
+                    host.push(value)
+                    break
+                case "setObjectProperty":
+                    host[step.value] = value
+                    break
+                case "setSubObjet":
+                    if (!(step.value in host)) {
+                        host[step.value] = {}
+                    }
+                    host = host[step.value]
+                    break
+                case "setSubArray":
+                    if (!(step.value in host)) {
+                        host[step.value] = []
+                    }
+                    host = host[step.value]
+                    break
+            }
+        }
     }
+    //  function add
+    avalon.unparam = function(qs, sep, eq) {
+        sep = sep || '&';
+        eq = eq || '=';
+        var obj = {};
+        if ((typeof qs !== "string") || qs.length === 0) {
+            return obj;
+        }
+        if (qs.indexOf("?") !== -1) {
+            qs = qs.split("?").pop()
+        }
+        var array = qs.split(sep);
+        for (var i = 0, el; el = array[i++];) {
+            var arr = el.split("=")
+            if (arr.length === 1) { //处理只有键名没键值的情况
+                obj[arr[0]] = ""
+            } else {
+                var key = arr[0].replace(radd, '%20')
+                var v = tryDecodeURIComponent(arr.slice(1).join("=").replace(radd, ' '));
+                if (addSubObject(obj, key, v)) { //处理存在中括号的情况
+                    var k = tryDecodeURIComponent(key) //处理不存在中括号的简单的情况
+                    if (!Object.prototype.hasOwnProperty.call(obj, k)) {
+                        obj[k] = v;
+                    } else if (Array.isArray(obj[k])) {
+                        obj[k].push(v);
+                    } else {
+                        obj[k] = [obj[k], v];
+                    }
+                }
+            }
+        }
 
+        return obj
+    }
     var rinput = /select|input|button|textarea/i
     var rcheckbox = /radio|checkbox/
     var rline = /\r?\n/g
@@ -542,7 +670,7 @@ define(["avalon", "../mmPromise/mmPromise"], function(avalon) {
     }
     //表单元素变字符串, form为一个元素节点
     avalon.serialize = function(form) {
-        var json = {}
+        var json = {};
         // 不直接转换form.elements，防止以下情况：   <form > <input name="elements"/><input name="test"/></form>
         Array.prototype.filter.call(form.getElementsByTagName("*"), function(el) {
             if (rinput.test(el.nodeName) && el.name && !el.disabled) {
@@ -569,9 +697,9 @@ define(["avalon", "../mmPromise/mmPromise"], function(avalon) {
         xhr: {
             //发送请求
             request: function() {
-                var self = this
-                var opts = this.options
-                var transport = this.transport = new avalon.xhr
+                var self = this;
+                var opts = this.options;
+                var transport = this.transport = new avalon.xhr;
                 transport.open(opts.type, opts.url, opts.async, opts.username, opts.password)
                 if (this.mimeType && transport.overrideMimeType) {
                     transport.overrideMimeType(this.mimeType)
@@ -604,7 +732,7 @@ define(["avalon", "../mmPromise/mmPromise"], function(avalon) {
                  */
                 if (opts.progressCallback) {
                     // 判断是否 ie6-9
-                    var isOldIE = document.all && !window.atob
+                    var isOldIE = document.all && !window.atob;
                     if (!isOldIE) {
                         transport.upload.onprogress = opts.progressCallback
                     }
@@ -645,7 +773,7 @@ define(["avalon", "../mmPromise/mmPromise"], function(avalon) {
                 }
                 // by zilong：避免abort后还继续派发onerror等事件
                 if (forceAbort && this.timeoutID) {
-                    clearTimeout(this.timeoutID)
+                    clearTimeout(this.timeoutID);
                     delete this.timeoutID
                 }
                 try {
@@ -671,7 +799,8 @@ define(["avalon", "../mmPromise/mmPromise"], function(avalon) {
                                 //访问它会抛“An attempt was made to use an object that is not, or is no longer, usable”异常
                                 var xml = transport.responseXML
                                 this.responseXML = xml.documentElement
-                            } catch (e) {}
+                            } catch (e) {
+                            }
                             //设置response
                             if (this.useResponseType) {
                                 this.response = transport.response
@@ -682,8 +811,8 @@ define(["avalon", "../mmPromise/mmPromise"], function(avalon) {
                             try { //火狐在跨城请求时访问statusText值会抛出异常
                                 var statusText = transport.statusText
                             } catch (e) {
-                                this.error = e
-                                statusText = "firefoxAccessError"
+                            this.error = e
+                            statusText = "firefoxAccessError"
                             }
                             //用于处理特殊情况,如果是一个本地请求,只要我们能获取数据就假当它是成功的
                             if (!status && isLocal && !this.options.crossDomain) {
@@ -696,17 +825,17 @@ define(["avalon", "../mmPromise/mmPromise"], function(avalon) {
                         }
                     }
                 } catch (err) {
-                    // 如果网络问题时访问XHR的属性，在FF会抛异常
-                    // http://helpful.knobs-dials.com/index.php/Component_returned_failure_code:_0x80040111_(NS_ERROR_NOT_AVAILABLE)
-                    if (!forceAbort) {
-                        this.dispatch(500, err)
-                    }
+                // 如果网络问题时访问XHR的属性，在FF会抛异常
+                // http://helpful.knobs-dials.com/index.php/Component_returned_failure_code:_0x80040111_(NS_ERROR_NOT_AVAILABLE)
+                if (!forceAbort) {
+                this.dispatch(500, err)
+                }
                 }
             }
         },
         jsonp: {
             preproccess: function() {
-                var opts = this.options
+                var opts = this.options;
                 var name = this.jsonpCallback = opts.jsonpCallback || "avalon.jsonp" + setTimeout("1")
                 if (rjsonp.test(opts.url)) {
                     opts.url = opts.url.replace(rjsonp, "$1" + name)
@@ -729,15 +858,15 @@ define(["avalon", "../mmPromise/mmPromise"], function(avalon) {
         },
         script: {
             request: function() {
-                var opts = this.options
+                var opts = this.options;
                 var node = this.transport = DOC.createElement("script")
                 if (opts.charset) {
                     node.charset = opts.charset
                 }
-                var self = this
+                var self = this;
                 node.onerror = node[useOnload ? "onload" : "onreadystatechange"] = function() {
                     self.respond()
-                }
+                };
                 node.src = opts.url
                 head.insertBefore(node, head.firstChild)
             },
@@ -748,18 +877,18 @@ define(["avalon", "../mmPromise/mmPromise"], function(avalon) {
                 }
                 // by zilong：避免abort后还继续派发onerror等事件
                 if (forceAbort && this.timeoutID) {
-                    clearTimeout(this.timeoutID)
+                    clearTimeout(this.timeoutID);
                     delete this.timeoutID
                 }
                 var execute = /loaded|complete|undefined/i.test(node.readyState)
                 if (forceAbort || execute) {
                     node.onerror = node.onload = node.onreadystatechange = null
-                    var parent = node.parentNode
+                    var parent = node.parentNode;
                     if (parent) {
                         parent.removeChild(node)
                     }
                     if (!forceAbort) {
-                        var args
+                        var args;
                         if (this.jsonpCallback) {
                             var jsonpCallback = this.jsonpCallback.startsWith('avalon.') ? avalon[this.jsonpCallback.replace(/avalon\./, '')] : window[this.jsonpCallback]
                             args = typeof jsonpCallback === "function" ? [500, "error"] : [200, "success"]
@@ -776,8 +905,8 @@ define(["avalon", "../mmPromise/mmPromise"], function(avalon) {
             preproccess: function() {
                 var opts = this.options, formdata
                 if (typeof opts.form.append === "function") { //简单判断opts.form是否为FormData
-                    formdata = opts.form
-                    opts.contentType = ''
+                    formdata = opts.form;
+                    opts.contentType = '';
                 } else {
                     formdata = new FormData(opts.form) //将二进制什么一下子打包到formdata
                 }
@@ -803,45 +932,45 @@ define(["avalon", "../mmPromise/mmPromise"], function(avalon) {
                  Next\r\n\
                  BinaryToArray = oDic.Items\r\n\
               End Function'
-        execScript(str, "VBScript")
+        execScript(str, "VBScript");
         avalon.fixAjax = function() {
             avalon.ajaxConverters.arraybuffer = function() {
                 var body = this.tranport && this.tranport.responseBody
                 if (body) {
-                    return new VBArray(BinaryToArray(body)).toArray()
+                    return new VBArray(BinaryToArray(body)).toArray();
                 }
-            }
+            };
             function createIframe(ID) {
                 var iframe = avalon.parseHTML("<iframe " + " id='" + ID + "'" +
-                    " name='" + ID + "'" + " style='position:absolute;left:-9999px;top:-9999px;'/>").firstChild
-                return (DOC.body || DOC.documentElement).insertBefore(iframe, null)
+                    " name='" + ID + "'" + " style='position:absolute;left:-9999px;top:-9999px;'/>").firstChild;
+                return (DOC.body || DOC.documentElement).insertBefore(iframe, null);
             }
             function addDataToForm(form, data) {
                 var ret = [],
-                    d, isArray, vs, i, e
+                    d, isArray, vs, i, e;
                 for (d in data) {
-                    isArray = Array.isArray(data[d])
-                    vs = isArray ? data[d] : [data[d]]
+                    isArray = Array.isArray(data[d]);
+                    vs = isArray ? data[d] : [data[d]];
                     // 数组和原生一样对待，创建多个同名输入域
                     for (i = 0; i < vs.length; i++) {
-                        e = DOC.createElement("input")
-                        e.type = 'hidden'
-                        e.name = d
-                        e.value = vs[i]
-                        form.appendChild(e)
-                        ret.push(e)
+                        e = DOC.createElement("input");
+                        e.type = 'hidden';
+                        e.name = d;
+                        e.value = vs[i];
+                        form.appendChild(e);
+                        ret.push(e);
                     }
                 }
-                return ret
+                return ret;
             }
             //https://github.com/codenothing/Pure-Javascript-Upload/blob/master/src/upload.js
             avalon.ajaxTransports.upload = {
                 request: function() {
-                    var self = this
-                    var opts = this.options
-                    var ID = "iframe-upload-" + this.uniqueID
-                    var form = opts.form
-                    var iframe = this.transport = createIframe(ID)
+                    var self = this;
+                    var opts = this.options;
+                    var ID = "iframe-upload-" + this.uniqueID;
+                    var form = opts.form;
+                    var iframe = this.transport = createIframe(ID);
                     //form.enctype的值
                     //1:application/x-www-form-urlencoded   在发送前编码所有字符（默认）
                     //2:multipart/form-data 不对字符编码。在使用包含文件上传控件的表单时，必须使用该值。
@@ -851,60 +980,61 @@ define(["avalon", "../mmPromise/mmPromise"], function(avalon) {
                         action: form.action || "",
                         enctype: form.enctype,
                         method: form.method
-                    }
-                    var fields = opts.data ? addDataToForm(form, opts.data) : []
+                    };
+                    var fields = opts.data ? addDataToForm(form, opts.data) : [];
                     //必须指定method与enctype，要不在FF报错
                     //表单包含文件域时，如果缺少 method=POST 以及 enctype=multipart/form-data，
                     // 设置target到隐藏iframe，避免整页刷新
-                    form.target = ID
-                    form.action = opts.url
-                    form.method = "POST"
-                    form.enctype = "multipart/form-data"
+                    form.target = ID;
+                    form.action = opts.url;
+                    form.method = "POST";
+                    form.enctype = "multipart/form-data";
                     this.uploadcallback = avalon.bind(iframe, "load", function(event) {
-                        self.respond(event)
-                    })
-                    form.submit()
+                        self.respond(event);
+                    });
+                    form.submit();
                     //还原form的属性
                     for (var i in backups) {
-                        form[i] = backups[i]
+                        form[i] = backups[i];
                     }
                     //移除之前动态添加的节点
                     fields.forEach(function(input) {
-                        form.removeChild(input)
-                    })
+                        form.removeChild(input);
+                    });
                 },
                 respond: function(event) {
                     var node = this.transport, child
                     // 防止重复调用,成功后 abort
                     if (!node) {
-                        return
+                        return;
                     }
                     if (event && event.type === "load") {
-                        var doc = node.contentWindow.document
-                        this.responseXML = doc
+                        var doc = node.contentWindow.document;
+                        this.responseXML = doc;
                         if (doc.body) { //如果存在body属性,说明不是返回XML
-                            this.responseText = doc.body.innerHTML
+                            this.responseText = doc.body.innerHTML;
                             //当MIME为'application/javascript' 'text/javascript",浏览器会把内容放到一个PRE标签中
                             if ((child = doc.body.firstChild) && child.nodeName.toUpperCase() === 'PRE' && child.firstChild) {
-                                this.responseText = child.firstChild.nodeValue
+                                this.responseText = child.firstChild.nodeValue;
                             }
                         }
-                        this.dispatch(200, "success")
+                        this.dispatch(200, "success");
                     }
-                    this.uploadcallback = avalon.unbind(node, "load", this.uploadcallback)
-                    delete this.uploadcallback
+                    this.uploadcallback = avalon.unbind(node, "load", this.uploadcallback);
+                    delete this.uploadcallback;
                     setTimeout(function() { // Fix busy state in FF3
-                        node.parentNode.removeChild(node)
-                    })
+                        node.parentNode.removeChild(node);
+                    });
                 }
-            }
-            delete avalon.fixAjax
-        }
+            };
+            delete avalon.fixAjax;
+        };
         avalon.fixAjax()
     }
     return avalon
 })
 /**
+ * 
  2011.8.31
  将会传送器的abort方法上传到avalon.XHR.abort去处理
  修复serializeArray的bug
@@ -914,6 +1044,7 @@ define(["avalon", "../mmPromise/mmPromise"], function(avalon) {
  http://www.cnblogs.com/heyuquan/archive/2013/05/13/3076465.html
  2014.12.25  v4 大重构 
  2015.3.2   去掉mmPromise
- 2014.3.13  使用加强版mmPromise
- 2014.3.17  增加 xhr 的 onprogress 回调
+ 2015.3.13  使用加强版mmPromise
+ 2015.3.17  增加 xhr 的 onprogress 回调
+ 2015.12.10 处理全局对象BUG               
  */

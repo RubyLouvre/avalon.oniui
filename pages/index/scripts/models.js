@@ -219,7 +219,8 @@ define("models", function(){
                 "联动的dropdown": "avalon.dropdown.ex12.html",
                 "dropdown状态保持功能": "avalon.dropdown.ex13.html",
                 "多个dropdown共享状态": "avalon.dropdown.ex14.html",
-                "鼠标移入移出下拉菜单自动显示隐藏": "avalon.dropdown.ex15.html"
+                "鼠标移入移出下拉菜单自动显示隐藏": "avalon.dropdown.ex15.html",
+                "分组联动": "avalon.dropdown.ex16.html"
             },
             "fileuploader": {
                 "uploader基础配置项": "avalon.fileuploader.ex1.html",

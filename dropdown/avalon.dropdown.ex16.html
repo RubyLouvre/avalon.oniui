@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
+    <script src="../avalon.js"></script>
+    <script type="text/javascript">
+        require(['dropdown/avalon.dropdown.js'], function () {
+            var dropdowns = [],
+                    subDropdowns = []
+
+            avalon.ready(function () {
+                var dropdownVm = avalon.define('dropdown', function (vm) {
+                    vm.provinces = [{
+                        value: '江苏',
+                        label: '江苏'
+                    }, {
+                        value: '河北',
+                        label: '河北'
+                    }]
+                    vm.cities = {
+                        江苏: [{
+                            value: '南京',
+                            label: '南京'
+                        }, {
+                            value: '杨州',
+                            label: '杨州'
+                        }],
+                        河北: [{
+                            value: '保定',
+                            label: '保定'
+                        }, {
+                            value: '石家庄',
+                            label: '石家庄'
+                        }]
+                    }
+                    vm.rows = [{
+                        note: "from",
+                        province: "江苏",
+                        city: "南京"
+                    }, {
+                        note: "to",
+                        province: "河北",
+                        city: "石家庄"
+                    }]
+                    vm.$opt = {
+                        onInit: function (el) {
+                            dropdowns.push(el.$id)
+                        },
+                        onChange: function (val, old, vm) {
+                            var position = dropdowns.indexOf(vm.$id),
+                                    dropdown = avalon.vmodels[dropdowns[position]],
+                                    subDropdown = avalon.vmodels[subDropdowns[position]]
+
+                            subDropdown.source = []
+                            subDropdown.source = avalon.mix(true, [], dropdownVm.$model.cities[dropdown.value])
+                        }
+                    }
+                    vm.$subOpt = {
+                        onInit: function (el) {
+                            subDropdowns.push(el.$id)
+                        }
+                    }
+                });
+
+                avalon.scan();
+            });
+        });
+    </script>
+    <script src="../highlight/shCore.js"></script>
+</head>
+<body>
+<div class="wrapper" ms-controller="dropdown">
+    <h2>dropdown（下拉框）</h2>
+
+    <p>dropdown列表以及联动</p>
+    <ul>
+        <li ms-repeat-row="rows">
+            <span style="display:inline-block;width: 30px;margin: 10px;">{{row.note}}:</span>
+            <select ms-duplex="row.province" ms-widget="dropdown, $, $opt">
+                <option ms-repeat-option="provinces" ms-attr-value="option.value" ms-attr-label="option.label"></option>
+            </select>
+            <select ms-duplex="row.city" ms-widget="dropdown, $, $subOpt">
+                <option ms-repeat-option="cities[row.province]" ms-attr-value="option.value"
+                        ms-attr-label="option.label"></option>
+            </select>
+            {{row.province}}-{{row.city}}
+        </li>
+    </ul>
+    <pre class="brush:html;gutter:false;toolbar:false;" ms-skip>
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;&lt;/title&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width"&gt;
+    &lt;link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/&gt;
+    &lt;script src="../avalon.js"&gt;&lt;/script&gt;
+    &lt;script type="text/javascript"&gt;
+        require(['dropdown/avalon.dropdown.js'], function () {
+            var dropdowns = [],
+                    subDropdowns = []
+
+            avalon.ready(function () {
+                var dropdownVm = avalon.define('dropdown', function (vm) {
+                    vm.provinces = [{
+                        value: '江苏',
+                        label: '江苏'
+                    }, {
+                        value: '河北',
+                        label: '河北'
+                    }]
+                    vm.cities = {
+                        江苏: [{
+                            value: '南京',
+                            label: '南京'
+                        }, {
+                            value: '杨州',
+                            label: '杨州'
+                        }],
+                        河北: [{
+                            value: '保定',
+                            label: '保定'
+                        }, {
+                            value: '石家庄',
+                            label: '石家庄'
+                        }]
+                    }
+                    vm.rows = [{
+                        note: "from",
+                        province: "江苏",
+                        city: "南京"
+                    }, {
+                        note: "to",
+                        province: "河北",
+                        city: "石家庄"
+                    }]
+                    vm.$opt = {
+                        onInit: function (el) {
+                            dropdowns.push(el.$id)
+                        },
+                        onChange: function (val, old, vm) {
+                            var position = dropdowns.indexOf(vm.$id),
+                                    dropdown = avalon.vmodels[dropdowns[position]],
+                                    subDropdown = avalon.vmodels[subDropdowns[position]]
+
+                            subDropdown.source = []
+                            subDropdown.source = avalon.mix(true, [], dropdownVm.$model.cities[dropdown.value])
+                        }
+                    }
+                    vm.$subOpt = {
+                        onInit: function (el) {
+                            subDropdowns.push(el.$id)
+                        }
+                    }
+                });
+
+                avalon.scan();
+            });
+        });
+    &lt;/script&gt;
+    &lt;script src="../highlight/shCore.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class="wrapper" ms-controller="dropdown"&gt;
+    &lt;h2&gt;dropdown（下拉框）&lt;/h2&gt;
+
+    &lt;p&gt;联动的dropdown&lt;/p&gt;
+    &lt;ul&gt;
+        &lt;li ms-repeat-row="rows"&gt;
+            &lt;span style="display:inline-block;width: 30px;margin: 10px;"&gt;{{row.note}}:&lt;/span&gt;
+            &lt;select ms-duplex="row.province" ms-widget="dropdown, $, $opt"&gt;
+                &lt;option ms-repeat-option="provinces" ms-attr-value="option.value" ms-attr-label="option.label"&gt;&lt;/option&gt;
+            &lt;/select&gt;
+            &lt;select ms-duplex="row.city" ms-widget="dropdown, $, $subOpt"&gt;
+                &lt;option ms-repeat-option="cities[row.province]" ms-attr-value="option.value"
+                        ms-attr-label="option.label"&gt;&lt;/option&gt;
+            &lt;/select&gt;
+            {{row.province}}-{{row.city}}
+        &lt;/li&gt;
+    &lt;/ul&gt;
+    &lt;pre class="brush:html;gutter:false;toolbar:false;" ms-skip&gt;
+        
+    &lt;/pre&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+    </pre>
+</div>
+</body>
+</html>

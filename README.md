@@ -1,7 +1,11 @@
 
 avalon.oniui
 ==========================
+
+**注意：avalon1.5及以上版本不支持oniui，请使用1.4.*或以下版本的avalon**
+
 基于avalon的组件库,由<a href="http://ued.qunar.com/">去哪儿网</a>前端架构组倾力打造
+
 <p>当前进度表</p>
 <ul>                                       
     <li>UI组件，有界面的，通过ms-widget调用</li>

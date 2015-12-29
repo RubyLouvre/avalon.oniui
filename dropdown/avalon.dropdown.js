@@ -48,7 +48,7 @@ define(["avalon",
             .replace(/MS_OPTION_ID/g, data.dropdownId).split("MS_OPTION_TEMPLATE")
         titleTemplate = templates[0]
         listTemplate = templates[1]
-        dataSource = options.data.$model || options.data
+        dataSource = avalon.mix(true, [], options.data.$model || options.data)
 
         //由于element本身存在ms-if或者内部包含ms-repeat等绑定，在抽取数据之前，先对element进行扫描
         element.removeAttribute("ms-duplex");

@@ -177,7 +177,7 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
                         exceedBottom = listHeight > offsetBottom
 
                     if(exceedBottom){
-                        avalon(suggestHtml).css({top: "initial", bottom: inputHeight + 3 + "px"})
+                        avalon(suggestHtml).css({top: "initial", bottom: inputHeight + "px"})
                     }
 
                     function getOffset( el ) {

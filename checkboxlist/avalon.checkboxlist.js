@@ -42,8 +42,13 @@ define(["../avalon.getModel", "text!./avalon.checkboxlist.html", "css!../chamele
             vm.$init = function(continueScan) {
                 var temp = template.replace("MS_OPTIONS_DUPLEX", options.duplex);
                 vmodel.template = vmodel.getTemplate(temp, options);
-                element.className += " oni-checkboxlist oni-checkboxlist-list oni-helper-clearfix";
+
+                element.className += "oni-checkboxlist";
                 element.innerHTML = vmodel.template;
+
+                if(!options.vertical){
+                    avalon(element).addClass("oni-checkboxlist-horizontal")
+                }
 
                 if (continueScan) {
                     continueScan()

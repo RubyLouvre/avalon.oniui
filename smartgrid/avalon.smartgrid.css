@@ -14,12 +14,11 @@
     width: 12px;
     height: 12px;
     line-height: 1;
-    display: -moz-inline-stack;
     display: inline-block;
     vertical-align: middle;
-    *vertical-align: auto;
-    zoom: 1;
     *display: inline;
+    *zoom: 1;
+    *vertical-align: auto;
     position: relative;
     cursor: pointer; }
   .oni-smartgrid .oni-helper-asc span, .oni-smartgrid .oni-helper-desc span, .oni-smartgrid .oni-helper-ndb span {
@@ -135,12 +134,11 @@
 
 .oni-smartgrid-column {
   font-size: 12px;
-  display: -moz-inline-stack;
   display: inline-block;
   vertical-align: middle;
-  *vertical-align: auto;
-  zoom: 1;
   *display: inline;
+  *zoom: 1;
+  *vertical-align: auto;
   overflow: hidden; }
   .oni-smartgrid-column-cell {
     padding: 7px 5px; }
@@ -152,23 +150,21 @@
   padding-left: 5px;
   font-size: 12px; }
   .oni-smartgrid-pager-options .oni-smartgrid-showinfo {
-    display: -moz-inline-stack;
     display: inline-block;
     vertical-align: middle;
-    *vertical-align: auto;
-    zoom: 1;
-    *display: inline; }
+    *display: inline;
+    *zoom: 1;
+    *vertical-align: auto; }
   .oni-smartgrid-pager-options .oni-dropdown {
     margin: 0 5px; }
 
 /*列设置*/
 .oni-smartgrid-handler-wrap {
-  display: -moz-inline-stack;
   display: inline-block;
   vertical-align: middle;
-  *vertical-align: auto;
-  zoom: 1;
   *display: inline;
+  *zoom: 1;
+  *vertical-align: auto;
   position: relative;
   z-index: 1;
   text-align: left;
@@ -205,12 +201,11 @@
     border-bottom: 1px #f2f2f2 solid;
     color: #0084bb; }
     .oni-smartgrid-handler .oni-smartgrid-handler-mode .oni-smartgrid-handler-mode-item {
-      display: -moz-inline-stack;
       display: inline-block;
       vertical-align: middle;
-      *vertical-align: auto;
-      zoom: 1;
       *display: inline;
+      *zoom: 1;
+      *vertical-align: auto;
       margin: 0 10px 0 0;
       cursor: pointer;
       -webkit-touch-callout: none;
@@ -225,23 +220,21 @@
     list-style: none;
     overflow: hidden; }
     .oni-smartgrid-handler .oni-smartgrid-handler-list .oni-smartgrid-handler-name {
-      display: -moz-inline-stack;
       display: inline-block;
       vertical-align: middle;
-      *vertical-align: auto;
-      zoom: 1;
       *display: inline;
+      *zoom: 1;
+      *vertical-align: auto;
       max-width: 110px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap; }
     .oni-smartgrid-handler .oni-smartgrid-handler-list .checkbox {
-      display: -moz-inline-stack;
       display: inline-block;
       vertical-align: middle;
-      *vertical-align: auto;
-      zoom: 1;
       *display: inline;
+      *zoom: 1;
+      *vertical-align: auto;
       margin-left: 0;
       cursor: pointer;
       *vertical-align: -3px; }
@@ -251,12 +244,11 @@
       height: 20px;
       line-height: 20px; }
       .oni-smartgrid-handler .oni-smartgrid-handler-list-item label {
-        display: -moz-inline-stack;
         display: inline-block;
         vertical-align: middle;
-        *vertical-align: auto;
-        zoom: 1;
         *display: inline;
+        *zoom: 1;
+        *vertical-align: auto;
         cursor: pointer; }
   .oni-smartgrid-handler .oni-smartgrid-handler-ope {
     padding: 4px 5px;

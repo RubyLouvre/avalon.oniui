@@ -11,11 +11,13 @@
         .button-group{
             position: relative;
             z-index: 1;
+            height: 26px;
+            line-height: 26px;
         }
         #container{
             position: absolute;
             right: 0;
-            bottom: 0;
+            top: 0;
         }
     </style>
 </head>
@@ -43,17 +45,21 @@
                     {
                         key: "name",
                         name: "姓名",
+                        width: 400,
                         isLock: true
                     }, {
                         key: "age",
                         name: "年龄",
-                        toggle: false
+                        toggle: false,
+                        width: 100
                     }, {
                         key: "salary",
-                        name: "薪水"
+                        name: "薪水",
+                        width: 100
                     }, {
                         key: "busy",
-                        name: "忙吗"
+                        name: "忙吗",
+                        width: 200
                     }
                 ],
                 colHandlerContainer: "container", //指定控制按钮的容器，可以是DOM节点或id
@@ -101,23 +107,23 @@
                 }
             &lt;/style&gt;
         &lt;/head&gt;
-        
+
         &lt;body ms-controller="test"&gt;
-        
+
         &lt;div style="width:960px; margin: 0 auto"&gt;
             &lt;h1&gt;自定义列的显示/隐藏&lt;/h1&gt;
-        
+
             &lt;div class="button-group"&gt;
                 &lt;div id="container"&gt;&lt;/div&gt;
                 &lt;span&gt;这里可以自定义更多的按钮&lt;/span&gt;
             &lt;/div&gt;
-        
+
             &lt;div ms-widget="smartgrid, sg"&gt;&lt;/div&gt;
         &lt;/div&gt;
-        
+
         &lt;script&gt;
             require(["smartgrid/avalon.smartgrid"], function () {
-        
+
                 avalon.define("test", function (vm) {
                     vm.smartgrid = {
                         data: getDatas(5),
@@ -125,17 +131,21 @@
                             {
                                 key: "name",
                                 name: "姓名",
+                                width: 400,
                                 isLock: true
                             }, {
                                 key: "age",
                                 name: "年龄",
-                                toggle: false
+                                toggle: false,
+                                width: 100
                             }, {
                                 key: "salary",
-                                name: "薪水"
+                                name: "薪水",
+                                width: 100
                             }, {
                                 key: "busy",
-                                name: "忙吗"
+                                name: "忙吗",
+                                width: 200
                             }
                         ],
                         colHandlerContainer: "container", //指定控制按钮的容器，可以是DOM节点或id
@@ -144,9 +154,9 @@
                         $skipArray: ["switchdropdown"]
                     }
                 })
-        
+
                 avalon.scan()
-        
+
                 function getDatas(number) {
                     var data = []
                     for (var i = 0; i &lt; number; i++) {

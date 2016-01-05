@@ -52,7 +52,7 @@ $uiname: "oni-smartgrid";
     display: none;
 }
 .#{$uiname}-hover {
-    background-color: #e8f5fd;
+    background-color: #e8f5fd; 
 }
 .#{$uiname}-selected {
     background-color: #fff7e6;
@@ -121,7 +121,7 @@ $uiname: "oni-smartgrid";
     &-cell{
         padding: 7px 5px;
     }
-}
+}  
 .#{$uiname}-pager-options {
     float: left;
     height: 26px;
@@ -132,7 +132,7 @@ $uiname: "oni-smartgrid";
         @include inline-block();
     }
     .oni-dropdown {
-        margin: 0 5px;
+        margin: 0 5px; 
     }
 }
 
@@ -211,7 +211,7 @@ $uiname: "oni-smartgrid";
             line-height: 20px;
             label{
                 @include inline-block();
-                cursor: pointer;
+                cursor: pointer;  
             }
         }
     }

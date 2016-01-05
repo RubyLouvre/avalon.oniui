@@ -5,20 +5,20 @@
 .oni-tooltip-hidden {
   visibility: hidden; }
 
-div.oni-tooltip {
-  padding: 10px;
+.oni-tooltip {
+  padding: 10px !important;
   position: absolute;
   max-width: 300px;
   overflow: visible;
   background: #ffe44f;
   border: 1px solid #ffc805;
   color: #a65a00;
-  font-size: 12px;
-  border-radius: 0 0 0 0; }
-  div.oni-tooltip a, div.oni-tooltip a:link, div.oni-tooltip a:hover {
+  font-size: 12px; }
+  .oni-tooltip a, .oni-tooltip a:link, .oni-tooltip a:hover {
+    font-family: sans-serif;
     color: #a65a00;
     cursor: pointer; }
-  div.oni-tooltip .oni-tooltip-arrow-in, div.oni-tooltip .oni-tooltip-arrow-out {
+  .oni-tooltip .oni-tooltip-arrow-in, .oni-tooltip .oni-tooltip-arrow-out {
     overflow: visible;
     position: absolute; }
 

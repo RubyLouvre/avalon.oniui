@@ -492,7 +492,9 @@ define(["../avalon.getModel",
         if (vmodel.position === "absolute") {
             if (dialogShows.length > 1) {
                 for (var i = 0; i < dialogShows.length -1; i++) {
-                    dialogShows[i].widgetElement.style.display = "none"
+                    if (!isIE6) {
+                        dialogShows[i].widgetElement.style.display = "none"
+                    }
                 }
             }
             $maskLayer.css({height: clientHeight, width: clientWidth, top: scrollTop, position: "absolute"})

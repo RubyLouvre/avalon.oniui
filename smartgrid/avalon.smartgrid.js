@@ -339,7 +339,7 @@ define(["avalon",
             vm.isSelectAll = function () {
                 return vmodel._allSelected;
             };
-
+            
             vm.sortColumn = function (column, index, event) {
                 var target = event.target, $target = avalon(target), sortTrend = '', field = column.key, trend = 0, onColumnSort = vmodel.onColumnSort;
                 if (!vmodel.data.length)
@@ -433,7 +433,7 @@ define(["avalon",
 
                 for(var i = 0, len = cols.length; i < len; i++){
                     var col = cols[i]
-
+                    
                     if( String(col.originalWidth).indexOf("%") !== -1){
                         col.width = Math.floor((parentWidth * parseInt(col.originalWidth, 10)) / 100) -1
                     }
@@ -478,7 +478,7 @@ define(["avalon",
             }
             vm._selectAll = function (event, selected) {
                 var datas = vmodel.data, rows = containerWrapper.children, onSelectAll = vmodel.onSelectAll,
-                    val = event ? event.target.checked : selected,
+                    val = event ? event.target.checked : selected, 
                     enableData = datas.concat();
 
                 for (var i = 0, len = rows.length; i < len; i++) {
@@ -488,7 +488,7 @@ define(["avalon",
                     if (!$row.hasClass('oni-smartgrid-row')) {
                         continue
                     }
-                    var input = row.children[0].getElementsByTagName('input')[0],
+                    var input = row.children[0].getElementsByTagName('input')[0], 
                         dataIndex = input && avalon(input).attr('data-index'),
                         data
 
@@ -724,9 +724,9 @@ define(["avalon",
                 container.innerHTML = gridFrame;
                 dataFracte(vmodel)
                 avalon.scan(container, [vmodel].concat(vmodels));
-                gridEle = document.getElementById('oni-smartgrid')
+                gridEle = document.getElementById('oni-smartgrid') 
                 containerWrapper = document.getElementById('oni-smartgrid-body')
-
+                
                 smartgridHeader = document.getElementById('oni-smartgrid-header')
                 gridEle.id = ''
                 containerWrapper.id=''
@@ -790,7 +790,7 @@ define(["avalon",
                     });
                 }
             };
-
+            
             vm.$remove = function () {
                 var container = vmodel.container;
                 container.innerHTML = container.textContent = '';
@@ -840,7 +840,7 @@ define(["avalon",
         selectable: false, //@config 为表格添加Checkbox或者Radio操作项，格式为<pre>{type: 'Checkbox', width: '25px'}</pre>
         bodyHeight: 0,
         //@config 设置loading缓冲的配置项，具体使用方法参见loading文档
-        loading: {
+        loading: { 
             toggle: false,
             modal: true,
             modalBackground: '#000'
@@ -943,9 +943,9 @@ define(["avalon",
                     }
                 }
                 if (enabledData.length == datas.length - disabledData.length- filterCheckboxData.length) {
-                    options._allSelected = true
+                    options._allSelected = true 
                 } else {
-                    options._allSelected = false
+                    options._allSelected = false  
                 }
             });
         }
@@ -979,7 +979,7 @@ define(["avalon",
         }
     }
     function getMaxWidthColumn(columns, vmodel) {
-        var maxWidth = 0, maxWidthColumn = null,
+        var maxWidth = 0, maxWidthColumn = null, 
             showColumnWidth = 0,
             _columns = columns.$model || columns;
         for (var i = 0, len = _columns.length; i < len; i++) {
@@ -1020,9 +1020,9 @@ define(["avalon",
         return allSelected;
     }
     function perfectColumns(options, element, vmId) {
-        var columns = options.columns, selectColumn = {},
+        var columns = options.columns, selectColumn = {}, 
             parentContainer = avalon(options.container.parentNode),
-            parentContainerWidth = parentContainer.width() -2,
+            parentContainerWidth = parentContainer.width() -2, 
             allColumnWidth = 0, maxWidth = 0, maxWidthColumn = {};
 
         options._parentContainer = parentContainer
@@ -1100,7 +1100,7 @@ define(["avalon",
                         return ""
                     }
                     var disableStr = disable ? ' disabled ' : ' ms-disabled=\'_getAllCheckboxDisabledStatus('+ (allSelected ? true : false) + ', _dataRender)\' '
-
+                    
                     return '<input type=\'' + type.toLowerCase() + '\'' + disableStr + (selected ? 'checked=\'checked\'' : '') + ' name=\'selected\' ' + (allSelected ? ' ms-on-click=\'_selectAll\' ms-duplex-radio=\'_allSelected\'' : ' data-index=\'' + index + '\'') + ' data-role=\'selected\'/>';
                 };
                 options._allSelected = false

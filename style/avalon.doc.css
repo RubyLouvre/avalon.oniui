@@ -32,6 +32,7 @@ body {
   padding: 40px 60px;
   overflow-x: hidden;
   background-color: #fff; }
+
   body::-webkit-scrollbar {
     width: 9px; }
   body::-webkit-scrollbar-track-piece {

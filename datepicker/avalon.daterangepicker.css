@@ -1,12 +1,12 @@
-@charset "UTF-8";
 /*
 这是每个都组件都应该引用的部分
 */
 .oni-daterangepicker-wrapper {
   display: inline-block;
+  vertical-align: middle;
   *display: inline;
-  _display: inline;
-  zoom: 1; }
+  *zoom: 1;
+  *vertical-align: auto; }
 
 .oni-daterangepicker {
   width: 260px;
@@ -14,22 +14,22 @@
   line-height: 18px; }
   .oni-daterangepicker .oni-datepicker-range-input {
     cursor: pointer;
-    border: 1px solid #cccccc;
-    background-color: #ffffff; }
-    .oni-daterangepicker .oni-datepicker-range-input .oni-datepicker-input {
-      height: 18px;
-      overflow: hidden;
-      padding: 3px 21px 3px 6px;
-      text-overflow: ellipsis;
-      white-space: nowrap; }
-      .oni-daterangepicker .oni-datepicker-range-input .oni-datepicker-input.oni-datepicker-input-disabled {
-        background: #ebebe4;
-        border-color: #cccccc; }
-    .oni-daterangepicker .oni-datepicker-range-input.oni-state-hover {
-      border: 1px solid #999; }
-    .oni-daterangepicker .oni-datepicker-range-input.oni-state-active {
-      border-color: #3775c0;
-      border-bottom-color: #fff; }
+    border: 1px solid #ccc;
+    background-color: #fff; }
+  .oni-daterangepicker .oni-datepicker-input {
+    height: 18px;
+    overflow: hidden;
+    padding: 3px 21px 3px 6px;
+    text-overflow: ellipsis;
+    white-space: nowrap; }
+  .oni-daterangepicker .oni-datepicker-input-disabled {
+    background: #ebebe4;
+    border-color: #ccc; }
+  .oni-daterangepicker .oni-state-hover {
+    border-color: #999; }
+  .oni-daterangepicker .oni-state-active {
+    border-color: #3775c0;
+    border-bottom-color: #fff; }
   .oni-daterangepicker .oni-datepicker-icon-wrap {
     position: relative;
     display: block;
@@ -38,65 +38,72 @@
       position: absolute;
       right: 0;
       top: -21px;
-      display: none;
       cursor: pointer;
       padding: 0 6px;
       text-align: center;
       text-indent: 0;
       color: #b5b5b5; }
-      .oni-daterangepicker .oni-datepicker-icon-wrap .oni-datepicker-icon.oni-icon-angle-down, .oni-daterangepicker .oni-datepicker-icon-wrap .oni-datepicker-icon.oni-icon-angle-up {
-        display: block; }
 
 .oni-daterangepicker-content {
   position: relative;
   z-index: 1000;
   zoom: 1; }
+  .oni-daterangepicker-content .oni-calendarbox-btns {
+    position: absolute;
+    right: 10px;
+    top: 4px;
+    display: inline;
+    font-size: 0; }
+    .oni-daterangepicker-content .oni-calendarbox-btns .oni-btn {
+      margin: 0 0 0 5px; }
   .oni-daterangepicker-content .oni-datepicker-groups {
     position: absolute;
     z-index: 1000;
     zoom: 1;
     padding: 9px 0 0 10px;
-    border: 1px solid #cccccc;
+    border: 1px solid #ccc;
+    -webkit-box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1);
+    -moz-box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1);
+    -ms-box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1);
+    -o-box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1);
     box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.1);
     font-size: 0;
     white-space: nowrap;
-    background: #ffffff; }
+    background: #fff; }
     .oni-daterangepicker-content .oni-datepicker-groups .oni-datepicker-group {
       position: relative;
-      display: -moz-inline-stack;
       display: inline-block;
       vertical-align: middle;
-      *vertical-align: auto;
-      zoom: 1;
-      *display: inline; }
-      .oni-daterangepicker-content .oni-datepicker-groups .oni-datepicker-group .oni-datepicker-content {
-        position: static;
-        box-shadow: 0 0 0 0 transparent; }
+      *display: inline;
+      *zoom: 1;
+      *vertical-align: auto; }
+    .oni-daterangepicker-content .oni-datepicker-groups .oni-datepicker-content {
+      position: static;
+      -webkit-box-shadow: none;
+      -moz-box-shadow: none;
+      -ms-box-shadow: none;
+      -o-box-shadow: none;
+      box-shadow: none; }
     .oni-daterangepicker-content .oni-datepicker-groups .oni-calendarbox-footer-small {
       position: relative;
       margin: 10px 0 0 -10px;
       height: 22px;
       line-height: 22px;
       padding: 4px 0;
-      _width: 466px;
       *width: 466px;
       background: #f8f8f8; }
-      .oni-daterangepicker-content .oni-datepicker-groups .oni-calendarbox-footer-small .oni-calendarbox-btns {
-        position: absolute;
-        right: 10px;
-        top: 4px;
-        display: inline;
-        font-size: 0; }
-        .oni-daterangepicker-content .oni-datepicker-groups .oni-calendarbox-footer-small .oni-calendarbox-btns .oni-btn {
-          margin: 0 0 0 5px; }
-      .oni-daterangepicker-content .oni-datepicker-groups .oni-calendarbox-footer-small .oni-calendarbox-msg {
-        padding-left: 10px;
-        font-size: 12px; }
+    .oni-daterangepicker-content .oni-datepicker-groups .oni-calendarbox-msg {
+      padding-left: 10px;
+      font-size: 12px; }
     .oni-daterangepicker-content .oni-datepicker-groups .oni-datepicker-wrapper {
       position: static;
       padding: 0;
       border: 0;
-      box-shadow: 0 0 0 0 transparent;
+      -webkit-box-shadow: none;
+      -moz-box-shadow: none;
+      -ms-box-shadow: none;
+      -o-box-shadow: none;
+      box-shadow: none;
       font-size: 12px; }
 
 .oni-daterangepicker-quick-operation {
@@ -104,15 +111,12 @@
   border-bottom: 1px solid #f2f2f2;
   margin: -5px 0 10px -10px;
   padding-left: 10px; }
-  .oni-daterangepicker-quick-operation span {
+  .oni-daterangepicker-quick-operation .oni-daterangepicker-quick-operation-item {
     color: #3775c0;
     padding: 6px 10px 6px 0;
-    display: -moz-inline-stack;
     display: inline-block;
     vertical-align: middle;
-    *vertical-align: auto;
-    zoom: 1;
     *display: inline;
+    *zoom: 1;
+    *vertical-align: auto;
     cursor: pointer; }
-
-/*# sourceMappingURL=avalon.daterangepicker.css.map */

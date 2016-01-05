@@ -1,9 +1,6 @@
 
 @import "../chameleon/oniui-theme";
 $uiname: "oni-notice";
-.#{$uiname}-flow {
-    margin-bottom: 10px;
-}
 .#{$uiname}-detach {
     position: relative;
     width: 100%;

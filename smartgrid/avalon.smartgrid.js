@@ -11,8 +11,9 @@ define(["avalon",
     "../loading/avalon.loading",
     "../pager/avalon.pager",
     "../dropdown/avalon.dropdown",
+    "../button/avalon.button",
     "css!../chameleon/oniui-common.css",
-    "css!./avalon.smartgrid.css"
+    "css!./avalon.smartgrid.css",
 ], function(avalon, template) {
     var tempId = new Date() - 0, templateArr = template.split('MS_OPTION_EJS'), gridHeader = templateArr[0],
     // 表格视图结构
@@ -338,7 +339,7 @@ define(["avalon",
             vm.isSelectAll = function () {
                 return vmodel._allSelected;
             };
-            
+
             vm.sortColumn = function (column, index, event) {
                 var target = event.target, $target = avalon(target), sortTrend = '', field = column.key, trend = 0, onColumnSort = vmodel.onColumnSort;
                 if (!vmodel.data.length)
@@ -400,7 +401,6 @@ define(["avalon",
                         column.toggle = b;
                     }
                 }
-                computeToggledWidth(vmodel)
             };
             /**
              * @interface {Function} 调用此方法清空表格数据
@@ -433,15 +433,52 @@ define(["avalon",
 
                 for(var i = 0, len = cols.length; i < len; i++){
                     var col = cols[i]
-                    
+
                     if( String(col.originalWidth).indexOf("%") !== -1){
                         col.width = Math.floor((parentWidth * parseInt(col.originalWidth, 10)) / 100) -1
+                    }
+                }
+
+                var cols = vmodel.columns.$model,
+                    parentWidth = avalon(vmodel.container.parentNode).width() - 2,
+                    computableWidth = 0,
+                    unComputableWidth = 0,
+                    computableColNum = 0
+
+                // 计算可分配宽度
+                for(var i in cols){
+                    if(cols[i].toggle){
+                        var colConfigWidth = cols[i].configWidth
+
+                        if(col.configWidth !== 0 && col.toggle){
+                            unComputableWidth += parseInt(colConfigWidth)
+                        }
+                    }
+                }
+
+                computableWidth = parentWidth - unComputableWidth
+
+                // 计算可分配列数
+                for(var i in cols){
+                    var col = cols[i]
+
+                    if(col.configWidth === 0 && col.toggle){
+                        computableColNum += 1
+                    }
+                }
+
+                // 为这些列分配宽度
+                for(var i in cols){
+                    var col = cols[i]
+
+                    if(col.configWidth === 0 && col.toggle){
+                        vmodel.columns[i].width = Math.floor(computableWidth / computableColNum)
                     }
                 }
             }
             vm._selectAll = function (event, selected) {
                 var datas = vmodel.data, rows = containerWrapper.children, onSelectAll = vmodel.onSelectAll,
-                    val = event ? event.target.checked : selected, 
+                    val = event ? event.target.checked : selected,
                     enableData = datas.concat();
 
                 for (var i = 0, len = rows.length; i < len; i++) {
@@ -451,7 +488,7 @@ define(["avalon",
                     if (!$row.hasClass('oni-smartgrid-row')) {
                         continue
                     }
-                    var input = row.children[0].getElementsByTagName('input')[0], 
+                    var input = row.children[0].getElementsByTagName('input')[0],
                         dataIndex = input && avalon(input).attr('data-index'),
                         data
 
@@ -666,7 +703,7 @@ define(["avalon",
                     $initRender = false
                 }
                 if (!vmodel.noHeader && init && vmodel.isAffix && !vmodel.maxGridWidth) {
-                    vmodel._gridWidth = avalon(gridEle).innerWidth()
+                    vmodel._gridWidth = avalon(gridEle).innerWidth() -2
                 }
                 vmodel.addRows(void 0, init, noShowLoading)
                 if (avalon.type(data) === 'array' && data.length) {
@@ -677,6 +714,7 @@ define(["avalon",
                 } else if (!init) {
                     vmodel.container.scrollIntoView();
                 }
+
                 vm._adjustColWidth()
             };
             vm.$init = function () {
@@ -686,9 +724,9 @@ define(["avalon",
                 container.innerHTML = gridFrame;
                 dataFracte(vmodel)
                 avalon.scan(container, [vmodel].concat(vmodels));
-                gridEle = document.getElementById('oni-smartgrid') 
+                gridEle = document.getElementById('oni-smartgrid')
                 containerWrapper = document.getElementById('oni-smartgrid-body')
-                
+
                 smartgridHeader = document.getElementById('oni-smartgrid-header')
                 gridEle.id = ''
                 containerWrapper.id=''
@@ -751,10 +789,8 @@ define(["avalon",
                         vm._adjustColWidth()
                     });
                 }
-
-                computeToggledWidth(vmodel)
             };
-            
+
             vm.$remove = function () {
                 var container = vmodel.container;
                 container.innerHTML = container.textContent = '';
@@ -804,7 +840,7 @@ define(["avalon",
         selectable: false, //@config 为表格添加Checkbox或者Radio操作项，格式为<pre>{type: 'Checkbox', width: '25px'}</pre>
         bodyHeight: 0,
         //@config 设置loading缓冲的配置项，具体使用方法参见loading文档
-        loading: { 
+        loading: {
             toggle: false,
             modal: true,
             modalBackground: '#000'
@@ -907,9 +943,9 @@ define(["avalon",
                     }
                 }
                 if (enabledData.length == datas.length - disabledData.length- filterCheckboxData.length) {
-                    options._allSelected = true 
+                    options._allSelected = true
                 } else {
-                    options._allSelected = false  
+                    options._allSelected = false
                 }
             });
         }
@@ -943,7 +979,7 @@ define(["avalon",
         }
     }
     function getMaxWidthColumn(columns, vmodel) {
-        var maxWidth = 0, maxWidthColumn = null, 
+        var maxWidth = 0, maxWidthColumn = null,
             showColumnWidth = 0,
             _columns = columns.$model || columns;
         for (var i = 0, len = _columns.length; i < len; i++) {
@@ -984,9 +1020,9 @@ define(["avalon",
         return allSelected;
     }
     function perfectColumns(options, element, vmId) {
-        var columns = options.columns, selectColumn = {}, 
+        var columns = options.columns, selectColumn = {},
             parentContainer = avalon(options.container.parentNode),
-            parentContainerWidth = parentContainer.width() -2, 
+            parentContainerWidth = parentContainer.width() -2,
             allColumnWidth = 0, maxWidth = 0, maxWidthColumn = {};
 
         options._parentContainer = parentContainer
@@ -1064,7 +1100,7 @@ define(["avalon",
                         return ""
                     }
                     var disableStr = disable ? ' disabled ' : ' ms-disabled=\'_getAllCheckboxDisabledStatus('+ (allSelected ? true : false) + ', _dataRender)\' '
-                    
+
                     return '<input type=\'' + type.toLowerCase() + '\'' + disableStr + (selected ? 'checked=\'checked\'' : '') + ' name=\'selected\' ' + (allSelected ? ' ms-on-click=\'_selectAll\' ms-duplex-radio=\'_allSelected\'' : ' data-index=\'' + index + '\'') + ' data-role=\'selected\'/>';
                 };
                 options._allSelected = false
@@ -1099,7 +1135,6 @@ define(["avalon",
                 options.maxGridWidth = allColumnWidth + 20
             } else {
                 _columns.push(maxWidthColumn)
-                setColumnWidth(_columns, autoWidth)
             }
         } else {
             if (maxWidth) {
@@ -1122,50 +1157,6 @@ define(["avalon",
             column.width = columnWidth
         }
     }
-    /**
-     * 设置列显隐处理后宽度
-     */
-    function computeToggledWidth(sgVmodel){
-        var cols = sgVmodel.columns.$model,
-            parentWidth = avalon(sgVmodel.container.parentNode).width() - 2,
-            computableWidth = 0,
-            unComputableWidth = 0,
-            computableColNum = 0
-
-        // 计算可分配宽度
-        for(var i in cols){
-            if(cols[i].toggle){
-                var colConfigWidth = cols[i].configWidth
-
-                if(typeof colConfigWidth === "string" && colConfigWidth.indexOf("%") !== -1){
-                    unComputableWidth += parentWidth * parseInt(colConfigWidth) / 100
-                } else{
-                    unComputableWidth += parseInt(colConfigWidth)
-                }
-            }
-        }
-
-        computableWidth = parentWidth - unComputableWidth
-
-        // 计算可分配列数
-        for(var i in cols){
-            var col = cols[i]
-
-            if(col.configWidth === 0 && col.toggle){
-                computableColNum += 1
-            }
-        }
-
-        // 为这些列分配宽度
-        for(var i in cols){
-            var col = cols[i]
-
-            if(col.configWidth === 0 && col.toggle){
-                sgVmodel.columns[i].width = Math.floor(computableWidth / computableColNum)
-            }
-        }
-    }
-
     return avalon;
 
     // 添加对列显示/隐藏的控制
@@ -1178,7 +1169,7 @@ define(["avalon",
             container = document.getElementById(sgVmodel.colHandlerContainer)
         }
 
-        var containerCtrlId = "colHandler_" + Date.now()
+        var containerCtrlId = "colHandler_" + new Date().getTime();
 
         container.setAttribute("ms-controller", containerCtrlId)
 
@@ -1190,17 +1181,17 @@ define(["avalon",
         handlerTpl += "     ms-click=\"toggleHandlerWindow()\">";
         handlerTpl += "<\/div>";
         handlerTpl += "<div class=\"oni-smartgrid-handler\" ms-visible=\"handlerWindowVisible\">";
-        handlerTpl += "    <div class=\"oni-smartgrid-handler-mode\">";
-        handlerTpl += "        <span ms-repeat=\"colHandlerModes\"";
+        handlerTpl += "    <ul class=\"oni-smartgrid-handler-mode\">";
+        handlerTpl += "        <li class=\"oni-smartgrid-handler-mode-item\" ms-repeat=\"colHandlerModes\"";
         handlerTpl += "              ms-class=\"oni-smartgrid-handler-mode-active: colHandlerMode === $key\"";
         handlerTpl += "              ms-click=\"changeColHandlerMode($key)\">";
         handlerTpl += "            {{$val}}";
-        handlerTpl += "        <\/span>";
-        handlerTpl += "    <\/div>";
+        handlerTpl += "        <\/li>";
+        handlerTpl += "    <\/ul>";
         handlerTpl += "    <ul class=\"oni-smartgrid-handler-list\">";
-        handlerTpl += "        <li ms-repeat=\"colHandlerData\">";
+        handlerTpl += "        <li ms-repeat=\"colHandlerData\" class=\"oni-smartgrid-handler-list-item\">";
         handlerTpl += "            <label>";
-        handlerTpl += "                <input type=\"checkbox\"";
+        handlerTpl += "                <input class=\"checkbox\" type=\"checkbox\"";
         handlerTpl += "                       ms-duplex-checked=\"el.toggle\"";
         handlerTpl += "                       ms-attr-disabled=\"el.isLock\"\/>";
         handlerTpl += "                <span class=\"oni-smartgrid-handler-name\">{{el.name}}<\/span>";
@@ -1208,10 +1199,14 @@ define(["avalon",
         handlerTpl += "        <\/li>";
         handlerTpl += "    <\/ul>";
         handlerTpl += "    <div class=\"oni-smartgrid-handler-ope\">";
-        handlerTpl += "        <span class=\"oni-smartgrid-handler-confirm\" ms-click=\"confirmColHandler()\">确定<\/span>";
-        handlerTpl += "        <span class=\"oni-smartgrid-handler-cancel\" ms-click=\"cancelColHandler()\">取消<\/span>";
+        handlerTpl += "        <button ms-widget=\"button\" data-button-size=\"small\" data-button-color=\"success\" ";
+        handlerTpl += "              ms-click=\"confirmColHandler()\">确定<\/button>";
+        handlerTpl += "        <button ms-widget=\"button\" data-button-size=\"small\" ms-click=\"cancelColHandler()\">取消<\/span>";
         handlerTpl += "    <\/div>";
         handlerTpl += "<\/div>";
+
+        //<button  ms-click="_confirm">{{confirmName}}</button>
+        //<button ms-widget="button" ms-if="type =='confirm'" ms-click="_cancel">{{cancelName}}</button>
 
         handlerWrap.innerHTML = handlerTpl
         container.appendChild(handlerWrap)
@@ -1283,8 +1278,6 @@ define(["avalon",
                 sgVmodel.setColumns(visibleColKeys, true)
                 sgVmodel.setColumns(unVisibleColKeys, false)
 
-                computeToggledWidth(sgVmodel)
-
                 vm.handlerWindowVisible = false
             }
 
@@ -1297,8 +1290,6 @@ define(["avalon",
         })
 
         setHandlerLayout()
-        computeToggledWidth(sgVmodel)
-
 
         /**
          * 设置列显隐处理布局样式

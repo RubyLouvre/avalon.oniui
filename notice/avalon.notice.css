@@ -1,9 +1,7 @@
-
+@charset "UTF-8";
 /*
 这是每个都组件都应该引用的部分
 */
-.oni-notice-flow { margin-bottom: 10px; }
-
 .oni-notice-detach { position: relative; width: 100%; z-index: 1000; }
 
 .oni-notice-detach .oni-notice { position: absolute; }

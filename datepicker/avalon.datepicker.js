@@ -470,13 +470,19 @@ define(["../avalon.getModel",
                     div.setAttribute("ms-css-border-color", "dateError")
                     div.setAttribute("ms-hover", "oni-state-hover")
                     elementPar.insertBefore(div,element)
-                    div.appendChild(element)
+
+                    var inputPositionWrap = document.createElement("div")
+                    inputPositionWrap.className = "oni-datepicker-input-position"
+
+                    inputPositionWrap.appendChild(element)
                     if (vmodel.showTip) {
                         var tip = avalon.parseHTML("<div class='oni-datepicker-tip'>{{tip}}<i class='oni-icon oni-icon-calendar-o'>&#xf088;</i></div>")
-                        div.appendChild(tip)
+                        inputPositionWrap.appendChild(tip)
                     } else {
                         element.style.paddingRight = "0px"
                     }
+
+                    div.appendChild(inputPositionWrap)
                     div.appendChild(calendar)
                 }
                 if (vmodel.timer) {

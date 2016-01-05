@@ -8,6 +8,15 @@
 <link type="text/css" rel="stylesheet" href="../style/avalon.doc.css"/>
 <script src="../highlight/shCore.js"></script>
 <script src="../avalon.js"></script>
+
+<style type="text/css">
+    .oni-datepicker-default .special-cell{
+        color: #008000;
+    }
+    .oni-datepicker-selected .special-cell{
+        color: #fff;
+    }
+</style>
 </head>
 <body>
     <div class="wrapper">
@@ -24,7 +33,7 @@
                         vm.datepicker = {
                             dateCellRender: function(date, vmodel, dateObject) {
                                 if (date == 1) {
-                                    return "<b style='color:green'>one</b>"
+                                    return "<b class='special-cell'>one</b>"
                                 }
                                 return date
                             }

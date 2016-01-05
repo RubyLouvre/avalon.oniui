@@ -50,41 +50,44 @@ $uiname: "oni-textbox";
         word-wrap: break-word;
         word-break: break-all;
         @if($oinui-theme == smoothness) {
-            color: #999999;
+            color: #999;
         }
     }
     .#{$uiname}-suggest {
         position: relative;
         z-index: 1000;
     }
-    &.#{$uiname}-disabled {
+    @at-root .#{$uiname}-disabled {
         background-color: $ui-state-disabled-background-color;
         border-color: $ui-state-disabled-border-color;
         cursor: default;
         .#{$uiname}-placeholder {
             @if($oinui-theme == smoothness) {
-                color: #CCCCCC;
+                color: #ccc;
             }
         }
         .#{$uiname}-input {
             cursor: default;
-            background-color: $ui-state-disabled-background-color;
+            background-color: $ui-state-disabled-background-color!important;
             @if($oinui-theme == smoothness) {
-                color: #CCCCCC;
+                color: #ccc!important;
             }
+        }
+        &.#{$uiname}-hover {
+            border-color: $ui-state-disabled-border-color;
         }
     }
 }
 .#{$uiname}-hover {
     @if($oinui-theme == smoothness) {
-        border-color: #999999;
+        border-color: #999;
     }
 }
 .#{$uiname}-focus {
     @if($oinui-theme == smoothness) {
-        border-color: #3775c0;
+        border-color: $ui-state-active-border-color;
     }
 }
 .#{$uiname}-error {
-    border-color: #ff8888;
+    border-color: $ui-state-error-border-color;
 }

@@ -49,19 +49,30 @@
     *position:relative;
 }
 
-    @mixin vertical-align-block
-    {
-        display: table-cell;
-        vertical-align: middle;
 
-        // ie6 ie7
-        *position: absolute;
-        *top: 50%;
+@mixin vertical-align-block
+{
+    display: table-cell;
+    vertical-align: middle;
+
+    // ie6 ie7
+    *position: absolute;
+    *top: 50%;
+}
+// if you support ie lte 7, you need to add an additionnal wrapper under the `vertical-align-block` element
+@mixin vertical-align-block-fallback
+{
+    // ie6 ie7
+    *position: relative;
+    *top: -50%;
+}
+
+@mixin inline-block($vertical-align:middle){
+    display:inline-block;
+    vertical-align:$vertical-align;
+    @if $legacy-support-for-ie{
+        *display:inline;
+        *zoom:1;
+        *vertical-align:auto;
     }
-        // if you support ie lte 7, you need to add an additionnal wrapper under the `vertical-align-block` element
-        @mixin vertical-align-block-fallback
-        {
-            // ie6 ie7
-            *position: relative;
-            *top: -50%;
-        }
+}

@@ -14,7 +14,7 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
         }
         /**
          * 如果options.notpuresuggest为true说明是与textbox组件结合的，
-         * 否则与textbox组件无关，options.inputElement就是进行自动补全的输入域节点对应的id 
+         * 否则与textbox组件无关，options.inputElement就是进行自动补全的输入域节点对应的id
          */
         options.inputElement = !!options.notpuresuggest ? options.inputElement : document.getElementById(options.inputElement);
         /**
@@ -48,7 +48,7 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
                         }else{
                             this._minIndex--;
                             this._maxIndex--;
-                            
+
                             this._update();
                             this.scroll.pre();
                         }
@@ -72,7 +72,7 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
                         // 向下滚动
                             this._minIndex++;
                             this._maxIndex++;
-                            
+
                             this._update();
                             this.scroll.next();
                         }
@@ -114,14 +114,14 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
                     }
                 },
                 _update: function(){
-                    
+
                     if(vmodel.list.length > limit){
                     // 如果suggest条数大于配置数，显示滚动条
-                        suggest.style.overflowY = 'scroll';    
+                        suggest.style.overflowY = 'scroll';
                         suggest.style.height = this._getHeight(this._minIndex, this._maxIndex) + 'px';
                     }else{
                     // 否则，取消滚动条
-                        suggest.style.overflowY = 'auto';    
+                        suggest.style.overflowY = 'auto';
                         suggest.style.height = 'auto';
                     }
                 },
@@ -161,7 +161,7 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
                         var offset = $element.offset(),
                             suggestHtmlWidth = $inputElement.width()+"px";
                         element.style.cssText = "position: absolute; left:"+offset.left+"px;top:"+offset.top+"px;";
-                        
+
                         suggestHtml.style.cssText = "margin:0;left:0;top:0;width:"+suggestHtmlWidth ;
                         return ;
                     }
@@ -169,26 +169,24 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
                     suggestHtml.style.width = $textboxContainer.outerWidth() - 2 - avalon(suggestHtml).css("paddingLeft").replace(styleReg, '$1') - avalon(suggestHtml).css("paddingRight").replace(styleReg, '$1') + 'px'
 
                     var listHeight = avalon(suggestHtml).height(),
-                        offsetTop = getOffset(textboxContainer).top,
+                        offsetTop = getOffsetTop(textboxContainer),
                         inputHeight = avalon(textboxContainer).height(),
-                        windowHeihgt = avalon(window).height()
+                        windowHeihgt = document.body.clientHeight
 
                     var offsetBottom = windowHeihgt - offsetTop - inputHeight,
                         exceedBottom = listHeight > offsetBottom
 
                     if(exceedBottom){
-                        avalon(suggestHtml).css({top: "initial", bottom: inputHeight + "px"})
+                        avalon(suggestHtml).css({top: "auto", bottom: inputHeight + 3 + "px"})
                     }
 
-                    function getOffset( el ) {
-                        var _x = 0;
+                    function getOffsetTop( el ) {
                         var _y = 0;
-                        while( el && !isNaN( el.offsetLeft ) && !isNaN( el.offsetTop ) ) {
-                            _x += el.offsetLeft - el.scrollLeft;
-                            _y += el.offsetTop - el.scrollTop;
+                        while( el && !isNaN( el.offsetTop ) ) {
+                            _y += el.offsetTop;
                             el = el.offsetParent;
                         }
-                        return { top: _y, left: _x };
+                        return _y;
                     }
                 }
             })
@@ -196,17 +194,17 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
             vm.$watch('searchText',function(v){
                 vmodel.updateSource(v , vmodel, limit, disableLetter);
             });
-            
+
             // 处理提示项的鼠标点击，也就是更新input值，同时隐藏提示框?
             vm.clickcallback = function(idx, event) {
                 var selectObj = vmodel.list[idx],
                     selectValue = selectObj.value
 
+                vmodel.toggle = false;
                 vmodel.onChangeCallback(selectValue, vmodel.inputElement, event, selectObj);
                 if (typeof vmodel.onSelectItem === "function") {
                     vmodel.onSelectItem.call(null, selectValue, vmodel.inputElement, event, selectObj)
                 }
-                vmodel.toggle = false;
             }
             // 当点击input框之外的区域时，隐藏提示框?
             vm.hidepromptinfo = function(event) {
@@ -321,7 +319,7 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
                     vmodel.selectedIndex = 0
                 }
                 vmodel.onChangeCallback( vmodel.list[vmodel.selectedIndex].value , vmodel.inputElement, event, vmodel.list[vmodel.selectedIndex]);
-                
+
                 // prevent default behavior to move cursor at the the end
                 event.preventDefault()
             break;
@@ -372,10 +370,10 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
         }
     };
     widget.defaults = {
-        inputElement : "" , 
-        strategy : "__getVal" , 
+        inputElement : "" ,
+        strategy : "__getVal" ,
         textboxContainer : "" ,
-        
+
         focus : false ,
         changed : false,
         onSelectItem: "",
@@ -420,7 +418,7 @@ define(["../avalon.getModel", "text!./avalon.suggest.html","css!../chameleon/oni
                 value + "6" ,
                 value + "7" ,
                 value + "8" ,
-                value + "9"   
+                value + "9"
             ] : [] )
         }
     }

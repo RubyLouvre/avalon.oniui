@@ -247,7 +247,7 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
             vm.$draggableOpts.stop = function(e, data) {
                 vmodel.$draggableOpts.drag(e, data)
                 vmodel.dragging = false
-                avalon(data.element).removeClass("oni-state-active")
+                avalon(data.element).removeClass("oni-scrollbar-state-active")
             }
 
             vm.$remove = function() {
@@ -494,14 +494,14 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
                         }
                         if(vmodel.showBarHeader) {
                             if(y == 0 && isVertical || !isVertical && x == 0) {
-                                avalon(getByClassName("oni-scrollbar-arrow-up", bar[0])[0]).addClass("oni-state-disabled")
+                                avalon(getByClassName("oni-scrollbar-arrow-up", bar[0])[0]).addClass("oni-scrollbar-state-disabled")
                             } else {
-                                avalon(getByClassName("oni-scrollbar-arrow-up", bar[0])[0]).removeClass("oni-state-disabled")
+                                avalon(getByClassName("oni-scrollbar-arrow-up", bar[0])[0]).removeClass("oni-scrollbar-state-disabled")
                             }
                             if(y >= draggerpar.innerHeight() - dragger.innerHeight() && isVertical || !isVertical && x >= draggerpar.innerWidth() - dragger.innerWidth()) {
-                               !vmodel.breakOutCallback && avalon(getByClassName("oni-scrollbar-arrow-down", bar[0])[0]).addClass("oni-state-disabled")
+                               !vmodel.breakOutCallback && avalon(getByClassName("oni-scrollbar-arrow-down", bar[0])[0]).addClass("oni-scrollbar-state-disabled")
                             } else {
-                                avalon(getByClassName("oni-scrollbar-arrow-down", bar[0])[0]).removeClass("oni-state-disabled")
+                                avalon(getByClassName("oni-scrollbar-arrow-down", bar[0])[0]).removeClass("oni-scrollbar-state-disabled")
                             }
                         }
                     }
@@ -535,12 +535,12 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
                 clearInterval(ele.data("mousedownTimer"))
                 clearTimeout(ele.data("setTimer"))
                 var bar = bars[barIndex]
-                if(ismouseup || ele.hasClass("oni-state-disabled")) {
-                    return ele.removeClass("oni-state-active")
+                if(ismouseup || ele.hasClass("oni-scrollbar-state-disabled")) {
+                    return ele.removeClass("oni-scrollbar-state-active")
                 }
                 // 延时开启循环
                 ele.data("setTimer", setTimeout(function(){
-                    ele.addClass("oni-state-active")
+                    ele.addClass("oni-scrollbar-state-active")
                     ele.data("mousedownTimer", setInterval(function() {
                         return vmodel._computer(function(obj) {
                                 return vmodel._clickComputer(obj, diretion)
@@ -602,17 +602,17 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
                     if(isVertical) {
                         if(xy.y < 0) {
                             xy.y = 0
-                            obj.up.addClass("oni-state-disabled")
+                            obj.up.addClass("oni-scrollbar-state-disabled")
                             breakOut = ["v", "up"]
                         } else {
-                            obj.up.removeClass("oni-state-disabled")
+                            obj.up.removeClass("oni-scrollbar-state-disabled")
                         }
                         if(xy.y > obj.draggerparHeight - obj.draggerHeight) {
                             xy.y = obj.draggerparHeight - obj.draggerHeight
                             breakOut = ["v", "down"]
-                            obj.down.addClass("oni-state-disabled")
+                            obj.down.addClass("oni-scrollbar-state-disabled")
                         } else {
-                            obj.down.removeClass("oni-state-disabled")
+                            obj.down.removeClass("oni-scrollbar-state-disabled")
                         }
                         var c = strToNumber((obj.scrollerH - obj.viewH) * xy.y / (obj.draggerparHeight - obj.draggerHeight)) - vmodel.scrollTop
                         obj.dragger.css("top", xy.y)
@@ -621,17 +621,17 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
                         if(xy.x < 0) {
                             xy.x = 0
                             breakOut = ["h", "up"]
-                            obj.up.addClass("oni-state-disabled")
+                            obj.up.addClass("oni-scrollbar-state-disabled")
                         } else {
-                            obj.up.removeClass("oni-state-disabled")
+                            obj.up.removeClass("oni-scrollbar-state-disabled")
                         }
                         if(xy.x > obj.draggerparWidth - obj.draggerWidth) {
                             xy.x = obj.draggerparWidth - obj.draggerWidth
                             breakOut = ["h", "down"]
                             // 有溢出检测回调，不disable
-                            !vmodel.breakOutCallback && obj.down.addClass("oni-state-disabled")
+                            !vmodel.breakOutCallback && obj.down.addClass("oni-scrollbar-state-disabled")
                         } else {
-                            obj.down.removeClass("oni-state-disabled")
+                            obj.down.removeClass("oni-scrollbar-state-disabled")
                         }
                         obj.dragger.css("left", xy.x)
                         vmodel._scrollTo(strToNumber((obj.scrollerW - obj.viewW) * xy.x / (obj.draggerparWidth - obj.draggerWidth)), void 0)
@@ -643,6 +643,11 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
                 vmodel.breakOutCallback && vmodel.breakOutCallback(breakOut, vmodel, obj)
             }
             vm._scrollTo = function(x, y) {
+                if(!document.querySelector){ // fix IE 67下嵌套滚动条无效bug
+                    if(avalon(scroller[0]).css("position") === "static"){
+                        avalon(scroller[0]).css("position", "relative")
+                    }
+                }
                 if(y != void 0) {
                     scroller[0].scrollTop = y
                     vmodel.scrollTop = scroller[0].scrollTop
@@ -670,9 +675,9 @@ define(["avalon", "text!./avalon.scrollbar.html", "../draggable/avalon.draggable
                 if(vmodel.disabled) return
                 var ele = avalon(this)
                 if(isdown) {
-                    ele.addClass("oni-state-active")
+                    ele.addClass("oni-scrollbar-state-active")
                 } else {
-                    ele.removeClass("oni-state-active")
+                    ele.removeClass("oni-scrollbar-state-active")
                 }
             }
             vm._stopPropagation = function(e) {

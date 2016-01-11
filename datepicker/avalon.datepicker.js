@@ -1,14 +1,14 @@
 // avalon 1.3.6
 /**
- * 
+ *
  * @cnName 日期选择器
  * @enName datepicker
  * @introduce
  *    <p>datepicker组件方便快速创建功能齐备的日历组件，通过不同的配置日历可以满足显示多个月份、通过prev、next切换月份、或者通过下拉选择框切换日历的年份、月份，当然也可以手动输入日期，日历组件也会根据输入域中的日期值高亮显示对应日期等等各种需求</p>
  */
-define(["../avalon.getModel", 
+define(["../avalon.getModel",
         "./avalon.datepicker.lang",
-        "text!./avalon.datepicker.html", 
+        "text!./avalon.datepicker.html",
         "../dropdown/avalon.dropdown",
         "../button/avalon.button",
         "../slider/avalon.slider",
@@ -23,21 +23,21 @@ define(["../avalon.getModel",
     var widget = avalon.ui.datepicker = function(element, data, vmodels) {
         var options = data.datepickerOptions,
             msDuplexName = element.msData["ms-duplex"],
-            duplexVM = msDuplexName && avalon.getModel(msDuplexName, vmodels), 
+            duplexVM = msDuplexName && avalon.getModel(msDuplexName, vmodels),
             parseDate = options.parseDate,
             formatDate = options.formatDate,
-            minDate = options.minDate, 
+            minDate = options.minDate,
             maxDate = options.maxDate,
             monthYearChangedBoth = false,
-            datepickerData = [],            
+            datepickerData = [],
             _initValue = "",
             daysWrapper = null,
             years=[],
             minDateVM,
             maxDateVM,
             calendar,
-            month, 
-            day, 
+            month,
+            day,
             year
 
         calendarTemplate = options.template = options.getTemplate(calendarTemplate, options)
@@ -56,15 +56,15 @@ define(["../avalon.getModel",
             maxDateVM = avalon.getModel(options.maxDate, vmodels)
             maxDateVM && (maxDate = validateDate(maxDateVM[1][maxDateVM[0]]))
         }
-        maxDate = options.maxDate = maxDate && cleanDate(maxDate) 
+        maxDate = options.maxDate = maxDate && cleanDate(maxDate)
         minDate ? firstYear = minDate.getFullYear() : 0
         maxDate ? lastYear = maxDate.getFullYear() : 0
         if (avalon.type(options.years) === "array") {
-            years = options.years    
+            years = options.years
         } else {
             for (var i = firstYear; i <= lastYear; i++) {
                 years.push(i)
-            }    
+            }
         }
         if (options.mobileMonthAndYear) {
             options.mobileYear = 0
@@ -85,7 +85,7 @@ define(["../avalon.getModel",
                 "months", "years", "numberOfMonths",
                 "showOtherMonths", "watermark", "weekNames",
                 "stepMonths", "changeMonthAndYear", "startDay", "mobileMonthAndYear",
-                "formatErrorTip" 
+                "formatErrorTip"
             ]
             vm._uc = false //更新calendar
             vm._height = 150
@@ -103,7 +103,7 @@ define(["../avalon.getModel",
             vm.day = day
             vm.years = years
             vm.months = [1,2,3,4,5,6,7,8,9,10,11,12]
-            vm._position = "absolute"            
+            vm._position = "absolute"
             vm._datepickerToggle = true
             vm._monthToggle = false
             vm._yearToggle = false
@@ -115,16 +115,16 @@ define(["../avalon.getModel",
                 if (_position === 'absolute') {
                     switch(position) {
                         case "rb":
-                            return 'oni-datepicker-wrapper-right' 
+                            return 'oni-datepicker-wrapper-right'
                         break
                         case "lt":
-                            return 'oni-datepicker-wrapper-top' 
+                            return 'oni-datepicker-wrapper-top'
                         break
-                        case "rt": 
-                            return 'oni-datepicker-wrapper-top-right' 
+                        case "rt":
+                            return 'oni-datepicker-wrapper-top-right'
                         break
                         default:
-                            return position 
+                            return position
                         break
                     }
                 }
@@ -202,7 +202,7 @@ define(["../avalon.getModel",
                 }
             }
             vm.sliderHourOpts = {
-                onInit: function(sliderHour, options, vmodels) {    
+                onInit: function(sliderHour, options, vmodels) {
                     sliderHour.$watch("value", function(val) {
                         vmodel.hour = val
                     })
@@ -249,7 +249,7 @@ define(["../avalon.getModel",
                         if (!vmodel.mobileYearDisabled(year)) {
                             vmodel.mobileYear = year
                         } else {
-                            return 
+                            return
                         }
                     } else {
                         vmodel.mobileYear = vmodel.year
@@ -257,7 +257,7 @@ define(["../avalon.getModel",
                     vmodel._monthToggle = true
                     vmodel._yearToggle = false
                     vmodel._datepickerToggle = false
-                } 
+                }
             }
             vm._selectYears = function() {
                 if (vmodel.mobileMonthAndYear) {
@@ -270,6 +270,7 @@ define(["../avalon.getModel",
                 var date = formatDate(timeDate),
                     time = timeDate.toTimeString(),
                     now = time.substr(0, time.lastIndexOf(":"));
+
                 vmodel.hour = timeDate.getHours()
                 vmodel.minute = timeDate.getMinutes()
                 return date + ' ' + now
@@ -342,7 +343,7 @@ define(["../avalon.getModel",
                 if (year === vmodel.years[0]) {
                     return
                 }
-                vmodel.mobileYear = vmodel.mobileYear - 1 
+                vmodel.mobileYear = vmodel.mobileYear - 1
             }
             vm._nextYear = function(year) {
                 if (year === vmodel.years[vmodel.years.length-1]) {
@@ -350,7 +351,7 @@ define(["../avalon.getModel",
                 }
                 vmodel.mobileYear = vmodel.mobileYear + 1
             }
-            vm._prevYears = function() { 
+            vm._prevYears = function() {
                 if (vmodel._years[0] <= vmodel.years[0]) {
                     return
                 }
@@ -407,7 +408,7 @@ define(["../avalon.getModel",
                     var _date = new Date(year, month, day),
                         date = formatDate(_date),
                         calendarWrapper = options.type ==="range" ? element["data-calenderwrapper"] : null
-                    
+
                     vmodel.tip = getDateTip(cleanDate(_date)).text
                     vmodel.dateError = "#cccccc"
                     if (!calendarWrapper && !vmodel.timer) {
@@ -487,7 +488,6 @@ define(["../avalon.getModel",
                     div.appendChild(calendar)
                 }
                 if (vmodel.timer) {
-                    vmodel.width = 100
                     var time = validateTime(_initValue)
                     if (_initValue && time) {
                         _initValue = vmodel.getInitTime(time)
@@ -507,7 +507,7 @@ define(["../avalon.getModel",
                 } else {
                     bindEvents(calendar, div)
                 }
-                
+
                 if (options.type === "range") {
                     div = element["data-calenderwrapper"]
                     vmodel._position = "static"
@@ -603,7 +603,7 @@ define(["../avalon.getModel",
         if (vmodel.changeMonthAndYear) {
             vmodel.$watch("_month", function(month) {
                 vmodel.month = month - 1
-            }) 
+            })
         }
         vmodel.$watch("month", function(month) {
             vmodel._month = month + 1
@@ -616,7 +616,7 @@ define(["../avalon.getModel",
                 year = vmodel.year,
                 exitLoop = false,
                 dateYear,
-                dateMonth, 
+                dateMonth,
                 dateDay
 
             for (var i = 0, len = data.length; i < len; i++) {
@@ -683,7 +683,7 @@ define(["../avalon.getModel",
         vmodel.$watch("maxDate", function(val) {
             var maxDate = validateDate(val)
             if (maxDate) {
-                vmodel.maxDate = cleanDate(maxDate)    
+                vmodel.maxDate = cleanDate(maxDate)
             } else {
                 vmodel.maxDate = ""
             }
@@ -752,8 +752,8 @@ define(["../avalon.getModel",
             } else {
                 if (!value) {
                     value = formatDate(today)
-                    options.tip = getDateTip(today).text  
-                    _initDate = today  
+                    options.tip = getDateTip(today).text
+                    _initDate = today
                     dateDisabled = isDateDisabled(today, options)
                 } else if (_date) {
                     dateDisabled = isDateDisabled(_date, options)
@@ -762,7 +762,7 @@ define(["../avalon.getModel",
             if (dateDisabled) {
                 _initDate = options.minDate || options.maxDate
                 value = formatDate(_initDate)
-            } 
+            }
 
             year = _initDate.getFullYear()
             month =  _initDate.getMonth()
@@ -778,7 +778,7 @@ define(["../avalon.getModel",
                     newYears.push(Number(_year3+i))
                 }
                 vmodel._years = newYears
-            } 
+            }
         }
         // 根据minDate和maxDate的设置判断给定的日期是否不可选
         function isDateDisabled(date, vmodel) {
@@ -806,7 +806,7 @@ define(["../avalon.getModel",
                     if(options.type==="range") {
                         return ;
                     }
-                    if(!calendar.contains(target) && !tipContainer.contains(target) && vmodel.toggle && !vmodel.timer) {
+                    if(!calendar.contains(target) && !tipContainer.contains(target) && vmodel.toggle) {
                         vmodel.toggle = false;
                         return ;
                     } else if(!vmodel.toggle && !vmodel.disabled && tipContainer.contains(target)){
@@ -821,7 +821,7 @@ define(["../avalon.getModel",
                     eChar = e.key;
                     if(eChar) {
                         switch(eChar) {
-                            case "-": 
+                            case "-":
                                 operate = "-";
                             break;
                             case "/":
@@ -830,7 +830,7 @@ define(["../avalon.getModel",
                         }
                     } else {
                         switch(keyCode) {
-                            case 189: 
+                            case 189:
                                 operate = "-";
                             break;
                             case 191:
@@ -845,12 +845,12 @@ define(["../avalon.getModel",
                     if((keyCode<48 || (keyCode>57 && keyCode<96) || keyCode>105) && keyCode !==13 && keyCode!==8 && options.separator !== operate && keyCode !== 27 && keyCode !== 9 && keyCode !== 37 && keyCode!== 39 && keyCode!==46) {
                         e.preventDefault();
                         return false;
-                    } 
+                    }
                 }],
                 [element, "keyup", function(e) {
                     var value = element.value,
-                        year = vmodel.year, 
-                        month = vmodel.month, 
+                        year = vmodel.year,
+                        month = vmodel.month,
                         keyCode = e.keyCode,
                         dateMonth,
                         dateYear,
@@ -902,7 +902,7 @@ define(["../avalon.getModel",
         }
         // 通过prev、next按钮切换月份
         function toggleMonth(operate) {
-            var month = vmodel.month, 
+            var month = vmodel.month,
                 year = vmodel.year,
                 stepMonths = vmodel.stepMonths,
                 numberOfMonths = vmodel.numberOfMonths,
@@ -945,7 +945,7 @@ define(["../avalon.getModel",
                 dateDisabled = isDateDisabled(cellDate, vmodel)
             if (valueDate && valueDate.getDate() === +day && dateMonth===valueDate.getMonth() && dateYear===valueDate.getFullYear()) {
                 selected = true
-            }    
+            }
             days.push({day:day+"",_day: _day+"", month: dateMonth, year: dateYear, weekend: weekend, selected: selected, dateDisabled: dateDisabled})
             _days.push(_day+"")
         }
@@ -955,7 +955,7 @@ define(["../avalon.getModel",
                 vmodel.onBeforeRender(vmodel, month, year, function() {
                     _calendarDays(month, year)
                 })
-                return 
+                return
             }
             _calendarDays(month, year)
         }
@@ -983,16 +983,16 @@ define(["../avalon.getModel",
             vmodel.nextMonth = next
 
             for (var i = 0, len = vmodel.numberOfMonths; i < len; i++) {
-                
+
                 for (var m=0; m<6; m++) {
                     days = []
                     _days = []
-                    
+
                     for (var n = 0; n < 7; n++) {
                         dateMonth = cellDate.getMonth()
                         dateYear = cellDate.getFullYear()
                         day = cellDate.getDate()
-                        if (dateYear === year && dateMonth === month) { 
+                        if (dateYear === year && dateMonth === month) {
                             calendarDate(cellDate, vmodel, valueDate, dateMonth, dateYear, days, _days, day)
                         } else {
                             if (showOtherMonths && m === 0 && (dateYear < year || dateMonth < month)) {
@@ -1003,7 +1003,7 @@ define(["../avalon.getModel",
                             }
                         }
                         cellDate = new Date(cellDate.setDate(day+1))
-                    } 
+                    }
                     rows.push(days)
                     _rows.push(_days)
                 }
@@ -1014,7 +1014,7 @@ define(["../avalon.getModel",
                 })
                 _data.push({
                     year: year,
-                    month: month, 
+                    month: month,
                     rows: _rows
                 })
                 month += 1
@@ -1033,7 +1033,7 @@ define(["../avalon.getModel",
                 month = valueDate && valueDate.getMonth(),
                 year = valueDate && valueDate.getFullYear(),
                 tip = getDateTip(cellDate),
-                _day = tip && tip.cellText || dateDay, 
+                _day = tip && tip.cellText || dateDay,
                 weekDay = cellDate.getDay(),
                 weekend = weekDay % 7 == 0 || weekDay % 7 == 6,
                 dateDisabled = isDateDisabled(cellDate, vmodel),
@@ -1044,7 +1044,7 @@ define(["../avalon.getModel",
 
             if (dateDay === +day && dateMonth === month && dateYear === year) {
                 selected = true
-            }    
+            }
             if (dayItem._day == _day && (dayItem.selected != selected || dayItem.dateDisabled != dateDisabled)) {
                 avalon.mix(dayItem, {month: dateMonth, year: dateYear, selected: selected, dateDisabled: dateDisabled})
                 rowItem.set(n, "").set(n, _day)
@@ -1060,7 +1060,7 @@ define(["../avalon.getModel",
                 vmodel.onBeforeRender(vmodel, month, year, function() {
                     _setCalendarDays(month, year, day)
                 })
-                return 
+                return
             }
             _setCalendarDays(month, year, day)
         }
@@ -1080,9 +1080,9 @@ define(["../avalon.getModel",
 
             vmodel.prevMonth = prev
             vmodel.nextMonth = next
-            
+
             for (var i = 0, len = vmodel.numberOfMonths; i < len; i++) {
-                
+
                 vmodel.data[i].year = year
                 vmodel.data[i].month = month
                 datepickerData[i].year = year
@@ -1094,7 +1094,7 @@ define(["../avalon.getModel",
                         dateYear = cellDate.getFullYear()
                         dateDay = cellDate.getDate()
 
-                        if (dateYear === year && dateMonth === month) { 
+                        if (dateYear === year && dateMonth === month) {
                             setCalendarDate(cellDate, vmodel, valueDate, dateMonth, dateYear, dateDay, day, i, m, n)
                         } else {
                             if (showOtherMonths && m === 0 && (dateYear < year || dateMonth < month)) {
@@ -1108,7 +1108,7 @@ define(["../avalon.getModel",
                             vmodel._uc = !vmodel._uc
                         }
                         cellDate = new Date(cellDate.setDate(dateDay+1))
-                    } 
+                    }
                 }
                 month += 1
                 firstDayOfMonth = new Date(year, month, 1)
@@ -1206,7 +1206,7 @@ define(["../avalon.getModel",
          * @param month {Number} 当前日期的month(0-11)
          * @param vmodel {Number} 日历组件对应vmodel
          */
-        onChangeMonthYear: avalon.noop, 
+        onChangeMonthYear: avalon.noop,
         /**
          * @config {Function} 格式化输出日期单元格内容
          * @param date {Date} 当前的日期
@@ -1222,7 +1222,7 @@ define(["../avalon.getModel",
         /**
          * @config {Function} 在渲染日期前的准备工作，比如格式化日期前需请求的服务器数据
          * @param vmodel {Object} 当前日期组件对应的Vmodel
-         * @param month {Number} 当前month(0-11) 
+         * @param month {Number} 当前month(0-11)
          * @param year {Number} 当前year
          */
         onBeforeRender: null,
@@ -1232,7 +1232,7 @@ define(["../avalon.getModel",
          * @param vmodel {Object} 当前日期组件对应的Vmodel
          * @param data {Object} 绑定组件的元素的data属性组成的集合
          */
-        onSelect: avalon.noop, 
+        onSelect: avalon.noop,
         /**
          * @config {Function} 日历关闭的回调
          * @param date {Object} 当前日期

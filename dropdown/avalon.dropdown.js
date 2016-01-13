@@ -809,7 +809,7 @@ define(["avalon",
             data = data === "true" ? true :
                 data === "false" ? false :
                     data === "null" ? null :
-                        +data + "" === data ? +data : data;
+                        data + "" === data ? data : +data;
         } catch (e) {
         }
         return data

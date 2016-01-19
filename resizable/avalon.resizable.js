@@ -65,9 +65,7 @@ define(["../draggable/avalon.draggable"], function(avalon) {
         //data.originalX = offset.left; data.originalY = offset.top;
         options.beforeStart = function(event, data) {
             var target = data.$element;
-            if(_drag === avalon.noop){
                 data.dragX = data.dragY = false
-            }
             var dir = getDirection(event, target, data);
             if (dir === "")
                 return;

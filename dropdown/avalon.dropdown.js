@@ -809,7 +809,7 @@ define(["avalon",
             data = data === "true" ? true :
                 data === "false" ? false :
                     data === "null" ? null :
-                        +data + "" === data ? +data : data;
+                        data + "" === data ? data : +data;
         } catch (e) {
         }
         return data
@@ -901,7 +901,7 @@ define(["avalon",
                 if (el.tagName === "OPTGROUP") {
                     parent = {
                         label: el.label,
-                        value: "",
+                        value: "__dropdownGroup",
                         enable: !el.disabled,
                         group: true,        //group不能添加ui-state-active
                         parent: false,
@@ -913,7 +913,7 @@ define(["avalon",
                     ret.push({
                         label: el.label.trim()||el.text.trim()||el.value.trim(), //IE9-10有BUG，没有进行trim操作
                         title: el.title.trim(),
-                        value: parseData(el.value.trim()||el.text.trim()),
+                        value: parseData(el.value.trim()),
                         enable: ensureBool(parent && parent.enable, true) && !el.disabled,
                         group: false,
                         parent: parent,

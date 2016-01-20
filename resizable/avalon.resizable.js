@@ -65,7 +65,9 @@ define(["../draggable/avalon.draggable"], function(avalon) {
         //data.originalX = offset.left; data.originalY = offset.top;
         options.beforeStart = function(event, data) {
             var target = data.$element;
+            if(_drag === avalon.noop){
                 data.dragX = data.dragY = false
+            }
             var dir = getDirection(event, target, data);
             if (dir === "")
                 return;
@@ -84,6 +86,10 @@ define(["../draggable/avalon.draggable"], function(avalon) {
             data.aspectRatio = data._aspectRatio ? data.aspectRatio : ((data.startResizeWidth / data.startResizeHeight) || 1);
             event.type = "resizestart";
             //data.start.call(target[0], event, data); //触发用户回调
+
+            if(dir){
+                data.dragX = data.dragY = false
+            }
             avalon(body).css('cursor', dir + '-resize');
         }
         options.drag = function(event, data) {

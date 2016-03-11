@@ -936,12 +936,13 @@ define(["./mmPromise", "./mmRouter"], function () {
         function wrapper($ctrl) {
             callback && callback($ctrl)
         }
+        url = url instanceof Array ? url : [url]
         if (window.requirejs) {
-            requirejs([url], wrapper)
+            requirejs(url, wrapper)
         } else if (typeof require === "function" && require.ensure) {
-            require.ensure([url], wrapper)
+            require.ensure(url, wrapper)
         } else if (avalon.require) {
-            avalon.require([url], wrapper)
+            avalon.require(url, wrapper)
         }
     }
 

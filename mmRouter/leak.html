@@ -1,0 +1,30 @@
+<html>
+<head>
+<script type="text/javascript">
+var arr = []
+    function LeakMemory(){
+        var parentDiv = 
+             document.createElement("div");
+ 
+        parentDiv.bigString = new Array(1000).join(
+                              new Array(2000).join("XXXXX"));
+        // document.body.appendChild(parentDiv)
+        // parentDiv = null
+        arr.push(parentDiv)
+    }
+    setTimeout(function() {
+        LeakMemory()
+    }, 1000)
+    setTimeout(function() {
+        LeakMemory()
+    }, 2000)
+    setTimeout(function() {
+        arr.splice(0, 1)
+    }, 4000)
+</script>
+</head>
+<body>
+<input type="button"
+       value="Memory Leaking Insert" onclick="LeakMemory()" />
+</body>
+</html>

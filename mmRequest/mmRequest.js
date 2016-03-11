@@ -3,7 +3,7 @@
 //  版本: 1.0.0
 //  最近更新: 2015/4/30
 //==========================================
-define("mmRequest", ["avalon", "mmPromise"], function(avalon) {
+define(["avalon", "../mmPromise/mmPromise"], function(avalon) {
     var global = window
     var DOC = global.document
     var encode = encodeURIComponent

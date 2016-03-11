@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <script src="../avalon.modern.js"></script>
+</head>
+<body 
+      ms-controller="test">
+    <button 
+            ms-click="go()">go!!</button>
+    <div ms-view="" class="oni-mmRouter-slide">hello</div>
+    <script type="text/javascript">
+        require(["mmRouter/mmState"], function() {
+            //一个顶层VM
+            avalon.define({
+                $id: "test",
+                i: "",
+                go: function() {
+                    var id = parseInt(Math.random() * 10000)
+                    avalon.vmodels.test.i = id
+                    avalon.router.go("id", {id: id})
+                }
+            })
+            avalon.state.config({
+                onLoad: function() {
+                    avalon.log("onload")
+                    avalon.log(this.params)
+                    avalon.log(this.path)
+                },
+                onUnload: function() {
+                    avalon.log("unload")
+                    avalon.log(this.params)
+                },
+                onViewEnter: function(newNode, oldNode) {
+                    oldNode.parentNode && oldNode.parentNode.removeChild(oldNode)
+                }
+            })
+            avalon.state("id", {
+                url: "/{id}",
+                views: {
+                    "@": {
+                        template: function() {
+                            return "this is: " + Math.random() + "{{i}}"
+                        }
+                    }
+                }
+            })
+            //启动路由
+            avalon.history.start({
+                // basepath: "/mmRouter",
+                fireAnchor: false,
+                routeElementJudger: function(ele, href) {
+                    ele = avalon(ele)
+                    if(ele.hasClass("route-ele")) return true // return href
+                }
+            })
+            //go!!!!!!!!!
+            avalon.scan(document.body)
+        })
+    </script>
+</body>
+</html>

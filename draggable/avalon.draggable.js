@@ -90,6 +90,8 @@ define(["avalon"], function(avalon) {
         body = document.body //因为到这里时，肯定已经domReady
 
         $element.bind(dragstart, function(e) {
+            stopPropagation(e)
+
             var data = avalon.mix({}, options, {
                 element: element,
                 $element: $element,
@@ -225,16 +227,18 @@ define(["avalon"], function(avalon) {
     //统一处理拖动的事件
     var lockTime = new Date - 0, minTime = document.querySelector ? 12 : 30
     avalon(document).bind(drag, function(e) {
+        stopPropagation(e)
+
         var time = new Date - lockTime
         if (time > minTime) {//减少调用次数，防止卡死IE6-8
             lockTime = time
             var data = draggable.dragData
             if (data.started === true) {
-                //fix touchmove bug;  
+                //fix touchmove bug;
                 //IE 在 img 上拖动时默认不能拖动（不触发 mousemove，mouseup 事件，mouseup 后接着触发 mousemove ...）
                 //防止 html5 draggable 元素的拖放默认行为 (选中文字拖放)
                 e.preventDefault();
-                //使用document.selection.empty()来清除选择，会导致捕获失败 
+                //使用document.selection.empty()来清除选择，会导致捕获失败
                 var element = data.clone || data.element
                 setPosition(e, element, data, "X")
                 setPosition(e, element, data, "Y")
@@ -245,6 +249,8 @@ define(["avalon"], function(avalon) {
 
     //统一处理拖动结束的事件
     avalon(document).bind(dragstop, function(e) {
+        stopPropagation(e)
+
         var data = draggable.dragData
         if (data.started === true) {
             restoreUserSelect()
@@ -367,7 +373,7 @@ define(["avalon"], function(avalon) {
             if (elem) {
                 var $offset = avalon(elem).offset()
                 data.containment = [
-                    $offset.left + data.marginLeft, //如果元素设置了marginLeft，设置左边界时需要考虑它 
+                    $offset.left + data.marginLeft, //如果元素设置了marginLeft，设置左边界时需要考虑它
                     $offset.top + data.marginTop,
                     $offset.left + elem.offsetWidth - data.marginLeft - elemWidth,
                     $offset.top + elem.offsetHeight - data.marginTop - elemHeight
@@ -375,5 +381,14 @@ define(["avalon"], function(avalon) {
             }
         }
     }
+
+    function stopPropagation(event) {
+    	if (event.stopPropagation) {
+    		event.stopPropagation();
+    	} else if (event.cancelBubble !== undefined && event.cancelBubble !== true) {
+    		event.cancelBubble = true;
+    	}
+    }
+
     return avalon
 })

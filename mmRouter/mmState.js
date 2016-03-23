@@ -50,11 +50,12 @@ define(["./mmPromise", "./mmRouter"], function () {
         }
     }
     // 事件管理器
-    var Event = window.$eventManager = avalon.define("$eventManager", function (vm) {
-        vm.$flag = 0;
-        vm.uiqKey = function () {
-            vm.$flag++
-            return "flag" + vm.$flag++
+    var Event = window.$eventManager = avalon.define({
+        $id: "$eventManager",
+        $flag: 0,
+        uiqKey: function () {
+            Event.$flag++
+            return "flag" + Event.$flag++
         }
     })
     function removeOld() {
@@ -336,11 +337,12 @@ define(["./mmPromise", "./mmRouter"], function () {
     }
     // 靠谱的解决方法
     avalon.bindingHandlers.view = function (data) {
+        data.expr = "'" + (data.expr || "") + "'"
         var vmodels = data.vmodels || arguments[1]
         var currentState = mmState.currentState,
                 element = data.element,
                 $element = avalon(element),
-                viewname = data.value || data.expr || "",
+                viewname = (data.value || data.expr || "").replace(/['"]+/g, ""),
                 comment = document.createComment("ms-view:" + viewname),
                 par = element.parentNode,
                 defaultHTML = element.innerHTML,

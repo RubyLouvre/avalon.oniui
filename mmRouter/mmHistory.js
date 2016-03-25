@@ -1,63 +1,43 @@
-/*
- * 
- * version 0.9
- * built in 2015.11.19
- */
+define(["avalon"], function(avalon) {
+    var anchorElement = document.createElement('a')
 
-define(["avalon"], function (avalon) {
-
-    var History = avalon.History = function () {
-        this.location = window.location
-        this.history = window.history
+    var History = avalon.History = function() {
+        this.location = location
     }
 
     History.started = false
-//取得当前IE的真实运行环境
-    History.IEVersion = (function () {
+    //取得当前IE的真实运行环境
+    History.IEVersion = (function() {
         var mode = document.documentMode
         return mode ? mode : window.XMLHttpRequest ? 7 : 6
     })()
 
     History.defaults = {
-        root: "/",
+        basepath: "/",
         html5Mode: false,
         hashPrefix: "!",
         iframeID: null, //IE6-7，如果有在页面写死了一个iframe，这样似乎刷新的时候不会丢掉之前的历史
         interval: 50, //IE6-7,使用轮询，这是其时间时隔
-        fireAnchor: true, //决定是否将滚动条定位于与hash同ID的元素上
+        fireAnchor: true,//决定是否将滚动条定位于与hash同ID的元素上
         routeElementJudger: avalon.noop // 判断a元素是否是触发router切换的链接
     }
+
     var oldIE = window.VBArray && History.IEVersion <= 7
     var supportPushState = !!(window.history.pushState)
     var supportHashChange = !!("onhashchange" in window && (!window.VBArray || !oldIE))
-
-
-    History.started = false;
-
     History.prototype = {
         constructor: History,
-        atRoot: function () {
-            //判定当前地址栏不存在hash与search
-            var path = this.location.pathname.replace(/[^\/]$/, '$&/')
-            return path === this.root && !this.getSearch()
+        getFragment: function(fragment) {
+            if (fragment == null) {
+                if (this.monitorMode === "popstate") {
+                    fragment = this.getPath()
+                } else {
+                    fragment = this.getHash()
+                }
+            }
+            return fragment.replace(/^[#\/]|\s+$/g, "")
         },
-        // 判定pathname是否匹配我们的root参数
-        matchRoot: function () {
-            var path = this.decodeFragment(this.location.pathname)
-            var root = path.slice(0, this.root.length - 1) + '/'
-            return root === this.root;
-        },
-        // 变经过编辑的东西变回我们可识别的文字
-        decodeFragment: function (fragment) {
-            return decodeURI(fragment.replace(/%25/g, '%2525'))
-        },
-        // 取得查询字符串, 注意IE6下search可能包含hash
-        getSearch: function () {
-            var match = this.location.href.replace(/#.*/, '').match(/\?.+/)
-            return match ? match[0] : '';
-        },
-        // 从location.href中抽取hash,不能直接使用location.hash,因为firefox会对它进行decoded
-        getHash: function (window) {
+        getHash: function(window) {
             // IE6直接用location.hash取hash，可能会取少一部分内容
             // 比如 http://www.cnblogs.com/rubylouvre#stream/xxxxx?lang=zh_c
             // ie6 => location.hash = #stream/xxxxx
@@ -69,32 +49,24 @@ define(["avalon"], function (avalon) {
             var path = (window || this).location.href
             return this._getHash(path.slice(path.indexOf("#")))
         },
-        _getHash: function (path) {
+        _getHash: function(path) {
             if (path.indexOf("#/") === 0) {
-                return decodeURI(path.slice(2))
+                return decodeURIComponent(path.slice(2))
             }
             if (path.indexOf("#!/") === 0) {
-                return decodeURI(path.slice(3))
+                return decodeURIComponent(path.slice(3))
             }
             return ""
         },
-        // Get the pathname and search params, without the root.
-        getPath: function () {
-            var path = this.decodeFragment(
-                    this.location.pathname + this.getSearch()
-                    ).slice(this.root.length - 1);
-            return path.charAt(0) === '/' ? path.slice(1) : path
+        getPath: function() {
+            var path = decodeURIComponent(this.location.pathname + this.location.search)
+            var root = this.basepath.slice(0, -1)
+            if (!path.indexOf(root))
+                path = path.slice(root.length)
+            return path.slice(1)
         },
-        // 根据浏览器对路由器事件的支持情况截取hash或path
-        getFragment: function (fragment) {
-            if (fragment == null) {
-                if (this.monitorMode === "popstate") {
-                    fragment = this.getPath()
-                } else {
-                    fragment = this.getHash()
-                }
-            }
-            return  fragment.replace(/^[#\/]|\s+$/g, "")
+        _getAbsolutePath: function(a) {
+            return !a.hasAttribute ? a.getAttribute("href", 4) : a.href
         },
         /*
          * @interface avalon.history.start 开始监听历史变化
@@ -104,21 +76,12 @@ define(["avalon"], function (avalon) {
          * @param options.html5Mode 是否采用html5模式，即不使用hash来记录历史，默认false
          * @param options.fireAnchor 决定是否将滚动条定位于与hash同ID的元素上，默认为true
          * @param options.basepath 根目录，默认为"/"
-         * @param options.silent 不触发回调，默认false
          */
-        start: function (options) {
+        start: function(options) {
             if (History.started)
-                throw new Error('avalon.history has already been started')
-            options = options || {}
-            if (options.basepath) {
-                options.root = options.basepath
-                delete options.basepath
-            }
-
-
+                throw new Error("avalon.history has already been started")
             History.started = true
-            this.options = avalon.mix({root: '/'}, History.defaults, options)
-
+            this.options = avalon.mix({}, History.defaults, options)
             //IE6不支持maxHeight, IE7支持XMLHttpRequest, IE8支持window.Element，querySelector, 
             //IE9支持window.Node, window.HTMLElement, IE10不支持条件注释
             //确保html5Mode属性存在,并且是一个布尔
@@ -135,168 +98,152 @@ define(["avalon"], function (avalon) {
             if (!supportHashChange) {
                 this.monitorMode = "iframepoll"
             }
-
-
-        
             this.prefix = "#" + this.options.hashPrefix + "/"
-            // 将前后出现的//变成/
-            this.root = ('/' + this.options.root + '/').replace(/^\/+|\/+$/g, '/')
+            //确认前后都存在斜线， 如"aaa/ --> /aaa/" , "/aaa --> /aaa/", "aaa --> /aaa/", "/ --> /"
+            this.basepath = ("/" + this.options.basepath + "/").replace(/^\/+|\/+$/g, "/")  // 去最左右两边的斜线
+
             this.fragment = this.getFragment()
-            var hasHash = this.atRoot()
-            if (this.monitorMode === "popstate" && supportPushState && hasHash) {
-                this.navigate(this.getHash(), {replace: true})
-            }
 
-
+            anchorElement.href = this.basepath
+            this.rootpath = this._getAbsolutePath(anchorElement)
             var that = this
-            function checkUrlChange() {
-                if (!History.started) {
-                    return false
-                }
-                var current = that.getFragment()// 取得主窗口的hash
-                // 如果用户按下后退按钮,那么iframe中的hash会发生改变,那么我们将使用
-                // 它来更新主窗口的hash
-                if (current === that.fragment && that.iframe) {
-                    current = that.getHash(that.iframe.contentWindow)// 取得iframe的hash
-                }
-                if (current === that.fragment) {
-                    return false
-                }
-                if (that.iframe) {
-                    that.navigate(current)
-                }
-                that.fireUrlChange()
+
+            var html = '<!doctype html><html><body>@</body></html>'
+            if (this.options.domain) {
+                html = html.replace("<body>", "<script>document.domain =" + this.options.domain + "</script><body>")
             }
+            this.iframeHTML = html
+            if (this.monitorMode === "iframepoll") {
+                //IE6,7在hash改变时不会产生历史，需要用一个iframe来共享历史
+                avalon.ready(function() {
+                    if(that.iframe) return
+                    var iframe = that.iframe || document.getElementById(that.iframeID) || document.createElement('iframe')
+                    iframe.src = 'javascript:0'
+                    iframe.style.display = 'none'
+                    iframe.tabIndex = -1
+                    document.body.appendChild(iframe)
+                    that.iframe = iframe.contentWindow
+                    that._setIframeHistory(that.prefix + that.fragment)
+                })
+
+            }
+
+            // 支持popstate 就监听popstate
+            // 支持hashchange 就监听hashchange
+            // 否则的话只能每隔一段时间进行检测了
+            function checkUrl(e) {
+                var iframe = that.iframe
+                if (that.monitorMode === "iframepoll" && !iframe) {
+                    return false
+                }
+                var pageHash = that.getFragment(), hash
+                if (iframe) {//IE67
+                    var iframeHash = that.getHash(iframe)
+                    //与当前页面hash不等于之前的页面hash，这主要是用户通过点击链接引发的
+                    if (pageHash !== that.fragment) {
+                        that._setIframeHistory(that.prefix + pageHash)
+                        hash = pageHash
+                        //如果是后退按钮触发hash不一致
+                    } else if (iframeHash !== that.fragment) {
+                        that.location.hash = that.prefix + iframeHash
+                        hash = iframeHash
+                    }
+
+                } else if (pageHash !== that.fragment) {
+                    hash = pageHash
+                }
+                if (hash !== void 0) {
+                    that.fragment = hash
+                    that.fireRouteChange(hash, {fromHistory: true})
+                }
+            }
+
+            //thanks https://github.com/browserstate/history.js/blob/master/scripts/uncompressed/history.html4.js#L272
 
             // 支持popstate 就监听popstate
             // 支持hashchange 就监听hashchange(IE8,IE9,FF3)
             // 否则的话只能每隔一段时间进行检测了(IE6, IE7)
             switch (this.monitorMode) {
-                case "popstate" :
-                    this._checkUrlChange = avalon.bind(window, 'popstate', checkUrlChange)
+                case "popstate":
+                    this.checkUrl = avalon.bind(window, "popstate", checkUrl)
+                    this._fireLocationChange = checkUrl
                     break
-                case "hashchange":
-                    this._checkUrlChange = avalon.bind(window, 'hashchange', checkUrlChange)
-                    break
-                case "iframepoll":
-                    this._intervalID = setInterval(checkUrlChange, this.interval)
-                    avalon.ready(function () {
-                        var iframe = that.iframe = document.createElement('iframe')
-                        iframe.src = 'javascript:0'
-                        iframe.style.display = 'none'
-                        iframe.tabIndex = -1
-                        var body = document.body
-                        var iWindow = body.insertBefore(iframe, body.firstChild).contentWindow
-                        iWindow.document.open()
-                        iWindow.document.close()
-                        iWindow.location.hash = that.prefix + that.fragment
-                    })
-                    break
+                case  "hashchange":
+                    this.checkUrl = avalon.bind(window, "hashchange", checkUrl)
+                    break;
+                case  "iframepoll":
+                    this.checkUrl = setInterval(checkUrl, this.options.interval)
+                    break;
             }
-            if (!this.options.silent) {
-                return this.fireUrlChange()
+            //根据当前的location立即进入不同的路由回调
+            avalon.ready(function() {
+                that.fireRouteChange(that.fragment || "/", {replace: true})
+            })
+        },
+        fireRouteChange: function(hash, options) {
+            var router = avalon.router
+            if (router && router.navigate) {
+                router.setLastPath(hash)
+                router.navigate(hash === "/" ? hash : "/" + hash, options)
+            }
+            if (this.options.fireAnchor) {
+                scrollToAnchorId(hash.replace(/\?.*/g,""))
             }
         },
         // 中断URL的监听
-        stop: function () {
-            switch (this.monitorMode) {
-                case "popstate" :
-                    avalon.unbind(window, 'popstate', this._checkUrlChange)
-                    break
-                case "hashchange":
-                    avalon.unbind(window, 'hashchange', this._checkUrlChange)
-                    break
-                case "iframepoll":
-                    if (this.iframe) {
-                        document.body.removeChild(this.iframe)
-                        this.iframe = null
-                    }
-                    clearInterval(this._intervalID)
-                    break
-            }
+        stop: function() {
+            avalon.unbind(window, "popstate", this.checkUrl)
+            avalon.unbind(window, "hashchange", this.checkUrl)
+            clearInterval(this.checkUrl)
             History.started = false
         },
-        // 触发预先绑定的回调
-        fireUrlChange: function (fragment) {
-//            if (!this.matchRoot()) {
-//                return false
-//            }
-            fragment = this.fragment = this.getFragment(fragment)
-
-            if (avalon.router) {
-                avalon.router.setLastPath(fragment)//保存到本地储存或cookie
-                avalon.router.navigate(fragment)
-            }
-            if (this.options.fireAnchor) {
-                scrollToAnchorId(fragment.replace(/\?.*/g, ""))
-            }
-        },
-        // 用动触发回调并更新地址栏, options里面 replace, trigger
-
-        navigate: function (fragment, options) {
-            if (!History.started)
-                return false
-            if (!options || options === true) {
-                options = {trigger: options}
-            }
-            // Normalize the fragment.
-            fragment = this.getFragment(fragment || '')
-
-            // Don't include a trailing slash on the root.
-            var root = this.root;
-            if (fragment === '' || fragment.charAt(0) === '?') {
-                root = root.slice(0, -1) || '/';
-            }
-            var url = root + fragment
-
-            // Strip the hash and decode for matching.
-            fragment = this.decodeFragment(fragment.replace(/#.*$/, ''));
-            if (this.fragment === fragment)
-                return
-            this.fragment = fragment
-
+        updateLocation: function(hash, options, urlHash) {
+            var options = options || {},
+                rp = options.replace,
+                st =    options.silent
             if (this.monitorMode === "popstate") {
-                this.history[options.replace ? 'replaceState' : 'pushState']({}, document.title, url);
-            } else if (!this.options.html5Mode) {
-                this._updateHash(this.location, fragment, options.replace);
-                if (this.iframe && (fragment !== this.getHash(this.iframe.contentWindow))) {
-                    var iWindow = this.iframe.contentWindow
-                    // IE67需要通过iframe创建一个历史记录
-                    if (!options.replace) {
-                        iWindow.document.open();
-                        iWindow.document.close();
-                    }
-                    this._updateHash(iWindow.location, fragment, options.replace)
-                }
+                // html5 mode 第一次加载的时候保留之前的hash
+                var path = this.rootpath + hash + (urlHash || "")
+                // html5 model包含query
+                if(path != this.location.href.split("#")[0]) history[rp ? "replaceState" : "pushState"]({path: path}, document.title, path)
+                if(!st) this._fireLocationChange()
             } else {
-                return this.location.assign(url)
-            }
-            if (options.trigger) {
-                return this.fireUrlChange(fragment)
+                var newHash = this.prefix + hash
+                if(st && hash != this.getHash()) {
+                    this._setIframeHistory(newHash, rp)
+                    if(this.fragment) avalon.router.setLastPath(this.fragment)
+                    this.fragment = this._getHash(newHash)
+                }
+                this._setHash(this.location, newHash, rp)
             }
         },
-        // 更新hash或地址的某一部分
-        _updateHash: function (location, fragment, replace) {
-            if (replace) {
-                var href = location.href.replace(/(javascript:|#).*$/, '');
-                location.replace(href + this.prefix + fragment);
-            } else {
-                location.hash = this.prefix + fragment
+        _setHash: function(location, hash, replace){
+            var href = location.href.replace(/(javascript:|#).*$/, '')
+            if (replace){
+                location.replace(href + hash)
             }
+            else location.hash = hash
+        },
+        _setIframeHistory: function(hash, replace) {
+            if(!this.iframe) return
+            var idoc = this.iframe.document
+                idoc.open()
+                idoc.write(this.iframeHTML)
+                idoc.close()
+            this._setHash(idoc.location, hash, replace)
         }
-
     }
+
     avalon.history = new History
 
-//https://github.com/asual/jquery-address/blob/master/src/jquery.address.js
+    //https://github.com/asual/jquery-address/blob/master/src/jquery.address.js
 
-//劫持页面上所有点击事件，如果事件源来自链接或其内部，
-//并且它不会跳出本页，并且以"#/"或"#!/"开头，那么触发updateLocation方法
-    avalon.bind(document, "click", function (event) {
-        var defaultPrevented = "defaultPrevented" in event ? event['defaultPrevented'] : event.returnValue === false
-
-        if (!History.started || defaultPrevented || event.ctrlKey
-                || event.metaKey || event.which === 2)
+    //劫持页面上所有点击事件，如果事件源来自链接或其内部，
+    //并且它不会跳出本页，并且以"#/"或"#!/"开头，那么触发updateLocation方法
+    avalon.bind(document, "click", function(event) {
+        var defaultPrevented = "defaultPrevented" in event ? event['defaultPrevented'] : event.returnValue === false,
+            routeElementJudger = avalon.history.options.routeElementJudger
+        if (defaultPrevented || event.ctrlKey || event.metaKey || event.which === 2)
             return
         var target = event.target
         while (target.nodeName !== "A") {
@@ -307,35 +254,32 @@ define(["avalon"], function (avalon) {
         }
 
         if (targetIsThisWindow(target.target)) {
-            var href = target.getAttribute("href", 2) || target.getAttribute("xlink:href")
-
+            var href = oldIE ? target.getAttribute("href", 2) : target.getAttribute("href") || target.getAttribute("xlink:href")
             var prefix = avalon.history.prefix
             if (href === null) { // href is null if the attribute is not present
                 return
             }
             var hash = href.replace(prefix, "").trim()
-            if (!(href.indexOf(prefix) === 0 && hash !== "")) {
-                var routeElementJudger = avalon.history.options.routeElementJudger
+            if(!(href.indexOf(prefix) === 0 && hash !== "")) {
                 hash = routeElementJudger(target, href)
-                if (hash === true)
-                    hash = href
+                if(hash === true) hash = href
             }
             if (hash) {
                 event.preventDefault()
-                avalon.history.navigate(hash, true)
+                avalon.router && avalon.router.navigate(hash)
             }
         }
     })
 
-//判定A标签的target属性是否指向自身
-//thanks https://github.com/quirkey/sammy/blob/master/lib/sammy.js#L219
+    //判定A标签的target属性是否指向自身
+    //thanks https://github.com/quirkey/sammy/blob/master/lib/sammy.js#L219
     function targetIsThisWindow(targetWindow) {
         if (!targetWindow || targetWindow === window.name || targetWindow === '_self' || (targetWindow === 'top' && window == window.top)) {
             return true
         }
         return false
     }
-//得到页面第一个符合条件的A标签
+    //得到页面第一个符合条件的A标签
     function getFirstAnchor(list) {
         for (var i = 0, el; el = list[i++]; ) {
             if (el.nodeName === "A") {
@@ -355,3 +299,5 @@ define(["avalon"], function (avalon) {
     }
     return avalon
 })
+
+// 主要参数有 basepath  html5Mode  hashPrefix  interval domain fireAnchor

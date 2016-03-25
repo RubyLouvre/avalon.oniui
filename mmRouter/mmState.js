@@ -957,6 +957,7 @@ define(["./mmPromise", "./mmRouter"], function () {
     }
 
     function objectCompare(objA, objB) {
+        if (!objA || !objB) return false
         for (var i in objA) {
             if (!(i in objB) || objA[i] !== objB[i])
                 return false

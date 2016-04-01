@@ -945,6 +945,8 @@ define(["./mmPromise", "./mmRouter"], function () {
             require.ensure(url, wrapper)
         } else if (avalon.require) {
             avalon.require(url, wrapper)
+        } else { // 抛个错误，方便调试
+            throw Error('未能找有效的模块加载器异步加载"' + url + '"，请参照mmState.js的avalon.controller.loader源码进行修改')
         }
     }
 

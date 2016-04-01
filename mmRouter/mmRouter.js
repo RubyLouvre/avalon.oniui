@@ -118,7 +118,9 @@ define(["./mmHistory"], function() {
                     var val = key.decode(value)
                 } else {
                     try {
-                        val = JSON.parse(value)
+                        // 大数限制
+                        // 是不是应该还限制小数啊
+                        if(!(value.match(/^[0-9]{17,}$/g) || value > "9007199254740992")) val = JSON.parse(value)
                     } catch (e) {
                         val = value
                     }

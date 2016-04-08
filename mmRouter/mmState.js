@@ -174,88 +174,115 @@ define(["./mmPromise", "./mmRouter"], function () {
                     state = toChain[i],
                     _local = _root.sourceLocal,
                     toLocals = []
-            if (!reload) {
-                // 找到共有父状态chain，params未变化
-                while (state && state === fromChain[i] && !state.paramsChanged(toParams)) {
-                    _local = toLocals[i] = state._local
+            // 初始化可能存在的异步state
+            var modulesToLoad = [],
+                modulesToLoadObj = {},
+                chains = [].concat(fromChain).concat(toChain)
+            avalon.each(chains, function(i, state) {
+                var stateUrl = state.stateUrl
+                if (stateUrl) {
+                    state._stateUrl = stateUrl
+                    delete state.stateUrl
+                    if (!(stateUrl in modulesToLoadObj)) {
+                        modulesToLoadObj[stateUrl] = ''
+                        modulesToLoad.push(getPromise(function (rs, rj) {
+                            avalon.controller.loader(stateUrl, function(stateConfig) {
+                                avalon.mix(state, stateConfig)
+                                state.initViewsConfig()
+                                rs()
+                            })
+                        }))
+                    }
+                }
+            })
+            chains = modulesToLoadObj = null
+
+            getPromise(modulesToLoad).then(function() {
+                if (!reload) {
+                    // 找到共有父状态chain，params未变化
+                    while (state && state === fromChain[i] && !state.paramsChanged(toParams)) {
+                        _local = toLocals[i] = state._local
+                        i++
+                        state = toChain[i]
+                    }
+                }
+                var exitChain = fromChain.slice(i), // 需要退出的chain
+                        enterChain = toChain.slice(i), // 需要进入的chain
+                        commonLocal = _local
+                // 建立toLocals，用来计算哪些view会被替换
+                while (state = toChain[i]) {
+                    _local = toLocals[i] = inherit(_local, state.sourceLocal)
                     i++
-                    state = toChain[i]
                 }
-            }
-            var exitChain = fromChain.slice(i), // 需要退出的chain
-                    enterChain = toChain.slice(i), // 需要进入的chain
-                    commonLocal = _local
-            // 建立toLocals，用来计算哪些view会被替换
-            while (state = toChain[i]) {
-                _local = toLocals[i] = inherit(_local, state.sourceLocal)
-                i++
-            }
-            mmState._local = _local
-            done = function (success, e) {
-                if (over)
-                    return
-                over = true
-                me.currentState = me.activeState
-                enterChain = exitChain = commonLocal = _local = toParams = null
-                mmState.oldNodes = []
-                if (success !== false) {
-                    mmState.lastLocal = mmState.currentState._local
-                    _root.fire("updateview", me.currentState, changeType)
-                    avalon.log("transitionTo " + toState.stateName + " success")
-                    callStateFunc("onLoad", me, fromState, toState)
-                } else {
-                    return callStateFunc("onError", me, {
-                        type: "transition",
-                        message: "transitionTo " + toState.stateName + " faild",
-                        error: e,
-                        fromState: fromState,
-                        toState: toState,
-                        params: toParams
-                    }, me.currentState)
+                mmState._local = _local
+                done = function (success, e) {
+                    if (over)
+                        return
+                    over = true
+                    me.currentState = me.activeState
+                    enterChain = exitChain = commonLocal = _local = toParams = null
+                    mmState.oldNodes = []
+                    if (success !== false) {
+                        mmState.lastLocal = mmState.currentState._local
+                        _root.fire("updateview", me.currentState, changeType)
+                        avalon.log("transitionTo " + toState.stateName + " success")
+                        callStateFunc("onLoad", me, fromState, toState)
+                    } else {
+                        return callStateFunc("onError", me, {
+                            type: "transition",
+                            message: "transitionTo " + toState.stateName + " faild",
+                            error: e,
+                            fromState: fromState,
+                            toState: toState,
+                            params: toParams
+                        }, me.currentState)
+                    }
                 }
-            }
-            toState.path = ("/" + info.path).replace(/^[\/]{2,}/g, "/")
-            if (!reload && fromState === toState) {
-                changeType = toState.paramsChanged(toParams)
-                if (!changeType) {
-                    // redirect的目的状态 == this.activeState && abort
-                    if (toState == this.activeState && fromAbort)
-                        return done()
-                    // 重复点击直接return
-                    return
+                toState.path = ("/" + info.path).replace(/^[\/]{2,}/g, "/")
+                if (!reload && fromState === toState) {
+                    changeType = toState.paramsChanged(toParams)
+                    if (!changeType) {
+                        // redirect的目的状态 == me.activeState && abort
+                        if (toState == me.activeState && fromAbort)
+                            return done()
+                        // 重复点击直接return
+                        return
+                    }
                 }
-            }
 
-            mmState.query = avalon.mix({}, toParams.query)
+                mmState.query = avalon.mix({}, toParams.query)
 
-            // onBeforeUnload check
-            if (options && !options.confirmed && (callStateFunc("onBeforeUnload", this, fromState, toState) === false || broadCastBeforeUnload(exitChain, enterChain, fromState, toState) === false)) {
-                return callStateFunc("onAbort", this, fromState, toState)
-            }
-            if (over === true) {
-                return
-            }
-            avalon.log("begin transitionTo " + toState.stateName + " from " + (fromState && fromState.stateName || "unknown"))
-            callStateFunc("onUnload", this, fromState, toState)
-            this.currentState = toState
-            this.prevState = fromState
-            mmState._toParams = toParams
-            if (info && avalon.history) {
-                if (avalon.history.updateLocation) {
-                    avalon.history.updateLocation(info.path + info.query,
-                            avalon.mix({silent: true}, options), !fromState && location.hash)
-                } else {
-                    avalon.history.navigate(info.path + info.query,
-                            avalon.mix({silent: true}, options))
+                // onBeforeUnload check
+                if (options && !options.confirmed && (callStateFunc("onBeforeUnload", me, fromState, toState) === false || broadCastBeforeUnload(exitChain, enterChain, fromState, toState) === false)) {
+                    return callStateFunc("onAbort", me, fromState, toState)
                 }
-            }
-            callStateFunc("onBegin", this, fromState, toState)
-            this.popOne(exitChain, toParams, function (success) {
-                // 中断
-                if (success === false)
-                    return done(success)
-                me.pushOne(enterChain, toParams, done, commonLocal, toLocals)
-            }, !(options && options.confirmed))
+                if (over === true) {
+                    return
+                }
+                avalon.log("begin transitionTo " + toState.stateName + " from " + (fromState && fromState.stateName || "unknown"))
+                callStateFunc("onUnload", me, fromState, toState)
+                me.currentState = toState
+                me.prevState = fromState
+                mmState._toParams = toParams
+                if (info && avalon.history) {
+                    if (avalon.history.updateLocation) {
+                        avalon.history.updateLocation(info.path + info.query,
+                                avalon.mix({silent: true}, options), !fromState && location.hash)
+                    } else {
+                        avalon.history.navigate(info.path + info.query,
+                                avalon.mix({silent: true}, options))
+                    }
+                }
+                callStateFunc("onBegin", me, fromState, toState)
+                me.popOne(exitChain, toParams, function (success) {
+                    // 中断
+                    if (success === false)
+                        return done(success)
+                    me.pushOne(enterChain, toParams, done, commonLocal, toLocals)
+                }, !(options && options.confirmed))
+            }, function() {
+                throw new Error('加载stateUrl资源失败')
+            })
         }
     }
     //将template,templateUrl,templateProvider等属性从opts对象拷贝到新生成的view对象上的
@@ -701,10 +728,10 @@ define(["./mmPromise", "./mmRouter"], function () {
         formate: function (options) {
             avalon.mix(true, this, options)
             var stateName = this.stateName,
-                    me = this,
-                    chain = stateName.split("."),
-                    len = chain.length - 1,
-                    sourceLocal = me.sourceLocal = {}
+                me = this,
+                chain = stateName.split("."),
+                len = chain.length - 1/*,
+                sourceLocal = me.sourceLocal = {}*/
             this.chain = []
             avalon.each(chain, function (key, name) {
                 if (key == len) {
@@ -720,11 +747,27 @@ define(["./mmPromise", "./mmRouter"], function () {
             if (this.url === void 0) {
                 this.abstract = true
             }
-            var parent = this.chain[len - 1] || _root
-            if (parent) {
-                this.url = parent.url + (this.url || "")
-                this.parentState = parent
+            var _parent = this.chain[len - 1] || _root
+            if (_parent) {
+                this.url = _parent.url + (this.url || "")
+                this.parentState = _parent
             }
+            // state的views等属性需要异步按需加载
+            if (!this.stateUrl) this.initViewsConfig()
+            this._self = options
+            this._pending = false
+            this.visited = false
+            this.params = inherit(_parent && _parent.params || {})
+            this.oldParams = {}
+            this.keys = []
+
+            this.events = {}
+        },
+        initViewsConfig: function () {
+            var me = this,
+                sourceLocal = this.sourceLocal = {},
+                stateName = this.statename,
+                _parent = this.parentState
             if (!this.views && stateName != "") {
                 var view = {}
                 "template,templateUrl,templateProvider,controller,controllerUrl,controllerProvider,viewCache".replace(/\w+/g, function (prop) {
@@ -735,25 +778,17 @@ define(["./mmPromise", "./mmRouter"], function () {
                 this.views[viewname] = view
             }
             var views = {},
-                    viewsIsArray = this.views instanceof Array // 如果是一个数组
+                viewsIsArray = this.views instanceof Array // 如果是一个数组
 
             avalon.each(this.views, function (maybeName, view) {
                 var name = viewsIsArray ? view.name || "" : maybeName // 默认缺省
                 if (name.indexOf("@") < 0) {
-                    name += "@" + (parent ? parent.stateName || "" : "")
+                    name += "@" + (_parent ? _parent.stateName || "" : "")
                 }
                 views[name] = view
                 sourceLocal[name] = {}
             })
             this.views = views
-            this._self = options
-            this._pending = false
-            this.visited = false
-            this.params = inherit(parent && parent.params || {})
-            this.oldParams = {}
-            this.keys = []
-
-            this.events = {}
         },
         watch: function (eventName, func) {
             var events = this.events[eventName] || []

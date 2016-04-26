@@ -74,7 +74,7 @@ $uiname-dropdown: "oni-dropdown";
         width: 50px;
     }
     .#{$uiname}-slide-wrap, label {
-        margin: 0;   
+        margin: 0;
     }
     .oni-button-success{
         float: right;
@@ -191,10 +191,10 @@ $uiname-dropdown: "oni-dropdown";
     .#{$uiname}-default {
         color: #333;
         cursor: pointer;
-        text-align: center;  
+        text-align: center;
         line-height: 18px;
         padding: 3px 0;
-    } 
+    }
     .#{$uiname}-day-hover {
         background: #dbebff;
     }
@@ -283,6 +283,10 @@ $uiname-dropdown: "oni-dropdown";
             height: 18px;
             color: #b5b5b5;
             font-size: 12px;
+        }
+        .oni-icon-calendar-o{
+            vertical-align: top;
+            margin-left: 2px;
         }
     }
 }

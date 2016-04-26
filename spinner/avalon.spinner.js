@@ -1,6 +1,6 @@
 // avalon 1.3.6
 /**
- * 
+ *
  * @cnName 数字输入框
  * @enName spinner
  * @introduce
@@ -149,7 +149,7 @@ define(["../avalon.getModel", "text!./avalon.spinner.html", "css!../chameleon/on
 
             if (typeof min == 'number' && !isNaN(Number(min)) && value < min) {
                 value = min;
-            } 
+            }
             if (typeof max == 'number' && !isNaN(Number(max)) && value > max) {
                 value = max;
             }
@@ -165,7 +165,9 @@ define(["../avalon.getModel", "text!./avalon.spinner.html", "css!../chameleon/on
                 if (!isNaN(Number(value))) {
                     value = checkNum(element.value);
                 }
-                vmodel.value = element.value = value;
+                setTimeout(function(){
+                    vmodel.value = element.value = value;
+                }, 0)
             })
             $element.bind("keydown", function(event) {
                 switch( event.which ) {
@@ -190,7 +192,7 @@ define(["../avalon.getModel", "text!./avalon.spinner.html", "css!../chameleon/on
             // 当设置了数值options.min，且不是NaN，重置v，否则忽略
             if( typeof min == 'number' && !isNaN(Number(min)) ) {
                 if (v < min) v = min
-            } 
+            }
             // 当设置了数值options.max，且不是NaN，重置v，否则忽略
             if( typeof max == 'number' && !isNaN(Number(max)) ) {
                 if (v > max) v = max

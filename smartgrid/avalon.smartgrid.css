@@ -6,6 +6,11 @@
   font-size: 12px;
   line-height: 20px;
   position: relative;
+  opacity: 0;
+  /* IE 8 */
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  /* IE 5-7 */
+  filter: alpha(opacity=0);
   /*三种容器的规则*/
   /*三种容器下三角形的共同点*/
   /*上三角*/
@@ -141,7 +146,9 @@
   *vertical-align: auto;
   overflow: hidden; }
   .oni-smartgrid-column-cell {
-    padding: 7px 5px; }
+    padding: 7px 5px;
+    word-wrap: break-word;
+    word-break: normal; }
 
 .oni-smartgrid-pager-options {
   float: left;
@@ -198,6 +205,7 @@
   border: 1px solid #ccc; }
   .oni-smartgrid-handler .oni-smartgrid-handler-mode {
     padding: 9px 10px;
+    line-height: 14px;
     border-bottom: 1px #f2f2f2 solid;
     color: #0084bb; }
     .oni-smartgrid-handler .oni-smartgrid-handler-mode .oni-smartgrid-handler-mode-item {

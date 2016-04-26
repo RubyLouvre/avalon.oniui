@@ -4,6 +4,12 @@ $uiname: "oni-smartgrid";
     font-size: 12px;
     line-height: 20px;
     position: relative;
+    opacity: 0;
+    /* IE 8 */
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    /* IE 5-7 */
+    filter: alpha(opacity=0);
+
     /*三种容器的规则*/
     .oni-helper-asc, .oni-helper-desc,  .oni-helper-ndb{
         width:12px;
@@ -52,7 +58,7 @@ $uiname: "oni-smartgrid";
     display: none;
 }
 .#{$uiname}-hover {
-    background-color: #e8f5fd; 
+    background-color: #e8f5fd;
 }
 .#{$uiname}-selected {
     background-color: #fff7e6;
@@ -120,8 +126,10 @@ $uiname: "oni-smartgrid";
     overflow: hidden;
     &-cell{
         padding: 7px 5px;
+        word-wrap: break-word;
+        word-break: normal;
     }
-}  
+}
 .#{$uiname}-pager-options {
     float: left;
     height: 26px;
@@ -132,7 +140,7 @@ $uiname: "oni-smartgrid";
         @include inline-block();
     }
     .oni-dropdown {
-        margin: 0 5px; 
+        margin: 0 5px;
     }
 }
 
@@ -174,6 +182,7 @@ $uiname: "oni-smartgrid";
     border: 1px solid #ccc;
     .#{$uiname}-handler-mode{
         padding: 9px 10px;
+        line-height: 14px;
         border-bottom: 1px #f2f2f2 solid;
         color: #0084bb;
         .#{$uiname}-handler-mode-item{
@@ -211,7 +220,7 @@ $uiname: "oni-smartgrid";
             line-height: 20px;
             label{
                 @include inline-block();
-                cursor: pointer;  
+                cursor: pointer;
             }
         }
     }
@@ -220,6 +229,7 @@ $uiname: "oni-smartgrid";
         text-align: right;
         background-color: #f8f8f8;
         font-size: 0;
+        
         .oni-button{
             margin-left:5px;
         }

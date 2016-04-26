@@ -175,7 +175,7 @@ define(["avalon",
                                         duplexModel[1][duplexModel[0]] = n
                                         element.value = n
                                     }
-                                    vmodel.currentOption = setLabelTitle(n);
+                                    vmodel.currentOption = setLabelTitle(n) || {};
                                 }
                             }
                             if ((onChange && onChange.call(element, n, o, vmodel, valueStateKeep) !== false) || !onChange) {
@@ -183,7 +183,12 @@ define(["avalon",
                                     duplexModel[1][duplexModel[0]] = n
                                     element.value = n
                                 }
-                                vmodel.currentOption = setLabelTitle(n);
+                                var currentOption = setLabelTitle(n);
+                                if(currentOption === null) {
+                                    currentOption = {};
+                                    vmodel.label = '';
+                                }
+                                vmodel.currentOption = currentOption;
                             }
                         })
                     });
@@ -195,9 +200,9 @@ define(["avalon",
                 }
 
                 //同步disabled或者enabled
-                var disabledAttr = element.msData["ms-disabled"],
+                var disabledAttr = element.msData["ms-disabled"] || element.msData["ms-attr-disabled"],
                     disabledModel,
-                    enabledAttr = element.msData["ms-enabled"],
+                    enabledAttr = element.msData["ms-enabled"] || element.msData["ms-attr-enabled"],
                     enabledModel;
 
                 if(disabledAttr && (disabledModel = avalon.getModel(disabledAttr, vmodels))) {

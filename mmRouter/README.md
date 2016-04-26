@@ -10,6 +10,8 @@ mmRouter
 
 mmHistroy是负责监听URL地址栏的变化及用户是否已经点击了前进后退按钮
 
+不支持AVALON 2
+
 ### 使用说明
 
 1、引入依赖(直接依赖于mmRouter, 总共依赖于avalon, mmRouter, mmHistory)

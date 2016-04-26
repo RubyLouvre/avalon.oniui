@@ -195,9 +195,9 @@ define(["avalon",
                 }
 
                 //同步disabled或者enabled
-                var disabledAttr = element.msData["ms-disabled"],
+                var disabledAttr = element.msData["ms-disabled"] || element.msData["ms-attr-disabled"],
                     disabledModel,
-                    enabledAttr = element.msData["ms-enabled"],
+                    enabledAttr = element.msData["ms-enabled"] || element.msData["ms-attr-enabled"],
                     enabledModel;
 
                 if(disabledAttr && (disabledModel = avalon.getModel(disabledAttr, vmodels))) {

@@ -354,7 +354,7 @@ mmState新增了一个stateUrl，支持将state的url、abstract等必须属性�
                 */
             }
             // 进入视图时候的回调
-            vm.$onEnter = function(resolve, reject) {
+            vm.$onEnter = function(params, resolve, reject) {
                 setTimeout(function() {
                     // 写数据
                     ...

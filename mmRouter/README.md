@@ -10,6 +10,8 @@ mmRouter
 
 mmHistroy是负责监听URL地址栏的变化及用户是否已经点击了前进后退按钮
 
+不支持AVALON 2
+
 ### 使用说明
 
 1、引入依赖(直接依赖于mmRouter, 总共依赖于avalon, mmRouter, mmHistory)
@@ -197,11 +199,84 @@ mmState的使用
                 }
             }
         })
+
         avalon.state.config({
             onError: function() {
                 console.log(arguments)
             } // 强烈打开错误配置
         })
+    })
+```
+mmState新增了一个stateUrl，支持将state的url、abstract等必须属性之外的配置写到另外的文件，在进入状态的时候使用avalon.controller.loader去加载，这样既更方便的支持打包，又减小了路由文件的体积
+```javascript
+    // index.js
+    require(["mmState"], function() {
+        // 定义一个顶层的vmodel，用来放置全局共享数据
+        var root = avalon.define("root", function(vm) {
+            vm.page = ""
+        })
+
+        // 定义一个全局抽象状态，用来渲染通用不会改变的视图，比如header，footer
+        avalon.state("blog", {
+            url: "/",
+            abstract: true, // 抽象状态，不会对应到url上
+            stateUrl: "./blog" // 如果你使用的是webpack进行打包，stateUrl后面不允许出现变量
+        })
+
+        // 如果这个项目使用webpack打包，你需要再重写avalon.controller.loader
+        // 依赖StateUrlCompilationPlugin.js，你可以在https://github.com/gogoyqj/mmRouter-demo-list/tree/master/webpack/StateUrlCompilationPlugin.js获取
+        avalon.controller.loader = function (url, callback) {
+            if (url.join) {
+                __webpack_require__.e(url[1], function (r) {
+                    callback(r(url[0]))
+                })
+            } else {
+                // 修改为更合理的容错
+                var msg = url + '没有打包进来'
+                window.console && console.log(msg)
+                throw Error(msg)
+            }
+        }
+
+        avalon.state.config({
+            onError: function() {
+                console.log(arguments)
+            } // 强烈打开错误配置
+        })
+    })
+
+    // blog.js，以下代码是基于webpack打包，因此可直接使用require
+    define([], function() {
+        return {
+            views: {
+                "": {
+                    template: require("./template/blog.html"), // 指定模板地址
+                    controller: require("./controller/blog") // 指定控制器地址
+                },
+                "footer@": { // 视图名字的语法请仔细查阅文档
+                    template: function() {
+                        return "<div style=\"text-align:center;\">this is footer</div>"
+                    } // 指定一个返回字符串的函数来获取模板
+                }
+            }
+        }    
+    })
+    // blog.js，requirejs版本
+    define(["avalon", "text!./common/blog.html", "./common/blog"], function(avalon, tpl, ctrl) {
+        // do something
+        return {
+            views: {
+                "": {
+                    template: tpl, // 指定模板地址
+                    controller: ctrl // 指定控制器地址
+                },
+                "footer@": { // 视图名字的语法请仔细查阅文档
+                    template: function() {
+                        return "<div style=\"text-align:center;\">this is footer</div>"
+                    } // 指定一个返回字符串的函数来获取模板
+                }
+            }
+        }    
     })
 ```
 
@@ -250,6 +325,9 @@ mmState的使用
         return avalon.controller(function($ctrl) {
             // 视图渲染后，意思是avalon.scan完成的回调
             $ctrl.$onRendered = function() {
+                /*
+                    this 指向 ms-view dom 元素 
+                */
             }
             // 进入视图时候的回调
             $ctrl.$onEnter = function() {
@@ -266,10 +344,17 @@ mmState的使用
         // 定义所有相关的vmodel
         var blog = avalon.define("blog", function(vm) {
             // 对视图调用avalon.scan后出发的回调
-            vm.$onRendered = function() {
+            vm.$onRendered = function(obj) {
+                /*
+                    obj = {
+                        template: '',
+                        state   : 状态,
+                        element : ms-view dom 元素
+                    }
+                */
             }
             // 进入视图时候的回调
-            vm.$onEnter = function(resolve, reject) {
+            vm.$onEnter = function(params, resolve, reject) {
                 setTimeout(function() {
                     // 写数据
                     ...
@@ -368,15 +453,15 @@ options字段
 
 定义视图，参见view 
 
-* ignoreChange: function () {changeType}
+* ignoreChange: function (changeType) {}
 
 当mmState.currentState == this时，更新视图的时候调用该函数，return true mmRouter则不会去重写视图和scan，请确保该视图内用到的数据没有放到avalon vmodel $skipArray内，changeType值为"param"，表示params变化，值为"query"，表示query变化
 
 * onBeforeEnter: function () {}
 
-进入状态之前
+进入状态之前，除去resolve和reject，其他参数与定义state时候url参数内的变量一一对应
 
-* onEnter: function(resolve, reject) {} 
+* onEnter: function([params1, param2, ]resolve, reject) {} 
 
 进入状态
 
@@ -388,7 +473,7 @@ return false表示有需要等待异步逻辑，这个时候跳转会中断，�
 
 * onExit: function(resolve, reject) {}
 
-退出状态，参数通onEnter
+退出状态，参数同onEnter
 
 
 
@@ -461,7 +546,26 @@ view绑定在state的views属性上，当状态只有一个view时候，也可�
 | "viewname@statename" | 指向statename状态之内的view，覆盖其配置|
 | "@statename" | 指向statename状态内的""view，可以理解为用这个view去覆盖statename状态的""view |
 
+##### 视图controller配置
 
+进入视图
 
-具体可以看<https://github.com/gogoyqj/mmRouter-demo-list>例子
+* $ctrl.$onEnter function(params, resolve, reject)
+
+avalon.scan视图之后，函数内this指向ms-view dom元素
+
+* $ctrl.$onRendered function(obj)
+
+退出视图前，return false阻止跳转
+
+* $ctrl.$onBeforeUnload function()
+
+指定一个avalon.scan视图的vmodels，vmodels = $ctrl.$vmodels.concact(DOM树上下文vmodels)
+
+* $ctrl.$vmodels
+
+### SPA及打包例子
+
++ 具体可以看<https://github.com/gogoyqj/mmRouter-demo-list>例子
++ 获取StateUrlCompilationPlugin插件 for webpack<https://github.com/gogoyqj/mmRouter-demo-list/tree/master/webpack/StateUrlCompilationPlugin.js>
 

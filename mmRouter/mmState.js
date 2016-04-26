@@ -395,12 +395,12 @@ define(["./mmPromise", "./mmRouter"], function () {
             if (firsttime && !_local || currentLocal === _local)
                 return
             currentLocal = _local
-            _currentState = _local && _local.state
+            var _currentState = _local && _local.state
             // 缓存，如果加载dom上，则是全局配置，针对template还可以开一个单独配置
             var cacheTpl = $element.data("viewCache"),
                     lastCache = $element.data("currentCache")
             if (_local) {
-                cacheTpl = (_local.viewCache === false ? false : _local.viewCache || cacheTpl) && (viewname + "@" + _currentState.stateName)
+                cacheTpl = (_local.viewCache === false ? false : _local.viewCache || cacheTpl) && (viewname + "@" + (_currentState && _currentState.stateName || ""))
             } else if (cacheTpl) {
                 cacheTpl = viewname + "@__default__"
             }

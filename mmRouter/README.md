@@ -544,23 +544,23 @@ view绑定在state的views属性上，当状态只有一个view时候，也可�
 | "viewname@statename" | 指向statename状态之内的view，覆盖其配置|
 | "@statename" | 指向statename状态内的""view，可以理解为用这个view去覆盖statename状态的""view |
 
-##### 定义视图controller
+##### 视图controller配置
 
 进入视图
 
-$ctrl.$onEnter function(params, resolve, reject)
+* $ctrl.$onEnter function(params, resolve, reject)
 
 avalon.scan视图之后，函数内this指向ms-view dom元素
 
-$ctrl.$onRendered function(obj)
+* $ctrl.$onRendered function(obj)
 
 退出视图前，return false阻止跳转
 
-$ctrl.$onBeforeUnload function()
+* $ctrl.$onBeforeUnload function()
 
 指定一个avalon.scan视图的vmodels，vmodels = $ctrl.$vmodels.concact(DOM树上下文vmodels)
 
-$ctrl.$vmodels
+* $ctrl.$vmodels
 
 ### SPA及打包例子
 

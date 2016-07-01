@@ -28,18 +28,14 @@
                        ms-class="oni-datepicker-next-disabled:!nextMonth">&#xf03e;</i>
                     <div class="oni-datepicker-title" ms-if="changeMonthAndYear && $regional.showMonthAfterYear">
                         <select ms-each="years" data-each-rendered="_afterYearRendered">
-                            <option ms-attr-value="el">{{el}}</option>
                         </select>&nbsp;{{$regional.yearText}}&nbsp;
                         <select ms-each="months" data-each-rendered="_afterMonthRendered">
-                            <option ms-attr-value="{{el}}">{{el}}</option>
                         </select>&nbsp;{{$regional.monthText}}
                     </div>
                     <div class="oni-datepicker-title" ms-if="changeMonthAndYear && !$regional.showMonthAfterYear">
                         <select ms-each="months" data-each-rendered="_afterMonthRendered">
-                            <option ms-attr-value="{{el}}">{{el}}</option>
                         </select>&nbsp;{{$regional.monthText}}
                         <select ms-each="years" data-each-rendered="_afterYearRendered">
-                            <option ms-attr-value="el">{{el}}</option>
                         </select>&nbsp;{{$regional.yearText}}&nbsp;
                     </div>
                     <div class="oni-datepicker-title"

@@ -43,10 +43,10 @@ define(["../textbox/avalon.textbox", "../dropdown/avalon.dropdown", "css!./avalo
                             return
                         }
 
-                        activeIndexInvalidate = data[dropdown.activeIndex].label.toLowerCase().indexOf(val) == -1
+                        activeIndexInvalidate = data[dropdown.activeIndex].label.indexOf(val) == -1
 
                         data.forEach(function(item, index) {
-                            searchItem = item.label.toLowerCase().indexOf(val) != -1
+                            searchItem = item.label.indexOf(val) != -1
                             if (!item.group) {
                                 
                                 if (item.parent) {
